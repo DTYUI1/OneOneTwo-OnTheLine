@@ -1,0 +1,1708 @@
+{
+  "lines": {
+    "dtp_victims_fuel": {
+      "opening": {
+        "text": "Алло! Тут авария, машина врезалась в отбойник, в ней люди, течёт бензин!",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/opening.ogg",
+        "duration_ms": 4656,
+        "bytes": 12154,
+        "sha256": "fce18418b8e8eb124dbc36bb61062494ae0207f708c4fff5c0f264c16f52a5aa"
+      },
+      "address.calm": {
+        "text": "Кутузовский проспект, дом тридцать четыре, в сторону центра, рядом с отбойником.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/address.calm.ogg",
+        "duration_ms": 4644,
+        "bytes": 11936,
+        "sha256": "aecd37f7d1810b596ef67fd1e1111911164147046b09a65dc9a4f5827ac28e93"
+      },
+      "address.panic": {
+        "text": "Кутузовский, где-то у тридцать четвёртого дома, точно не знаю, тут всё в дыму от бензина!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/address.panic.ogg",
+        "duration_ms": 4865,
+        "bytes": 12817,
+        "sha256": "28dbcbe1176e7cd5887d2dcf3dd13c22613a2c165794f9d45dddac1859cb5a0f"
+      },
+      "landmark.calm": {
+        "text": "Рядом остановка автобуса и подземный переход.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/landmark.calm.ogg",
+        "duration_ms": 2763,
+        "bytes": 7326,
+        "sha256": "19a0424220a548abcbdb3f6c7038c8d9ec448de9a7113a07f7bd5c73330245dd"
+      },
+      "landmark.panic": {
+        "text": "Переход тут какой-то... Не знаю! Приезжайте!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/landmark.panic.ogg",
+        "duration_ms": 2566,
+        "bytes": 6750,
+        "sha256": "5c558b610c69a71e86e60b07b7b3af1428512ecdce1027bda02dce4f4dec1b4f"
+      },
+      "callback.calm": {
+        "text": "Да, мой мобильный.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/callback.calm.ogg",
+        "duration_ms": 1196,
+        "bytes": 3377,
+        "sha256": "be7b4f47f106ab5aca98003645e5d5caf21719da43798b052f46ac38c7c2d8cc"
+      },
+      "callback.panic": {
+        "text": "Да, да, мой! Давайте быстрее!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/callback.panic.ogg",
+        "duration_ms": 2252,
+        "bytes": 6075,
+        "sha256": "7b340b33b36f9c04cf80f7a1bb9a8c18d872dc9abc7c1a2f06e8fecc1aab1564"
+      },
+      "name.calm": {
+        "text": "Ковалёв Игорь Петрович.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/name.calm.ogg",
+        "duration_ms": 1788,
+        "bytes": 4787,
+        "sha256": "068c1ca98b50e24cb4b0cea43921bd08559c4f80017b198324a911c95481ab80"
+      },
+      "name.panic": {
+        "text": "Игорь! Какая разница?! Тут люди в машине!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/name.panic.ogg",
+        "duration_ms": 2972,
+        "bytes": 7906,
+        "sha256": "251dbffb0c4a4438950f9ddc1ad562b740a72f301acb2c2a87608a4c06078692"
+      },
+      "what_happened.calm": {
+        "text": "Одна легковая врезалась в отбойник, кузов смят, из-под днища течёт бензин.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/what_happened.calm.ogg",
+        "duration_ms": 4063,
+        "bytes": 10772,
+        "sha256": "13cc2b597be5a0adf5cc53ebbc790ad943191ef0b9aed3235981fe3de0dc4493"
+      },
+      "what_happened.panic": {
+        "text": "Машина влетела в отбойник, там всё разбито, бензин течёт, это опасно!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/what_happened.panic.ogg",
+        "duration_ms": 4586,
+        "bytes": 11780,
+        "sha256": "45f14df08dae029992c1181743a3c2ab3e5f27e9d0c6d3dae268c5afe39d1e97"
+      },
+      "when.calm": {
+        "text": "Только что, минуты две назад. Я сразу остановился.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/when.calm.ogg",
+        "duration_ms": 3053,
+        "bytes": 8144,
+        "sha256": "535132a90f6f987c6da0a7b7ec09ad6940f9b24a1ecd274431413d5a9f77cbe3"
+      },
+      "when.panic": {
+        "text": "Только что! Я сразу позвонил!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/when.panic.ogg",
+        "duration_ms": 1776,
+        "bytes": 4780,
+        "sha256": "7d1badd2d8e4baad978ef56cf1c1675f1673b7f8179f68cb82fbf5bfe427758b"
+      },
+      "victims.calm": {
+        "text": "Двое. Водитель в сознании, у пассажира кровь на голове, оба сидят в машине.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/victims.calm.ogg",
+        "duration_ms": 4760,
+        "bytes": 12213,
+        "sha256": "91c60e4f743822a6a640f708e1d450754c7da1b93a20b8af576ad0d48d4a61f6"
+      },
+      "victims.panic": {
+        "text": "Они не выходят, водитель стонет, пассажир весь в крови, помогите скорее!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/victims.panic.ogg",
+        "duration_ms": 4481,
+        "bytes": 11775,
+        "sha256": "8b06a3b5c14b6ad02939b85cb99b826f65904c80acbee3ded31132697fdbc6d6"
+      },
+      "fuel.calm": {
+        "text": "Да, топливо разлилось прямо под машиной, сильно пахнет бензином.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/fuel.calm.ogg",
+        "duration_ms": 3262,
+        "bytes": 8756,
+        "sha256": "0bf8587fe0568725b5ee8cc0b13d166840ba90bbe294a120a662ccc77a3edd75"
+      },
+      "fuel.panic": {
+        "text": "Всё в бензине, лужа под машиной растёт, я боюсь, что загорится!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/fuel.panic.ogg",
+        "duration_ms": 4191,
+        "bytes": 10704,
+        "sha256": "e00c1b640d9632f0622ce4b59b4905ee6ecc465dd05b7cc547743eb74050a678"
+      },
+      "access.calm": {
+        "text": "Проезд по соседней полосе свободен, машины объезжают.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/access.calm.ogg",
+        "duration_ms": 3053,
+        "bytes": 8171,
+        "sha256": "8ea6d2721a33f0451472213302072afc35fd26d4312ce870179c40581c8f1d78"
+      },
+      "access.panic": {
+        "text": "Тут пробка, все встали, не знаю, проедет ли скорая!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/access.panic.ogg",
+        "duration_ms": 3007,
+        "bytes": 7953,
+        "sha256": "38c764bb64e8e1fd5bad4f327f133013984cb005528def9031148908636ffb0b"
+      },
+      "meet.calm": {
+        "text": "Да, я стою у обочины, включил аварийку. Встречу и покажу.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/meet.calm.ogg",
+        "duration_ms": 4447,
+        "bytes": 11661,
+        "sha256": "d99fc998cc79fc33d5cd869789c189116fbb8efb678623f235db4cfa38030754"
+      },
+      "meet.panic": {
+        "text": "Не знаю... попробую... тут опасно стоять!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/meet.panic.ogg",
+        "duration_ms": 2241,
+        "bytes": 5988,
+        "sha256": "c5a4521b0d18450ab748584f8d4f6e31f5b93d04107bfa27740a7d20c440c5ee"
+      },
+      "confirm.ok": {
+        "text": "Да, всё так. Кутузовский, тридцать четыре, в сторону центра.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/confirm.ok.ogg",
+        "duration_ms": 3587,
+        "bytes": 9524,
+        "sha256": "12bc9726b9b959d67e8177ce87931a3a233b755e269373886ca12833efd01392"
+      },
+      "confirm.wrong_street": {
+        "text": "Нет, Кутузовский проспект! Кутузовский!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/confirm.wrong_street.ogg",
+        "duration_ms": 2485,
+        "bytes": 6615,
+        "sha256": "6406896a0bd19c90920099d2675952eb1580f5dd98e6c1d5193f7967735cb49d"
+      },
+      "confirm.wrong_details": {
+        "text": "Нет, у дома тридцать четыре. Тридцать четвёртый дом.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/confirm.wrong_details.ogg",
+        "duration_ms": 3553,
+        "bytes": 9345,
+        "sha256": "9b60ed51e3bd980a4760cb353e27b2e3480844044019b1331e73800f0c0641e9"
+      },
+      "confirm.empty": {
+        "text": "Я же сказал: Кутузовский проспект, у тридцать четвёртого дома!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/confirm.empty.ogg",
+        "duration_ms": 3518,
+        "bytes": 9019,
+        "sha256": "f58b020e3a888ee1abf5705914d275dd649d229ce3254f3239882e1fdb56865a"
+      },
+      "confirm.panic": {
+        "text": "Да, да, наверное... Приезжайте быстрее!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/confirm.panic.ogg",
+        "duration_ms": 2206,
+        "bytes": 5828,
+        "sha256": "6401743216e7918d45b732c688dfa5fea25a98f3db98c7335e7bd5b716072816"
+      },
+      "distractor.apartment": {
+        "text": "Какая квартира?! Это на проспекте, на дороге!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/distractor.apartment.ogg",
+        "duration_ms": 2856,
+        "bytes": 7495,
+        "sha256": "9c2315e061131feda721c03e1293ff0b9033f7f599051c498eaa6eecd9c0ac3b"
+      },
+      "distractor.driver_phone": {
+        "text": "Откуда я знаю его номер?! Я мимо проезжал!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/distractor.driver_phone.ogg",
+        "duration_ms": 3123,
+        "bytes": 8325,
+        "sha256": "fbc04645c937fe4ee458a15f428f2dcad6d83f08e20ec6b34dd4548316cdc3f2"
+      },
+      "distractor.car_make": {
+        "text": "Да какая разница, какая марка?! Там люди!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/distractor.car_make.ogg",
+        "duration_ms": 2775,
+        "bytes": 7378,
+        "sha256": "ab1fcec1144514977d151c95a3c84e789f9faf24b7587cb8866143319fd22d3f"
+      },
+      "distractor.who_guilty": {
+        "text": "Какая разница, кто виноват?! Людям помогите!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/distractor.who_guilty.ogg",
+        "duration_ms": 2902,
+        "bytes": 7588,
+        "sha256": "e2bdf08fdbcdf89e77781d5d1d13ff06646f266cadcd47276b781e01e38c8da4"
+      },
+      "distractor.plate": {
+        "text": "Номер не вижу, не до него сейчас! Приезжайте!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/distractor.plate.ogg",
+        "duration_ms": 2891,
+        "bytes": 7725,
+        "sha256": "36342eb64b051bab576ec960f497a03a08c2c7ef23b2d4bf4efbb920516149ad"
+      },
+      "hysteria.0": {
+        "text": "Я не знаю! Приезжайте быстрее!",
+        "style": "hyst",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/hysteria.0.ogg",
+        "duration_ms": 2078,
+        "bytes": 5553,
+        "sha256": "009d8c9b8c0f6406f4040974c8811d896f7897c94c5f298bcc91904a74d1feb5"
+      },
+      "hysteria.1": {
+        "text": "Какая разница?! Тут люди в машине!",
+        "style": "hyst",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/hysteria.1.ogg",
+        "duration_ms": 2868,
+        "bytes": 7539,
+        "sha256": "191a4faa679f1c29011203565e1bc32222f6ab7429dce2c772775058434e11d5"
+      },
+      "hysteria.2": {
+        "text": "Я вас не понимаю! Тут бензин течёт!",
+        "style": "hyst",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/hysteria.2.ogg",
+        "duration_ms": 2798,
+        "bytes": 7443,
+        "sha256": "f5bd8669e812c8452443521bbf43d9e6d92e3ba4f2e5e740e28f3b583749e194"
+      },
+      "calming": {
+        "text": "Так... хорошо... я стараюсь.",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/calming.ogg",
+        "duration_ms": 1358,
+        "bytes": 3687,
+        "sha256": "4b83d8a0112f08341088624aceb6fe713598a8bca2ee377936d9f8d81081ba40"
+      },
+      "calmed": {
+        "text": "Понял. Слушаю вас.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/calmed.ogg",
+        "duration_ms": 1405,
+        "bytes": 3904,
+        "sha256": "8d279fe4483e1aee28bd539d2c86a5ba5b8a409e8ab9fb8e732b818323d09906"
+      },
+      "order": {
+        "text": "Я спокоен! Приезжайте уже!",
+        "style": "hyst",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/order.ogg",
+        "duration_ms": 1741,
+        "bytes": 4674,
+        "sha256": "5b429cf64968bfc775c73f0bb659fd1fac61793d8ba56dcb2a4a9c42937d68bd"
+      },
+      "repeat": {
+        "text": "Я же уже сказал!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/repeat.ogg",
+        "duration_ms": 1103,
+        "bytes": 3109,
+        "sha256": "3479b860580b6bea0cd03ab1f98a009237067842e46b5596002e68ece0200894"
+      },
+      "not_understood": {
+        "text": "Что? Не расслышал, повторите!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/not_understood.ogg",
+        "duration_ms": 1718,
+        "bytes": 4629,
+        "sha256": "506356840cb03c890daadd6078b455c296ebbb223457c6a2b8aabc5a17e9bb02"
+      },
+      "irrelevant": {
+        "text": "При чём тут это? Тут люди в машине!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/irrelevant.ogg",
+        "duration_ms": 2531,
+        "bytes": 6750,
+        "sha256": "dda233abd84c0bc8498c4a34cdcd8d220034f912115f04cfb1bdd412e0eab420"
+      },
+      "hold": {
+        "text": "Да, я на связи.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/hold.ogg",
+        "duration_ms": 1138,
+        "bytes": 3225,
+        "sha256": "3a50bae99987fe732263bceeecddfa32e83ac436ee3c1e6e86c2583442fcdf11"
+      },
+      "pause.0": {
+        "text": "Алло? Вы меня слышите?",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/pause.0.ogg",
+        "duration_ms": 1486,
+        "bytes": 4056,
+        "sha256": "381dd3be96ebd909b2f4a543b04b7ae59aba9be6e30ffcc7e27bff67c8ff5ea3"
+      },
+      "pause.1": {
+        "text": "Алло! Вы там?! Связь пропала?",
+        "style": "hyst",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/pause.1.ogg",
+        "duration_ms": 1614,
+        "bytes": 4410,
+        "sha256": "ae0ea1da84301a51049fb36878166c2740cf0a915fb5e3984d9f717879177907"
+      },
+      "advice.away": {
+        "text": "Понял, отхожу. Людей отводим от машины.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/advice.away.ogg",
+        "duration_ms": 2902,
+        "bytes": 7730,
+        "sha256": "ee24f20c55637f5b2a13fd8da1f742a80e28f488575cd40853b9b597c86435d3"
+      },
+      "advice.keep_still": {
+        "text": "Понял, никого не трогаем.",
+        "style": "calm",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/advice.keep_still.ogg",
+        "duration_ms": 1672,
+        "bytes": 4580,
+        "sha256": "28abcde645dc3b08755ddf66e27e02d482b8f6e2f0884059282804080bc1d5d3"
+      },
+      "escalation": {
+        "text": "Из-под капота пошёл дым! Люди ещё внутри!",
+        "style": "panic",
+        "voice": "ruslan",
+        "file": "dtp_victims_fuel/escalation.ogg",
+        "duration_ms": 3332,
+        "bytes": 8859,
+        "sha256": "57236b3057e590221320dfb2fdb14e8f810343b55c906213b328ad2127b6e240"
+      }
+    },
+    "elevator_stuck": {
+      "opening": {
+        "text": "Алло... Это спасатели? Я застрял в лифте, он не едет... Мне страшно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/opening.ogg",
+        "duration_ms": 4830,
+        "bytes": 11646,
+        "sha256": "5394ee3a1488904012743b320dcef71fa5f0003d7069dcf8ee2ef6afc6e08751"
+      },
+      "address.calm": {
+        "text": "Я у бабушки в гостях, адрес точно не знаю... Улица Новочерёмушкинская, а номер дома не помню.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/address.calm.ogg",
+        "duration_ms": 7129,
+        "bytes": 16702,
+        "sha256": "fbb9d5aa01f622eae31987925bcee8673c613d3306e14c362e16bb57f89d06b0"
+      },
+      "address.panic": {
+        "text": "Я не знаю адрес! Я у бабушки в гостях!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/address.panic.ogg",
+        "duration_ms": 3622,
+        "bytes": 8540,
+        "sha256": "4168f435b79581536ae93b30c531646e7806624f64ed64fa469fa5bd76a3c61e"
+      },
+      "landmark.calm": {
+        "text": "Дом напротив школы, рядом остановка автобуса. На табличке написано: восемь, корпус два.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/landmark.calm.ogg",
+        "duration_ms": 7152,
+        "bytes": 16998,
+        "sha256": "cc0b1433b86a8c8d2f0be83baf2ae50b24575d7d3934c15fa3f195e367b1b11b"
+      },
+      "landmark.panic": {
+        "text": "Тут школа рядом... кажется... я не знаю!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/landmark.panic.ogg",
+        "duration_ms": 2125,
+        "bytes": 5047,
+        "sha256": "e665647d7a3b2439a78ab85cb0d58ba26b520a27dc6acbb4a18cd9a5f2c197d0"
+      },
+      "callback.calm": {
+        "text": "Да, это мой телефон.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/callback.calm.ogg",
+        "duration_ms": 2659,
+        "bytes": 5721,
+        "sha256": "9c3fb0acfac40685c3757b543dfc9968469d0d8caa34d68b93c031ccb22a016c"
+      },
+      "callback.panic": {
+        "text": "Да! Мой! Не отключайтесь!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/callback.panic.ogg",
+        "duration_ms": 2450,
+        "bytes": 5722,
+        "sha256": "cd513704b101d98f26d0e2deffa41e088a6d568c8eda90a9b901db7be582f59b"
+      },
+      "name.calm": {
+        "text": "Миша. Миша Фролов.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/name.calm.ogg",
+        "duration_ms": 1997,
+        "bytes": 4983,
+        "sha256": "57af0a9f775eb8743a37e09ff59ba8b9c496917c2624bf523b7e2af7b62789e8"
+      },
+      "name.panic": {
+        "text": "Миша... Мне страшно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/name.panic.ogg",
+        "duration_ms": 1289,
+        "bytes": 3332,
+        "sha256": "f7ef2db7bc6d2f04ef7fa901038f0ab02cd4fa11a5692304bceb3d3f9ab64e5a"
+      },
+      "floor.calm": {
+        "text": "Я ехал на пятый, а лифт встал между четвёртым и пятым.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/floor.calm.ogg",
+        "duration_ms": 3843,
+        "bytes": 9005,
+        "sha256": "487f41d7f75d15f783cd03c67944ba85293dd2598a6b2b1e3a9ee3996df8b04f"
+      },
+      "floor.panic": {
+        "text": "Где-то между этажами, я не знаю где!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/floor.panic.ogg",
+        "duration_ms": 3193,
+        "bytes": 7761,
+        "sha256": "4ea748785eff26a2d4b9397961fb5aca02253ffe19bd34999113d16b9dfbe89b"
+      },
+      "contact.calm": {
+        "text": "Я нажимал кнопку с колокольчиком, но никто не отвечает.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/contact.calm.ogg",
+        "duration_ms": 3855,
+        "bytes": 9240,
+        "sha256": "ad22a3c08e2ad51de0d2943f7832b35b2f012e81f94adbbc4c89fb4f6c0cde99"
+      },
+      "contact.panic": {
+        "text": "Кнопка не работает! Никто не отвечает!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/contact.panic.ogg",
+        "duration_ms": 2763,
+        "bytes": 6632,
+        "sha256": "788f662689ffac693ece17cc74f7cb73692a1ddb6787f364b9187239ae8f7034"
+      },
+      "how_many.calm": {
+        "text": "Я один в лифте.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/how_many.calm.ogg",
+        "duration_ms": 1242,
+        "bytes": 3083,
+        "sha256": "25b7e70d03e45016a140d777cd112e561620906c6190798ab56264b7a3fdf313"
+      },
+      "how_many.panic": {
+        "text": "Я один! Мне страшно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/how_many.panic.ogg",
+        "duration_ms": 2055,
+        "bytes": 5026,
+        "sha256": "d53da21ad0a77e9fffe0a9332a207b433c983c7427d7f175f1fced071bbcadee"
+      },
+      "victims.calm": {
+        "text": "Нет, я не ударился. Просто страшно.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/victims.calm.ogg",
+        "duration_ms": 3715,
+        "bytes": 8686,
+        "sha256": "19e79503bb286b8c8032b26cf7556dacdf1aa22587e7f1109c044057ec70cd81"
+      },
+      "victims.panic": {
+        "text": "Мне страшно! Тут душно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/victims.panic.ogg",
+        "duration_ms": 2113,
+        "bytes": 5280,
+        "sha256": "e8e053152db186836e727d36a75230cc374c5a33e87423d1705baecb2ec8ac72"
+      },
+      "entrance.calm": {
+        "text": "Второй подъезд... Я сам дверь открывал, там цифра два.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/entrance.calm.ogg",
+        "duration_ms": 4133,
+        "bytes": 9361,
+        "sha256": "17335f352ba9ff246789a7ea5228f63269f5b2058c39036bc8cc0b66bfa4ca9c"
+      },
+      "entrance.panic": {
+        "text": "Не помню! Я не знаю, какой подъезд!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/entrance.panic.ogg",
+        "duration_ms": 2984,
+        "bytes": 7054,
+        "sha256": "1dd510a3f62af21baca15f1d2a1d0ea5038fcee05eb7102af0cd711401c9a47e"
+      },
+      "adults.calm": {
+        "text": "Бабушка дома, на пятом этаже. Она не знает, что я застрял.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/adults.calm.ogg",
+        "duration_ms": 4609,
+        "bytes": 10798,
+        "sha256": "a45308e93d2813c56bcf86ecf574cd458cbcd4d85cb3e2439c684be1e216a919"
+      },
+      "adults.panic": {
+        "text": "Бабушка не знает! Позвоните бабушке!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/adults.panic.ogg",
+        "duration_ms": 2554,
+        "bytes": 6074,
+        "sha256": "802871f95f6ec82f9afbab3603bfd7e06b84f6a5358276c982a42dfa34f90de2"
+      },
+      "confirm.ok": {
+        "text": "Да... Новочерёмушкинская, восемь, корпус два. Так на табличке написано.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/confirm.ok.ogg",
+        "duration_ms": 5236,
+        "bytes": 12556,
+        "sha256": "b5cec3d91221da060dbfe81c768a54f584cbaf392777f507c79c042173e82b11"
+      },
+      "confirm.wrong_street": {
+        "text": "Нет... улица Новочерёмушкинская. Бабушка так говорит.",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/confirm.wrong_street.ogg",
+        "duration_ms": 3460,
+        "bytes": 8352,
+        "sha256": "28b60a9379c026d3565aa32d4deaff18765a69acc24a09a3e21d26d5cf69380a"
+      },
+      "confirm.wrong_details": {
+        "text": "Там на табличке у подъезда было восемь, корпус два.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/confirm.wrong_details.ogg",
+        "duration_ms": 3355,
+        "bytes": 8046,
+        "sha256": "eb18c29adf7dd12e5cf34ab62685c3c0b0aa2b115c8030092ac0b2cc06c64c01"
+      },
+      "confirm.empty": {
+        "text": "Я же говорю... Новочерёмушкинская улица. А номер я не помню.",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/confirm.empty.ogg",
+        "duration_ms": 4029,
+        "bytes": 9793,
+        "sha256": "56029fcfcf3a342a0db9d7652822b6b98837e87b1aedd93725e1aecf0b978dfa"
+      },
+      "confirm.panic": {
+        "text": "Да... наверное... я не знаю! Вытащите меня!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/confirm.panic.ogg",
+        "duration_ms": 2659,
+        "bytes": 6453,
+        "sha256": "0928a0ca10aad45a9d9f273f58b90dd277793be4b9c3992d87aff5f1a82a9c98"
+      },
+      "distractor.apartment": {
+        "text": "Я не помню... Я же в лифте! Вытащите меня!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/distractor.apartment.ogg",
+        "duration_ms": 2647,
+        "bytes": 6699,
+        "sha256": "fbc685f63ae41a312fa4629dc4bde310ee64b745c5d9e66d5de2095f3dadf7c4"
+      },
+      "distractor.carrier": {
+        "text": "Я не знаю... Мне мама телефон дала. Не отключайтесь!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/distractor.carrier.ogg",
+        "duration_ms": 3529,
+        "bytes": 8643,
+        "sha256": "afb61152bbec6d40b02d990bc5f1951d87f823354d56759c133c4ec236df6863"
+      },
+      "distractor.lift_kind": {
+        "text": "Я не знаю... Обычный лифт! Он не едет!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/distractor.lift_kind.ogg",
+        "duration_ms": 3042,
+        "bytes": 7334,
+        "sha256": "c8c6711489110facc22e2235aa9115337d3d4497fac622ecb5ae3183a617d032"
+      },
+      "distractor.repaired": {
+        "text": "Я не знаю... Я тут не живу! Мне страшно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/distractor.repaired.ogg",
+        "duration_ms": 2926,
+        "bytes": 7152,
+        "sha256": "7bb616eef1d8449979603883a4598d107cdab9ac3561a7be6360341c3d75a9d8"
+      },
+      "distractor.lift_number": {
+        "text": "Я не вижу никакой таблички... Тут только кнопки!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/distractor.lift_number.ogg",
+        "duration_ms": 2902,
+        "bytes": 7015,
+        "sha256": "0d228ac55c09fbb4769ae8ffebfb952d18d7f0b5d429c478f0c041a45c6731a1"
+      },
+      "hysteria.0": {
+        "text": "Мама! Я хочу выйти! Я боюсь!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "elevator_stuck/hysteria.0.ogg",
+        "duration_ms": 2612,
+        "bytes": 6487,
+        "sha256": "9ad4ea0ce138c541c55624af9a1d46bf9fed47a3b445644f43c9af5817d6c11b"
+      },
+      "hysteria.1": {
+        "text": "Я не знаю! Вытащите меня!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "elevator_stuck/hysteria.1.ogg",
+        "duration_ms": 2206,
+        "bytes": 5473,
+        "sha256": "67654044ed08591c10870d60d500d05247a869c0b8ef3f9706bc658f0f9ec115"
+      },
+      "hysteria.2": {
+        "text": "Мне страшно! Я хочу к бабушке!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "elevator_stuck/hysteria.2.ogg",
+        "duration_ms": 2252,
+        "bytes": 5564,
+        "sha256": "8da517dad2888546c1cdfd05397a18feda1621ab8cdca734db23f862c2cc0de2"
+      },
+      "calming": {
+        "text": "Хорошо... я стараюсь... не плакать.",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/calming.ogg",
+        "duration_ms": 1718,
+        "bytes": 4210,
+        "sha256": "834e9344c575bf657bd022f5cd0f478ccef66c7231ea82cfe0bf18fe37a32175"
+      },
+      "calmed": {
+        "text": "Да... я слушаю.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/calmed.ogg",
+        "duration_ms": 1115,
+        "bytes": 2764,
+        "sha256": "fef1cb6e9ad718bd2fb1733ccec29763a16738d66488e8f28b011fa71f6551c6"
+      },
+      "order": {
+        "text": "Я не могу успокоиться! Мне страшно!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "elevator_stuck/order.ogg",
+        "duration_ms": 2508,
+        "bytes": 6200,
+        "sha256": "d6ab36249d7ba6f5a9f155f8b4684cbadadce6a89918bd88f5bce9f75f21b114"
+      },
+      "repeat": {
+        "text": "Я же уже сказал...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/repeat.ogg",
+        "duration_ms": 1242,
+        "bytes": 3130,
+        "sha256": "dbfa4242eb02f606cd18c5e9dee9a072548a67f3d46506a3aef8da59489edc86"
+      },
+      "not_understood": {
+        "text": "Что? Я не понял...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/not_understood.ogg",
+        "duration_ms": 1382,
+        "bytes": 3451,
+        "sha256": "31332d257f7ea9fafada60ead7f0142b8926e29370e56e05e27ad7b8e8ffaba8"
+      },
+      "irrelevant": {
+        "text": "Я не знаю... Вытащите меня!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/irrelevant.ogg",
+        "duration_ms": 1823,
+        "bytes": 4869,
+        "sha256": "b423568324050a4f69fe43aa9dc2de06597d06519613e192261f04656bcf21b1"
+      },
+      "hold": {
+        "text": "Да... я тут.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/hold.ogg",
+        "duration_ms": 848,
+        "bytes": 1970,
+        "sha256": "b3ce91901817dd6fe96a7e80ebb940f4202dba5f3f70bc9d9275e0ca4a7af990"
+      },
+      "pause.0": {
+        "text": "Алло? Вы здесь? Не уходите!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/pause.0.ogg",
+        "duration_ms": 2438,
+        "bytes": 5992,
+        "sha256": "325441d814902c48131d3ea03c25b4300b0e5cd3d18692e6a47241df61f7745c"
+      },
+      "pause.1": {
+        "text": "Алло! Алло! Не бросайте меня!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "elevator_stuck/pause.1.ogg",
+        "duration_ms": 2612,
+        "bytes": 6859,
+        "sha256": "10120215fe032d62865df5d4553fe70ccaecf56acfbdbe459c17816e8ca945eb"
+      },
+      "advice.stay": {
+        "text": "Хорошо... я сел... не отключайтесь.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/advice.stay.ogg",
+        "duration_ms": 2032,
+        "bytes": 4664,
+        "sha256": "6d580c46d4f258369fccb08ab1c6b422e9b0e574635a3590a5ed9ded6caaf146"
+      },
+      "advice.light": {
+        "text": "Включил... так лучше.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "elevator_stuck/advice.light.ogg",
+        "duration_ms": 1440,
+        "bytes": 3531,
+        "sha256": "6b685ce820a1a10b41ba154797ae78bc5a6843fcfb08530c45e3650085be85a4"
+      },
+      "escalation": {
+        "text": "Ой! Свет погас! Тут совсем темно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "elevator_stuck/escalation.ogg",
+        "duration_ms": 2740,
+        "bytes": 6662,
+        "sha256": "e32af7cee0828ad0875ece9f57d9ab247b98065dca596aff8f4022883627277d"
+      }
+    },
+    "fire_apartment_smoke": {
+      "opening": {
+        "text": "Алло! Алло, это пожарные?! У соседки из-под двери дым валит, она не открывает! Я не знаю, что делать!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/opening.ogg",
+        "duration_ms": 7744,
+        "bytes": 18455,
+        "sha256": "95a9e306a12be1e132775e11545febba3e46c569ea52f857a7dda4e440ebc533"
+      },
+      "address.calm": {
+        "text": "Дубнинская улица, дом двенадцать, квартира сорок семь, это соседка. Район Западное Дегунино.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/address.calm.ogg",
+        "duration_ms": 7790,
+        "bytes": 18502,
+        "sha256": "6569ae0db11a23e5c8d6713dd6ace999ce705300e39518187f1e676bad2ba8ec"
+      },
+      "address.panic": {
+        "text": "Это... Дубининская, кажется, дом двенадцать, а квартиру точно не помню, соседняя дверь!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/address.panic.ogg",
+        "duration_ms": 5828,
+        "bytes": 14342,
+        "sha256": "036d9777d50e4090ed59ddbd096b7c09d2657d17b404cab5e8f6423976841f65"
+      },
+      "landmark.calm": {
+        "text": "Напротив дома продуктовый магазин, а через дорогу — школа.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/landmark.calm.ogg",
+        "duration_ms": 4470,
+        "bytes": 11119,
+        "sha256": "89ec0350ece940192722b359effc5ddf8959472e5e3450c6b9af0ab3404d74c0"
+      },
+      "landmark.panic": {
+        "text": "Магазин какой-то напротив... Я не знаю! Приезжайте!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/landmark.panic.ogg",
+        "duration_ms": 3251,
+        "bytes": 8061,
+        "sha256": "09a7d24dc8591704752778535d97fec2f3a006c3580a41a4cc97d9338d239463"
+      },
+      "callback.calm": {
+        "text": "Да, это мой мобильный.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/callback.calm.ogg",
+        "duration_ms": 2740,
+        "bytes": 6019,
+        "sha256": "165b6b8f2a7188966967bad05ed50a33bfe1d2c59ac3e337787e5cf15b69667c"
+      },
+      "callback.panic": {
+        "text": "Да, да, мой! Быстрее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/callback.panic.ogg",
+        "duration_ms": 3077,
+        "bytes": 7288,
+        "sha256": "c4a83fb55f2a285ab515c2b74346a05e749c5cbcf795cd75c1efe627b9a0dcd5"
+      },
+      "name.calm": {
+        "text": "Соснина Ольга.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/name.calm.ogg",
+        "duration_ms": 1428,
+        "bytes": 3548,
+        "sha256": "103d492482fa6f169117174d6c9c6dbab7afa1ec4aa8e0a5cf6fd6974fec5c1f"
+      },
+      "name.panic": {
+        "text": "Ольга! Какая разница, как меня зовут?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/name.panic.ogg",
+        "duration_ms": 2694,
+        "bytes": 6618,
+        "sha256": "5dc8977e508722930526f31a08080f3e34ae6d3a3afe23364627343d78c8b1ed"
+      },
+      "what_happened.calm": {
+        "text": "Из-под двери соседней квартиры идёт густой дым, открытого огня я не вижу.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/what_happened.calm.ogg",
+        "duration_ms": 5329,
+        "bytes": 13034,
+        "sha256": "3711ed5cd693d9cccedbd67c49f1726403232595ff8ad6470628784840fae3a9"
+      },
+      "what_happened.panic": {
+        "text": "Дым везде, вообще ничего не видно, там что-то горит, не знаю что!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/what_happened.panic.ogg",
+        "duration_ms": 5457,
+        "bytes": 12868,
+        "sha256": "9cfe4dcb25a44184e5579d00120e60d8e4ba122ff196ac078a7c12f60352e804"
+      },
+      "since.calm": {
+        "text": "Минут пять назад почувствовала запах гари, а потом пошёл дым.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/since.calm.ogg",
+        "duration_ms": 4145,
+        "bytes": 10221,
+        "sha256": "a3d6711ad6bb8dd2e02627a6429a98c99732e2b7b152371ce3739935e283e327"
+      },
+      "since.panic": {
+        "text": "Не знаю! Недавно! Я не засекала!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/since.panic.ogg",
+        "duration_ms": 2879,
+        "bytes": 7073,
+        "sha256": "b268cde2244c7d94becb5395bedfebdb5591940767e7234489108b49607be533"
+      },
+      "victims.calm": {
+        "text": "Там живёт бабушка, Нина Петровна, она одна. На стук не отвечает.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/victims.calm.ogg",
+        "duration_ms": 4830,
+        "bytes": 11624,
+        "sha256": "2c09541a9f0e4de2cadfa1513361560849c2378d7eca3f0208b498925846d1c9"
+      },
+      "victims.panic": {
+        "text": "Там бабушка! Она не открывает! Совсем не отвечает!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/victims.panic.ogg",
+        "duration_ms": 3564,
+        "bytes": 8453,
+        "sha256": "e54a929464bc1eed40a94beccceecd5b51e8636e50b6eb00eb2298215d7c7d9f"
+      },
+      "self_safety.calm": {
+        "text": "Я у своей двери, у меня дыма пока немного.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/self_safety.calm.ogg",
+        "duration_ms": 3471,
+        "bytes": 8587,
+        "sha256": "00cb4e1bf18aa39ed9cce5053055609c95bba98605294ea41ef105cab3e4b269"
+      },
+      "self_safety.panic": {
+        "text": "Не знаю! Мне страшно тут стоять!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/self_safety.panic.ogg",
+        "duration_ms": 2601,
+        "bytes": 6333,
+        "sha256": "a253fc1661100053433450fba407be99d63bb984f59859eab0e0f10961da1cff"
+      },
+      "floor.calm": {
+        "text": "Второй подъезд, мы на пятом этаже.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/floor.calm.ogg",
+        "duration_ms": 2508,
+        "bytes": 6093,
+        "sha256": "bcb899dbc4c1c9a11e17289b103bb629679300aee58a118904d77a935bc25065"
+      },
+      "floor.panic": {
+        "text": "Пятый... кажется, пятый этаж, я не уверена!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/floor.panic.ogg",
+        "duration_ms": 3123,
+        "bytes": 7502,
+        "sha256": "2e7e4378ebd8f8944e795f0ee1594e27cc6808de70a4075fc5f157279065bce2"
+      },
+      "access.calm": {
+        "text": "Дверь в подъезд открыта, домофон не нужен, а квартира заперта изнутри.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/access.calm.ogg",
+        "duration_ms": 5747,
+        "bytes": 13742,
+        "sha256": "151ce082c34ee416aff789f26a38854f9a389fb62320c0ab277b3d9e748edfe5"
+      },
+      "access.panic": {
+        "text": "Подъезд открыт, а дверь в квартиру заперта, я не могу попасть внутрь!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/access.panic.ogg",
+        "duration_ms": 5364,
+        "bytes": 12293,
+        "sha256": "13432e54f47f455adb0bc0a23554b5f7278171ce653eabbdec9a0bf8af563eb3"
+      },
+      "gas.calm": {
+        "text": "У соседей обычная газовая плита, баллонов нет.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/gas.calm.ogg",
+        "duration_ms": 4087,
+        "bytes": 9899,
+        "sha256": "5aa0fc84ebb71e0cf3e3706fa0dbfc6d777451fa3e1208a2f25d8b0224d8b17f"
+      },
+      "gas.panic": {
+        "text": "Не знаю про газ, там вроде обычная плита, я не знаю точно!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/gas.panic.ogg",
+        "duration_ms": 4574,
+        "bytes": 11359,
+        "sha256": "f26665e9213cedc99b68eee2a96e708f8f0ae20ffdc489a74591353300e504b0"
+      },
+      "confirm.ok": {
+        "text": "Да, всё верно. Дубнинская, двенадцать, квартира сорок семь.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/confirm.ok.ogg",
+        "duration_ms": 5979,
+        "bytes": 13463,
+        "sha256": "5296739bb1738c75ee33d5206ad724c616f3a1c710d6e2029fd3cdece5cdb256"
+      },
+      "confirm.wrong_street": {
+        "text": "Нет-нет, не так! Дубнинская улица! Дубнинская!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/confirm.wrong_street.ogg",
+        "duration_ms": 4075,
+        "bytes": 10016,
+        "sha256": "9e6db1af7dbe3a8feea581e23f071e5cf1cadcfced01517cead1ad0ca271cd85"
+      },
+      "confirm.wrong_details": {
+        "text": "Нет... Дом двенадцать, квартира сорок семь. Запишите правильно.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/confirm.wrong_details.ogg",
+        "duration_ms": 4598,
+        "bytes": 11368,
+        "sha256": "e53403191c620794e6ca76a4a567053c8d9e6f1d0ce1c6a7d935468032bc8408"
+      },
+      "confirm.empty": {
+        "text": "Я же говорю: Дубнинская улица, дом двенадцать!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/confirm.empty.ogg",
+        "duration_ms": 4168,
+        "bytes": 10211,
+        "sha256": "b3fcf5704b049c25c61168ef1775d8d2fcbea2222d961c179922a697505e037d"
+      },
+      "confirm.panic": {
+        "text": "Да... наверное... я не знаю, быстрее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/confirm.panic.ogg",
+        "duration_ms": 2183,
+        "bytes": 5418,
+        "sha256": "7fec20fd6b6337b38fb6c3f505bd5936cd562b2e765f3c207755076add6030de"
+      },
+      "distractor.postcode": {
+        "text": "Индекс?! Я не знаю индекс! Приезжайте скорее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/distractor.postcode.ogg",
+        "duration_ms": 3680,
+        "bytes": 9016,
+        "sha256": "5316531e6fb8dde4bf92415ef4bea030fdc9cb471b2ec900e380b63ca5bb6dd1"
+      },
+      "distractor.home_phone": {
+        "text": "Зачем вам домашний?! Нет у меня!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/distractor.home_phone.ogg",
+        "duration_ms": 2264,
+        "bytes": 5474,
+        "sha256": "6c45fa1c1e1f9cbbc085c574f8bd89b1d27957d5da93a0fb916f2d4522cf60fd"
+      },
+      "distractor.called_fire": {
+        "text": "Я вам и звоню! Вы же пожарные?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/distractor.called_fire.ogg",
+        "duration_ms": 2612,
+        "bytes": 6585,
+        "sha256": "0afad4fad34b70ae0fde8c2add3613b74fe97f7eb6ccbd1712eced60688398c3"
+      },
+      "distractor.pets": {
+        "text": "Кошка у неё... Это сейчас важно?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/distractor.pets.ogg",
+        "duration_ms": 1788,
+        "bytes": 4559,
+        "sha256": "3c45cdc9ddb55a830974eaf1b415a05bab17b6ab3f5590a5ce11e51d3ee2f611"
+      },
+      "distractor.door_color": {
+        "text": "Коричневая... Какая разница, какого цвета?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/distractor.door_color.ogg",
+        "duration_ms": 3053,
+        "bytes": 7593,
+        "sha256": "be8a5f9ad42c3f973543463e2ab09b8328ad8b4f8bdfbc76654c919fd96b9466"
+      },
+      "hysteria.0": {
+        "text": "Я не знаю! Там дым! Сделайте что-нибудь!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/hysteria.0.ogg",
+        "duration_ms": 2995,
+        "bytes": 7481,
+        "sha256": "5207198d50ca88213ae59e20af31a258d8dc06ef0f70b11bb55d472c24f99963"
+      },
+      "hysteria.1": {
+        "text": "Какая разница?! Приезжайте быстрее, там человек!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/hysteria.1.ogg",
+        "duration_ms": 3796,
+        "bytes": 9159,
+        "sha256": "80b3131afb6ff9c628d6e81099c1e1d9a51c49de5d08907b7c138b6f78f0bd10"
+      },
+      "hysteria.2": {
+        "text": "Я не понимаю, что вы спрашиваете! Тут дым!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/hysteria.2.ogg",
+        "duration_ms": 2902,
+        "bytes": 7203,
+        "sha256": "450607f8011854af1f70b2285e0fbe02146ce0864a3b955f421389a37ce9e11c"
+      },
+      "calming": {
+        "text": "Я... хорошо... я пытаюсь. Там дым, понимаете?",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/calming.ogg",
+        "duration_ms": 3379,
+        "bytes": 8161,
+        "sha256": "07d78780b8e1134140c0e3b1be1c95c519f5253fb7a1833bcb8d438a3201e3ef"
+      },
+      "calmed": {
+        "text": "Да... хорошо. Я слушаю.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/calmed.ogg",
+        "duration_ms": 2136,
+        "bytes": 5392,
+        "sha256": "5b29723e97cb739e276dee662af4d43fe7f5b6d60d69f07103d47360ad49f00b"
+      },
+      "order": {
+        "text": "Как я могу успокоиться?! Там человек за дверью!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/order.ogg",
+        "duration_ms": 2902,
+        "bytes": 7395,
+        "sha256": "4b10de9fee8cdbac775bfd05f262274a47b075545742cf9177cd6f3bc9b02701"
+      },
+      "repeat": {
+        "text": "Я же уже сказала!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/repeat.ogg",
+        "duration_ms": 1265,
+        "bytes": 3294,
+        "sha256": "7a010d8548d6f8b2dc38e0574ec61bd79756bf8d6ea6cb132db9b3db7776ea88"
+      },
+      "not_understood": {
+        "text": "Что? Я не понимаю! Повторите!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/not_understood.ogg",
+        "duration_ms": 2566,
+        "bytes": 6258,
+        "sha256": "adacf1f49ee03925ba43f9ab97b66e8a6ac7ccf47d31c545464ea0a5e8ae5b75"
+      },
+      "irrelevant": {
+        "text": "При чём тут это? Помогите быстрее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/irrelevant.ogg",
+        "duration_ms": 2299,
+        "bytes": 5803,
+        "sha256": "0956fa6a79abe391119cb8e3b8df4fb6d5b92e434d5f29e959535d22e7e40211"
+      },
+      "hold": {
+        "text": "Да, я здесь.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/hold.ogg",
+        "duration_ms": 2113,
+        "bytes": 4865,
+        "sha256": "18cee4f321bef325fc63e9bcf92685caed534088917277847e04dc97a3402aed"
+      },
+      "pause.0": {
+        "text": "Алло?! Вы меня слышите?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/pause.0.ogg",
+        "duration_ms": 1823,
+        "bytes": 4563,
+        "sha256": "c926bb54c634274b5f1c00fe47088986c2bcbca7d369023ff1b3c5388b65089a"
+      },
+      "pause.1": {
+        "text": "Алло! Алло! Не бросайте трубку!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/pause.1.ogg",
+        "duration_ms": 2438,
+        "bytes": 5861,
+        "sha256": "6f8c469afd4489079d7e5dd9ddb1045bbf3b4ac9f2ae51826105d857f7e40f24"
+      },
+      "advice.leave": {
+        "text": "Хорошо. Я выйду на улицу и встречу пожарных.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/advice.leave.ogg",
+        "duration_ms": 3913,
+        "bytes": 9581,
+        "sha256": "a99743a377fee612f3855d6dc90b1ca34c544934d140bed68428d3e69d3f81d2"
+      },
+      "advice.smoke": {
+        "text": "Хорошо... закрываю лицо... спускаюсь по лестнице.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/advice.smoke.ogg",
+        "duration_ms": 2949,
+        "bytes": 7257,
+        "sha256": "8b7fed8665956ded8fb5873661ddc96a4df61006cae38d397023c799825a47d7"
+      },
+      "escalation": {
+        "text": "Ой... дым уже на лестнице! Мне тяжело дышать!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "fire_apartment_smoke/escalation.ogg",
+        "duration_ms": 2868,
+        "bytes": 7304,
+        "sha256": "ce30ac603b1cf94a116d40b36ab5434c82a5a19bf483694d9b92829bb1faeed5"
+      }
+    },
+    "heart_attack_home": {
+      "opening": {
+        "text": "Алло... скорая? Мужу плохо, за сердце держится, весь бледный...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/opening.ogg",
+        "duration_ms": 6002,
+        "bytes": 14664,
+        "sha256": "8493a995d46f244f9f528dbdb978bb09e0e2141d7e3c249fc15ec846c4cfe608"
+      },
+      "address.calm": {
+        "text": "Профсоюзная улица, дом сорок три, корпус один, квартира пятьдесят восемь.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/address.calm.ogg",
+        "duration_ms": 6920,
+        "bytes": 16382,
+        "sha256": "97928fe829dadcb7c3ec6610ce9177f7d36c7c67dc8c5c134a289d52338addf6"
+      },
+      "address.panic": {
+        "text": "Профсоюзная... сорок три... корпус... ой, не помню, первый вроде... быстрее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/address.panic.ogg",
+        "duration_ms": 5654,
+        "bytes": 13520,
+        "sha256": "be0a7a8158f1c523a5d1a7b8e4f3b3253f9681b76f3f754bc1defd08ef77387c"
+      },
+      "landmark.calm": {
+        "text": "Аптека у нас на первом этаже, деточка. И остановка напротив.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/landmark.calm.ogg",
+        "duration_ms": 5317,
+        "bytes": 12757,
+        "sha256": "336195f4827ef2e5fa14d84b1b4d442e633c96a8ed6b5893e0f1376fb2e3ae1c"
+      },
+      "landmark.panic": {
+        "text": "Аптека... рядом аптека... я не соображаю, деточка!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/landmark.panic.ogg",
+        "duration_ms": 3959,
+        "bytes": 9384,
+        "sha256": "e3d66b027c475fb289750140ea05c275ec8354569bcacb848ae65085be956f7c"
+      },
+      "callback.calm": {
+        "text": "Да, это мой мобильный, деточка.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/callback.calm.ogg",
+        "duration_ms": 4400,
+        "bytes": 9617,
+        "sha256": "c1d7e72eb172f83b943bd94945239c90166ac94d9960d5a90c4bf9c24cc15e68"
+      },
+      "callback.panic": {
+        "text": "Да, мой, мой... приезжайте!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/callback.panic.ogg",
+        "duration_ms": 2902,
+        "bytes": 6447,
+        "sha256": "1f4bd046939978306435e7f86d07194f1c5926b0a9a6eec56cf27d76922646bf"
+      },
+      "name.calm": {
+        "text": "Королёва Наталья Павловна.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/name.calm.ogg",
+        "duration_ms": 1974,
+        "bytes": 4840,
+        "sha256": "91c515607cb311c9db760072db2fb8403fc444c553d00991ce9ed8e0c076729e"
+      },
+      "name.panic": {
+        "text": "Наталья Павловна... Ой, какая разница, ему плохо!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/name.panic.ogg",
+        "duration_ms": 4702,
+        "bytes": 11375,
+        "sha256": "c0d0f4fb4f5787fd9e85f11ef0ef9fef249f3433fac9b997098975583c53627f"
+      },
+      "what_happened.calm": {
+        "text": "Давит в груди уже минут двадцать, отдаёт в левую руку.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/what_happened.calm.ogg",
+        "duration_ms": 5271,
+        "bytes": 12838,
+        "sha256": "4c2da7be4e8a7893fe2fa9636293df5bacf0c4dee2be2f1245a171cecb75f5e7"
+      },
+      "what_happened.panic": {
+        "text": "Держится за грудь, стонет... я не понимаю, что с ним!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/what_happened.panic.ogg",
+        "duration_ms": 3796,
+        "bytes": 9708,
+        "sha256": "3c2d774ac329903c07579161e5aeba6524c5e32726553ba5f3b3f45320763550"
+      },
+      "age.calm": {
+        "text": "Ему семьдесят четыре года.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/age.calm.ogg",
+        "duration_ms": 2241,
+        "bytes": 5781,
+        "sha256": "f6b8ba17704fa9757a35f7910612639b1db2e62c88bd6f3214f46d82be50652a"
+      },
+      "age.panic": {
+        "text": "Под восемьдесят... какая разница, приезжайте скорее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/age.panic.ogg",
+        "duration_ms": 3715,
+        "bytes": 9171,
+        "sha256": "b9e146867b426c4d34df0e9d0f5e2caf02c942de6f7ab96f90db2e86a05da0fa"
+      },
+      "consciousness.calm": {
+        "text": "В сознании, отвечает мне, дышит часто.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/consciousness.calm.ogg",
+        "duration_ms": 3715,
+        "bytes": 8951,
+        "sha256": "cfd9877b355b2595c732fd8f491439f128b0b3b43c3bc9c4286cf23d6d289e8b"
+      },
+      "consciousness.panic": {
+        "text": "Он то отвечает, то глаза закрывает... я боюсь, что он отключится!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/consciousness.panic.ogg",
+        "duration_ms": 4830,
+        "bytes": 11748,
+        "sha256": "132ca9a873298ebf56d28c45703809ed43a86fbf535edba2339c6f091bea5195"
+      },
+      "alone.calm": {
+        "text": "Одна я, деточка. Соседку могу позвать, она встретит.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/alone.calm.ogg",
+        "duration_ms": 5213,
+        "bytes": 12224,
+        "sha256": "226d557f5b072978a9299bc1adc09bea9184f770a84683059befbd590709c73d"
+      },
+      "alone.panic": {
+        "text": "Одна... одна я! Что же мне делать?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/alone.panic.ogg",
+        "duration_ms": 2473,
+        "bytes": 6239,
+        "sha256": "31429553bfde95c285bdda27214b5db1bec38e76f90cd89897f98bf21b50ba1a"
+      },
+      "access.calm": {
+        "text": "Третий подъезд, седьмой этаж, код домофона пятьдесят восемь. Дверь я открою.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/access.calm.ogg",
+        "duration_ms": 6618,
+        "bytes": 16221,
+        "sha256": "b5f99f939166cf09bdd8693c71a3e7626f4a72d4e60e8a93282fc4f180be5bf3"
+      },
+      "access.panic": {
+        "text": "Подъезд третий... этаж седьмой... код не помню... я выйду встречу!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/access.panic.ogg",
+        "duration_ms": 4203,
+        "bytes": 10421,
+        "sha256": "f12d1a1c093c8ee67cc0352fb3dac87f60804f138a959798a3a945512adbfa36"
+      },
+      "lift.calm": {
+        "text": "Работает, деточка. Есть и большой, грузовой.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/lift.calm.ogg",
+        "duration_ms": 4934,
+        "bytes": 11749,
+        "sha256": "1705eab85413b75eb7012bfa9d0843743704a01bae07c73a788d831303bf863e"
+      },
+      "lift.panic": {
+        "text": "Не знаю... вроде работает... быстрее!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/lift.panic.ogg",
+        "duration_ms": 2229,
+        "bytes": 5626,
+        "sha256": "2310ada890ddf3d9aac3386aff6da6a899fbab248b19678d016fa2fa8a596b0e"
+      },
+      "confirm.ok": {
+        "text": "Да, да, деточка, всё правильно. Сорок три, корпус один, квартира пятьдесят восемь.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/confirm.ok.ogg",
+        "duration_ms": 11041,
+        "bytes": 23474,
+        "sha256": "de1515dac09be66bb0f10aa9a305e895515df3034f521eb49358ddf873aba4af"
+      },
+      "confirm.wrong_street": {
+        "text": "Нет-нет... Профсоюзная улица, деточка. Профсоюзная.",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/confirm.wrong_street.ogg",
+        "duration_ms": 4481,
+        "bytes": 11024,
+        "sha256": "323675406a5d644cf98239e26c26b2217608b1545c6c2df27254e61d6cdadd5e"
+      },
+      "confirm.wrong_details": {
+        "text": "Нет... дом сорок три, корпус один, квартира пятьдесят восемь. Запишите, деточка.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/confirm.wrong_details.ogg",
+        "duration_ms": 7616,
+        "bytes": 17747,
+        "sha256": "b36e0112106ec0d6a9d9d4c266643962a02e800395ac12501b4b623285216d4e"
+      },
+      "confirm.empty": {
+        "text": "Я же говорю... Профсоюзная, сорок три, корпус один...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/confirm.empty.ogg",
+        "duration_ms": 4377,
+        "bytes": 10795,
+        "sha256": "dd66be38c3c0a21bfe89d80cdd6914526dd0484d7af45e93c92aafb42751a488"
+      },
+      "confirm.panic": {
+        "text": "Да... наверное, да... я уже ничего не соображаю...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/confirm.panic.ogg",
+        "duration_ms": 2844,
+        "bytes": 7072,
+        "sha256": "b076453aec22f5e0a9dbaf6917200a9127fdc32f075ab081dff0b95add3a34fd"
+      },
+      "distractor.registration": {
+        "text": "Какая прописка, деточка?! Ему плохо!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/distractor.registration.ogg",
+        "duration_ms": 3750,
+        "bytes": 8981,
+        "sha256": "40b097c6213ce57ee1ae639157809d7bb6607702ada29b9388a9fe75b8fba9aa"
+      },
+      "distractor.policy": {
+        "text": "Полис? Ой... я не знаю, где он лежит... Ему плохо!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/distractor.policy.ogg",
+        "duration_ms": 4098,
+        "bytes": 10145,
+        "sha256": "c772fc827660b9a261552ea5d44c50ca2817e3f9f3339db02ed13d82eb68f858"
+      },
+      "distractor.flu_shot": {
+        "text": "При чём тут прививка, деточка?! У него сердце!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/distractor.flu_shot.ogg",
+        "duration_ms": 3843,
+        "bytes": 9421,
+        "sha256": "21c5e5b2450058fc7a5aa536eb2fe07a232124baa407b8989bb1b1f93e20b644"
+      },
+      "distractor.smoking": {
+        "text": "Курил раньше... Зачем это сейчас?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/distractor.smoking.ogg",
+        "duration_ms": 2125,
+        "bytes": 5448,
+        "sha256": "f0edf843e5f8efd93d413ea007f654b4f0d59a3784398887e3dbbb22dba112f3"
+      },
+      "distractor.district_doctor": {
+        "text": "Участкового? Не помню я, деточка... Приезжайте!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/distractor.district_doctor.ogg",
+        "duration_ms": 4029,
+        "bytes": 9977,
+        "sha256": "d0c078ce0982c5a5759ae3fdaf6890290d9dad587cb828370ba81f8a677c1215"
+      },
+      "hysteria.0": {
+        "text": "Ой, господи... я не знаю... приезжайте...",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "heart_attack_home/hysteria.0.ogg",
+        "duration_ms": 2914,
+        "bytes": 7231,
+        "sha256": "995057a72159bb264601e6ef104a404038c3fcf99eda17de00ab993bc5612e50"
+      },
+      "hysteria.1": {
+        "text": "Что? Я не понимаю... ему плохо!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "heart_attack_home/hysteria.1.ogg",
+        "duration_ms": 2264,
+        "bytes": 5828,
+        "sha256": "6ef758f0f596dd405cbf040cde700cd013974f1659bc6176a1e551be104a64b2"
+      },
+      "hysteria.2": {
+        "text": "Деточка, быстрее, ему совсем плохо!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "heart_attack_home/hysteria.2.ogg",
+        "duration_ms": 3692,
+        "bytes": 8986,
+        "sha256": "89122c4fef387086554eb52c48d5cf9c7d37bc85dd64e4460458099aa3a8977b"
+      },
+      "calming": {
+        "text": "Хорошо... хорошо, деточка... я слушаю.",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/calming.ogg",
+        "duration_ms": 2670,
+        "bytes": 6771,
+        "sha256": "cb2c30ddb5be3ca61b61d528b75f5052dfaba377d8bdaa446e7eb3cf0eaf54e8"
+      },
+      "calmed": {
+        "text": "Да, да... я слушаю вас.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/calmed.ogg",
+        "duration_ms": 3483,
+        "bytes": 7716,
+        "sha256": "30f1dbb34fee953226215461ee871ed909da21492a4d34e53be1a6bcf0c0eaad"
+      },
+      "order": {
+        "text": "Как же мне успокоиться, ему же плохо!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "heart_attack_home/order.ogg",
+        "duration_ms": 2752,
+        "bytes": 7010,
+        "sha256": "fd27b11b430e739558bf1b93a9d047bcfd52dfae614670eea098716b5ee477da"
+      },
+      "repeat": {
+        "text": "Я же сказала уже, деточка...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/repeat.ogg",
+        "duration_ms": 2485,
+        "bytes": 6121,
+        "sha256": "1bbd2e074b318ed12877c0f26b955d838b47694f04f38955dcb0d25b2226510e"
+      },
+      "not_understood": {
+        "text": "Что? Повторите, я плохо слышу...",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/not_understood.ogg",
+        "duration_ms": 2879,
+        "bytes": 7104,
+        "sha256": "4f9587478afea107251ad41d0b2b0e8e20c180f7180644ff67e86ff805fc63f2"
+      },
+      "irrelevant": {
+        "text": "Зачем это? Ему плохо, приезжайте!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/irrelevant.ogg",
+        "duration_ms": 4145,
+        "bytes": 9900,
+        "sha256": "76e96f24bc90bb284307de892f50e7ab1a61b4e8f1b9c6827fb40adca1cdd14b"
+      },
+      "hold": {
+        "text": "Да, я жду, жду.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/hold.ogg",
+        "duration_ms": 2902,
+        "bytes": 6726,
+        "sha256": "446085167be7262b6132bbf6ba7feba1434cbba7d6b0924a47fa372787de3002"
+      },
+      "pause.0": {
+        "text": "Алло? Вы тут? Деточка?",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/pause.0.ogg",
+        "duration_ms": 2345,
+        "bytes": 5644,
+        "sha256": "02ac12b0dfd76653cbb7f05703bdc28bfe7d3f627e69b51878dc2f2f713e23e5"
+      },
+      "pause.1": {
+        "text": "Алло! Не слышу вас! Алло!",
+        "style": "hyst",
+        "voice": "irina",
+        "file": "heart_attack_home/pause.1.ogg",
+        "duration_ms": 2438,
+        "bytes": 6154,
+        "sha256": "7bd5edf16df8646b99f6b8c20212ce41352d178b3c8563840ff8e96bb93ef79a"
+      },
+      "advice.position": {
+        "text": "Хорошо... усадила... дверь открою.",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/advice.position.ogg",
+        "duration_ms": 1997,
+        "bytes": 4933,
+        "sha256": "75445d0031aee362b7824d246bda75c392a33bce69985935fbed45286aff0d17"
+      },
+      "advice.breathing": {
+        "text": "Дышит... дышит! Глаза открыл, слава богу...",
+        "style": "calm",
+        "voice": "irina",
+        "file": "heart_attack_home/advice.breathing.ogg",
+        "duration_ms": 3901,
+        "bytes": 9321,
+        "sha256": "20d1f2661d73a6178c3230c4f6fe04084d17fbf057e846a1277dcdb32d2488e1"
+      },
+      "escalation": {
+        "text": "Ой... он глаза закрыл и не отвечает! Что делать?!",
+        "style": "panic",
+        "voice": "irina",
+        "file": "heart_attack_home/escalation.ogg",
+        "duration_ms": 3924,
+        "bytes": 9446,
+        "sha256": "31b89da2a07883029f145ee7c81d343614fa311f8dc8abddac40a01885bb760a"
+      }
+    }
+  },
+  "backgrounds": {
+    "stairwell_alarm": {
+      "file": "background/stairwell_alarm.ogg",
+      "bytes": 33785,
+      "sha256": "acaf86beb55e00d10fe0ca92ac818596be35e0ad68e5201cc6559fbe8a4b2211"
+    },
+    "street": {
+      "file": "background/street.ogg",
+      "bytes": 35830,
+      "sha256": "8058b3bcd9b1c4299b12564160c7094b448e6e8fb78275869db8b61dbb01e359"
+    },
+    "apartment": {
+      "file": "background/apartment.ogg",
+      "bytes": 27364,
+      "sha256": "de12d8b9ce8ae6a06323b3019cc204fc1355265614112295afbca335ba455b3c"
+    },
+    "lift": {
+      "file": "background/lift.ogg",
+      "bytes": 21603,
+      "sha256": "a3a07fa2b8322f980ac696db5b9795ed775a9c6a797abfd487d43dfa8da795e1"
+    }
+  }
+}

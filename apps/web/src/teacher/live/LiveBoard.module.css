@@ -1,0 +1,165 @@
+/* Live-доска преподавателя. Оригинала у этого экрана нет, поэтому здесь
+   действует наша простота: подписи словами, крупные числа, порядок плиток
+   постоянный — преподаватель знает класс по номерам АРМ.
+
+   Три уровня внимания: спокойно, «скоро» (последние секунды норматива) и
+   «просрочено». Зовёт второй, а не третий: после провала помогать поздно. */
+
+.board {
+  padding: var(--space-3);
+  /* Янтарь для «скоро» снят с метки ЧП на arm_dds/06.png: в палитре АРМ
+     этот цвет уже есть, а в tokens.css его пока нет. Красный до провала
+     нагнетал бы, синий занят состоянием «в работе».
+     Капитану: кандидат в shared/tokens.css, если понадобится другим зонам. */
+  --color-warn: #e0a33e;
+  --color-warn-bg: #fdf6e8;
+  --color-warn-text: #8a5a12;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* Длительность занятия — рядом с названием, моноширинно, чтобы цифры не прыгали. */
+.clock {
+  font-variant-numeric: tabular-nums;
+}
+
+.calm {
+  opacity: 0.7;
+}
+
+.soonSeats {
+  color: var(--color-warn-text);
+  font-weight: bold;
+}
+
+.overdueSeats {
+  color: var(--color-danger);
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-2);
+}
+
+/* Фиксированные строки: подписи не прыгают, доска сканируется взглядом. */
+.tile {
+  display: grid;
+  grid-template-rows: auto auto auto 34px auto;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-border);
+}
+
+.busy {
+  border-left-color: var(--color-active);
+}
+
+.soon {
+  border-left-color: var(--color-warn);
+  background: var(--color-warn-bg);
+}
+
+.overdue {
+  border-left-color: var(--color-danger);
+}
+
+/* Свободные и отсутствующие не должны весить столько же, сколько рабочие. */
+.quiet {
+  background: transparent;
+  border-color: var(--color-border);
+  border-left-color: transparent;
+  color: var(--color-text);
+  opacity: 0.45;
+}
+
+.seat {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.number {
+  font-size: 22px;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.name {
+  font-size: 15px;
+}
+
+.who {
+  opacity: 0.7;
+}
+
+.phase {
+  font-weight: bold;
+}
+
+/* Ряд таймера фиксирован по высоте, поэтому строка не имеет права
+   переноситься: перенос выталкивает её на текст происшествия ниже. */
+.left {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.leftWord {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.leftTime {
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+}
+
+.warn {
+  color: var(--color-warn-text);
+}
+
+.late {
+  color: var(--color-danger);
+}
+
+.what {
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.more {
+  color: var(--color-active);
+}
+
+.empty {
+  padding: var(--space-4);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+/* Бригада звонит, а обучаемый не отвечает: преподавателю — куда подойти. */
+.calling {
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: bold;
+}

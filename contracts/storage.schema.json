@@ -1,0 +1,879 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/storage.schema.json",
+  "$defs": {
+    "Classifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "incident_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "group_no": {
+                "type": "string"
+              },
+              "group_name": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "sign1": {
+                "type": "string"
+              },
+              "sign2": {
+                "type": "string"
+              },
+              "sign3": {
+                "type": "string"
+              },
+              "scenario_code": {
+                "type": "string"
+              },
+              "main_service_code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "group_no",
+              "group_name",
+              "name",
+              "sign1",
+              "sign2",
+              "sign3",
+              "scenario_code",
+              "main_service_code"
+            ]
+          }
+        },
+        "routing_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "incident_type_code": {
+                "type": "string"
+              },
+              "service_id": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "const": "classifier_column"
+                  },
+                  "column": {
+                    "type": "integer"
+                  },
+                  "trigger": {
+                    "description": "Стабильное условие колонки: номер колонки различается между 046_11 и 046_24.",
+                    "enum": [
+                      "default",
+                      "no_access",
+                      "offense",
+                      "victims",
+                      "victims_off_site",
+                      "gasification"
+                    ]
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "column",
+                  "trigger",
+                  "label"
+                ]
+              },
+              "payload": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "incident_type_code",
+              "service_id",
+              "condition",
+              "payload"
+            ]
+          }
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "phone_ext": {
+                "type": "string",
+                "pattern": "^[0-9]{3}$"
+              },
+              "voice_profile": {
+                "type": "string"
+              },
+              "is_active": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "code",
+              "name",
+              "category",
+              "phone_ext",
+              "voice_profile",
+              "is_active"
+            ]
+          }
+        }
+      },
+      "required": [
+        "version",
+        "source",
+        "incident_types",
+        "routing_rules",
+        "services"
+      ]
+    },
+    "RoutingCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "classifier_column"
+        },
+        "column": {
+          "type": "integer"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "column",
+        "label"
+      ]
+    },
+    "IncidentRaw": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "group_no": {
+          "type": "string"
+        },
+        "group_name": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "sign1": {
+          "type": "string"
+        },
+        "sign2": {
+          "type": "string"
+        },
+        "sign3": {
+          "type": "string"
+        },
+        "scenario_code": {
+          "type": "string"
+        },
+        "main_service_code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "group_no",
+        "group_name",
+        "name",
+        "sign1",
+        "sign2",
+        "sign3",
+        "scenario_code",
+        "main_service_code"
+      ]
+    },
+    "Pack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "approved",
+            "retired"
+          ]
+        },
+        "origin": {
+          "type": "string"
+        },
+        "scenario_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status",
+        "origin",
+        "scenario_ids"
+      ]
+    },
+    "VoiceManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "ready"
+          ]
+        },
+        "phrases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "files": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "phrase_id": {
+                      "enum": [
+                        "listen",
+                        "accepted"
+                      ]
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "sha256": {
+                      "type": "string"
+                    },
+                    "duration_ms": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "phrase_id",
+                    "path",
+                    "sha256",
+                    "duration_ms"
+                  ]
+                }
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "ready"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "files",
+              "status"
+            ]
+          }
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "phrases",
+        "profiles"
+      ]
+    },
+    "Street": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "okrug": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "okrug",
+        "district",
+        "source"
+      ]
+    },
+    "AuditSnapshot": {
+      "oneOf": [
+        {
+          "$ref": "scenario.schema.json"
+        },
+        {
+          "$ref": "urn:openapi#/components/schemas/Settings"
+        },
+        {
+          "$ref": "urn:openapi#/components/schemas/Session"
+        },
+        {
+          "$ref": "urn:openapi#/components/schemas/Assignment"
+        },
+        {
+          "$ref": "urn:openapi#/components/schemas/Evaluation"
+        },
+        {
+          "$ref": "urn:openapi#/components/schemas/Job"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "card_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "client_event_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "card_id",
+            "client_event_id",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10485760
+            }
+          },
+          "required": [
+            "call_id",
+            "size"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "status_code": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "status_code"
+          ]
+        }
+      ]
+    },
+    "Scores": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "CriticalFlags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "Explanations": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/$defs/CriterionExplanation"
+          }
+        ]
+      }
+    },
+    "CriterionExplanation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "explanation": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "explanation",
+        "evidence"
+      ]
+    },
+    "ModelInfo": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "RatingHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "card_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "theta": {
+            "type": "number"
+          },
+          "theta_var": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "card_id",
+          "theta",
+          "theta_var"
+        ]
+      }
+    },
+    "JobPayload": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pack_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "count": {
+              "type": "integer"
+            },
+            "level": {
+              "type": "integer"
+            },
+            "service_id": {
+              "type": "string"
+            },
+            "seed": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "pack_id",
+            "count",
+            "level",
+            "service_id",
+            "seed"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "card_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "evaluation_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "card_id",
+            "evaluation_id"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "session_id"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "call_id"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "voice_profile": {
+              "type": "string"
+            },
+            "phrase_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "voice_profile",
+            "phrase_id"
+          ]
+        }
+      ]
+    },
+    "JobResult": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "scenario_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          },
+          "required": [
+            "scenario_ids"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "evaluation_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "version": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "evaluation_id",
+            "version"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "weakest_criteria": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "explanation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "weakest_criteria",
+            "explanation"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "transcript": {
+              "type": "string"
+            },
+            "provider": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "call_id",
+            "transcript",
+            "provider"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "relative_path": {
+              "type": "string"
+            },
+            "duration_ms": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "relative_path",
+            "duration_ms"
+          ]
+        }
+      ]
+    },
+    "Workstations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "number": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 23
+          }
+        },
+        "required": [
+          "id",
+          "number"
+        ]
+      }
+    },
+    "C01TimingPolicy": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/TimingPolicy",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01ClockSample": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/ClockSample",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01TrainingPlan": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/TrainingPlan",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01InformationEvidence": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/InformationEvidence",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01EvaluationAnalysis": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/EvaluationAnalysis",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01PredictionObservation": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/PredictionObservation",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01Provenance": {
+      "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/ContentProvenance",
+      "description": "План хранения C-02…C-07; не используется в текущей БД."
+    },
+    "C01GenerateJobPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "План C-05: request_id копируется из input.options.request_id для generate или input.request_id для revise. Равенство проверяет API/worker; независимый ключ worker не создаётся. В текущую очередь этот payload не передаётся.",
+      "properties": {
+        "contract_version": {
+          "const": 2,
+          "type": "integer"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "generate",
+            "revise"
+          ]
+        },
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "pack_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scenario_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expected_version": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "input": {
+          "oneOf": [
+            {
+              "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/ScenarioRevisionInput"
+            },
+            {
+              "$ref": "https://arm112.local/contracts/openapi.json#/components/schemas/GenerateInput",
+              "required": [
+                "options"
+              ],
+              "properties": {
+                "options": {
+                  "$ref": "https://arm112.local/contracts/c01.schema.json#/$defs/GenerateOptions"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "contract_version",
+        "operation",
+        "request_id",
+        "pack_id",
+        "scenario_id",
+        "expected_version",
+        "input"
+      ]
+    },
+    "C01ContentJobResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "pack_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "scenario_ids",
+        "pack_id",
+        "warnings"
+      ]
+    }
+  }
+}

@@ -1,0 +1,211 @@
+/* Реплей занятия. Экрана-оригинала нет, поэтому здесь наша простота:
+   скраббер во всю ширину, подписи словами, «к ошибке» — крупная кнопка. */
+
+.replay {
+  padding: var(--space-3);
+  display: grid;
+  gap: var(--space-3);
+  --color-warn-text: #8a5a12;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.time {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  min-width: 120px;
+}
+
+/* Шкала показывает, где ошибки, а не заставляет искать их вслепую. */
+.track {
+  position: relative;
+  padding-bottom: 14px;
+}
+
+.scrubber {
+  width: 100%;
+  height: 32px;
+  display: block;
+}
+
+.marks {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 12px;
+}
+
+.mark {
+  position: absolute;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.mark::before {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 12px;
+  margin: 0 auto;
+  background: var(--color-danger);
+}
+
+.jump {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.jump:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.panes {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  max-height: 480px;
+  overflow: auto;
+}
+
+.log button {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid transparent;
+  padding: var(--space-2);
+}
+
+.at {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+.problem {
+  border-left-color: var(--color-danger);
+}
+
+.problem .title {
+  color: var(--color-danger);
+  font-weight: bold;
+}
+
+.now {
+  outline: 2px solid var(--color-active);
+  outline-offset: -2px;
+}
+
+.detail {
+  grid-column: 2;
+  opacity: 0.8;
+}
+
+.card {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.card h3,
+.verdict h3 {
+  margin: 0;
+  font-size: var(--font-size);
+}
+
+.status {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: var(--space-2);
+}
+
+.label {
+  opacity: 0.7;
+}
+
+.verdict {
+  margin-top: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.criteria {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.criterion {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.lost {
+  color: var(--color-danger);
+}
+
+.score {
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+
+.why {
+  grid-column: 1 / -1;
+  opacity: 0.8;
+}
+
+.empty {
+  padding: var(--space-4);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.reports {
+  margin: 0;
+  padding-left: var(--space-3);
+}

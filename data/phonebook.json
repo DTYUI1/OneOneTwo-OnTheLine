@@ -1,0 +1,56 @@
+[
+  {
+    "id": "101",
+    "code": "101",
+    "name": "Служба 101",
+    "category": "fire",
+    "phone_ext": "101",
+    "voice_profile": "voice-1",
+    "is_active": true
+  },
+  {
+    "id": "102",
+    "code": "102",
+    "name": "Служба 102",
+    "category": "police",
+    "phone_ext": "102",
+    "voice_profile": "voice-2",
+    "is_active": true
+  },
+  {
+    "id": "103",
+    "code": "103",
+    "name": "Скорая помощь",
+    "category": "medical",
+    "phone_ext": "103",
+    "voice_profile": "voice-3",
+    "is_active": true
+  },
+  {
+    "id": "104",
+    "code": "104",
+    "name": "Мосгаз",
+    "category": "gas",
+    "phone_ext": "104",
+    "voice_profile": "voice-4",
+    "is_active": true
+  },
+  {
+    "id": "GKH",
+    "code": "GKH",
+    "name": "ЖКХ",
+    "category": "utilities",
+    "phone_ext": "105",
+    "voice_profile": "voice-1",
+    "is_active": true
+  },
+  {
+    "id": "MOSLIFT",
+    "code": "MOSLIFT",
+    "name": "Мослифт",
+    "category": "lift",
+    "phone_ext": "106",
+    "voice_profile": "voice-2",
+    "is_active": true
+  }
+]

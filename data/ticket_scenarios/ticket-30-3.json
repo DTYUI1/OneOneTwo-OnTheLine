@@ -1,0 +1,71 @@
+{
+  "id": "1a60370f-13d0-541b-9af9-15ded6fdce8c",
+  "version": 1,
+  "level": 3,
+  "weight": 5,
+  "incident_type_code": "13020300",
+  "target_service_id": "104",
+  "card": {
+    "number": "73030006",
+    "incident_type_code": "13020300",
+    "caller_name": "Соколова Вера Ивановна",
+    "phone_aon": "+79000003003",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "поселение Вороновское, посёлок ЛМС, микрорайон Солнечный",
+      "house": "20",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "В частном доме запах газа от трубы на вводе в дом, слышен шум в трубе. Газ магистральный. Скорая не требуется. Новая Москва.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Запах бытового газа в частном доме",
+    "service_ids": [
+      "101",
+      "104"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "поселение Вороновское, посёлок ЛМС, микрорайон Солнечный",
+      "house": "20",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Запах газа и шум в трубе на вводе в частный дом, газ магистральный. Москва, поселение Вороновское, посёлок ЛМС, микрорайон Солнечный, д. 20. Направлена аварийная бригада."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 30, задача 3 (стр. 30 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

@@ -1,0 +1,14 @@
+# Интеграция с main: отдельный проект arm112-c01-publish, новые volumes.
+services:
+  # Миграции тем же образом, что и API: иначе берётся arm112-api:0.1.0 чужого стенда.
+  migrate:
+    image: arm112-api:c01-publish
+  api:
+    image: arm112-api:c01-publish
+  worker:
+    image: arm112-api:c01-publish
+  certs:
+    image: arm112-api:c01-publish
+  web:
+    image: arm112-web:c01-publish
+    ports: !override ['127.0.0.1:43080:80', '127.0.0.1:43443:443']

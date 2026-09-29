@@ -1,0 +1,25 @@
+# Изолированный локальный стенд C-01; тестовые значения не используются в общем проекте.
+services:
+  db:
+    environment:
+      POSTGRES_DB: arm112
+      POSTGRES_USER: arm112
+      POSTGRES_PASSWORD: c01-isolated-only
+  api:
+    image: arm112-api:c01-check
+    environment:
+      API_MODE: database
+      DATABASE_URL: postgresql+asyncpg://arm112:c01-isolated-only@db:5432/arm112
+      JWT_SECRET: c01-isolated-test-secret-at-least-32-bytes
+      DEMO_PASSWORD: demo-local
+      AI_PROVIDER: 'off'
+  worker:
+    image: arm112-api:c01-check
+    environment:
+      DATABASE_URL: postgresql+asyncpg://arm112:c01-isolated-only@db:5432/arm112
+      AI_PROVIDER: 'off'
+  certs:
+    image: arm112-api:c01-check
+  web:
+    image: arm112-web:c01-check
+    ports: !override ['127.0.0.1:38080:80', '127.0.0.1:38443:443']

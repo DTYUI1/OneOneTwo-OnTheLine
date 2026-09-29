@@ -1,0 +1,71 @@
+{
+  "id": "915fc30a-fd6e-50c2-9dee-ca8863158b9b",
+  "version": 1,
+  "level": 3,
+  "weight": 6,
+  "incident_type_code": "2020100",
+  "target_service_id": "102",
+  "card": {
+    "number": "73120007",
+    "incident_type_code": "2020100",
+    "caller_name": "Иванова Елена Сергеевна",
+    "phone_aon": "+79000003102",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Рублёвское шоссе",
+      "house": "",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Наезд на пешехода: мужчина в сознании, травма головы. С места скрылся ВАЗ-2110 красного цвета, номер известен частично (? 128 ?? 177), уехал в сторону области. Напротив ТЦ «Европарк».",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "ДТП наезд на пешехода",
+    "service_ids": [
+      "102",
+      "103"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Рублёвское шоссе",
+      "house": "",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Наезд на пешехода, пострадавший в сознании, травма головы; ВАЗ-2110 красный, номер частично ? 128 ?? 177, скрылся в сторону области. Москва, Рублёвское шоссе, напротив ТЦ «Европарк». Направлен наряд."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 31, задача 2 (стр. 31 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

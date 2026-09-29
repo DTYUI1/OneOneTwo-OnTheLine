@@ -1,0 +1,48 @@
+/* Подсказка к кнопке «?»: плоская плашка цвета активного элемента АРМ со стрелкой
+   вверх. Щелчки проходят насквозь — она ничего не закрывает для работы. */
+.tip {
+  position: fixed;
+  z-index: 1000;
+  display: grid;
+  gap: var(--space-1);
+  width: min(300px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: var(--space-3);
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  line-height: 1.45;
+  pointer-events: none;
+  animation: appear 0.25s ease-out;
+}
+
+.arrow {
+  position: absolute;
+  top: -10px;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--color-active);
+  border-left: 10px solid transparent;
+}
+
+.title {
+  font-size: 16px;
+}
+
+.note {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tip {
+    animation: none;
+  }
+}

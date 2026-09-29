@@ -1,0 +1,19 @@
+{
+  "reaction_normative_s": 30,
+  "handling_normative_s": 180,
+  "critical_cap": 0.5,
+  "weights": {
+    "reaction_time": 1,
+    "handling_time": 1,
+    "status_flow": 1,
+    "routing": 1,
+    "required_fields": 1,
+    "address": 1,
+    "call": 1,
+    "spelling": 0.5,
+    "comment_keywords": 1
+  },
+  "parallel_cards": 1,
+  "hints_level": 0,
+  "spelling_hints": false
+}

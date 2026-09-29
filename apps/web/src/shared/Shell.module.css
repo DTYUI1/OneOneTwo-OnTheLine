@@ -1,0 +1,72 @@
+.shell {
+  min-height: 100vh;
+}
+.header {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-3);
+  color: var(--color-on-dark);
+  background: var(--color-header);
+}
+.header time {
+  margin-left: auto;
+}
+.header a {
+  color: var(--color-on-dark);
+}
+.header > * {
+  min-width: 0;
+}
+/* Ширина — как у кнопки «?» (Help.module.css, .trigger). */
+.helpSlot {
+  display: flex;
+  flex: 0 0 36px;
+}
+.header button {
+  height: 36px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+@media (max-width: 600px) {
+  .header {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+  .header > span:first-child {
+    flex-basis: 100%;
+  }
+  .header > span {
+    overflow-wrap: anywhere;
+  }
+  .header time {
+    margin-left: auto;
+  }
+  .header a {
+    margin-right: auto;
+  }
+}
+/* Сбой виден сразу под шапкой: занятие без worker или БД молча не работает. */
+.outage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-on-dark);
+  background: var(--color-danger);
+}
+.login {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+}
+.login form {
+  display: grid;
+  gap: var(--space-3);
+  width: min(360px, calc(100vw - 32px));
+}
+.login label {
+  display: grid;
+  gap: var(--space-2);
+}

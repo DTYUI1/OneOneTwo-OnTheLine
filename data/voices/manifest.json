@@ -1,0 +1,83 @@
+{
+  "version": 2,
+  "status": "ready",
+  "phrases": [
+    "Слушаю вас",
+    "Я вас понял, информация принята",
+    "Я вас поняла, информация принята"
+  ],
+  "profiles": [
+    {
+      "id": "voice-1",
+      "files": [
+        {
+          "phrase_id": "accepted",
+          "path": "voices/denis/accepted.ogg",
+          "sha256": "86a568d90c2a86f40db6eb795491552ba44780e0388e81ff60eb5ea4a53d8276",
+          "duration_ms": 2368
+        },
+        {
+          "phrase_id": "listen",
+          "path": "voices/denis/listen.ogg",
+          "sha256": "6d671b62281e44f526405a79ceb2bcb7335e2ced48efed30c5b105ef656efd8e",
+          "duration_ms": 929
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "voice-2",
+      "files": [
+        {
+          "phrase_id": "accepted",
+          "path": "voices/irina/accepted.ogg",
+          "sha256": "b54f999bf0ca045efa6ddde39a88bc427e1a9f4aa2f06a447419a514fd339818",
+          "duration_ms": 2740
+        },
+        {
+          "phrase_id": "listen",
+          "path": "voices/irina/listen.ogg",
+          "sha256": "78686356da40f7c6aa1471f74f15eaf26934640653347fbacc0ada56e5570baa",
+          "duration_ms": 1207
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "voice-3",
+      "files": [
+        {
+          "phrase_id": "accepted",
+          "path": "voices/dmitri/accepted.ogg",
+          "sha256": "44b00b58f18fd21f64d50a5a75fae0a15aa8726ab23adc9b3fcabd0d292094ee",
+          "duration_ms": 2055
+        },
+        {
+          "phrase_id": "listen",
+          "path": "voices/dmitri/listen.ogg",
+          "sha256": "83682fbc40c80302c20a48d1819b8a0dc26a330ffd694f8169e14aa238af8669",
+          "duration_ms": 836
+        }
+      ],
+      "status": "ready"
+    },
+    {
+      "id": "voice-4",
+      "files": [
+        {
+          "phrase_id": "accepted",
+          "path": "voices/ruslan/accepted.ogg",
+          "sha256": "4d953989e2e820fa4e942b8fe6b1bed71a31b6ba8bb040de305ffa4799c251a6",
+          "duration_ms": 2043
+        },
+        {
+          "phrase_id": "listen",
+          "path": "voices/ruslan/listen.ogg",
+          "sha256": "d0f53f679d331f84efc60edcf31f03bbda10ce36d3ed9915d3d75c7d32227b69",
+          "duration_ms": 1149
+        }
+      ],
+      "status": "ready"
+    }
+  ]
+}

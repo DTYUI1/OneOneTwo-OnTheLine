@@ -1,0 +1,6 @@
+services:
+  api:
+    environment:
+      COOKIE_SECURE: 'false'
+    command: [python, -m, uvicorn, app.api.main:app, --host, 0.0.0.0, --reload]
+    volumes: ['../apps/api/app:/workspace/apps/api/app']

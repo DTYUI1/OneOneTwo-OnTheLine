@@ -1,0 +1,637 @@
+/* Раскладка и цвета сняты со скриншотов arm_dds/06 и 09; пиксельная сверка — T-028. */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-panel);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.head {
+  display: grid;
+  /* Число колонок плавает: у закрытой карточки добавляется «Разбор». */
+  grid-template-columns: 1fr;
+  grid-auto-columns: auto;
+  grid-auto-flow: column;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: #dfe3e5;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.phones {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Три телефона делят строку шапки поровну, как в arm_dds/06. */
+.phone {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 180px;
+  min-height: 52px;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.phoneLabel {
+  color: #6c757b;
+  font-size: 12px;
+}
+
+.phoneValue {
+  min-height: 18px;
+}
+
+.headInfo {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  font-size: 12px;
+}
+
+.headInfo strong {
+  font-size: var(--font-size);
+}
+
+.timer {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+/* Норматив отработки превышен — красное поле, как в боевой карточке. */
+.timerOverdue {
+  composes: timer;
+  background: var(--color-danger);
+  color: var(--color-on-dark);
+  border-color: var(--color-danger);
+}
+
+/* Подпись «реакция / обработка» на красном поле — цветом самого поля. */
+.timerOverdue .fieldLabel {
+  color: inherit;
+}
+
+.close {
+  margin-left: auto;
+  align-self: flex-end;
+  color: var(--color-on-dark);
+  background: var(--color-header);
+  border: 1px solid var(--color-border);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--color-border);
+  flex: 1;
+  min-height: 0;
+}
+
+.left,
+.right {
+  background: var(--color-panel);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+.fieldLabel {
+  color: #6c757b;
+  font-size: 12px;
+  display: block;
+}
+
+.caller,
+.address {
+  background: #e3e6e8;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+}
+
+/* Лента описания — по своему тексту, свободная высота колонки уходит истории. */
+.feed {
+  background: #e3e6e8;
+  border: 1px solid var(--color-border);
+  padding: var(--space-2);
+  min-height: 70px;
+  overflow: auto;
+}
+
+.feedLine p {
+  margin: var(--space-1) 0 0;
+}
+
+/* Дата и оператор над текстом вызова — жирным, как в arm_dds/06. */
+.feedMeta {
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  background: #e3e6e8;
+  border: 1px solid var(--color-border);
+}
+
+.emergency {
+  background: var(--color-danger);
+  color: var(--color-on-dark);
+  padding: 0 var(--space-2);
+}
+
+.incident {
+  border: 1px solid var(--color-border);
+}
+
+.incidentHead {
+  margin: 0;
+  padding: var(--space-2);
+  background: var(--color-header);
+  color: var(--color-on-dark);
+  font-size: var(--font-size);
+}
+
+.tags,
+.incidentClass {
+  padding: var(--space-2);
+  background: var(--color-on-dark);
+  border-top: 1px solid var(--color-border);
+}
+
+/* История занимает свободную высоту колонки; свежая запись прокручивается на вид. */
+.history {
+  flex: 1;
+  /* Не схлопывается на низком экране: тогда прокручивается колонка. */
+  min-height: 120px;
+  border: 1px solid var(--color-border);
+  background: var(--color-on-dark);
+  padding: var(--space-2);
+  overflow: auto;
+}
+
+.historyHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+}
+
+.history h3 {
+  margin: 0;
+  font-size: var(--font-size);
+}
+
+.history ul {
+  margin: 0;
+  padding-left: var(--space-3);
+}
+
+/* Строка действия раскрывается над панелью служб — arm_dds/09. */
+/* Панель статуса — в строке служб справа от плашек, как на arm_dds/09:
+   карточка над ней не сдвигается, а пустая часть строки служб работает. */
+.formDock {
+  position: relative;
+  flex: 1 1 560px;
+  /* Ровно полоса служб (под запасом яруса): заметки встают над полосой. */
+  margin-top: var(--services-tier);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.form {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 8px #10182033;
+}
+
+.form select,
+.form input {
+  border: 1px solid var(--color-border);
+}
+
+.form button {
+  min-width: 36px;
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+/* Подсказки, предупреждение и ошибка — одной строкой над полями, в запасе строки
+   служб над полосой: форма занимает только полосу, заметки растут вверх поверх
+   фона карточки и ничего не раздвигают. */
+.formNotes {
+  position: absolute;
+  bottom: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  font-size: 13px;
+}
+
+/* Подсказки орфографии (учебный режим): слово с ошибкой и варианты исправления. */
+.formSpelling {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  /* Снизу запас под волнистое подчёркивание. */
+  padding: 2px var(--space-2) 5px;
+  color: var(--color-text);
+  background: var(--color-on-dark);
+  border-left: 3px solid var(--color-danger);
+}
+
+.spellingItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.misspelled {
+  text-decoration: underline wavy var(--color-danger);
+  text-underline-offset: 3px;
+}
+
+.spellingFix {
+  padding: 0 var(--space-1);
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+.spellingFix:hover,
+.spellingFix:focus-visible {
+  border-color: var(--color-active);
+}
+
+.formWarning,
+.formError {
+  padding: 2px var(--space-2);
+  color: var(--color-text);
+  background: var(--color-on-dark);
+  border-left: 3px solid var(--color-active);
+}
+
+.formError {
+  color: var(--color-danger);
+  border-left-color: var(--color-danger);
+}
+
+.number {
+  width: 120px;
+}
+
+.comment {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Строка служб держит над плашками место под раскрытый ярус (--services-tier,
+   высота яруса своей службы). Полоса служб — только нижняя часть строки, над ней
+   фон карточки: ярус встаёт над полосой, как на arm_dds/07, и ничего не сдвигает. */
+.services {
+  --services-tier: 42px;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: linear-gradient(
+    to bottom,
+    transparent calc(var(--space-2) + var(--services-tier)),
+    var(--color-list) 0
+  );
+  color: var(--color-on-dark);
+  flex-wrap: wrap;
+}
+
+/* Отступ сверху — высота яруса: подпись по центру полосы, а не всей строки. */
+.servicesLabel {
+  align-self: center;
+  margin-top: var(--services-tier);
+  padding-right: var(--space-2);
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 130px;
+  text-align: center;
+  background: #9aa4aa;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+}
+
+/* Своя ДДС — активная плашка, по ней открывается форма статуса. */
+.serviceOwn {
+  composes: service;
+  background: var(--color-on-dark);
+  border-color: var(--color-active);
+  color: var(--color-active);
+}
+
+.redirect {
+  align-self: center;
+  margin-top: var(--services-tier);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+/* Колонка службы: плашка внизу, раскрытый ярус уходит вверх — arm_dds/07.
+   Ширина постоянная, длинный текст — с многоточием, как «Получена слу…» на
+   снимке: смена статуса не сужает плитку и не сдвигает её «карандаш». */
+.serviceColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 130px;
+}
+
+.service > *,
+.details > * {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* «подразделения не передаются» у чужой службы — в две строки, без обрезки. */
+.details > span:only-child {
+  white-space: normal;
+}
+
+.plate {
+  display: flex;
+  flex-direction: column;
+}
+
+.toggle {
+  padding: 0;
+  line-height: 1;
+  font-size: 11px;
+  background: #9aa4aa;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 130px;
+  padding: var(--space-1);
+  font-size: 12px;
+  background: #78848b;
+  color: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+}
+
+.detailsOwn {
+  composes: details;
+  background: var(--color-on-dark);
+  color: var(--color-text);
+}
+
+/* Ярус ровно той высоты, под которую строка держит место. */
+.details,
+.detailsOwn {
+  position: relative;
+  height: var(--services-tier);
+  justify-content: center;
+}
+
+/* «Карандаш» — в углу яруса, как на arm_dds/07: ярус в две строки. */
+.detailsOwn > .pencil {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  max-width: none;
+}
+
+/* Свёрнутый ярус невидим, но место держит. */
+.detailsFolded {
+  visibility: hidden;
+}
+
+/* «Карандаш» из боевого АРМ: смена статуса из раскрытого яруса своей службы. */
+.pencil {
+  padding: 0 var(--space-1);
+  background: transparent;
+  border: 1px solid var(--color-border);
+}
+
+/* Состояние контекста занятия: без него неизвестно, за какую службу работает обучаемый. */
+.context {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: #cfd4d7;
+  border-top: 1px solid var(--color-border);
+}
+
+/* «Разбор» — синяя кнопка, как «просмотр» в шапке карточки arm_dds/07. */
+.review {
+  padding: 6px 14px;
+  color: var(--color-on-dark);
+  font-size: 13px;
+  background: var(--color-active);
+  border: 1px solid var(--color-active);
+}
+
+/* Ручной ввод адреса (D-03): отдельно от исходного адреса карточки. */
+.manualAddress {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.manualAddress legend {
+  padding: 0 4px;
+  color: #6c757b;
+  font-size: 12px;
+}
+
+.manualFields {
+  display: grid;
+  grid-template-columns: 1fr 2fr 0.7fr 0.7fr 0.7fr;
+  gap: var(--space-1) var(--space-2);
+}
+
+.manualFields label {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: 11px;
+  color: #6c757b;
+}
+
+.manualFields input {
+  min-width: 0;
+  padding: 4px 6px;
+  font-size: 13px;
+  border: 1px solid var(--color-border);
+}
+
+.manualActions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: var(--space-1);
+}
+
+.manualState {
+  color: #6c757b;
+  font-size: 12px;
+}
+
+/* Цвет — из токенов снимков АРМ, отдельного «зелёного» в палитре нет. */
+.manualSaved {
+  color: var(--color-active);
+}
+
+/* Адрес ещё не введён: поле видно сразу, его не пропустить. */
+.manualNeeded {
+  border: 2px solid var(--color-active);
+}
+
+/* Шаг «Принять решение»: плашка своей службы уже в рамке active,
+   поэтому акцент — внешний контур того же токена, а не толщина рамки. */
+.serviceOwn.manualNeeded {
+  outline: 2px solid var(--color-active);
+  outline-offset: 2px;
+}
+
+.manualNeeded legend {
+  color: var(--color-active);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+@media (max-width: 700px) {
+  .manualFields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Подсказки начального уровня (FR-1.6) */
+.hint {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.hintButton {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  color: var(--color-on-dark);
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+  background: var(--color-active);
+  border: 0;
+  border-radius: 50%;
+}
+
+.hintText {
+  max-width: 320px;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+  font-size: var(--font-size);
+  line-height: 1.4;
+  background: #eef5f9;
+  border-left: 3px solid var(--color-active);
+}
+
+.hintLabel {
+  color: #6c757b;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+/* Узкий экран: шапка переносится по строкам, карточка — в одну колонку.
+   Раскладка скриншота ДДС остаётся для широкого экрана АРМ. */
+@media (max-width: 600px) {
+  .card {
+    height: auto;
+    overflow: visible;
+  }
+  .form {
+    flex-wrap: wrap;
+  }
+  .form .number {
+    flex: 1;
+  }
+  /* Комментарий — главное поле формы: на узком экране ему целая строка. */
+  .form .comment {
+    flex-basis: 100%;
+    order: 1;
+  }
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    padding: var(--space-2);
+  }
+  .phones {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .phone {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+  .headInfo {
+    text-align: left;
+    flex: 1;
+  }
+  .body {
+    grid-template-columns: 1fr;
+  }
+  .left,
+  .right {
+    padding: var(--space-2);
+  }
+  /* Узкий экран: строка служб переносится, запас под ярус — в общей полосе. */
+  .services {
+    background: var(--color-list);
+  }
+  /* Карточка растёт по содержимому: истории — своя высота с прокруткой. */
+  .history {
+    flex: none;
+    max-height: 320px;
+  }
+}

@@ -1,0 +1,63 @@
+/* Подтверждение поверх АРМ: светлая панель с тёмной полосой, как шапка карточки. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: #101820a6;
+}
+
+.dialog {
+  width: min(440px, 100%);
+  color: var(--color-text);
+  background: var(--color-panel);
+  border-top: 4px solid var(--color-active);
+  outline: none;
+}
+
+.dialog h2 {
+  margin: 0;
+  padding: 10px var(--space-3);
+  color: var(--color-on-dark);
+  font-size: 16px;
+  background: var(--color-header);
+}
+
+.dialog p {
+  margin: var(--space-3) var(--space-3) 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.primary,
+.plain {
+  padding: 6px 14px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  border-radius: 0;
+}
+
+.primary {
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border-color: var(--color-active);
+}
+
+.plain {
+  color: var(--color-text);
+  background: #f7f7f7;
+  border-color: #9aa3a8;
+}
+
+.primary:disabled,
+.plain:disabled {
+  opacity: 0.45;
+}

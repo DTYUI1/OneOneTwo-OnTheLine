@@ -1,0 +1,68 @@
+{
+  "id": "d8530999-dd20-54bd-ab5a-6af61260824c",
+  "version": 1,
+  "level": 2,
+  "weight": 5,
+  "incident_type_code": "22020000",
+  "target_service_id": "103",
+  "card": {
+    "number": "70420010",
+    "incident_type_code": "22020000",
+    "caller_name": "Иванова Ирина Петровна",
+    "phone_aon": "+79000000402",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Московская область, Балашиха",
+      "okrug": "",
+      "district": "",
+      "street": "Мирской проезд",
+      "house": "16",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Плохо женщине на автомобильной парковке, потеря сознания, на вид 40 лет. Со стороны мусорной площадки.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Без сознания",
+    "service_ids": [
+      "103"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "rejected"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Московская область, Балашиха",
+      "okrug": "",
+      "district": "",
+      "street": "Мирской проезд",
+      "house": "16",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "Не принята: адрес Московская область, Балашиха, Мирской проезд, д. 16 — вне зоны ответственности ДДС города Москвы. Информацию для передачи в службу Московской области вернуть в ЦОВ 112."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 4, задача 2 (стр. 4 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

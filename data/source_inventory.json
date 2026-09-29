@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "scope": "files available in this checkout; ticket sources present, import is per scenario",
+  "files": [
+    {
+      "path": "docs/ТЗ_ДГОЧСиПБ_финал_01092026ГСИ.docx",
+      "kind": "final_specification",
+      "status": "present",
+      "version": "01.09.2026",
+      "bytes": 36477,
+      "sha256": "4a1d905940e8eb5e2346fe1660403c4b779d6ecb530bb540a01b8eff176ac46d",
+      "rights": "customer; usage rights unverified"
+    },
+    {
+      "path": "docs/Классификатор_происшествий_v_046_11_ДТУ_15_11_2024_искл_пожар_задымление.xlsx",
+      "kind": "classifier_original",
+      "status": "present",
+      "version": "v0.46 / 15.11.2024",
+      "bytes": 605427,
+      "sha256": "8d969b8e973a9574c63763ff290a11cb7221c50e5f9955efdb33520914d51409",
+      "rights": "customer; usage rights unverified"
+    },
+    {
+      "path": "docs/classifier_v046.csv",
+      "kind": "classifier_conversion",
+      "status": "present",
+      "version": "v0.46",
+      "bytes": 938912,
+      "sha256": "9c18ba66c743b6ee4f64e1cd6ba5f0d8324a9ec50fd15972337259050827897a",
+      "rights": "derived from customer classifier; usage rights unverified"
+    },
+    {
+      "path": "docs/dataset/Датасет/Классификатор_происшествий_v_046_24_корректировка_МВД_+_Департамент.xlsx",
+      "kind": "classifier_original",
+      "status": "present",
+      "version": "046_24 / 17.12.2025",
+      "bytes": 680116,
+      "sha256": "1d907424ab96ae397cf4b67dfd0193aa94deda56fba2d2ca4f8df8f2c2585937",
+      "rights": "customer dataset 24.09; usage rights unverified"
+    },
+    {
+      "path": "docs/dataset/Датасет/Классификатор_происшествий_v_046_24_корректировка_МВД_+_Департамент.csv",
+      "kind": "classifier_conversion",
+      "status": "present",
+      "version": "046_24",
+      "bytes": 987549,
+      "sha256": "0508d68c19dd7a0532882ed4d4279874ed47a613fefa9872112423aa652c6718",
+      "rights": "derived from customer classifier; usage rights unverified"
+    },
+    {
+      "path": "data/classifier.json",
+      "kind": "classifier_parsed",
+      "status": "present",
+      "version": "046_24",
+      "bytes": 1845484,
+      "sha256": "b5b317271985c0ec2a965dd9d223201ec50346800a112eccf0ee58896ff72a06",
+      "rights": "derived from customer classifier; usage rights unverified"
+    },
+    {
+      "path": "docs/dataset/Датасет/Билеты- задачи по C 112 . АГС_ГСИ.pdf",
+      "kind": "official_tickets",
+      "status": "present",
+      "version": "32 tickets / 96 tasks",
+      "bytes": 6528074,
+      "sha256": "4b94bf521f215419921effee2b81cb01e09ae94e7c38514e2cc82b096b15ba39",
+      "rights": "customer dataset 24.09; usage rights unverified"
+    },
+    {
+      "path": "docs/dataset/Датасет/Билеты- задачи по C 112 . АГС_ГСИ.txt",
+      "kind": "official_tickets_ocr",
+      "status": "present",
+      "version": "local OCR; verify against PDF",
+      "bytes": 39023,
+      "sha256": "bc9538380db9926403a7bd48bec66f70cbbb2e4ed3ada1b61950674eab7eddfc",
+      "rights": "derived from customer tickets; usage rights unverified"
+    },
+    {
+      "path": "docs/dataset/Датасет/Работа с АРМ-112 для ДДС от ОКр_ГСИ.pdf",
+      "kind": "dds_memo",
+      "status": "withheld",
+      "version": "2025, 40 pages",
+      "rights": "customer dataset 24.09; usage rights unverified"
+    },
+    {
+      "path": "docs/СКРИНШОТ ДДСГСИ.docx",
+      "kind": "dds_screenshots",
+      "status": "present",
+      "version": null,
+      "bytes": 3422757,
+      "sha256": "04702f5387b3112865bd2c3161a22af1e0deb933577723597893266ed1672d4a",
+      "rights": "customer; usage rights unverified"
+    },
+    {
+      "path": "docs/СКРИНШОТ КАРТОЧКИ 112ГСИ.docx",
+      "kind": "operator_screenshots",
+      "status": "present",
+      "version": null,
+      "bytes": 2322725,
+      "sha256": "ea9903a74031a8e8ff66000ac9cd42a2353e600363b1bcc192d3f71466d390b2",
+      "rights": "customer; usage rights unverified"
+    },
+    {
+      "path": "docs/customer_2026-09-18/КАРТОЧКА 112.docx",
+      "kind": "operator_examples",
+      "status": "present",
+      "version": "18.09.2026",
+      "bytes": 6935021,
+      "sha256": "49037e9a2a90760b1fc0c50243aae75ec396e12302f43eae514691d5bb94bc4c",
+      "rights": "customer; usage rights unverified"
+    },
+    {
+      "path": "docs/customer_2026-09-18/СЛУЖБЫ 112.docx",
+      "kind": "service_names",
+      "status": "present",
+      "version": "18.09.2026",
+      "bytes": 10000416,
+      "sha256": "3f736a75014d4ae9129da415d8bb834066fa037d9ca5372b90d8c09f8be6220c",
+      "rights": "customer; usage rights unverified"
+    },
+    {
+      "path": "docs/C08_customer_2026-09-21.md",
+      "kind": "forwarded_correspondence",
+      "status": "withheld",
+      "version": "22.09.2026",
+      "rights": "forwarded text; original thread unavailable"
+    },
+    {
+      "path": "data/tg_followup_20260924.md",
+      "kind": "forwarded_correspondence_update",
+      "status": "withheld",
+      "version": "24.09.2026",
+      "rights": "user-supplied text; original Telegram thread unavailable"
+    },
+    {
+      "path": "data/templates/traffic.json",
+      "kind": "synthetic_template",
+      "status": "present",
+      "version": null,
+      "bytes": 2035,
+      "sha256": "fab4e31e0f8f7ff4f9996ba5c1b37b978952ceed44c277dc3c1d42fb1d203653",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/phonebook.json",
+      "kind": "synthetic_phonebook",
+      "status": "present",
+      "version": null,
+      "bytes": 1087,
+      "sha256": "638f879cf2da0aec8d8a92b75636455e021243b2c5f2612ec32ebfae3e38e59e",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-01.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 6847,
+      "sha256": "cebfd050942e9ae109aec099d9f20637c0e78fde3d30f506500b349dab6efb23",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-02.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 6755,
+      "sha256": "7f6de6fc3b02f162706e3fe7e20189312f6d695c613d19fa8ed28dd57a9c5d38",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-03.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 7009,
+      "sha256": "24c6257d31fad96e1cccea02616de21f85c8cb556f20029f4f35e4223ce93052",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-04.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 7045,
+      "sha256": "a180a5b352d06e316ca3049d7956b2d653d4b6e5e45aef5908252992c5bc3a45",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-05.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 7201,
+      "sha256": "9f919debacad00c123370ab5e8e184d7ce1ec1a5f47d0c97cd6ab8691b1959c2",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-06.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 6895,
+      "sha256": "d76784404004e059fa17dce99c82574276d054a52f67b50c98d031c0d0937683",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-07.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 6755,
+      "sha256": "b5775c7f32e56ec46be55400acdc6c985db1a852fe71c23b3d9a90185b825370",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-08.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 6870,
+      "sha256": "b62e8ab1c6be3dc319ee0bfc046c59308079d6052b73f7edae618d6d7bd84676",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-09.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 7021,
+      "sha256": "7a83bf0dd2bb41a4559f4ca969211f0d65d910a83be47327769b883e5fea1c11",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-10.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 6890,
+      "sha256": "b97a4fe2b039905396d71042069aa16e8b32e85c0455a72abe704d4e18fa42c9",
+      "rights": "team synthetic"
+    },
+    {
+      "path": "data/golden_scenarios/case-11-wrong-redirect.json",
+      "kind": "synthetic_golden",
+      "status": "present",
+      "version": null,
+      "bytes": 4747,
+      "sha256": "2b07052147e434aa8c0a2b79952a1c88fade4222763493f5b99c1de807cbc874",
+      "rights": "team synthetic"
+    }
+  ],
+  "external_observations": {
+    "schema_version": 1,
+    "scope": "Metadata from a local Telegram drop; binaries are outside this branch",
+    "files": [
+      {
+        "path": "docs/fromTG/Инструкция для участника .pdf",
+        "kind": "hackathon_participant_guide",
+        "status": "observed_external",
+        "version": null,
+        "bytes": 1562655,
+        "sha256": "e103609aa41d02e376b94439024cad676e9cb5c05c7157964a19fef8687cf9fe",
+        "same_as": null,
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/Инструкция_по_заведению_карточки_2507ГСИ.docx",
+        "kind": "operator_112_card_instruction",
+        "status": "observed_external",
+        "version": "filename: 2507",
+        "bytes": 9801206,
+        "sha256": "11dd230f64d23bce5886f81c44af8fa92a9e963e65f9e9ed92dcb4f07af62e92",
+        "same_as": null,
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/КАРТОЧКА 112.docx",
+        "kind": "duplicate_or_other_customer_file",
+        "status": "observed_external",
+        "version": null,
+        "bytes": 6935021,
+        "sha256": "49037e9a2a90760b1fc0c50243aae75ec396e12302f43eae514691d5bb94bc4c",
+        "same_as": "docs/customer_2026-09-18/КАРТОЧКА 112.docx",
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/Классификатор_происшествий_v_046_11_ДТУ_15_11_2024_искл_пожар_задымление.xlsx",
+        "kind": "classifier_original_duplicate",
+        "status": "observed_external",
+        "version": "v0.46 / 15.11.2024",
+        "bytes": 605427,
+        "sha256": "8d969b8e973a9574c63763ff290a11cb7221c50e5f9955efdb33520914d51409",
+        "same_as": "docs/Классификатор_происшествий_v_046_11_ДТУ_15_11_2024_искл_пожар_задымление.xlsx",
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/Ответы на вопросы.pdf",
+        "kind": "hackathon_faq",
+        "status": "observed_external",
+        "version": null,
+        "bytes": 1334321,
+        "sha256": "5d374f73662814b4a50df555658fe27c8a577000e4789db42f966ce4e9ccc6d1",
+        "same_as": null,
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/РТУ Т16Р_Datasheet_ 2024_ГСИ.pdf",
+        "kind": "phone_datasheet",
+        "status": "observed_external",
+        "version": "filename: 2024",
+        "bytes": 243042,
+        "sha256": "81041f30c6584b7fd3116552bb558457648d7c4f845f241c5bb1db345ba30398",
+        "same_as": null,
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/СКРИНШОТ ДДСГСИ.docx",
+        "kind": "duplicate_or_other_customer_file",
+        "status": "observed_external",
+        "version": null,
+        "bytes": 3422757,
+        "sha256": "04702f5387b3112865bd2c3161a22af1e0deb933577723597893266ed1672d4a",
+        "same_as": "docs/СКРИНШОТ ДДСГСИ.docx",
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/СКРИНШОТ КАРТОЧКИ 112ГСИ.docx",
+        "kind": "duplicate_or_other_customer_file",
+        "status": "observed_external",
+        "version": null,
+        "bytes": 2322725,
+        "sha256": "ea9903a74031a8e8ff66000ac9cd42a2353e600363b1bcc192d3f71466d390b2",
+        "same_as": "docs/СКРИНШОТ КАРТОЧКИ 112ГСИ.docx",
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/СЛУЖБЫ 112.docx",
+        "kind": "duplicate_or_other_customer_file",
+        "status": "observed_external",
+        "version": null,
+        "bytes": 10000416,
+        "sha256": "3f736a75014d4ae9129da415d8bb834066fa037d9ca5372b90d8c09f8be6220c",
+        "same_as": "docs/customer_2026-09-18/СЛУЖБЫ 112.docx",
+        "rights": "supplied Telegram file; usage rights unverified"
+      },
+      {
+        "path": "docs/fromTG/ТЗ_ДГОЧСиПБ_финал_01092026ГСИ.docx",
+        "kind": "final_specification_duplicate",
+        "status": "observed_external",
+        "version": "01.09.2026",
+        "bytes": 36477,
+        "sha256": "4a1d905940e8eb5e2346fe1660403c4b779d6ecb530bb540a01b8eff176ac46d",
+        "same_as": "docs/ТЗ_ДГОЧСиПБ_финал_01092026ГСИ.docx",
+        "rights": "supplied Telegram file; usage rights unverified"
+      }
+    ]
+  },
+  "missing_sources": [
+    {
+      "kind": "official_ticket_solutions",
+      "reason": "Customer will not provide answers (decision 24.09); team references are marked as such."
+    },
+    {
+      "kind": "service_phone_registry",
+      "reason": "The datasheet gives device capabilities, not DDS contact numbers."
+    },
+    {
+      "kind": "moscow_streets",
+      "reason": "data/streets.csv.gz is absent; fixture addresses are not a street registry."
+    }
+  ]
+}

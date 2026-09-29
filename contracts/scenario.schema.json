@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/scenario.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "weight": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "incident_type_code": {
+      "type": "string"
+    },
+    "target_service_id": {
+      "type": "string"
+    },
+    "card": {
+      "$ref": "card.schema.json"
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expected_flow": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "added",
+              "received",
+              "accepted",
+              "rejected",
+              "responding",
+              "arrived",
+              "working",
+              "refused",
+              "completed",
+              "redirected"
+            ]
+          }
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "service_number",
+              "comment"
+            ]
+          }
+        },
+        "expected_service_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expected_address": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "okrug": {
+              "type": "string"
+            },
+            "district": {
+              "type": "string"
+            },
+            "street": {
+              "type": "string"
+            },
+            "house": {
+              "type": "string"
+            },
+            "building": {
+              "type": "string"
+            },
+            "apartment": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city",
+            "okrug",
+            "district",
+            "street",
+            "house",
+            "building",
+            "apartment"
+          ],
+          "readOnly": true
+        },
+        "expected_call": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "service_id": {
+              "type": "string"
+            },
+            "phone_ext": {
+              "type": "string",
+              "pattern": "^[0-9]{3}$"
+            },
+            "before_s": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "required",
+            "service_id",
+            "phone_ext",
+            "before_s"
+          ]
+        },
+        "expected_comment": {
+          "type": "string"
+        },
+        "comment_keywords": {
+          "type": "array",
+          "description": "Ключевые слова комментария сверх адреса, сути, решения и пострадавших (критерий comment_keywords): пункт найден, если есть все слова хотя бы одного варианта; варианты — через «/».",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "expected_flow",
+        "required_fields",
+        "expected_service_ids",
+        "expected_address",
+        "expected_call",
+        "expected_comment"
+      ]
+    },
+    "complications": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "wrong_address",
+          "duplicate",
+          "no_phone",
+          "no_contact",
+          "emergency",
+          "parallel"
+        ]
+      }
+    },
+    "origin": {
+      "type": "string",
+      "enum": [
+        "template",
+        "llm",
+        "imported",
+        "trainee"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "approved",
+        "retired"
+      ]
+    },
+    "teacher_comment": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "level",
+    "weight",
+    "incident_type_code",
+    "target_service_id",
+    "card",
+    "reference",
+    "complications",
+    "origin",
+    "status",
+    "teacher_comment"
+  ]
+}

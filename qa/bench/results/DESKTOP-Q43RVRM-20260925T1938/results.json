@@ -1,0 +1,170 @@
+{
+  "label": "DESKTOP-Q43RVRM",
+  "host": {
+    "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz (16 потоков)",
+    "ram": "15.7 ГБ ОЗУ",
+    "os": "MINGW64_NT-10.0-26200 3.6.3-7674c51e.x86_64",
+    "docker": "29.8.0"
+  },
+  "params": {
+    "base": "https://web",
+    "label": "DESKTOP-Q43RVRM",
+    "out": "qa/bench/results",
+    "workstations": 23,
+    "cards": 3,
+    "burst": 40,
+    "think": 1.0,
+    "settle": 10.0,
+    "card_timeout": 120.0,
+    "crowd": 100,
+    "crowd_active": 20,
+    "poll": 5.0,
+    "skip_crowd": true,
+    "llm": true,
+    "llm_cards": 6,
+    "llm_timeout": 900.0
+  },
+  "class": {
+    "workstations": 23,
+    "cards_per_workstation": 3,
+    "cards_total": 69,
+    "cards_expected": 69,
+    "duration_s": 71.4,
+    "writes": 920,
+    "write_window_s": 11.4,
+    "writes_per_s": 80.7,
+    "report_s": {
+      "report_json": 0.085,
+      "report_csv": 0.048,
+      "analytics": 1.33
+    },
+    "llm": {
+      "cards": 6,
+      "finished": 6,
+      "statuses": {
+        "done": 6
+      },
+      "first_s": 31.7,
+      "last_s": 264.6,
+      "per_card_s": 44.1
+    }
+  },
+  "latency": {
+    "analysis": {
+      "n": 314,
+      "p50_ms": 36.8,
+      "p95_ms": 56.6,
+      "max_ms": 79.0
+    },
+    "analytics": {
+      "n": 1,
+      "p50_ms": 1323.6,
+      "p95_ms": 1323.6,
+      "max_ms": 1323.6
+    },
+    "assign_batch": {
+      "n": 1,
+      "p50_ms": 52.9,
+      "p95_ms": 52.9,
+      "max_ms": 52.9
+    },
+    "card_appeared": {
+      "n": 69,
+      "p50_ms": 10690.5,
+      "p95_ms": 23321.8,
+      "max_ms": 23747.1
+    },
+    "create_session": {
+      "n": 1,
+      "p50_ms": 29.1,
+      "p95_ms": 29.1,
+      "max_ms": 29.1
+    },
+    "deliver": {
+      "n": 69,
+      "p50_ms": 786.3,
+      "p95_ms": 1109.4,
+      "max_ms": 1176.6
+    },
+    "finish_session": {
+      "n": 1,
+      "p50_ms": 59.0,
+      "p95_ms": 59.0,
+      "max_ms": 59.0
+    },
+    "get_settings": {
+      "n": 1,
+      "p50_ms": 9.1,
+      "p95_ms": 9.1,
+      "max_ms": 9.1
+    },
+    "list_scenarios": {
+      "n": 1,
+      "p50_ms": 30.1,
+      "p95_ms": 30.1,
+      "max_ms": 30.1
+    },
+    "list_users": {
+      "n": 1,
+      "p50_ms": 43.3,
+      "p95_ms": 43.3,
+      "max_ms": 43.3
+    },
+    "live_board_lag": {
+      "n": 1265,
+      "p50_ms": 365.4,
+      "p95_ms": 1725.3,
+      "max_ms": 6111.6
+    },
+    "login": {
+      "n": 24,
+      "p50_ms": 1275.6,
+      "p95_ms": 1383.7,
+      "max_ms": 1391.4
+    },
+    "open": {
+      "n": 69,
+      "p50_ms": 38.2,
+      "p95_ms": 787.4,
+      "max_ms": 893.4
+    },
+    "report_csv": {
+      "n": 1,
+      "p50_ms": 48.2,
+      "p95_ms": 48.2,
+      "max_ms": 48.2
+    },
+    "report_json": {
+      "n": 1,
+      "p50_ms": 84.2,
+      "p95_ms": 84.2,
+      "max_ms": 84.2
+    },
+    "start_session": {
+      "n": 1,
+      "p50_ms": 99.0,
+      "p95_ms": 99.0,
+      "max_ms": 99.0
+    },
+    "status_change": {
+      "n": 207,
+      "p50_ms": 70.5,
+      "p95_ms": 4107.6,
+      "max_ms": 6109.2
+    },
+    "write": {
+      "n": 920,
+      "p50_ms": 268.1,
+      "p95_ms": 370.6,
+      "max_ms": 647.7
+    },
+    "ws_connect": {
+      "n": 24,
+      "p50_ms": 457.5,
+      "p95_ms": 683.7,
+      "max_ms": 751.0
+    }
+  },
+  "errors": {},
+  "finished_at": "2026-09-25 19:38 UTC"
+}

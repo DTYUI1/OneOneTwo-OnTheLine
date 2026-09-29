@@ -1,0 +1,31 @@
+[project]
+name = "arm112-api"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi==0.116.1",
+    "uvicorn[standard]==0.35.0",
+    "pydantic-settings==2.10.1",
+    "sqlalchemy[asyncio]==2.0.43",
+    "asyncpg==0.30.0",
+    "alembic==1.16.5",
+    "PyJWT==2.10.1",
+    "jsonschema==4.25.1",
+    "PyYAML==6.0.2",
+    "httpx==0.28.1",
+    "evalcore",
+    "cryptography==46.0.1",
+    "argon2-cffi==25.1.0",
+    "python-multipart==0.0.20",
+    "pymorphy3==2.0.6",
+]
+
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.uv.sources]
+evalcore = { workspace = true }

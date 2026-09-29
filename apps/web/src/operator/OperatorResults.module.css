@@ -1,0 +1,207 @@
+/* Экран результатов тренировок 112: палитра и кнопки — как у карточки и окна «Результат
+   попытки» (OperatorPage.module.css), разбор попытки — те же классы оттуда. */
+.page {
+  --op-panel: #efefef;
+  --op-border: #aeb1b3;
+  --op-line: #d2d2d2;
+  --op-blue: #157dbd;
+  --op-orange: #ec653b;
+  --op-muted: #6c6c6c;
+  --op-good: #1d6b42;
+  --op-good-bg: #e3f4ea;
+  --op-bad: #9b1c14;
+  --op-bad-bg: #fbe4e1;
+  --op-warn: #7a5600;
+  --op-warn-bg: #fcf1d6;
+  --op-info: #3d4a57;
+  --op-info-bg: #e8edf2;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  color: var(--color-text);
+  background: #c9ced1;
+  font-size: 16px;
+}
+.header {
+  display: flex;
+  flex: none;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 12px 8px 20px;
+  color: #ffffff;
+  background: #303335;
+}
+.header h1 {
+  flex: 1;
+  margin: 0;
+  font-size: 22px;
+}
+.header button {
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+.primary {
+  padding: 7px 16px;
+  color: #ffffff;
+  background: var(--op-orange);
+  border: 1px solid var(--op-orange);
+}
+.close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--color-text);
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.primary:focus-visible,
+.close:focus-visible,
+.attempts button:focus-visible,
+.score:focus-visible,
+.review:focus-visible {
+  outline: 2px solid var(--op-blue);
+  outline-offset: 2px;
+}
+.state {
+  margin: 16px;
+  padding: 16px;
+  background: #ffffff;
+}
+
+/* Слева — сводка и попытки, по центру — баллы, справа — разбор; колонки листаются сами. */
+.body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 8px;
+  min-height: 0;
+  padding: 8px;
+}
+.side,
+.score,
+.review {
+  min-height: 0;
+  padding: 12px 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #ffffff;
+}
+.score h2,
+.review h2,
+.listTitle {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+.score h2 small {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--op-muted);
+}
+.score h3 {
+  margin: 14px 0 8px;
+  font-size: 16px;
+}
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.totals div {
+  padding: 6px 8px;
+  background: var(--op-panel);
+}
+.totals dt {
+  font-size: 12px;
+  color: var(--op-muted);
+}
+.totals dd {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--op-blue);
+}
+.calls {
+  width: 100%;
+  margin-bottom: 14px;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+.calls caption {
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+}
+.calls th,
+.calls td {
+  padding: 4px 4px;
+  text-align: left;
+  border-bottom: 1px solid var(--op-line);
+}
+.calls td {
+  white-space: nowrap;
+}
+.calls thead th {
+  font-weight: normal;
+  color: var(--op-muted);
+}
+.attempts {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.attempts button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  background: var(--op-panel);
+  border: 1px solid var(--op-line);
+}
+.attempts button[aria-current="true"] {
+  background: #dcecf7;
+  border-color: var(--op-blue);
+}
+.attempts time {
+  grid-column: 1;
+  font-size: 12px;
+  color: var(--op-muted);
+}
+.attempts strong {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+}
+
+/* Узкое окно: колонки друг под другом, листается страница. */
+@media (max-width: 1100px) {
+  .page {
+    height: auto;
+    min-height: 100dvh;
+  }
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .side,
+  .score,
+  .review {
+    overflow: visible;
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "scope": "Metadata from a local Telegram drop; binaries are outside this branch",
+  "files": [
+    {
+      "path": "docs/fromTG/Инструкция для участника .pdf",
+      "kind": "hackathon_participant_guide",
+      "status": "observed_external",
+      "version": null,
+      "bytes": 1562655,
+      "sha256": "e103609aa41d02e376b94439024cad676e9cb5c05c7157964a19fef8687cf9fe",
+      "same_as": null,
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/Инструкция_по_заведению_карточки_2507ГСИ.docx",
+      "kind": "operator_112_card_instruction",
+      "status": "observed_external",
+      "version": "filename: 2507",
+      "bytes": 9801206,
+      "sha256": "11dd230f64d23bce5886f81c44af8fa92a9e963e65f9e9ed92dcb4f07af62e92",
+      "same_as": null,
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/КАРТОЧКА 112.docx",
+      "kind": "duplicate_or_other_customer_file",
+      "status": "observed_external",
+      "version": null,
+      "bytes": 6935021,
+      "sha256": "49037e9a2a90760b1fc0c50243aae75ec396e12302f43eae514691d5bb94bc4c",
+      "same_as": "docs/customer_2026-09-18/КАРТОЧКА 112.docx",
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/Классификатор_происшествий_v_046_11_ДТУ_15_11_2024_искл_пожар_задымление.xlsx",
+      "kind": "classifier_original_duplicate",
+      "status": "observed_external",
+      "version": "v0.46 / 15.11.2024",
+      "bytes": 605427,
+      "sha256": "8d969b8e973a9574c63763ff290a11cb7221c50e5f9955efdb33520914d51409",
+      "same_as": "docs/Классификатор_происшествий_v_046_11_ДТУ_15_11_2024_искл_пожар_задымление.xlsx",
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/Ответы на вопросы.pdf",
+      "kind": "hackathon_faq",
+      "status": "observed_external",
+      "version": null,
+      "bytes": 1334321,
+      "sha256": "5d374f73662814b4a50df555658fe27c8a577000e4789db42f966ce4e9ccc6d1",
+      "same_as": null,
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/РТУ Т16Р_Datasheet_ 2024_ГСИ.pdf",
+      "kind": "phone_datasheet",
+      "status": "observed_external",
+      "version": "filename: 2024",
+      "bytes": 243042,
+      "sha256": "81041f30c6584b7fd3116552bb558457648d7c4f845f241c5bb1db345ba30398",
+      "same_as": null,
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/СКРИНШОТ ДДСГСИ.docx",
+      "kind": "duplicate_or_other_customer_file",
+      "status": "observed_external",
+      "version": null,
+      "bytes": 3422757,
+      "sha256": "04702f5387b3112865bd2c3161a22af1e0deb933577723597893266ed1672d4a",
+      "same_as": "docs/СКРИНШОТ ДДСГСИ.docx",
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/СКРИНШОТ КАРТОЧКИ 112ГСИ.docx",
+      "kind": "duplicate_or_other_customer_file",
+      "status": "observed_external",
+      "version": null,
+      "bytes": 2322725,
+      "sha256": "ea9903a74031a8e8ff66000ac9cd42a2353e600363b1bcc192d3f71466d390b2",
+      "same_as": "docs/СКРИНШОТ КАРТОЧКИ 112ГСИ.docx",
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/СЛУЖБЫ 112.docx",
+      "kind": "duplicate_or_other_customer_file",
+      "status": "observed_external",
+      "version": null,
+      "bytes": 10000416,
+      "sha256": "3f736a75014d4ae9129da415d8bb834066fa037d9ca5372b90d8c09f8be6220c",
+      "same_as": "docs/customer_2026-09-18/СЛУЖБЫ 112.docx",
+      "rights": "supplied Telegram file; usage rights unverified"
+    },
+    {
+      "path": "docs/fromTG/ТЗ_ДГОЧСиПБ_финал_01092026ГСИ.docx",
+      "kind": "final_specification_duplicate",
+      "status": "observed_external",
+      "version": "01.09.2026",
+      "bytes": 36477,
+      "sha256": "4a1d905940e8eb5e2346fe1660403c4b779d6ecb530bb540a01b8eff176ac46d",
+      "same_as": "docs/ТЗ_ДГОЧСиПБ_финал_01092026ГСИ.docx",
+      "rights": "supplied Telegram file; usage rights unverified"
+    }
+  ]
+}

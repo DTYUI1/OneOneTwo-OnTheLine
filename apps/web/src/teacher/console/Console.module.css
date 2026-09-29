@@ -1,0 +1,697 @@
+/* Пульт преподавателя в языке боевого АРМ (docs/screenshots/arm_dds/02, 07):
+   плоско, без скруглений; стальное поле списка, светлые панели, тёмные полосы
+   заголовков, синяя кнопка основного действия, плитки как панель служб. */
+
+/* ——— Кнопки: «просмотр» (синяя), «дополнение» (тёмная), «сбросить» (светлая) ——— */
+.primary,
+.dark,
+.plain {
+  padding: 6px 14px;
+  font-size: 13px;
+  line-height: 1.3;
+  border: 1px solid transparent;
+  border-radius: 0;
+}
+
+.primary {
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border-color: var(--color-active);
+}
+
+.primary:hover:not(:disabled) {
+  background: #146a9c;
+}
+
+.dark {
+  color: var(--color-on-dark);
+  background: var(--color-header);
+  border-color: #58626a;
+}
+
+.plain {
+  color: var(--color-text);
+  background: #f7f7f7;
+  border-color: #9aa3a8;
+}
+
+.plain:hover:not(:disabled) {
+  background: var(--color-on-dark);
+}
+
+.primary:disabled,
+.dark:disabled,
+.plain:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.link {
+  white-space: nowrap;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  background: none;
+  border: 0;
+}
+
+/* ——— Левая колонка: как поле «Список происшествий» ——— */
+/* Колонка прилипает и прокручивает список сама: «Новое занятие» и каталог
+   всегда на экране, сколько бы занятий ни набралось. */
+.side {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-self: start;
+  max-height: 100vh;
+  padding: var(--space-3);
+  color: var(--color-on-dark);
+  background: var(--color-list);
+}
+
+.sideTitle {
+  margin: 0 0 var(--space-1);
+  font-size: 18px;
+}
+
+.sideNote {
+  margin: 0;
+  font-size: 13px;
+}
+
+.sessionSearch {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text);
+}
+
+.sessionSearch input {
+  min-width: 0;
+  width: 100%;
+  color: var(--color-text);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+}
+
+.sessionList {
+  display: grid;
+  flex: 1 1 auto;
+  gap: 2px;
+  min-height: 0;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+@media (max-width: 900px) {
+  .side {
+    position: static;
+    max-height: none;
+  }
+
+  .sessionList {
+    max-height: 280px;
+  }
+}
+
+.sessionItem {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: var(--space-2) var(--space-2) var(--space-2) 10px;
+  color: var(--color-on-dark);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-left: 4px solid transparent;
+}
+
+.sessionItem:hover {
+  background: #ffffff1f;
+}
+
+.sessionItem[aria-current="true"] {
+  background: #6f7b82;
+  border-left-color: var(--color-active);
+}
+
+.sessionTitle {
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.sessionMeta {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: 12px;
+}
+
+.sideFoot {
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid #ffffff4d;
+}
+
+.sideLink {
+  width: 100%;
+  padding: var(--space-2) 10px;
+  color: var(--color-on-dark);
+  font-weight: bold;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-left: 4px solid transparent;
+}
+
+.sideLink:hover {
+  background: #ffffff1f;
+}
+
+.sideLink[aria-pressed="true"] {
+  background: #6f7b82;
+  border-left-color: var(--color-active);
+}
+
+/* ——— Статус занятия: плашки ——— */
+.status_running,
+.status_draft,
+.status_finished {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.status_running {
+  color: var(--color-on-dark);
+  background: var(--color-active);
+}
+
+.status_draft {
+  color: var(--color-text);
+  background: #dde2e5;
+}
+
+.status_finished {
+  color: #e7eaec;
+  border: 1px solid #e7eaec80;
+}
+
+/* ——— Выбранное занятие: полоса заголовка и плитки-вкладки ——— */
+.view {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.titleBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--space-3);
+  color: var(--color-on-dark);
+  background: var(--color-header);
+}
+
+.titleBar > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+
+.titleBar h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.clock {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.titleActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.blockers {
+  margin: 0;
+  padding: var(--space-2) var(--space-3) var(--space-2) 32px;
+  color: var(--color-danger);
+  font-size: 13px;
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.message {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px;
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  background: #58626a;
+}
+
+.tab {
+  display: flex;
+  flex: 1 1 140px;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  padding: 10px var(--space-2);
+  color: var(--color-on-dark);
+  font-size: 13px;
+  font-weight: bold;
+  background: #3f4a52;
+  border: 0;
+  border-bottom: 3px solid transparent;
+}
+
+.tab:hover {
+  background: #4b5760;
+}
+
+.tab[aria-selected="true"] {
+  background: var(--color-list);
+  border-bottom-color: var(--color-active);
+}
+
+.tabCount {
+  min-width: 20px;
+  padding: 0 5px;
+  font-size: 12px;
+  color: var(--color-header);
+  background: var(--color-on-dark);
+}
+
+.tabBody {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) 0 0;
+}
+
+/* ——— Панели содержимого ——— */
+.panel {
+  min-width: 0;
+  padding: var(--space-3);
+  background: var(--color-panel);
+}
+
+.panelTitle {
+  margin: 0 0 var(--space-2);
+  font-size: 14px;
+}
+
+.placeholder {
+  margin: 0;
+  padding: var(--space-4);
+  color: #3d4750;
+  line-height: 1.5;
+  background: var(--color-panel);
+}
+
+.warning {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-warn-text, #8a5a12);
+  font-size: 13px;
+  background: #fdf3dc;
+  border-left: 4px solid #c98a00;
+}
+
+.hint {
+  margin: 0 0 var(--space-2);
+  color: #5c6771;
+  font-size: 12px;
+}
+
+.muted {
+  color: #6b757d;
+  font-size: 12px;
+}
+
+.note {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-1) var(--space-2);
+  font-size: 12px;
+  background: var(--color-on-dark);
+  border-left: 3px solid var(--color-active);
+}
+
+.chip {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  background: #dde2e5;
+}
+
+/* ——— Таблицы: заголовки мелкие и серые, как колонки реестра ——— */
+.tableScroll {
+  /* Все поля состава доступны на узком экране без сдвига общей шапки. */
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  padding: var(--space-1) var(--space-2);
+  color: #5c6771;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  border-bottom: 1px solid #aab2b7;
+}
+
+.table td {
+  padding: 6px var(--space-2);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr:hover td {
+  background: #ffffff99;
+}
+
+.seat {
+  font-weight: bold;
+}
+
+.pick {
+  width: 36px;
+}
+
+.scroll {
+  max-height: 300px;
+  overflow: auto;
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.scroll .table th {
+  position: sticky;
+  top: 0;
+  background: var(--color-on-dark);
+}
+
+.rowActions {
+  display: flex;
+  gap: var(--space-1);
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+/* ——— Поля ——— */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: flex-end;
+  margin: var(--space-2) 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: #5c6771;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.field input,
+.field select,
+.field textarea,
+.table input,
+.table select {
+  font-family: inherit;
+  padding: 5px var(--space-2);
+  color: var(--color-text);
+  font-weight: normal;
+  font-size: 13px;
+  background: var(--color-on-dark);
+  border: 1px solid #9aa3a8;
+  border-radius: 0;
+}
+
+/* Галочка в ряду полей: по высоте как соседние поля ввода. */
+.field .checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 6px 0;
+  padding: 0;
+}
+
+.number {
+  width: 90px;
+}
+
+.wide {
+  width: min(100%, 480px);
+}
+
+.code {
+  width: 100%;
+  font-family: monospace;
+  resize: vertical;
+}
+
+.problems {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-3);
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+/* Предпросмотр раздачи — не ошибка: красным здесь только то, что не уйдёт. */
+.handout {
+  margin: var(--space-2) 0;
+  padding: var(--space-2) var(--space-3) var(--space-2) 32px;
+  color: #3d4750;
+  font-size: 13px;
+  background: var(--color-on-dark);
+  border-left: 3px solid var(--color-active);
+}
+
+.handout .dropped {
+  color: var(--color-danger);
+}
+
+/* ——— Вердикты ——— */
+.verdicts {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.verdict {
+  padding: var(--space-3);
+  background: var(--color-panel);
+}
+
+.verdictHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.verdictWho {
+  display: grid;
+  flex: 1 1 240px;
+  gap: 2px;
+  font-size: 13px;
+}
+
+.score {
+  min-width: 72px;
+  color: var(--color-active);
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.scoreNone {
+  min-width: 72px;
+  color: #6b757d;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Критический критерий: по нему оценка режется целиком (critical_cap). */
+.critical td {
+  background: #fbe9e7;
+}
+
+.evidence {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-3);
+  color: #5c6771;
+  font-size: 12px;
+}
+
+/* ——— Адресная выдача: очередь каждого места ——— */
+.seatPlan {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+  border-left: 4px solid var(--color-header);
+}
+
+.seatHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  font-size: 13px;
+}
+
+/* Неверная доставка — не ошибка, а выбор преподавателя: видно, но не красным. */
+.exercise {
+  display: inline-block;
+  padding: 1px 6px;
+  color: #8a5a12;
+  font-size: 12px;
+  font-weight: bold;
+  background: #fdf3dc;
+}
+
+/* ——— Графики отчёта: тонкие полосы, одна серия, тихая сетка ——— */
+.charts {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.chart {
+  margin: 0;
+  padding: var(--space-2) 0;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: auto;
+}
+
+.chartTitle {
+  margin-bottom: var(--space-1);
+  color: #3d4750;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.chartText {
+  fill: var(--color-text);
+  font-size: 12px;
+}
+
+.chartMuted {
+  fill: #6b757d;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.chartAxis {
+  fill: #6b757d;
+  font-size: 11px;
+}
+
+.chartGrid {
+  stroke: #d5dadd;
+  stroke-width: 1;
+}
+
+.chartNorm {
+  stroke: var(--color-header);
+  stroke-width: 2;
+}
+
+.chartBar {
+  fill: var(--color-active);
+}
+
+.chartBarOver {
+  fill: var(--color-danger);
+}
+
+.chartRow:hover .chartBar,
+.chartRow:hover .chartBarOver {
+  opacity: 0.8;
+}
+
+/* ——— Плитки счётчиков ——— */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-2);
+}
+
+.tile {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+  border-top: 3px solid var(--color-header);
+}
+
+.tileValue {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.tileLabel {
+  color: #5c6771;
+  font-size: 12px;
+}
+
+/* ——— Разбор человека ——— */
+.attempt {
+  margin: var(--space-2) 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+}
+
+.criteriaList {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-3);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.criticalItem {
+  color: var(--color-danger);
+}
+
+.attemptDetails {
+  margin: var(--space-2) 0;
+}

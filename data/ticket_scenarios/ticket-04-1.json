@@ -1,0 +1,73 @@
+{
+  "id": "2fd0aac5-5f80-5192-ae74-49b15f734d03",
+  "version": 1,
+  "level": 2,
+  "weight": 4,
+  "incident_type_code": "1050201",
+  "target_service_id": "101",
+  "card": {
+    "number": "70410002",
+    "incident_type_code": "1050201",
+    "caller_name": "Сидорова Анна Викторовна",
+    "phone_aon": "+79000000401",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "улица Грина",
+      "house": "11",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Горит балкон и два окна рядом на 13-м этаже, открытое пламя. Пострадавших не видят, наблюдают с улицы. Дом 14 этажей, газифицирован. Номер дома заявитель не знает: в доме библиотека № 193, по ориентиру уточнён дом 11.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "пожар: балкон",
+    "service_ids": [
+      "101",
+      "102",
+      "104",
+      "MOSLIFT"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "улица Грина",
+      "house": "11",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Пожар балкона и двух окон на 13-м этаже, открытое пламя, пострадавших не видят; дом газифицирован. Москва, улица Грина, д. 11 (библиотека № 193). Направлено подразделение."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 4, задача 1 (стр. 4 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

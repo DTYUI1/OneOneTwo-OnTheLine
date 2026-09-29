@@ -1,0 +1,4308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/c01.schema.json",
+  "title": "Общие интерфейсы C-01; реализация C-02…C-07 отдельно",
+  "$defs": {
+    "TimingPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timing_version": {
+          "type": "integer",
+          "enum": [
+            2,
+            3
+          ]
+        },
+        "reaction_normative_s": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "handling_normative_s": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "waiting_policy": {
+          "type": "string",
+          "enum": [
+            "separate",
+            "exclude_confirmed"
+          ]
+        },
+        "max_rtt_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_sample_age_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_buffer_delay_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "future_tolerance_ms": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "timing_version",
+        "reaction_normative_s",
+        "handling_normative_s",
+        "waiting_policy",
+        "max_rtt_ms",
+        "max_sample_age_ms",
+        "max_buffer_delay_ms",
+        "future_tolerance_ms"
+      ],
+      "examples": [
+        {
+          "timing_version": 2,
+          "reaction_normative_s": 30,
+          "handling_normative_s": 180,
+          "waiting_policy": "separate",
+          "max_rtt_ms": 2000,
+          "max_sample_age_ms": 60000,
+          "max_buffer_delay_ms": 30000,
+          "future_tolerance_ms": 250
+        },
+        {
+          "timing_version": 3,
+          "reaction_normative_s": 30,
+          "handling_normative_s": 180,
+          "waiting_policy": "exclude_confirmed",
+          "max_rtt_ms": 2000,
+          "max_sample_age_ms": 60000,
+          "max_buffer_delay_ms": 30000,
+          "future_tolerance_ms": 250
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "timing_version": {
+                "const": 2
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "waiting_policy": {
+                "const": "separate"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "timing_version": {
+                "const": 3
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "waiting_policy": {
+                "const": "exclude_confirmed"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ClockSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sample_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "ws_midpoint_v2",
+            "legacy_one_way"
+          ]
+        },
+        "client_sent_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "server_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "client_received_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "offset_ms": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "sample_id",
+        "method",
+        "client_sent_at",
+        "server_at",
+        "client_received_at",
+        "offset_ms"
+      ],
+      "examples": [
+        {
+          "sample_id": "00000000-0000-4000-8000-000000001001",
+          "method": "ws_midpoint_v2",
+          "client_sent_at": "2026-09-22T23:59:53.900Z",
+          "server_at": "2026-09-22T23:59:59.000Z",
+          "client_received_at": "2026-09-22T23:59:54.100Z",
+          "offset_ms": 5000
+        }
+      ]
+    },
+    "TimingEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "direct",
+            "deliver",
+            "open",
+            "status",
+            "redirect"
+          ]
+        },
+        "state": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "received",
+                "accepted",
+                "rejected",
+                "responding",
+                "arrived",
+                "working",
+                "refused",
+                "completed",
+                "redirected"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "server_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "clock": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ClockSample"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "event_id",
+        "kind",
+        "state",
+        "client_ts",
+        "server_ts",
+        "clock"
+      ]
+    },
+    "WaitingInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "message_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "message_id",
+        "started_at",
+        "ended_at"
+      ]
+    },
+    "TimingInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "snapshot_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "policy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimingPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "legacy_reaction_normative_s": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "legacy_handling_normative_s": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "appeared_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TimingEvent"
+          }
+        },
+        "waiting": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/WaitingInterval"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "policy",
+        "legacy_reaction_normative_s",
+        "legacy_handling_normative_s",
+        "appeared_at",
+        "observed_at",
+        "events",
+        "waiting"
+      ]
+    },
+    "TimingEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "normalized_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "corrected_client",
+            "server_fallback",
+            "legacy_client",
+            "server"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "missing_clock",
+            "legacy_clock",
+            "invalid_sample",
+            "stale_sample",
+            "future_event",
+            "buffer_exceeded",
+            "legacy",
+            "server_event"
+          ]
+        }
+      },
+      "required": [
+        "event_id",
+        "normalized_at",
+        "source",
+        "reason"
+      ]
+    },
+    "TimingResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timing_version": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "snapshot_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "reaction_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handling_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lifetime_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "waiting_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active_handling_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reaction_normative_s": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "handling_normative_s": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "reaction_overdue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handling_overdue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "quality": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "estimated",
+            "invalid",
+            "legacy"
+          ]
+        },
+        "anomalies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "missing_direct",
+              "missing_deliver",
+              "missing_open",
+              "missing_primary_status",
+              "missing_terminal",
+              "non_monotonic",
+              "waiting_unavailable",
+              "untrusted_clock"
+            ]
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TimingEvidence"
+          }
+        }
+      },
+      "required": [
+        "timing_version",
+        "snapshot_id",
+        "reaction_s",
+        "handling_s",
+        "lifetime_s",
+        "waiting_s",
+        "active_handling_s",
+        "reaction_normative_s",
+        "handling_normative_s",
+        "reaction_overdue",
+        "handling_overdue",
+        "quality",
+        "anomalies",
+        "evidence"
+      ]
+    },
+    "TimingFixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input": {
+          "$ref": "#/$defs/TimingInput"
+        },
+        "expected": {
+          "$ref": "#/$defs/TimingResult"
+        }
+      },
+      "required": [
+        "name",
+        "input",
+        "expected"
+      ]
+    },
+    "AssignmentBatchItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "participant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scenario_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scenario_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "delay_from_start_s": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "delivery_mode": {
+          "type": "string",
+          "enum": [
+            "profile",
+            "intentional_mismatch"
+          ]
+        }
+      },
+      "required": [
+        "participant_id",
+        "scenario_id",
+        "scenario_version",
+        "order",
+        "delay_from_start_s",
+        "delivery_mode"
+      ]
+    },
+    "AssignmentBatchInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AssignmentBatchItem"
+          },
+          "minItems": 1,
+          "maxItems": 230
+        }
+      },
+      "required": [
+        "request_id",
+        "items"
+      ],
+      "examples": [
+        {
+          "request_id": "00000000-0000-4000-8000-000000002000",
+          "items": [
+            {
+              "participant_id": "00000000-0000-4000-8000-000000000001",
+              "scenario_id": "00000000-0000-4000-8000-000000000100",
+              "scenario_version": 1,
+              "order": 1,
+              "delay_from_start_s": 0,
+              "delivery_mode": "profile"
+            },
+            {
+              "participant_id": "00000000-0000-4000-8000-000000000003",
+              "scenario_id": "00000000-0000-4000-8000-000000000101",
+              "scenario_version": 1,
+              "order": 1,
+              "delay_from_start_s": 30,
+              "delivery_mode": "profile"
+            }
+          ]
+        }
+      ]
+    },
+    "ScheduledAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "participant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scenario_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scenario_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "delay_from_start_s": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "due_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "delivery_mode": {
+          "type": "string",
+          "enum": [
+            "profile",
+            "intentional_mismatch"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "delivered",
+            "completed",
+            "cancelled"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "session_id",
+        "participant_id",
+        "scenario_id",
+        "scenario_version",
+        "order",
+        "delay_from_start_s",
+        "due_at",
+        "delivery_mode",
+        "status"
+      ]
+    },
+    "AssignmentBatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "assignments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScheduledAssignment"
+          },
+          "minItems": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "request_id",
+        "session_id",
+        "assignments",
+        "created_at"
+      ],
+      "examples": [
+        {
+          "request_id": "00000000-0000-4000-8000-000000002000",
+          "session_id": "00000000-0000-4000-8000-000000000400",
+          "assignments": [
+            {
+              "id": "00000000-0000-4000-8000-000000000300",
+              "session_id": "00000000-0000-4000-8000-000000000400",
+              "participant_id": "00000000-0000-4000-8000-000000000001",
+              "scenario_id": "00000000-0000-4000-8000-000000000100",
+              "scenario_version": 1,
+              "order": 1,
+              "delay_from_start_s": 0,
+              "delivery_mode": "profile",
+              "due_at": null,
+              "status": "pending"
+            },
+            {
+              "id": "00000000-0000-4000-8000-000000000301",
+              "session_id": "00000000-0000-4000-8000-000000000400",
+              "participant_id": "00000000-0000-4000-8000-000000000003",
+              "scenario_id": "00000000-0000-4000-8000-000000000101",
+              "scenario_version": 1,
+              "order": 1,
+              "delay_from_start_s": 30,
+              "delivery_mode": "profile",
+              "due_at": null,
+              "status": "pending"
+            }
+          ],
+          "created_at": "2026-09-23T00:00:00.000Z"
+        }
+      ]
+    },
+    "FinishInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "type": "integer",
+          "const": 2
+        },
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id"
+      ],
+      "examples": [
+        {
+          "contract_version": 2,
+          "request_id": "00000000-0000-4000-8000-000000002007"
+        }
+      ]
+    },
+    "AttemptState": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "participant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "completed",
+            "interrupted"
+          ]
+        },
+        "interrupted_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active_call_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recording_status": {
+          "type": "string",
+          "enum": [
+            "none",
+            "recording",
+            "upload_pending",
+            "saved",
+            "failed"
+          ]
+        }
+      },
+      "required": [
+        "card_id",
+        "participant_id",
+        "status",
+        "interrupted_at",
+        "active_call_id",
+        "recording_status"
+      ]
+    },
+    "SessionLifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "running",
+            "finished"
+          ]
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timing_policy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimingPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cancelled_assignment_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "remaining_assignments": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Сколько неотменённых назначений ещё не завершено: карточка не выдана или выдана, но не закрыта и не прервана. 0 у идущего занятия — все обучаемые закончили; назначения после старта не добавляются."
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AttemptState"
+          }
+        }
+      },
+      "required": [
+        "session_id",
+        "status",
+        "started_at",
+        "finished_at",
+        "timing_policy",
+        "cancelled_assignment_ids",
+        "remaining_assignments",
+        "attempts"
+      ],
+      "examples": [
+        {
+          "session_id": "00000000-0000-4000-8000-000000000400",
+          "status": "finished",
+          "started_at": "2026-09-23T00:00:00.000Z",
+          "finished_at": "2026-09-23T00:01:40.000Z",
+          "timing_policy": {
+            "timing_version": 2,
+            "reaction_normative_s": 30,
+            "handling_normative_s": 180,
+            "waiting_policy": "separate",
+            "max_rtt_ms": 2000,
+            "max_sample_age_ms": 60000,
+            "max_buffer_delay_ms": 30000,
+            "future_tolerance_ms": 250
+          },
+          "cancelled_assignment_ids": [
+            "00000000-0000-4000-8000-000000000301"
+          ],
+          "remaining_assignments": 0,
+          "attempts": [
+            {
+              "card_id": "00000000-0000-4000-8000-000000000600",
+              "participant_id": "00000000-0000-4000-8000-000000000001",
+              "status": "interrupted",
+              "interrupted_at": "2026-09-23T00:01:40.000Z",
+              "active_call_id": null,
+              "recording_status": "upload_pending"
+            }
+          ]
+        }
+      ]
+    },
+    "Brigade": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "service_id",
+        "name",
+        "is_active"
+      ],
+      "examples": [
+        {
+          "id": "00000000-0000-4000-8000-000000002005",
+          "service_id": "102",
+          "name": "Учебная бригада 1",
+          "is_active": true
+        }
+      ]
+    },
+    "CallTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "service_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "brigade_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phone_ext": {
+          "type": "string",
+          "pattern": "^[0-9]{3}$"
+        },
+        "voice_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "is_active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "service_id",
+        "brigade_id",
+        "name",
+        "phone_ext",
+        "voice_profile",
+        "is_active"
+      ],
+      "examples": [
+        {
+          "id": "00000000-0000-4000-8000-000000002006",
+          "service_id": "102",
+          "brigade_id": "00000000-0000-4000-8000-000000002005",
+          "name": "Старший бригады",
+          "phone_ext": "201",
+          "voice_profile": "male_calm",
+          "is_active": true
+        }
+      ]
+    },
+    "MessageAudio": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^/api/"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "asset_id",
+        "version",
+        "sha256",
+        "url",
+        "duration_ms"
+      ]
+    },
+    "InformationMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audio": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MessageAudio"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "text",
+        "audio"
+      ]
+    },
+    "PlannedMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/InformationMessage"
+        },
+        "brigade_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "call_target_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "available_after_s": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expected_comment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "justifies_state": {
+          "type": "string",
+          "enum": [
+            "responding",
+            "arrived",
+            "working",
+            "completed",
+            "refused"
+          ]
+        },
+        "requires_state": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "responding",
+            "arrived",
+            "working"
+          ],
+          "description": "Бригада ждёт решения диспетчера: доклад выдаётся только после того, как карточка дошла до этого статуса; available_after_s тогда отсчитывается от позднего из двух моментов — ответа на звонок и установки статуса. Нет поля — прежний отсчёт от ответа."
+        }
+      },
+      "required": [
+        "message",
+        "brigade_id",
+        "call_target_id",
+        "available_after_s",
+        "expected_comment"
+      ]
+    },
+    "TrainingPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "required_brigade_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PlannedMessage"
+          }
+        },
+        "observable_defects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_source": {
+                "type": "string",
+                "enum": [
+                  "card",
+                  "message"
+                ]
+              },
+              "message_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "key",
+              "evidence_source",
+              "message_id",
+              "explanation"
+            ]
+          }
+        }
+      },
+      "required": [
+        "version",
+        "required_brigade_ids",
+        "messages",
+        "observable_defects"
+      ],
+      "examples": [
+        {
+          "version": 1,
+          "required_brigade_ids": [
+            "00000000-0000-4000-8000-000000002005"
+          ],
+          "messages": [
+            {
+              "message": {
+                "id": "00000000-0000-4000-8000-000000002002",
+                "version": 1,
+                "text": "Бригада прибыла к месту происшествия.",
+                "audio": {
+                  "asset_id": "00000000-0000-4000-8000-000000002001",
+                  "version": 1,
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+                  "duration_ms": 2000
+                }
+              },
+              "brigade_id": "00000000-0000-4000-8000-000000002005",
+              "call_target_id": "00000000-0000-4000-8000-000000002006",
+              "available_after_s": 60,
+              "expected_comment": "Отразить прибытие."
+            }
+          ],
+          "observable_defects": []
+        }
+      ]
+    },
+    "DeliveredMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "delivery_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "card_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "call_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "participant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "brigade_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "call_target_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message": {
+          "$ref": "#/$defs/InformationMessage"
+        },
+        "delivered_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "delivery_id",
+        "card_id",
+        "call_id",
+        "participant_id",
+        "brigade_id",
+        "call_target_id",
+        "message",
+        "delivered_at"
+      ]
+    },
+    "PresentationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "delivery_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "playback_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "audio_version": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "audio",
+            "text"
+          ]
+        }
+      },
+      "required": [
+        "delivery_id",
+        "playback_id",
+        "message_version",
+        "audio_version",
+        "channel"
+      ],
+      "examples": [
+        {
+          "delivery_id": "00000000-0000-4000-8000-000000002003",
+          "playback_id": "00000000-0000-4000-8000-000000002009",
+          "message_version": 1,
+          "audio_version": 1,
+          "channel": "audio"
+        }
+      ]
+    },
+    "PresentationFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "delivery_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "playback_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "audio_version": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "enum": [
+            "audio_unavailable",
+            "playback_error",
+            "interrupted",
+            "session_finished"
+          ]
+        }
+      },
+      "required": [
+        "delivery_id",
+        "playback_id",
+        "message_version",
+        "audio_version",
+        "reason"
+      ],
+      "examples": [
+        {
+          "delivery_id": "00000000-0000-4000-8000-000000002003",
+          "playback_id": "00000000-0000-4000-8000-000000002009",
+          "message_version": 1,
+          "audio_version": 1,
+          "reason": "interrupted"
+        }
+      ]
+    },
+    "InformationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "delivery": {
+          "$ref": "#/$defs/DeliveredMessage"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "delivered",
+            "presented",
+            "failed"
+          ]
+        },
+        "presented_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failed_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "presentation_event_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failure_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "delivery",
+        "state",
+        "presented_at",
+        "failed_at",
+        "presentation_event_id",
+        "failure_reason"
+      ]
+    },
+    "CardTraining": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "missing_report_states": {
+          "type": "array",
+          "description": "Доступные сейчас переходы, для которых ещё не предъявлен доклад бригады. Пустой список означает, что доклад не мешает выбору статуса. Поле может отсутствовать у старого сервера.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "responding",
+              "arrived",
+              "working",
+              "completed",
+              "refused"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "card_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "selected_brigade_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InformationEvidence"
+          }
+        },
+        "awaiting_state": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "accepted",
+                "responding",
+                "arrived",
+                "working"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Статус, которого ждёт бригада перед следующим докладом (requires_state плана). Отдаётся только в занятии с подсказками (hints_level ≥ 1), иначе null; поле может отсутствовать у старого сервера."
+        },
+        "incoming": {
+          "type": "array",
+          "description": "Бригады, которые звонят диспетчеру сами с готовым докладом и ждут ответа (входящий звонок, решение 27.09). Ответ — call_answer с call_id; поле может отсутствовать у старого сервера.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "call_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "brigade_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "call_target_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              }
+            },
+            "required": [
+              "call_id",
+              "brigade_id",
+              "call_target_id",
+              "started_at"
+            ]
+          }
+        },
+        "callbacks": {
+          "type": "array",
+          "description": "История входящих вызовов бригад по карточке: когда бригада позвонила, когда диспетчер ответил (null — не ответил) и когда вызов закончился. По ней разбор показывает, сколько бригада ждала ответа; поле может отсутствовать у старого сервера.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "call_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "brigade_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "call_target_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "answered_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "Z$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "ended_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "Z$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "call_id",
+              "brigade_id",
+              "call_target_id",
+              "started_at",
+              "answered_at",
+              "ended_at"
+            ]
+          }
+        },
+        "available_brigade_ids": {
+          "type": "array",
+          "description": "Бригады своей ДДС, которыми диспетчер располагает на этой карточке (28.09): две, с четырьмя происшествиями у обучаемого в занятии — три, с шестью — четыре. Порядок — как в справочнике. Нет поля (старый сервер) — все активные бригады службы.",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "busy_brigades": {
+          "type": "array",
+          "description": "Бригады, направленные на другие незакрытые происшествия этого обучаемого в занятии: на эту карточку их не направить, пока там не закончена работа. Нет поля (старый сервер) — занятость не учитывается.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "brigade_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "card_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "card_number": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "brigade_id",
+              "card_id",
+              "card_number"
+            ]
+          }
+        }
+      },
+      "required": [
+        "card_id",
+        "revision",
+        "selected_brigade_ids",
+        "messages"
+      ],
+      "examples": [
+        {
+          "card_id": "00000000-0000-4000-8000-000000000600",
+          "revision": 1,
+          "selected_brigade_ids": [
+            "00000000-0000-4000-8000-000000002005"
+          ],
+          "messages": [
+            {
+              "delivery": {
+                "delivery_id": "00000000-0000-4000-8000-000000002003",
+                "card_id": "00000000-0000-4000-8000-000000000600",
+                "call_id": "00000000-0000-4000-8000-000000002004",
+                "participant_id": "00000000-0000-4000-8000-000000000001",
+                "brigade_id": "00000000-0000-4000-8000-000000002005",
+                "call_target_id": "00000000-0000-4000-8000-000000002006",
+                "message": {
+                  "id": "00000000-0000-4000-8000-000000002002",
+                  "version": 1,
+                  "text": "Бригада прибыла к месту происшествия.",
+                  "audio": {
+                    "asset_id": "00000000-0000-4000-8000-000000002001",
+                    "version": 1,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+                    "duration_ms": 2000
+                  }
+                },
+                "delivered_at": "2026-09-23T00:01:20.000Z"
+              },
+              "state": "presented",
+              "presented_at": "2026-09-23T00:01:22.000Z",
+              "failed_at": null,
+              "presentation_event_id": "00000000-0000-4000-8000-000000002008",
+              "failure_reason": null
+            }
+          ]
+        }
+      ]
+    },
+    "TrainingUpdated": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "card_id",
+        "revision"
+      ]
+    },
+    "ErrorCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "address": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grammar": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "routing": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status_flow": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timing": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "call": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "input",
+        "address",
+        "grammar",
+        "routing",
+        "status_flow",
+        "timing",
+        "call"
+      ]
+    },
+    "LayerResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "layer": {
+          "type": "string",
+          "enum": [
+            "rules",
+            "address",
+            "grammar",
+            "semantic",
+            "llm",
+            "information"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "done",
+            "pending",
+            "unavailable",
+            "failed",
+            "not_applicable"
+          ]
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "layer",
+        "status",
+        "version",
+        "reason",
+        "evidence",
+        "explanation"
+      ]
+    },
+    "EffectiveOverride": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "override_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "agree",
+            "disagree"
+          ]
+        },
+        "new_total": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "teacher_comment": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "override_id",
+        "decision",
+        "new_total",
+        "reason",
+        "teacher_comment",
+        "created_at"
+      ]
+    },
+    "EvaluationAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "evaluation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "evaluation_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "partial",
+            "complete"
+          ]
+        },
+        "automatic_total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "effective_total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "effective_override": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EffectiveOverride"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "required_layers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "rules",
+              "address",
+              "grammar",
+              "semantic",
+              "llm",
+              "information"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LayerResult"
+          }
+        },
+        "partial_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "methodology_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_versions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "errors": {
+          "$ref": "#/$defs/ErrorCounts"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "evaluation_id",
+        "evaluation_version",
+        "status",
+        "automatic_total",
+        "effective_total",
+        "effective_override",
+        "required_layers",
+        "layers",
+        "partial_reasons",
+        "methodology_version",
+        "model_versions",
+        "errors",
+        "explanation"
+      ]
+    },
+    "PredictionObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prediction_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "made_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "methodology_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "p_success": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "expected_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "expected_time_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "p_timeout": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "actual_score": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actual_time_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actual_timeout": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actual_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "prediction_id",
+        "made_at",
+        "model_version",
+        "methodology_version",
+        "p_success",
+        "expected_score",
+        "expected_time_s",
+        "p_timeout",
+        "actual_score",
+        "actual_time_s",
+        "actual_timeout",
+        "actual_at"
+      ]
+    },
+    "Recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "increase",
+            "keep",
+            "decrease"
+          ]
+        },
+        "based_on_attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "methodology_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "level",
+        "weight",
+        "direction",
+        "based_on_attempts",
+        "model_version",
+        "methodology_version",
+        "evidence",
+        "explanation"
+      ]
+    },
+    "AttemptAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "participant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt_status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "completed",
+            "interrupted"
+          ]
+        },
+        "timing": {
+          "$ref": "#/$defs/TimingResult"
+        },
+        "evaluation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvaluationAnalysis"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prediction": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PredictionObservation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "card_id",
+        "participant_id",
+        "attempt_status",
+        "timing",
+        "evaluation",
+        "prediction"
+      ],
+      "examples": [
+        {
+          "card_id": "00000000-0000-4000-8000-000000000600",
+          "participant_id": "00000000-0000-4000-8000-000000000001",
+          "attempt_status": "completed",
+          "timing": {
+            "timing_version": 2,
+            "snapshot_id": "00000000-0000-4000-8000-000000000400",
+            "reaction_s": 20,
+            "handling_s": 170,
+            "lifetime_s": 190,
+            "waiting_s": 0,
+            "active_handling_s": 170,
+            "reaction_normative_s": 30,
+            "handling_normative_s": 180,
+            "reaction_overdue": false,
+            "handling_overdue": false,
+            "quality": "verified",
+            "anomalies": [],
+            "evidence": [
+              {
+                "event_id": "00000000-0000-4000-8000-000000000001",
+                "normalized_at": "2026-09-23T00:00:00.000Z",
+                "source": "corrected_client",
+                "reason": "verified"
+              },
+              {
+                "event_id": "00000000-0000-4000-8000-000000000002",
+                "normalized_at": "2026-09-23T00:00:20.000Z",
+                "source": "corrected_client",
+                "reason": "verified"
+              },
+              {
+                "event_id": "00000000-0000-4000-8000-000000000003",
+                "normalized_at": "2026-09-23T00:00:40.000Z",
+                "source": "corrected_client",
+                "reason": "verified"
+              },
+              {
+                "event_id": "00000000-0000-4000-8000-000000000004",
+                "normalized_at": "2026-09-23T00:03:10.000Z",
+                "source": "corrected_client",
+                "reason": "verified"
+              }
+            ]
+          },
+          "evaluation": {
+            "evaluation_id": "00000000-0000-4000-8000-000000000500",
+            "evaluation_version": 1,
+            "status": "partial",
+            "automatic_total": 0.7,
+            "effective_total": 0.8,
+            "effective_override": {
+              "override_id": "00000000-0000-4000-8000-000000002100",
+              "decision": "disagree",
+              "new_total": 0.8,
+              "reason": "Учтён комментарий.",
+              "teacher_comment": "",
+              "created_at": "2026-09-23T00:04:00.000Z"
+            },
+            "required_layers": [
+              "rules",
+              "semantic"
+            ],
+            "layers": [
+              {
+                "layer": "rules",
+                "status": "done",
+                "version": "rules-v1",
+                "reason": null,
+                "evidence": [
+                  "Карточка завершена."
+                ],
+                "explanation": "Проверены правила."
+              },
+              {
+                "layer": "semantic",
+                "status": "unavailable",
+                "version": null,
+                "reason": "provider_off",
+                "evidence": [],
+                "explanation": "Проверка смысла ещё недоступна."
+              }
+            ],
+            "partial_reasons": [
+              "semantic_unavailable"
+            ],
+            "methodology_version": "c01-v2",
+            "model_versions": {
+              "rules": "rules-v1"
+            },
+            "errors": {
+              "input": null,
+              "address": null,
+              "grammar": null,
+              "routing": 0,
+              "status_flow": 0,
+              "timing": 0,
+              "call": 0
+            },
+            "explanation": "Частичная оценка; итог изменён преподавателем."
+          },
+          "prediction": {
+            "prediction_id": "00000000-0000-4000-8000-000000002101",
+            "made_at": "2026-09-22T23:59:59.000Z",
+            "model_version": "irt-v1",
+            "methodology_version": "c01-v2",
+            "p_success": 0.75,
+            "expected_score": 0.7,
+            "expected_time_s": 170,
+            "p_timeout": 0.2,
+            "actual_score": 0.7,
+            "actual_time_s": 170,
+            "actual_timeout": false,
+            "actual_at": "2026-09-23T00:03:10.000Z"
+          }
+        }
+      ]
+    },
+    "TraineeAnalytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interrupted_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evaluated_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "complete_evaluation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mean_effective_score": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mean_reaction_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reaction_sample_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mean_handling_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handling_sample_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "errors": {
+          "$ref": "#/$defs/ErrorCounts"
+        },
+        "current_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "recommendation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Recommendation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "user_id",
+        "attempt_count",
+        "completed_count",
+        "interrupted_count",
+        "evaluated_count",
+        "complete_evaluation_count",
+        "mean_effective_score",
+        "mean_reaction_s",
+        "reaction_sample_count",
+        "mean_handling_s",
+        "handling_sample_count",
+        "errors",
+        "current_level",
+        "recommendation",
+        "explanation"
+      ]
+    },
+    "SessionAnalytics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "trainees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TraineeAnalytics"
+          }
+        },
+        "attempts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AttemptAnalysis"
+          }
+        },
+        "methodology_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "session_id",
+        "trainees",
+        "attempts",
+        "methodology_version"
+      ],
+      "examples": [
+        {
+          "session_id": "00000000-0000-4000-8000-000000000400",
+          "trainees": [
+            {
+              "user_id": "00000000-0000-4000-8000-000000000001",
+              "attempt_count": 2,
+              "completed_count": 1,
+              "interrupted_count": 1,
+              "evaluated_count": 1,
+              "complete_evaluation_count": 0,
+              "mean_effective_score": 0.8,
+              "mean_reaction_s": 20,
+              "reaction_sample_count": 2,
+              "mean_handling_s": 170,
+              "handling_sample_count": 1,
+              "errors": {
+                "input": null,
+                "address": null,
+                "grammar": null,
+                "routing": 0,
+                "status_flow": 0,
+                "timing": 0,
+                "call": 0
+              },
+              "current_level": 1,
+              "recommendation": {
+                "level": 1,
+                "weight": 2,
+                "direction": "keep",
+                "based_on_attempts": 1,
+                "model_version": "irt-v1",
+                "methodology_version": "c01-v2",
+                "evidence": [
+                  "Одна оценённая попытка."
+                ],
+                "explanation": "Недостаточно данных для изменения уровня."
+              },
+              "explanation": "Одна попытка прервана, одна оценена частично."
+            }
+          ],
+          "attempts": [
+            {
+              "card_id": "00000000-0000-4000-8000-000000000600",
+              "participant_id": "00000000-0000-4000-8000-000000000001",
+              "attempt_status": "completed",
+              "timing": {
+                "timing_version": 2,
+                "snapshot_id": "00000000-0000-4000-8000-000000000400",
+                "reaction_s": 20,
+                "handling_s": 170,
+                "lifetime_s": 190,
+                "waiting_s": 0,
+                "active_handling_s": 170,
+                "reaction_normative_s": 30,
+                "handling_normative_s": 180,
+                "reaction_overdue": false,
+                "handling_overdue": false,
+                "quality": "verified",
+                "anomalies": [],
+                "evidence": [
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000001",
+                    "normalized_at": "2026-09-23T00:00:00.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  },
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000002",
+                    "normalized_at": "2026-09-23T00:00:20.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  },
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000003",
+                    "normalized_at": "2026-09-23T00:00:40.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  },
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000004",
+                    "normalized_at": "2026-09-23T00:03:10.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  }
+                ]
+              },
+              "evaluation": {
+                "evaluation_id": "00000000-0000-4000-8000-000000000500",
+                "evaluation_version": 1,
+                "status": "partial",
+                "automatic_total": 0.7,
+                "effective_total": 0.8,
+                "effective_override": {
+                  "override_id": "00000000-0000-4000-8000-000000002100",
+                  "decision": "disagree",
+                  "new_total": 0.8,
+                  "reason": "Учтён комментарий.",
+                  "teacher_comment": "",
+                  "created_at": "2026-09-23T00:04:00.000Z"
+                },
+                "required_layers": [
+                  "rules",
+                  "semantic"
+                ],
+                "layers": [
+                  {
+                    "layer": "rules",
+                    "status": "done",
+                    "version": "rules-v1",
+                    "reason": null,
+                    "evidence": [
+                      "Карточка завершена."
+                    ],
+                    "explanation": "Проверены правила."
+                  },
+                  {
+                    "layer": "semantic",
+                    "status": "unavailable",
+                    "version": null,
+                    "reason": "provider_off",
+                    "evidence": [],
+                    "explanation": "Проверка смысла ещё недоступна."
+                  }
+                ],
+                "partial_reasons": [
+                  "semantic_unavailable"
+                ],
+                "methodology_version": "c01-v2",
+                "model_versions": {
+                  "rules": "rules-v1"
+                },
+                "errors": {
+                  "input": null,
+                  "address": null,
+                  "grammar": null,
+                  "routing": 0,
+                  "status_flow": 0,
+                  "timing": 0,
+                  "call": 0
+                },
+                "explanation": "Частичная оценка; итог изменён преподавателем."
+              },
+              "prediction": {
+                "prediction_id": "00000000-0000-4000-8000-000000002101",
+                "made_at": "2026-09-22T23:59:59.000Z",
+                "model_version": "irt-v1",
+                "methodology_version": "c01-v2",
+                "p_success": 0.75,
+                "expected_score": 0.7,
+                "expected_time_s": 170,
+                "p_timeout": 0.2,
+                "actual_score": 0.7,
+                "actual_time_s": 170,
+                "actual_timeout": false,
+                "actual_at": "2026-09-23T00:03:10.000Z"
+              }
+            },
+            {
+              "card_id": "00000000-0000-4000-8000-000000000601",
+              "participant_id": "00000000-0000-4000-8000-000000000001",
+              "attempt_status": "interrupted",
+              "timing": {
+                "timing_version": 2,
+                "snapshot_id": "00000000-0000-4000-8000-000000000400",
+                "reaction_s": 20,
+                "handling_s": null,
+                "lifetime_s": null,
+                "waiting_s": 0,
+                "active_handling_s": null,
+                "reaction_normative_s": 30,
+                "handling_normative_s": 180,
+                "reaction_overdue": false,
+                "handling_overdue": null,
+                "quality": "verified",
+                "anomalies": [
+                  "missing_terminal"
+                ],
+                "evidence": [
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000001",
+                    "normalized_at": "2026-09-23T00:00:00.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  },
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000002",
+                    "normalized_at": "2026-09-23T00:00:20.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  },
+                  {
+                    "event_id": "00000000-0000-4000-8000-000000000003",
+                    "normalized_at": "2026-09-23T00:00:40.000Z",
+                    "source": "corrected_client",
+                    "reason": "verified"
+                  }
+                ]
+              },
+              "evaluation": null,
+              "prediction": null
+            }
+          ],
+          "methodology_version": "c01-v2"
+        }
+      ]
+    },
+    "ContentProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author_kind": {
+          "type": "string",
+          "enum": [
+            "system",
+            "teacher",
+            "trainee"
+          ]
+        },
+        "author_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "template",
+            "llm",
+            "imported",
+            "manual"
+          ]
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "author_kind",
+        "author_id",
+        "source_kind",
+        "source_id",
+        "source_version",
+        "sha256",
+        "synthetic"
+      ]
+    },
+    "ScenarioConstructor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "incident_type_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_service_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "address": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "okrug": {
+              "type": "string"
+            },
+            "district": {
+              "type": "string"
+            },
+            "street": {
+              "type": "string"
+            },
+            "house": {
+              "type": "string"
+            },
+            "building": {
+              "type": "string"
+            },
+            "apartment": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city",
+            "okrug",
+            "district",
+            "street",
+            "house",
+            "building",
+            "apartment"
+          ],
+          "readOnly": true
+        },
+        "victims": {
+          "type": "boolean"
+        },
+        "complications": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "wrong_address",
+              "duplicate",
+              "no_phone",
+              "no_contact",
+              "emergency",
+              "parallel"
+            ]
+          },
+          "title": "Complications"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "seed": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "incident_type_code",
+        "target_service_id",
+        "address",
+        "victims",
+        "complications",
+        "level",
+        "weight",
+        "seed"
+      ]
+    },
+    "ScenarioPreviewInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "constructor": {
+          "$ref": "#/$defs/ScenarioConstructor"
+        }
+      },
+      "required": [
+        "constructor"
+      ],
+      "examples": [
+        {
+          "constructor": {
+            "incident_type_code": "2020000",
+            "target_service_id": "102",
+            "address": {
+              "city": "Москва",
+              "okrug": "Северный",
+              "district": "Учебный",
+              "street": "Дубнинская улица",
+              "house": "1",
+              "building": "",
+              "apartment": ""
+            },
+            "victims": true,
+            "complications": [],
+            "level": 1,
+            "weight": 2,
+            "seed": 42
+          }
+        }
+      ]
+    },
+    "ScenarioPreview": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario": {
+          "$ref": "https://arm112.local/contracts/openapi.json#/components/schemas/Scenario"
+        },
+        "suggested_weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "validation_errors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "code": {
+                "type": "string",
+                "minLength": 1
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "path",
+              "code",
+              "message"
+            ]
+          }
+        },
+        "provenance": {
+          "$ref": "#/$defs/ContentProvenance"
+        },
+        "training_plan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TrainingPlan"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "scenario",
+        "suggested_weight",
+        "validation_errors",
+        "provenance",
+        "training_plan"
+      ],
+      "examples": [
+        {
+          "scenario": {
+            "id": "00000000-0000-4000-8000-000000000100",
+            "version": 1,
+            "level": 1,
+            "weight": 2,
+            "incident_type_code": "2020000",
+            "target_service_id": "102",
+            "card": {
+              "number": "10000001",
+              "incident_type_code": "2020000",
+              "caller_name": "Учебный заявитель",
+              "phone_aon": "+79000000001",
+              "phone_provided": "",
+              "phone_scene": "",
+              "address": {
+                "city": "Москва",
+                "okrug": "Северный",
+                "district": "Учебный",
+                "street": "Дубнинская улица",
+                "house": "1",
+                "building": "",
+                "apartment": ""
+              },
+              "description": "Учебный сценарий: ДТП с пострадавшими у дома 1.",
+              "tags": [
+                "ДТП",
+                "Пострадавшие"
+              ],
+              "victims": true,
+              "ambulance_refused": false,
+              "blocked_people": false,
+              "emergency": false,
+              "incident_class": "ДТП с пострадавшими",
+              "service_ids": [
+                "102",
+                "103"
+              ]
+            },
+            "reference": {
+              "expected_flow": [
+                "received",
+                "accepted",
+                "responding",
+                "completed"
+              ],
+              "required_fields": [
+                "service_number",
+                "comment"
+              ],
+              "expected_service_ids": [
+                "102",
+                "103"
+              ],
+              "expected_address": {
+                "city": "Москва",
+                "okrug": "Северный",
+                "district": "Учебный",
+                "street": "Дубнинская улица",
+                "house": "1",
+                "building": "",
+                "apartment": ""
+              },
+              "expected_call": {
+                "required": true,
+                "service_id": "102",
+                "phone_ext": "102",
+                "before_s": 180
+              },
+              "expected_comment": "Передана информация о ДТП с пострадавшими по адресу: Москва, Дубнинская улица, дом 1. Направлен экипаж."
+            },
+            "complications": [],
+            "origin": "template",
+            "status": "draft",
+            "teacher_comment": "Синтетическая фикстура для разработки."
+          },
+          "suggested_weight": 2,
+          "validation_errors": [],
+          "provenance": {
+            "author_kind": "teacher",
+            "author_id": "00000000-0000-4000-8000-000000000002",
+            "source_kind": "manual",
+            "source_id": null,
+            "source_version": null,
+            "sha256": null,
+            "synthetic": true
+          },
+          "training_plan": null
+        }
+      ]
+    },
+    "ContentSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author_kinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "system",
+              "teacher",
+              "trainee"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "incident_type_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "scenario_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "author_kinds",
+        "incident_type_codes",
+        "scenario_ids"
+      ]
+    },
+    "GenerateOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Клиентский ключ повтора generate/revise в области (kind=generate, actor_id, request_id). UUID создаётся один раз; при повторе сохраняются ключ и всё тело GenerateInput."
+        },
+        "selection": {
+          "$ref": "#/$defs/ContentSelection"
+        },
+        "constructor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScenarioConstructor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "selection",
+        "constructor"
+      ],
+      "examples": [
+        {
+          "request_id": "00000000-0000-4000-8000-000000002299",
+          "selection": {
+            "author_kinds": [
+              "system",
+              "teacher"
+            ],
+            "incident_type_codes": [
+              "2020000"
+            ],
+            "scenario_ids": []
+          },
+          "constructor": {
+            "incident_type_code": "2020000",
+            "target_service_id": "102",
+            "address": {
+              "city": "Москва",
+              "okrug": "Северный",
+              "district": "Учебный",
+              "street": "Дубнинская улица",
+              "house": "1",
+              "building": "",
+              "apartment": ""
+            },
+            "victims": true,
+            "complications": [],
+            "level": 1,
+            "weight": 2,
+            "seed": 42
+          }
+        }
+      ]
+    },
+    "ScenarioRevisionInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "request_id",
+        "version",
+        "comment"
+      ],
+      "examples": [
+        {
+          "request_id": "00000000-0000-4000-8000-000000002300",
+          "version": 1,
+          "comment": "Уточнить видимость номера дома в описании."
+        }
+      ]
+    },
+    "ScenarioVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "scenario_id",
+        "version"
+      ]
+    },
+    "PackApprovalInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scenarios": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScenarioVersion"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "request_id",
+        "scenarios"
+      ],
+      "examples": [
+        {
+          "request_id": "00000000-0000-4000-8000-000000002301",
+          "scenarios": [
+            {
+              "scenario_id": "00000000-0000-4000-8000-000000000100",
+              "version": 1
+            }
+          ]
+        }
+      ]
+    },
+    "PackApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pack_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "approved": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScenarioVersion"
+          },
+          "minItems": 1
+        },
+        "remaining_draft_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "pack_id",
+        "approved",
+        "remaining_draft_ids"
+      ],
+      "examples": [
+        {
+          "pack_id": "00000000-0000-4000-8000-000000000800",
+          "approved": [
+            {
+              "scenario_id": "00000000-0000-4000-8000-000000000100",
+              "version": 2
+            }
+          ],
+          "remaining_draft_ids": [
+            "00000000-0000-4000-8000-000000000101"
+          ]
+        }
+      ]
+    },
+    "JobProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "job": {
+          "$ref": "https://arm112.local/contracts/openapi.json#/components/schemas/Job"
+        },
+        "completed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scenario_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        },
+        "pack_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "job",
+        "completed",
+        "total",
+        "scenario_ids",
+        "pack_id",
+        "warnings"
+      ],
+      "examples": [
+        {
+          "job": {
+            "id": "00000000-0000-4000-8000-000000000900",
+            "kind": "generate",
+            "status": "pending",
+            "error": null
+          },
+          "completed": 0,
+          "total": 2,
+          "scenario_ids": [],
+          "pack_id": "00000000-0000-4000-8000-000000000800",
+          "warnings": []
+        }
+      ]
+    },
+    "ScenarioContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provenance": {
+          "$ref": "#/$defs/ContentProvenance"
+        },
+        "training_plan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TrainingPlan"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "scenario_id",
+        "version",
+        "provenance",
+        "training_plan"
+      ],
+      "examples": [
+        {
+          "scenario_id": "00000000-0000-4000-8000-000000000100",
+          "version": 1,
+          "provenance": {
+            "author_kind": "teacher",
+            "author_id": "00000000-0000-4000-8000-000000000002",
+            "source_kind": "manual",
+            "source_id": null,
+            "source_version": null,
+            "sha256": null,
+            "synthetic": true
+          },
+          "training_plan": {
+            "version": 1,
+            "required_brigade_ids": [
+              "00000000-0000-4000-8000-000000002005"
+            ],
+            "messages": [
+              {
+                "message": {
+                  "id": "00000000-0000-4000-8000-000000002002",
+                  "version": 1,
+                  "text": "Бригада прибыла к месту происшествия.",
+                  "audio": {
+                    "asset_id": "00000000-0000-4000-8000-000000002001",
+                    "version": 1,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+                    "duration_ms": 2000
+                  }
+                },
+                "brigade_id": "00000000-0000-4000-8000-000000002005",
+                "call_target_id": "00000000-0000-4000-8000-000000002006",
+                "available_after_s": 60,
+                "expected_comment": "Отразить прибытие."
+              }
+            ],
+            "observable_defects": []
+          }
+        }
+      ]
+    },
+    "ScenarioContentInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provenance": {
+          "$ref": "#/$defs/ContentProvenance"
+        },
+        "training_plan": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TrainingPlan"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "provenance",
+        "training_plan"
+      ],
+      "examples": [
+        {
+          "version": 1,
+          "provenance": {
+            "author_kind": "teacher",
+            "author_id": "00000000-0000-4000-8000-000000000002",
+            "source_kind": "manual",
+            "source_id": null,
+            "source_version": null,
+            "sha256": null,
+            "synthetic": true
+          },
+          "training_plan": {
+            "version": 1,
+            "required_brigade_ids": [
+              "00000000-0000-4000-8000-000000002005"
+            ],
+            "messages": [
+              {
+                "message": {
+                  "id": "00000000-0000-4000-8000-000000002002",
+                  "version": 1,
+                  "text": "Бригада прибыла к месту происшествия.",
+                  "audio": {
+                    "asset_id": "00000000-0000-4000-8000-000000002001",
+                    "version": 1,
+                    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                    "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+                    "duration_ms": 2000
+                  }
+                },
+                "brigade_id": "00000000-0000-4000-8000-000000002005",
+                "call_target_id": "00000000-0000-4000-8000-000000002006",
+                "available_after_s": 60,
+                "expected_comment": "Отразить прибытие."
+              }
+            ],
+            "observable_defects": []
+          }
+        }
+      ]
+    },
+    "GrammarCheckInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "description",
+              "teacher_comment",
+              "expected_comment"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "version",
+        "fields"
+      ],
+      "examples": [
+        {
+          "version": 1,
+          "fields": [
+            "description"
+          ]
+        }
+      ]
+    },
+    "GrammarIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "description",
+            "teacher_comment",
+            "expected_comment"
+          ]
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "spelling",
+            "grammar",
+            "punctuation"
+          ]
+        },
+        "suggestions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "field",
+        "start",
+        "end",
+        "category",
+        "suggestions",
+        "explanation"
+      ]
+    },
+    "GrammarCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "unavailable"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GrammarIssue"
+          }
+        },
+        "model_version": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "scenario_id",
+        "version",
+        "status",
+        "issues",
+        "model_version",
+        "reason"
+      ],
+      "examples": [
+        {
+          "scenario_id": "00000000-0000-4000-8000-000000000100",
+          "version": 1,
+          "status": "unavailable",
+          "issues": [],
+          "model_version": null,
+          "reason": "Словарь ещё не подключён."
+        }
+      ]
+    },
+    "Material": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "reference",
+            "evaluation"
+          ],
+          "description": "Назначение этой версии из MaterialMetadata: reference — справка, evaluation — материал только для оценивания. Ученику доступны лишь назначенные ему версии reference."
+        },
+        "media_type": {
+          "type": "string",
+          "enum": [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/json",
+            "application/xml",
+            "text/csv"
+          ]
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10485760
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "title",
+        "purpose",
+        "media_type",
+        "size_bytes",
+        "sha256",
+        "created_at"
+      ],
+      "examples": [
+        {
+          "id": "00000000-0000-4000-8000-000000002200",
+          "version": 1,
+          "title": "Учебная памятка",
+          "purpose": "reference",
+          "media_type": "application/pdf",
+          "size_bytes": 1024,
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "created_at": "2026-09-23T00:00:00.000Z"
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000002201",
+          "version": 1,
+          "title": "Учебные критерии оценивания",
+          "purpose": "evaluation",
+          "media_type": "application/json",
+          "size_bytes": 512,
+          "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "created_at": "2026-09-23T00:00:00.000Z"
+        }
+      ]
+    },
+    "MaterialMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "reference",
+            "evaluation"
+          ]
+        },
+        "previous_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "previous_version": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "purpose",
+        "previous_id",
+        "previous_version"
+      ],
+      "examples": [
+        {
+          "title": "Учебная памятка",
+          "purpose": "reference",
+          "previous_id": null,
+          "previous_version": null
+        },
+        {
+          "title": "Учебные критерии оценивания",
+          "purpose": "evaluation",
+          "previous_id": null,
+          "previous_version": null
+        }
+      ]
+    },
+    "MaterialAssignmentInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "material_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "material_id",
+              "version"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "request_id",
+        "materials"
+      ],
+      "examples": [
+        {
+          "request_id": "00000000-0000-4000-8000-000000002302",
+          "materials": [
+            {
+              "material_id": "00000000-0000-4000-8000-000000002200",
+              "version": 1
+            }
+          ]
+        }
+      ]
+    },
+    "PresentedInformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "delivery_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "presentation_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "presented_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "audio",
+            "text"
+          ]
+        }
+      },
+      "required": [
+        "delivery_id",
+        "message_id",
+        "message_version",
+        "presentation_event_id",
+        "presented_at",
+        "text",
+        "channel"
+      ]
+    },
+    "SupplementalResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "criteria": {
+          "type": "array",
+          "items": {
+            "$ref": "https://arm112.local/contracts/openapi.json#/components/schemas/CriterionResult"
+          }
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LayerResult"
+          }
+        },
+        "errors": {
+          "$ref": "#/$defs/ErrorCounts"
+        }
+      },
+      "required": [
+        "criteria",
+        "layers",
+        "errors"
+      ]
+    },
+    "PredictionContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Вход SessionPredictor для нового занятия: snapshot_id — UUID занятия, policy — его сохранённый TimingPolicy v2. Норматив не выводится из параметров Trainee. До V-03/C-06 в runtime не используется.",
+      "properties": {
+        "contract_version": {
+          "type": "integer",
+          "const": 2
+        },
+        "snapshot_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "policy": {
+          "$ref": "#/$defs/TimingPolicy"
+        }
+      },
+      "required": [
+        "contract_version",
+        "snapshot_id",
+        "policy"
+      ],
+      "examples": [
+        {
+          "contract_version": 2,
+          "snapshot_id": "00000000-0000-4000-8000-000000003100",
+          "policy": {
+            "timing_version": 2,
+            "reaction_normative_s": 30,
+            "handling_normative_s": 100,
+            "waiting_policy": "separate",
+            "max_rtt_ms": 2000,
+            "max_sample_age_ms": 60000,
+            "max_buffer_delay_ms": 30000,
+            "future_tolerance_ms": 250
+          }
+        },
+        {
+          "contract_version": 2,
+          "snapshot_id": "00000000-0000-4000-8000-000000003180",
+          "policy": {
+            "timing_version": 2,
+            "reaction_normative_s": 30,
+            "handling_normative_s": 180,
+            "waiting_policy": "separate",
+            "max_rtt_ms": 2000,
+            "max_sample_age_ms": 60000,
+            "max_buffer_delay_ms": 30000,
+            "future_tolerance_ms": 250
+          }
+        }
+      ]
+    },
+    "CalibrationObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Завершённая прошлая попытка. Норматив обработки и качество берутся из её снимка/TimingResult; неизвестные сведения передаются null, текущие settings не подставляются. Старые predictions не переписываются.",
+      "properties": {
+        "card_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "prediction_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "made_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "predicted_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "automatic_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "effective_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "override_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handling_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timing_version": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "snapshot_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "handling_normative_s": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timing_quality": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "verified",
+                "estimated",
+                "invalid",
+                "legacy"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "card_id",
+        "prediction_id",
+        "made_at",
+        "completed_at",
+        "predicted_score",
+        "automatic_score",
+        "effective_score",
+        "override_id",
+        "handling_s",
+        "timing_version",
+        "level",
+        "weight",
+        "snapshot_id",
+        "handling_normative_s",
+        "timing_quality"
+      ],
+      "examples": [
+        {
+          "card_id": "00000000-0000-4000-8000-000000003101",
+          "prediction_id": "00000000-0000-4000-8000-000000003102",
+          "made_at": "2026-09-23T00:00:00.000Z",
+          "completed_at": "2026-09-23T00:02:50.000Z",
+          "predicted_score": 0.7,
+          "automatic_score": 0.7,
+          "effective_score": 0.8,
+          "override_id": "00000000-0000-4000-8000-000000003103",
+          "handling_s": 170,
+          "timing_version": 2,
+          "snapshot_id": "00000000-0000-4000-8000-000000003100",
+          "handling_normative_s": 100,
+          "timing_quality": "verified",
+          "level": 1,
+          "weight": 2
+        },
+        {
+          "card_id": "00000000-0000-4000-8000-000000003181",
+          "prediction_id": "00000000-0000-4000-8000-000000003182",
+          "made_at": "2026-09-23T00:00:00.000Z",
+          "completed_at": "2026-09-23T00:02:50.000Z",
+          "predicted_score": 0.7,
+          "automatic_score": 0.7,
+          "effective_score": 0.8,
+          "override_id": "00000000-0000-4000-8000-000000003183",
+          "handling_s": 170,
+          "timing_version": 2,
+          "snapshot_id": "00000000-0000-4000-8000-000000003180",
+          "handling_normative_s": 180,
+          "timing_quality": "estimated",
+          "level": 1,
+          "weight": 2
+        },
+        {
+          "card_id": "00000000-0000-4000-8000-000000003201",
+          "prediction_id": "00000000-0000-4000-8000-000000003202",
+          "made_at": "2026-09-23T00:00:00.000Z",
+          "completed_at": "2026-09-23T00:02:50.000Z",
+          "predicted_score": 0.7,
+          "automatic_score": 0.7,
+          "effective_score": 0.7,
+          "override_id": null,
+          "handling_s": null,
+          "timing_version": 1,
+          "snapshot_id": null,
+          "handling_normative_s": null,
+          "timing_quality": null,
+          "level": 1,
+          "weight": 2
+        }
+      ]
+    },
+    "ClockSampleReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sample_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "sample_id",
+        "accepted",
+        "reason"
+      ]
+    },
+    "BatchValidationIssue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "field": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "unknown_participant",
+            "invalid_reference",
+            "service_mismatch",
+            "duplicate_order",
+            "unknown_scenario"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "field",
+        "code",
+        "message"
+      ]
+    },
+    "BatchValidationError": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/BatchValidationIssue"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "details"
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+/* Выбор обучения — по наброску пользователя: заголовок и две плитки рядом.
+   Цвета — токены приложения (tokens.css). */
+.welcome {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  min-height: 100svh;
+  padding: 24px 16px;
+  background: var(--color-panel);
+}
+.welcome h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 400;
+}
+.welcome h1:focus {
+  outline: none;
+}
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 48px;
+}
+.operator,
+.dispatcher {
+  width: min(340px, calc(100vw - 32px));
+  height: 200px;
+  color: var(--color-on-dark);
+  border: 0;
+  border-radius: 6px;
+  font-weight: 700;
+}
+.operator {
+  background: var(--color-danger);
+  font-size: 72px;
+}
+.dispatcher {
+  background: var(--color-active);
+  font-size: 32px;
+  line-height: 1.2;
+}
+.operator:hover,
+.dispatcher:hover {
+  filter: brightness(1.08);
+}
+.operator:focus-visible,
+.dispatcher:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: 3px;
+}
+/* Крестик — назад к экрану входа, в правом верхнем углу (просьба капитана 29.09). */
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.close:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.close:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: 3px;
+}

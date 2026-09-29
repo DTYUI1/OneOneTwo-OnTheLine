@@ -1,0 +1,35 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.result {
+  border: 1px solid var(--color-border);
+  padding: var(--space-3);
+  margin: var(--space-4) 0;
+}
+.scroll {
+  overflow-x: auto;
+}
+.result table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.result th,
+.result td {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2);
+  vertical-align: top;
+}
+.result caption {
+  text-align: left;
+  font-weight: bold;
+  padding: var(--space-2);
+}
+.feedback {
+  background: var(--color-welcome-note);
+  padding: var(--space-3);
+}
+.critical {
+  color: var(--color-danger);
+}

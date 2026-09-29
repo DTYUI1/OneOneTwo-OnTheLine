@@ -1,0 +1,72 @@
+{
+  "id": "1772fcb8-f1a0-5cb6-9a4b-d72060501d25",
+  "version": 1,
+  "level": 4,
+  "weight": 8,
+  "incident_type_code": "2020500",
+  "target_service_id": "103",
+  "card": {
+    "number": "73220008",
+    "incident_type_code": "2020500",
+    "caller_name": "Иванова Елена Сергеевна",
+    "phone_aon": "+79000003202",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Волгоградский проспект",
+      "house": "",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "ДТП: троллейбус маршрута 27 (бортовой номер 11 458) и ВАЗ-2115. В троллейбусе 3 пострадавших, не блокированы. Течёт бензин. В сторону области, остановка «Завод Спецэлектрод».",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "ДТП с пострадавшими - общественный",
+    "service_ids": [
+      "101",
+      "102",
+      "103"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Волгоградский проспект",
+      "house": "",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. ДТП троллейбуса № 27 (борт 11 458) и ВАЗ-2115, 3 пострадавших, не блокированы, течёт бензин. Москва, Волгоградский проспект, остановка «Завод Спецэлектрод», в сторону области. Направлены бригады скорой помощи."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 32, задача 2 (стр. 32 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

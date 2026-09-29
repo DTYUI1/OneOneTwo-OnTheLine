@@ -1,0 +1,97 @@
+/* Окно теста — как прочие окна поверх АРМ (ParallelNotice): светлая панель, тёмная полоса. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: #101820a6;
+}
+
+.dialog {
+  width: min(680px, 100%);
+  max-height: calc(100vh - 2 * var(--space-3));
+  overflow: auto;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border-top: 4px solid var(--color-active);
+  outline: none;
+}
+
+.dialog h2 {
+  margin: 0;
+  padding: 10px var(--space-3);
+  color: var(--color-on-dark);
+  font-size: 16px;
+  background: var(--color-header);
+}
+
+/* Номер стоит в тексте вопроса (legend): маркер списка у fieldset встаёт к первому варианту. */
+.questions {
+  margin: var(--space-3);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.question {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.question legend {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.right {
+  color: var(--color-success, #1f7a4d);
+  font-weight: bold;
+}
+
+.wrong {
+  color: var(--color-danger);
+  text-decoration: line-through;
+}
+
+.explain {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.result {
+  margin: 0 var(--space-3);
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.primary {
+  padding: 6px 14px;
+  font-size: 13px;
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border: 1px solid var(--color-active);
+  border-radius: 0;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Почему «Проверить» неактивна — прямо под кнопками. */
+.remaining {
+  margin: calc(-1 * var(--space-2)) var(--space-3) var(--space-3);
+  font-size: 13px;
+}

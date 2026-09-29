@@ -1,0 +1,774 @@
+{
+  "version": 1,
+  "note": "Доклады бригад в сценариях самостоятельной тренировки: тексты — data/practice, озвучка — Piper, голос службы (scripts/voices/practice_generate.sh). Пути относительно data/voices.",
+  "messages": [
+    {
+      "service_id": "102",
+      "path": "practice/fight-street/102/departure.ogg",
+      "text": "Вызов принят, наряд направлен.",
+      "duration_ms": 2415,
+      "sha256": "ff76b7d16c84bb24b98fd6ad8507e82ac86e06ffe326239d158744195292fdca",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/fight-street/102/arrival-1.ogg",
+      "text": "Наряд на месте, драку прекратили, двое задержаны.",
+      "duration_ms": 4400,
+      "sha256": "34620f4fc9165f6df1715c266a166f01e87d454a01a965c485f9e72780c479f5",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/fight-street/102/works-1.ogg",
+      "text": "Опрашиваем свидетелей, пострадавшего передаём скорой.",
+      "duration_ms": 3796,
+      "sha256": "87b75ad62b3328aabfb825e14c56f3645e4553a53b788fa2b3eb5f67b011ec19",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/fight-street/102/completion-1.ogg",
+      "text": "Задержанные доставлены в отдел полиции, наряд освободился.",
+      "duration_ms": 4679,
+      "sha256": "a453deadb7c4c0250abd6910e6e415f90dd6ab8a8096c2639ca64be72f999afb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/fight-street/102/arrival-2.ogg",
+      "text": "Наряд на месте, осматриваем площадь у входа.",
+      "duration_ms": 3262,
+      "sha256": "ae9c8793126933d8bec27262f2d9d5974ef04d75a9321a3f11b21257b516ed36",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/fight-street/102/outcome-2.ogg",
+      "text": "Драки нет, участники разошлись, свидетелей не нашли, работы не проводили.",
+      "duration_ms": 6037,
+      "sha256": "c0e7538602f3df904603b197bd2da4712ffd640391b8dc8166f939c916d9be36",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/fight-street/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "duration_ms": 1776,
+      "sha256": "3bf5fbaa0ef73a56cb065c512dd4bf196b6a1d6651a955908d2485a7d2a5d33d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/fight-street/103/arrival-1.ogg",
+      "text": "Бригада на месте, пострадавший мужчина с травмой головы, в сознании.",
+      "duration_ms": 3495,
+      "sha256": "b32a3c34afc644f02f3d317e1132e6145dfd45733205efab941e9a3cd62b7eb0",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/fight-street/103/works-1.ogg",
+      "text": "Обрабатываем рану, подозрение на сотрясение мозга.",
+      "duration_ms": 2705,
+      "sha256": "fb24bb0ffd31eae0e3aa555442f09af29f8b12436411af81119591eabc726bbb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/fight-street/103/completion-1.ogg",
+      "text": "Пострадавший госпитализирован, бригада свободна.",
+      "duration_ms": 2694,
+      "sha256": "7961f5ff4dd3a3f1804ee5cdee2c9f7963b00d7850bcd1e50798af5dc73925ab",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/fight-street/103/arrival-2.ogg",
+      "text": "Бригада на месте, осматриваем пострадавшего.",
+      "duration_ms": 2473,
+      "sha256": "465cb317462b8560d84be69391b0958aa07ee8020cdcac9f0addaf73a70ecc4b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/fight-street/103/outcome-2.ogg",
+      "text": "Пострадавший от госпитализации отказался, отказ оформлен, бригада свободна.",
+      "duration_ms": 4156,
+      "sha256": "e55cc495087f761fcb72d659ca434ea8eaf1b6f83cc7adbed71f7023fb53f1f5",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/gas-apartment/101/departure.ogg",
+      "text": "Вызов принят, отделение выехало.",
+      "duration_ms": 2357,
+      "sha256": "c42985a8bd6405c9c59ca4d4707c0525516c1bf774532b6de01b576ccac43336",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/gas-apartment/101/arrival-1.ogg",
+      "text": "Расчёт на месте, в квартире сильный запах газа, выводим жильцов.",
+      "duration_ms": 4122,
+      "sha256": "0d185d3a43352772f08dd4c4dbf0d498829efb41c7c836688554a4513345e7e3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/gas-apartment/101/works-1.ogg",
+      "text": "Жильцы выведены, проветриваем квартиру, ждём газовую службу.",
+      "duration_ms": 3611,
+      "sha256": "bf481a0fac68d65523f99f813edb6b3db2c7b142f9d07e03b909b4d70df032fc",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/gas-apartment/101/completion-1.ogg",
+      "text": "Газовая служба устранила утечку, газа в квартире нет, расчёт возвращается.",
+      "duration_ms": 4783,
+      "sha256": "be0203b42b6018eb911794a1e30b7674c2ece54d88de093cd676931d0e0bf5b5",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/gas-apartment/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся на третий этаж.",
+      "duration_ms": 2891,
+      "sha256": "b8f024a44605d8eaa9ba3a2a3c3802183c00c4d41216b068adbafc7c41806366",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/gas-apartment/101/outcome-2.ogg",
+      "text": "Запах слабый, жильцы на улице, утечкой занимается газовая служба, наши работы не потребовались.",
+      "duration_ms": 6188,
+      "sha256": "9b61b74bfa2d1d85f86f22b4687e9ce8eb422cdd07948db5526d1104391a7a21",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/gas-apartment/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "duration_ms": 2577,
+      "sha256": "2c6af4779b068e7a0dec45b238ddc11735c50e8d807d33790df48be3493dff49",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/gas-apartment/104/arrival-1.ogg",
+      "text": "Бригада на месте, замеряем газ в квартире прибором.",
+      "duration_ms": 2810,
+      "sha256": "4b000ba9b112cbaf27ce04f1b444dd71229dbc1b507f1cf2812fc6579b7055c2",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/gas-apartment/104/works-1.ogg",
+      "text": "Утечка на шланге плиты, газ перекрыт, меняем шланг.",
+      "duration_ms": 3564,
+      "sha256": "0e00bdf8c0a9c05c6d836338f6dfaf65c405166e3b9f409f564bbc2fc35917f9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/gas-apartment/104/completion-1.ogg",
+      "text": "Шланг заменён, утечка устранена, подача газа восстановлена, работы завершены.",
+      "duration_ms": 5074,
+      "sha256": "f3ec54fd1ef8a2e7e23f6fb043ccc502fcf0a35841981dfbfba113df0cb2fb6a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/gas-apartment/104/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "duration_ms": 2310,
+      "sha256": "2159e239ba1cb328c74b8125cd8e4172ec8bc8433d4fda8c08890383c7e8ad3f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/gas-apartment/104/outcome-2.ogg",
+      "text": "Дверь заперта, никто не открывает, в квартиру не попасть, работы не проводили, для вскрытия двери нужна полиция.",
+      "duration_ms": 6815,
+      "sha256": "76ff3c71db9afea1e2a38f34a2b795daa8dd1266780006666c07e65efc291c42",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/heart-street/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "duration_ms": 1892,
+      "sha256": "7f7f6639b4e912d427fd5a26b6ecefdabc69db177a8aee3e0955a18d7d2eafb9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/heart-street/103/arrival-1.ogg",
+      "text": "Бригада на месте, мужчина в сознании, снимаем кардиограмму.",
+      "duration_ms": 3088,
+      "sha256": "aa634da4ed4a76cb155f5292cb3d58f47ff694d321f384307b7c564fa3cd30fe",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/heart-street/103/works-1.ogg",
+      "text": "Подозрение на инфаркт, оказываем помощь, готовим к госпитализации.",
+      "duration_ms": 3599,
+      "sha256": "e152f3cad8fde038cc2d4d0fa6d4b486e4e927e7821ff9657db0bd0d1ba229cd",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/heart-street/103/completion-1.ogg",
+      "text": "Пациент госпитализирован в кардиологию, бригада свободна.",
+      "duration_ms": 3228,
+      "sha256": "3692d60b3c8568167fbbc74b3a4bb0b8bf89cd915ce327640eb1fecc82867d89",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/heart-street/103/arrival-2.ogg",
+      "text": "Бригада на месте, ищем мужчину на остановке.",
+      "duration_ms": 2426,
+      "sha256": "dedb483a95f4d7bd23308f29f2b39bac841940ddfb7e6ae73efacd7b9e6ca08d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/heart-street/103/outcome-2.ogg",
+      "text": "Мужчины на остановке нет, ушёл до нашего прибытия, очевидцы его не видели, бригада свободна.",
+      "duration_ms": 5132,
+      "sha256": "d911a11b6ba4b1b812cd19f2c0a0ae3952e4513f3722741b2b1cfc4805b32530",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/lift-stuck/101/departure.ogg",
+      "text": "Вызов принят, расчёт выехал.",
+      "duration_ms": 2101,
+      "sha256": "9b1adb365d436c5f2a875086e6b382790c106d9fd2e2e910a254ac25baf08d82",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/lift-stuck/101/arrival-1.ogg",
+      "text": "Расчёт на месте, кабина между седьмым и восьмым этажами, раздвигаем двери.",
+      "duration_ms": 4772,
+      "sha256": "fc0f97669d80079f9c289fb1afc69bae89dc5876833741ee80fe5f3c12255a7c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/lift-stuck/101/works-1.ogg",
+      "text": "Двери кабины раскрыты, выводим женщину на площадку.",
+      "duration_ms": 3518,
+      "sha256": "5416fbd3dd8ad370dfd7aa9f33d48abacc4d650b21dee22b8ab40cbc17ac026b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/lift-stuck/101/completion-1.ogg",
+      "text": "Женщина выведена и передана скорой помощи, расчёт возвращается.",
+      "duration_ms": 4319,
+      "sha256": "0a439dc5f3c3e6bcaf914acdf57731a710d8e8ba4e32ca9e26c9116fd50a8b6f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/lift-stuck/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся к кабине.",
+      "duration_ms": 2368,
+      "sha256": "8f8e36e6ed855bfb20c55ea9bc855f7637c99a67ead41510cd9bc445de7a4c06",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/lift-stuck/101/outcome-2.ogg",
+      "text": "Механик Мослифта уже вывел женщину, наши работы не потребовались, расчёт возвращается.",
+      "duration_ms": 5422,
+      "sha256": "6e3ec9bbc02e2b694afe58c3ce42436438b322d26525b0979db6f16e6785e527",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/lift-stuck/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "duration_ms": 1741,
+      "sha256": "9e3f0eaa6a2e78a3024e9a9abe5aae377696ece9723316b5d5a7e3f26be27630",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/lift-stuck/103/arrival-1.ogg",
+      "text": "Бригада на месте, ждём, когда откроют кабину.",
+      "duration_ms": 2357,
+      "sha256": "5bb274ee6ce789c99318d0f0e58f5c1fd92a8f0a989d2f7b8c38dbdcff121995",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/lift-stuck/103/works-1.ogg",
+      "text": "Женщина выведена, давление высокое, снимаем кардиограмму, оказываем помощь.",
+      "duration_ms": 3843,
+      "sha256": "a7303d22ef68029f70c4303cfa0a799c7b65a0b6b1c133f98b9dac5928c657c9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/lift-stuck/103/completion-1.ogg",
+      "text": "Состояние стабильное, от госпитализации отказалась, бригада свободна.",
+      "duration_ms": 3855,
+      "sha256": "3422c2282d4ee2bfa4c6da2107ffe77e3eebbbec4160f1785883a0cd142fe049",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/lift-stuck/103/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к лифту.",
+      "duration_ms": 2055,
+      "sha256": "3360bd4e70827e69817d092bb513d42b981f7aed151dcf7f83a7fb1ad6a65130",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/lift-stuck/103/outcome-2.ogg",
+      "text": "Женщину вывели, на боль больше не жалуется, от осмотра отказалась, бригада свободна.",
+      "duration_ms": 4307,
+      "sha256": "c07f8b62a8017ef65dae4fc317a29e6577754e6fe2e381e4d92a3c7210eec5f1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "practice/lift-stuck/MOSLIFT/departure.ogg",
+      "text": "Заявка принята, механик выехал.",
+      "duration_ms": 3181,
+      "sha256": "7d05b9ff25b9bfe5cf8239b1b4cff4f7e82d8b58a0f144f30408c8b09fd6e132",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "practice/lift-stuck/MOSLIFT/arrival-1.ogg",
+      "text": "Механик на месте, связь с кабиной установлена, пассажирка в сознании.",
+      "duration_ms": 5120,
+      "sha256": "e7acc3163abba9167147af17a6ea7b5cfb306a4fec7df7d1af3da3ab75afba2a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "practice/lift-stuck/MOSLIFT/works-1.ogg",
+      "text": "Лифт обесточен, опускаем кабину до этажа, выводим пассажирку.",
+      "duration_ms": 4818,
+      "sha256": "958df7b470154455667ca89fb51c343f9fa50190bcca62ac3409fd38e4ea1869",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "practice/lift-stuck/MOSLIFT/completion-1.ogg",
+      "text": "Пассажирка выведена и передана скорой, лифт отключён до ремонта, работы завершены.",
+      "duration_ms": 6374,
+      "sha256": "349712ce4d785a7903198e7022f6f2bae96087383446d76b2a05897a801f286e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "practice/lift-stuck/MOSLIFT/arrival-2.ogg",
+      "text": "Механик на месте, осматриваем машинное помещение.",
+      "duration_ms": 4226,
+      "sha256": "84958d13725ce03d5ac1b0e8038e94bf629d329c2900b87b9a37fdf7933e5e18",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "practice/lift-stuck/MOSLIFT/outcome-2.ogg",
+      "text": "Этот лифт обслуживает другая организация, ключей у нас нет, работы не проводили, информацию передали её диспетчеру.",
+      "duration_ms": 9183,
+      "sha256": "658391ee5c0b1ed724b698236072946c21237eaa0fc1844a4228eb3d9a998459",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/pipe-basement/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "duration_ms": 2728,
+      "sha256": "4ea5515e2c749aa95b5d96a1ddf3e284f64125cc9b040b11376ea3b5fc7f56b4",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/pipe-basement/104/arrival-1.ogg",
+      "text": "Бригада на месте, подвал залит, газопровод в зоне пара.",
+      "duration_ms": 2914,
+      "sha256": "729eef6cb619f531ef152863b81208d59955cfc1700b2b1a90f6e9d2e75811f6",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/pipe-basement/104/works-1.ogg",
+      "text": "Газопровод осмотрен, повреждений нет, замеряем газ в подвале, ждём отключения воды.",
+      "duration_ms": 4934,
+      "sha256": "3522284e9e4def1a299cc5f0fa59569f2bccfe26be9f374704086586cde9269b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/pipe-basement/104/completion-1.ogg",
+      "text": "Воду отключили, газопровод исправен, газа в подвале нет, работы завершены.",
+      "duration_ms": 4481,
+      "sha256": "04e6ddefdd6874ec71fc50e3117e24900c4bad6bfb2afd455816cc104d81b8bb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/pipe-basement/104/arrival-2.ogg",
+      "text": "Бригада на месте, спускаемся в подвал.",
+      "duration_ms": 2543,
+      "sha256": "2b55a0dce5ed2b479701c827207e7c21f7ad3e742c1220547ab242cfee936734",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/pipe-basement/104/outcome-2.ogg",
+      "text": "Газопровод проходит в другой части подвала, вода его не касается, работы не проводили, нужна аварийная служба водоканала.",
+      "duration_ms": 6803,
+      "sha256": "b8d5e97404066e9385ac741c813df843c14cd8148a55935a5dd6cd963c2dd29d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/departure.ogg",
+      "text": "Вызов принят, два отделения выехали.",
+      "duration_ms": 2473,
+      "sha256": "97b8a1a2208775653b699b6991f7e016d84b8c5b492686002949407a5960e39b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/arrival-1.ogg",
+      "text": "Расчёт на месте, дым из квартиры на девятом этаже, вскрываем дверь.",
+      "duration_ms": 4156,
+      "sha256": "c0478aacc053754cf7a05975681a4994a0bf174c01dd270d816cde75ab5f3fc1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/works-1.ogg",
+      "text": "Дверь вскрыта, горит кухня, подана вода, мужчину вынесли и передали скорой.",
+      "duration_ms": 4644,
+      "sha256": "8a4eb862f34539ffc3fd4503885cfbaf975bf7d738951c2dd2ce2b342b53e7c4",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/completion-1.ogg",
+      "text": "Пожар ликвидирован, квартира проветрена, расчёт возвращается.",
+      "duration_ms": 3855,
+      "sha256": "a5d922b672e84414ca232adf0e32e257a4d450602dd9fad20cc137ad6d50d871",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся на девятый этаж.",
+      "duration_ms": 2902,
+      "sha256": "27d36a8aee600c75fad6ad26bce0b79d6cdf3a56f681676a0d83d69002efead7",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/outcome-2.ogg",
+      "text": "Хозяин открыл дверь сам, подгорела еда на плите, огня нет, наши работы не потребовались, возвращаемся.",
+      "duration_ms": 6304,
+      "sha256": "edff5329e76119a9951e06a242485a2f902ced1195481fd0f932ee0f0e36b316",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/smoke-apartment/102/departure.ogg",
+      "text": "Вызов принят, наряд направлен.",
+      "duration_ms": 2519,
+      "sha256": "e9528f3011da7bb1a561a9dffdb5e3ea0033f3dbb26a48e52053ddb2d4b5842b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/smoke-apartment/102/arrival-1.ogg",
+      "text": "Наряд на месте, работаем вместе с пожарными, подъезд перекрыт.",
+      "duration_ms": 4876,
+      "sha256": "ee799e4e9cc863ac5aa7d8665b738a694d09eb7a926f05418cac7477f102e819",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/smoke-apartment/102/works-1.ogg",
+      "text": "Охраняем вскрытую квартиру, устанавливаем родственников хозяина.",
+      "duration_ms": 4795,
+      "sha256": "aa8e49f0eb575672ede0c21ab7de258d8d441005e70f86cb777be4d83633eb03",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/smoke-apartment/102/completion-1.ogg",
+      "text": "Квартира закрыта, родственникам сообщено, наряд освободился.",
+      "duration_ms": 4888,
+      "sha256": "55f3d080be7f6cd4cfafaab3608abbbb8ebaf84aa64975bcbd7ffe298ef79db5",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/smoke-apartment/102/arrival-2.ogg",
+      "text": "Наряд на месте, поднимаемся к квартире.",
+      "duration_ms": 3216,
+      "sha256": "f8c3dc4e990117fa5701b5c7fb89281c3d7728463642450121a4edf7f6059a42",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/smoke-apartment/102/outcome-2.ogg",
+      "text": "Хозяин открыл дверь сам, дым от подгоревшей еды, правонарушения нет, работы не проводили.",
+      "duration_ms": 6223,
+      "sha256": "6b251e7653e6dbdeb96144a0aa9e0d67f3cf0742e9e96f9b30eaf0e9a8a4b3e6",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/smoke-apartment/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "duration_ms": 1788,
+      "sha256": "2cb0a4e84ba905206db0fc291ab3ad952635f6109f0a6a64ca646a31ed45f761",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/smoke-apartment/103/arrival-1.ogg",
+      "text": "Бригада на месте, ждём, пока пожарные выведут жильца.",
+      "duration_ms": 2775,
+      "sha256": "496f69f6ca647490c90625c9d40122fb322fec6b8cae4cacd07f2e6d90e3003b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/smoke-apartment/103/works-1.ogg",
+      "text": "Мужчина семидесяти лет, отравление дымом, оказываем помощь.",
+      "duration_ms": 3170,
+      "sha256": "a7894b36d5fc01ab36666dbaf293989e074ff39111284b6b74af376697f6ca87",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/smoke-apartment/103/completion-1.ogg",
+      "text": "Пострадавший госпитализирован, бригада свободна.",
+      "duration_ms": 2612,
+      "sha256": "05e0836c8dbe5bcbf1fcbc1c1b3b58b41acc84c0b05ef4f89f875a00b371e257",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/smoke-apartment/103/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "duration_ms": 2299,
+      "sha256": "3db0d2c81ef7ad02916dcf7e01a9cea00c94e61f5731433ac27c20afe2aec79e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/smoke-apartment/103/outcome-2.ogg",
+      "text": "Хозяин квартиры осмотрен, отравления нет, в помощи не нуждается, бригада свободна.",
+      "duration_ms": 4423,
+      "sha256": "5f4a5ba25e97aea9595559cb76cc71db284ac86b70aadd7860e7ea51f818286d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/smoke-apartment/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "duration_ms": 2461,
+      "sha256": "9cef651bd3459eefa8ec22ce78e3ca1f0f57112095bfa722e779a3dcb6f14521",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/smoke-apartment/104/arrival-1.ogg",
+      "text": "Бригада на месте, ждём допуска от пожарных.",
+      "duration_ms": 2937,
+      "sha256": "82e6195c5625c0f8d08bcd3eddd2fb5faf01c87a1bfb819ce88f371e699a670b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/smoke-apartment/104/works-1.ogg",
+      "text": "Газ на квартиру перекрыт, замеряем газ в подъезде прибором.",
+      "duration_ms": 3611,
+      "sha256": "43c4cb4601c462bc60b5f17048b6c8cbbd7eb404d2020a7ae10585793837ee3c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/smoke-apartment/104/completion-1.ogg",
+      "text": "Газа в подъезде нет, квартира отключена от газа до ремонта плиты, работы завершены.",
+      "duration_ms": 5933,
+      "sha256": "3a66d21a916438fa7893f569c69c1caa0ab8b81fc4d4fe5c1429c72c5975e3b6",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/smoke-apartment/104/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "duration_ms": 2159,
+      "sha256": "d7084a0c1740fb996f8a736555861ee1b32ea787f05738cfa0d5e4ae45f8ef9b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "practice/smoke-apartment/104/outcome-2.ogg",
+      "text": "Газовое оборудование исправно, дым от подгоревшей еды, работы не проводили, бригада уезжает.",
+      "duration_ms": 5492,
+      "sha256": "90fc50de9bc8516eaf8c43c4edfc19b346df77e1e0e0ee7d975d3fdb30b7a713",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/traffic-blocked/101/departure.ogg",
+      "text": "Вызов принят, расчёт со спасательным инструментом выехал.",
+      "duration_ms": 3518,
+      "sha256": "ad58cda95c58cbc23dc98d5eff15487172f7c96b832ef938c858ced559aefa63",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/traffic-blocked/101/arrival-1.ogg",
+      "text": "Расчёт на месте, водитель зажат в салоне, начинаем деблокирование.",
+      "duration_ms": 4226,
+      "sha256": "f8ead7ecd577ff9aa8ba675ac9357bbe9a99caa769dd7b600017dc7084f4720d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/traffic-blocked/101/works-1.ogg",
+      "text": "Вскрываем дверь инструментом, водитель в сознании, скорая рядом.",
+      "duration_ms": 3808,
+      "sha256": "26a9d757027d0e659e754c9b4ef537c899d12928b491f009edd8c95dc8b843ea",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/traffic-blocked/101/completion-1.ogg",
+      "text": "Водитель извлечён и передан скорой, аккумуляторы отключены, расчёт возвращается.",
+      "duration_ms": 5108,
+      "sha256": "84cd92e64779667ce0d6630925b4a04bec64ba3636c61734316ff58542f19a6c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/traffic-blocked/101/arrival-2.ogg",
+      "text": "Расчёт на месте, осматриваем машины.",
+      "duration_ms": 2647,
+      "sha256": "2d31db2b3999bbe2f5c57c86190392d14ca6e43489911bc55eea159a3013cd00",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/traffic-blocked/101/outcome-2.ogg",
+      "text": "Водитель выбрался из машины сам до нашего прибытия, деблокирование не нужно, работы не проводили.",
+      "duration_ms": 5944,
+      "sha256": "a9ef04e65d6f3da9a3aea9db3182b5174225358d4c0eb0a6c45187b29ceb0bd8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/traffic-blocked/102/departure.ogg",
+      "text": "Вызов принят, экипаж ДПС направлен.",
+      "duration_ms": 3135,
+      "sha256": "500f69a4049727f963e50bd0599212662bf64ca831de0fdd694183ce59ed4c8f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/traffic-blocked/102/arrival-1.ogg",
+      "text": "Экипаж на месте, выставили ограждение, правый ряд перекрыт.",
+      "duration_ms": 4598,
+      "sha256": "0c2a0ec0b49c88a807d25addc89c74842901d557b5574ff61270503377091565",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/traffic-blocked/102/works-1.ogg",
+      "text": "Оформляем ДТП, опрашиваем водителей и очевидцев.",
+      "duration_ms": 3982,
+      "sha256": "e50a9cd2cddefe3eb5a0a4030ab0aed4f9ce2552cb881f01410a93967d1504b1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/traffic-blocked/102/completion-1.ogg",
+      "text": "Схема составлена, машины убраны с проезжей части, движение открыто, экипаж освободился.",
+      "duration_ms": 7663,
+      "sha256": "da6feea5c61cca4e8afede5c7fd0c5e7ae05fd4c20b1fc791cec9d41f9d396a0",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/traffic-blocked/102/arrival-2.ogg",
+      "text": "Экипаж на месте, осматриваем участок дороги.",
+      "duration_ms": 3727,
+      "sha256": "9fcdfcd47005a8a6c1f06c820ac2c647af691fda84d8d9a77da4cd9f890a705f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "practice/traffic-blocked/102/outcome-2.ogg",
+      "text": "Машин на месте нет, участники уехали до нашего прибытия, работы не проводили.",
+      "duration_ms": 5352,
+      "sha256": "680b74b9f3b667d9b66c69c88ab73e742b983585d6894584c5108bb7f3e04b2e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/traffic-blocked/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "duration_ms": 1765,
+      "sha256": "e24814d90fe6ae2e866a66587cdce1fb6e4422d8318cfbdc254ff014217c2592",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/traffic-blocked/103/arrival-1.ogg",
+      "text": "Бригада на месте, двое пострадавших, водитель ещё в машине.",
+      "duration_ms": 3204,
+      "sha256": "b4fe34fb4343f0b4edd803c5770851da0021e0c0e41f7102c3b21b1f66e98746",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/traffic-blocked/103/works-1.ogg",
+      "text": "Водителя извлекли, подозрение на перелом бедра, пассажирке наложили шину на шею.",
+      "duration_ms": 4354,
+      "sha256": "0cb55f8034360d8e38a6515085dd57e7de91dd20eaa041c1472d1f2cbadb9096",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/traffic-blocked/103/completion-1.ogg",
+      "text": "Двое пострадавших госпитализированы, бригада свободна.",
+      "duration_ms": 2937,
+      "sha256": "db176a2ae8d3f149f6ab14fb0aade738522aedcf77f00d14d468fba82769bdae",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/traffic-blocked/103/arrival-2.ogg",
+      "text": "Бригада на месте, осматриваем участников.",
+      "duration_ms": 2276,
+      "sha256": "159f1939c5152391b43364b4e00d4ea1699ccc4224b9beb73a595fd8ce36e93f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "practice/traffic-blocked/103/outcome-2.ogg",
+      "text": "Участники осмотрены, травм нет, от помощи отказались, бригада свободна.",
+      "duration_ms": 3634,
+      "sha256": "f5e759c02f78d2d183c08a7f91c988b86ef098c7e79b4ea58de6d0ae8e832ac8",
+      "media_type": "audio/ogg"
+    }
+  ]
+}

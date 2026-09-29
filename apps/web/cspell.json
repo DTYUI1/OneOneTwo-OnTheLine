@@ -1,0 +1,22 @@
+{
+  "version": "0.2",
+  "language": "ru",
+  "import": ["@cspell/dict-ru_ru/cspell-ext.json"],
+  "files": ["src/**/*.{ts,tsx}"],
+  "ignorePaths": [
+    "**/*.test.*",
+    "src/api-client/**",
+    "src/arm/softphone/**",
+    "src/shared/ws/**",
+    "src/shared/api.ts",
+    "src/shared/contracts.ts",
+    "src/shared/timing.ts"
+  ],
+  "includeRegExpList": ["/[А-Яа-яЁё]+/g"],
+  "ignoreRegExpList": [
+    "/\\/\\/[^\\n]*/g",
+    "/\\/\\*[\\s\\S]*?\\*\\//g",
+    "/\\/звонк\\/i/g"
+  ],
+  "words": ["АОН", "АРМ", "ДДС", "Мослифт", "Постр", "Сохр"]
+}

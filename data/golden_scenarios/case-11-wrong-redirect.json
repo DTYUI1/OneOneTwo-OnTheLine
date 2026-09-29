@@ -1,0 +1,152 @@
+{
+  "id": "case-11-wrong-redirect",
+  "description": "Отказ с последующим неверным перенаправлением в 102 вместо 101",
+  "scenario": {
+    "id": "00000000-0000-4000-8000-000000000110",
+    "version": 1,
+    "level": 1,
+    "weight": 1,
+    "incident_type_code": "2020000",
+    "target_service_id": "102",
+    "card": {
+      "number": "10000001",
+      "incident_type_code": "2020000",
+      "caller_name": "Учебный заявитель",
+      "phone_aon": "+79000000001",
+      "phone_provided": "",
+      "phone_scene": "",
+      "address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "description": "Учебное происшествие: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1.",
+      "tags": [
+        "ДТП пострадавшие"
+      ],
+      "victims": true,
+      "ambulance_refused": false,
+      "blocked_people": false,
+      "emergency": false,
+      "incident_class": "ДТП с пострадавшими",
+      "service_ids": [
+        "102"
+      ]
+    },
+    "reference": {
+      "expected_flow": [
+        "received",
+        "rejected",
+        "redirected"
+      ],
+      "required_fields": [
+        "service_number",
+        "comment"
+      ],
+      "expected_service_ids": [
+        "101"
+      ],
+      "expected_address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "expected_call": {
+        "required": false,
+        "service_id": "102",
+        "phone_ext": "102",
+        "before_s": 180
+      },
+      "expected_comment": "В службу 102 передана информация: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+    },
+    "complications": [],
+    "origin": "template",
+    "status": "retired",
+    "teacher_comment": "Синтетическая фикстура для разработки."
+  },
+  "current": {
+    "service_number": "23",
+    "comment": "В службу 102 передана информация: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+  },
+  "events": [
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001000",
+      "client_ts": "2026-09-19T09:00:00.000Z",
+      "server_ts": "2026-09-19T09:00:00.000Z",
+      "clock_offset_ms": 0,
+      "type": "deliver",
+      "payload": {}
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001001",
+      "client_ts": "2026-09-19T09:00:10.000Z",
+      "server_ts": "2026-09-19T09:00:10.000Z",
+      "clock_offset_ms": 0,
+      "type": "open",
+      "payload": {}
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001002",
+      "client_ts": "2026-09-19T09:00:15.000Z",
+      "server_ts": "2026-09-19T09:00:15.000Z",
+      "clock_offset_ms": 0,
+      "type": "status_change",
+      "payload": {
+        "state": "rejected",
+        "comment": "В службу 102 передана информация: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001003",
+      "client_ts": "2026-09-19T09:00:16.000Z",
+      "server_ts": "2026-09-19T09:00:16.000Z",
+      "clock_offset_ms": 0,
+      "type": "redirect",
+      "payload": {
+        "service_id": "102",
+        "comment": "В службу 102 передана информация: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+      }
+    }
+  ],
+  "calls": [],
+  "settings": {
+    "reaction_normative_s": 30,
+    "handling_normative_s": 180,
+    "critical_cap": 0.5,
+    "weights": {
+      "reaction_time": 1,
+      "handling_time": 1,
+      "status_flow": 1,
+      "routing": 1,
+      "required_fields": 1,
+      "address": 1,
+      "call": 1
+    },
+    "parallel_cards": 1,
+    "hints_level": 0
+  },
+  "expected": {
+    "criteria": {
+      "reaction_time": 1,
+      "handling_time": 1,
+      "status_flow": 1,
+      "routing": 0,
+      "required_fields": 1,
+      "address": 1,
+      "call": 1
+    },
+    "total": 0.5,
+    "tolerance": 0.001,
+    "critical_flags": [
+      "routing"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+# Единые переводы строк (LF) для текстовых файлов — чтобы Windows/Linux в команде не плодили диффы
+* text=auto eol=lf
+
+# Бинарные исходники кейса — не пытаться диффить/нормализовать
+*.png binary
+*.jpg binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.webm binary
+*.zip binary
+
+# Скрипты запускаются — всегда LF
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.gz binary
+*.wav binary

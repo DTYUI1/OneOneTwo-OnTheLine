@@ -1,0 +1,9 @@
+# Общие стыки требуют ревью владельца репозитория.
+/contracts/ @DTYUI1
+/apps/web/src/shared/ @DTYUI1
+/apps/web/src/api-client/ @DTYUI1
+/deploy/ @DTYUI1
+/.github/ @DTYUI1
+/pyproject.toml @DTYUI1
+/uv.lock @DTYUI1
+/pnpm-lock.yaml @DTYUI1

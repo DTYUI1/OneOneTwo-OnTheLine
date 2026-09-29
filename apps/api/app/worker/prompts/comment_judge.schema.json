@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CommentJudgeVerdict",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "facts_found": {"type": "array", "items": {"type": "string"}, "maxItems": 12},
+    "facts_missing": {"type": "array", "items": {"type": "string"}, "maxItems": 12},
+    "clarity": {"type": "number", "minimum": 0, "maximum": 1},
+    "explanation": {"type": "string", "minLength": 10, "maxLength": 600}
+  },
+  "required": ["facts_found", "facts_missing", "clarity", "explanation"]
+}

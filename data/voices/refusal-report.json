@@ -1,0 +1,66 @@
+{
+  "denis": {
+    "busy": {
+      "file": "refusal/denis/busy.ogg",
+      "text": "Мы заняты на другом происшествии",
+      "duration_ms": 2020,
+      "bytes": 8359,
+      "sha256": "5294836e101b20ba53bc1eb7fbe56d87c414430394e9529dd76dba034661f656"
+    },
+    "not_assigned": {
+      "file": "refusal/denis/not_assigned.ogg",
+      "text": "Нам этот вызов не назначен",
+      "duration_ms": 1881,
+      "bytes": 7791,
+      "sha256": "373ce649ad8a4011ef38e7cd4839c2644d293c4232e787e016acc9d077a8304c"
+    }
+  },
+  "dmitri": {
+    "busy": {
+      "file": "refusal/dmitri/busy.ogg",
+      "text": "Мы заняты на другом происшествии",
+      "duration_ms": 1695,
+      "bytes": 7019,
+      "sha256": "e4f337a4c158f2825414071116030a968e1a9a85c3af9e09e0384aa26b67be35"
+    },
+    "not_assigned": {
+      "file": "refusal/dmitri/not_assigned.ogg",
+      "text": "Нам этот вызов не назначен",
+      "duration_ms": 1509,
+      "bytes": 6270,
+      "sha256": "4ab6ddc881d1a95f4fdba8d98a05de8783f00ef7df79893261d9d33e051e5071"
+    }
+  },
+  "irina": {
+    "busy": {
+      "file": "refusal/irina/busy.ogg",
+      "text": "Мы заняты на другом происшествии",
+      "duration_ms": 2566,
+      "bytes": 10336,
+      "sha256": "f687308c1e3cde981183897c5e93fede0b0a17b90f5d2ef960df27c41bea33ec"
+    },
+    "not_assigned": {
+      "file": "refusal/irina/not_assigned.ogg",
+      "text": "Нам этот вызов не назначен",
+      "duration_ms": 1997,
+      "bytes": 8316,
+      "sha256": "20f5dbf9d169b76371b2cd6528dbf18dc0cf09ac54f2d9fb5d6d32be9ce44cff"
+    }
+  },
+  "ruslan": {
+    "busy": {
+      "file": "refusal/ruslan/busy.ogg",
+      "text": "Мы заняты на другом происшествии",
+      "duration_ms": 1892,
+      "bytes": 7982,
+      "sha256": "eae575df7a5d2feee2e7905016323eafbc3b3d650d71e3a3eddd4835a5499089"
+    },
+    "not_assigned": {
+      "file": "refusal/ruslan/not_assigned.ogg",
+      "text": "Нам этот вызов не назначен",
+      "duration_ms": 2148,
+      "bytes": 9081,
+      "sha256": "a09bae1072aaf82bca1e652656a9682e78ab87210567baa83ede06b0cccc57cc"
+    }
+  }
+}

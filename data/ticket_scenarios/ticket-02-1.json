@@ -1,0 +1,71 @@
+{
+  "id": "f37b7ecd-9fc7-501e-b39e-9be0664b461c",
+  "version": 1,
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "1050602",
+  "target_service_id": "101",
+  "card": {
+    "number": "70210001",
+    "incident_type_code": "1050602",
+    "caller_name": "Ким Олег Юрьевич",
+    "phone_aon": "+79000000201",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "улица Берзарина",
+      "house": "21",
+      "building": "1",
+      "apartment": ""
+    },
+    "description": "Задымление мусоропровода в жилом доме, 17 этажей. Заявитель на 7-м этаже, открытого пламени не видит, пострадавших нет. Подъезд 3, домофон 68.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "задымление: мусоропровод",
+    "service_ids": [
+      "101",
+      "102"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "улица Берзарина",
+      "house": "21",
+      "building": "1",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Задымление мусоропровода, открытого огня и пострадавших нет. Москва, улица Берзарина, д. 21, корп. 1, подъезд 3. Направлено подразделение."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 2, задача 1 (стр. 2 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

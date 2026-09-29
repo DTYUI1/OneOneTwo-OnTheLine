@@ -1,0 +1,47 @@
+:root {
+  /* [LIKELY] Снято визуально с arm_dds/02,06,09; точная сверка — T-028. */
+  --color-list: #849097;
+  --color-header: #2e353b;
+  --color-panel: #eeeeee;
+  --color-border: #c9ced1;
+  --color-text: #101820;
+  --color-on-dark: #ffffff;
+  --color-active: #187fba;
+  --color-danger: #c7372d;
+  /* Светлая подложка пояснений на экране результатов. */
+  --color-welcome-note: #eef5f7;
+  --font-body: Arial, sans-serif;
+  --font-size: 14px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size);
+  color: var(--color-text);
+  background: var(--color-panel);
+}
+button,
+input {
+  font: inherit;
+  padding: var(--space-2);
+}
+button {
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid var(--color-active);
+  outline-offset: 2px;
+}
+main {
+  padding: var(--space-3);
+}
+[role="alert"] {
+  color: var(--color-danger);
+}

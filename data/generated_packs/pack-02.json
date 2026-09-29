@@ -1,0 +1,909 @@
+{
+  "id": "c05-synthetic-02",
+  "title": "C-05 синтетический пакет 2",
+  "status": "draft",
+  "source": "classifier 046_24 + synthetic template address; not official tickets",
+  "previews": [
+    {
+      "scenario": {
+        "id": "5669a575-14a4-5119-b106-377aacf88987",
+        "version": 1,
+        "level": 2,
+        "weight": 2,
+        "incident_type_code": "1010101",
+        "target_service_id": "101",
+        "card": {
+          "number": "51650680",
+          "incident_type_code": "1010101",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: пожар: мусор. Адрес: Москва, Дубнинская улица, дом 1. Заявитель сообщает о повторном обращении.",
+          "tags": [
+            "на улице",
+            "мусор",
+            "открытое пламя"
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "пожар: мусор",
+          "service_ids": [
+            "101"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "101"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "101",
+            "phone_ext": "101",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 101 передана информация: пожар: мусор. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "duplicate"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 4,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:1010101",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "67a9838d-e4ab-5a13-9c88-e57f29d333ef",
+        "version": 1,
+        "level": 3,
+        "weight": 3,
+        "incident_type_code": "12080900",
+        "target_service_id": "103",
+        "card": {
+          "number": "17015407",
+          "incident_type_code": "12080900",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: МЦК - поездная травма. Адрес: Москва, Дубнинская улица, дом 1.",
+          "tags": [
+            "МЦК (вагон, поезд, перегон, тоннель, вестибюль, станция, платформа, переход, экскалатор, депо)",
+            "Поездная травма"
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "МЦК - поездная травма",
+          "service_ids": [
+            "103"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "103"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "103",
+            "phone_ext": "103",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 103 передана информация: МЦК - поездная травма. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "no_phone"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 6,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:12080900",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "bb9d16f6-fbed-536b-8655-ef1ec8ac11e5",
+        "version": 1,
+        "level": 4,
+        "weight": 4,
+        "incident_type_code": "13010100",
+        "target_service_id": "104",
+        "card": {
+          "number": "83269113",
+          "incident_type_code": "13010100",
+          "caller_name": "Не установлен",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: Запах бытового газа в коллекторе. Адрес: Москва, Дубнинская улица, дом 1. Связь с заявителем прервалась.",
+          "tags": [
+            "Запах газа на улице",
+            "Коллектор"
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "Запах бытового газа в коллекторе",
+          "service_ids": [
+            "104"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "104"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "104",
+            "phone_ext": "104",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 104 передана информация: Запах бытового газа в коллекторе. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "no_contact"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 8,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:13010100",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "de5efaf3-2397-5e29-966a-9a017755beea",
+        "version": 1,
+        "level": 1,
+        "weight": 5,
+        "incident_type_code": "14030100",
+        "target_service_id": "GKH",
+        "card": {
+          "number": "45922307",
+          "incident_type_code": "14030100",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: Частная проблема коммунального характера. Адрес: Москва, Дубнинская улица, дом 1. Есть признак чрезвычайной ситуации.",
+          "tags": [
+            "Повод локального (частного) коммунального характера",
+            "починить кран, заменить лампочку, нет отопления и т.д.",
+            "Пострадавшие"
+          ],
+          "victims": true,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": true,
+          "incident_class": "Частная проблема коммунального характера",
+          "service_ids": [
+            "103",
+            "GKH"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "103",
+            "GKH"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "GKH",
+            "phone_ext": "105",
+            "before_s": 180
+          },
+          "expected_comment": "В службу GKH передана информация: Частная проблема коммунального характера. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "emergency"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 3,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:14030100",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "55d76937-a701-50ef-9ec8-8cfa122c0ebc",
+        "version": 1,
+        "level": 2,
+        "weight": 6,
+        "incident_type_code": "14100100",
+        "target_service_id": "MOSLIFT",
+        "card": {
+          "number": "13074765",
+          "incident_type_code": "14100100",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица?",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: Застревание в лифте. Адрес: Москва, Дубнинская улица, дом 1. Заявитель уточнил улицу; в поле адреса есть неточность.",
+          "tags": [
+            "Лифт",
+            "Застревание"
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "Застревание в лифте",
+          "service_ids": [
+            "MOSLIFT"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "MOSLIFT"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "MOSLIFT",
+            "phone_ext": "106",
+            "before_s": 180
+          },
+          "expected_comment": "В службу MOSLIFT передана информация: Застревание в лифте. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "wrong_address"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 4,
+      "validation_errors": [
+        {
+          "path": "complications",
+          "code": "dds_address_policy_unresolved",
+          "message": "Проверка исходного адреса диспетчером ДДС не подтверждена: ответ заказчика от 23.09 относит контроль карточки к оператору 112."
+        }
+      ],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:14100100",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "07f30a0c-ea48-5b32-9880-97e3f8a1b1c5",
+        "version": 1,
+        "level": 3,
+        "weight": 7,
+        "incident_type_code": "2020000",
+        "target_service_id": "102",
+        "card": {
+          "number": "41968655",
+          "incident_type_code": "2020000",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: ДТП с пострадавшими. Адрес: Москва, Дубнинская улица, дом 1. Одновременно поступило ещё одно обращение.",
+          "tags": [
+            "ДТП пострадавшие",
+            "Пострадавшие"
+          ],
+          "victims": true,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "ДТП с пострадавшими",
+          "service_ids": [
+            "102",
+            "103"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "102",
+            "103"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "102",
+            "phone_ext": "102",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 102 передана информация: ДТП с пострадавшими. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "parallel"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 7,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:2020000",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "28e8dd1a-6767-5a32-b967-47ad7cfb5c67",
+        "version": 1,
+        "level": 4,
+        "weight": 8,
+        "incident_type_code": "1010101",
+        "target_service_id": "101",
+        "card": {
+          "number": "37560661",
+          "incident_type_code": "1010101",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: пожар: мусор. Адрес: Москва, Дубнинская улица, дом 1.",
+          "tags": [
+            "на улице",
+            "мусор",
+            "открытое пламя"
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "пожар: мусор",
+          "service_ids": [
+            "101"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "101"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "101",
+            "phone_ext": "101",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 101 передана информация: пожар: мусор. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 7,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:1010101",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "37fc89d1-95e3-5f5d-abae-cc2cd0a120f0",
+        "version": 1,
+        "level": 1,
+        "weight": 9,
+        "incident_type_code": "12080900",
+        "target_service_id": "103",
+        "card": {
+          "number": "36269491",
+          "incident_type_code": "12080900",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: МЦК - поездная травма. Адрес: Москва, Дубнинская улица, дом 1. Заявитель сообщает о повторном обращении.",
+          "tags": [
+            "МЦК (вагон, поезд, перегон, тоннель, вестибюль, станция, платформа, переход, экскалатор, депо)",
+            "Поездная травма"
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "МЦК - поездная травма",
+          "service_ids": [
+            "103"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "103"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "103",
+            "phone_ext": "103",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 103 передана информация: МЦК - поездная травма. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [
+          "duplicate",
+          "no_phone"
+        ],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 3,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:12080900",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "1e261710-5798-51c3-92c4-395873a502a3",
+        "version": 1,
+        "level": 2,
+        "weight": 10,
+        "incident_type_code": "13010100",
+        "target_service_id": "104",
+        "card": {
+          "number": "90985179",
+          "incident_type_code": "13010100",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: Запах бытового газа в коллекторе. Адрес: Москва, Дубнинская улица, дом 1.",
+          "tags": [
+            "Запах газа на улице",
+            "Коллектор",
+            "Пострадавшие"
+          ],
+          "victims": true,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "Запах бытового газа в коллекторе",
+          "service_ids": [
+            "103",
+            "104"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "103",
+            "104"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "104",
+            "phone_ext": "104",
+            "before_s": 180
+          },
+          "expected_comment": "В службу 104 передана информация: Запах бытового газа в коллекторе. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 4,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:13010100",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    },
+    {
+      "scenario": {
+        "id": "c1cf9abd-4956-5d7b-bf91-19c58b45badc",
+        "version": 1,
+        "level": 3,
+        "weight": 1,
+        "incident_type_code": "14030100",
+        "target_service_id": "GKH",
+        "card": {
+          "number": "22906311",
+          "incident_type_code": "14030100",
+          "caller_name": "Учебный заявитель",
+          "phone_aon": "+79000000000",
+          "phone_provided": "",
+          "phone_scene": "",
+          "address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "description": "Учебное сообщение: Частная проблема коммунального характера. Адрес: Москва, Дубнинская улица, дом 1.",
+          "tags": [
+            "Повод локального (частного) коммунального характера",
+            "починить кран, заменить лампочку, нет отопления и т.д."
+          ],
+          "victims": false,
+          "ambulance_refused": false,
+          "blocked_people": false,
+          "emergency": false,
+          "incident_class": "Частная проблема коммунального характера",
+          "service_ids": [
+            "GKH"
+          ]
+        },
+        "reference": {
+          "expected_flow": [
+            "received",
+            "accepted",
+            "responding",
+            "completed"
+          ],
+          "required_fields": [
+            "service_number",
+            "comment"
+          ],
+          "expected_service_ids": [
+            "GKH"
+          ],
+          "expected_address": {
+            "city": "Москва",
+            "okrug": "Северный",
+            "district": "Учебный",
+            "street": "Дубнинская улица",
+            "house": "1",
+            "building": "",
+            "apartment": ""
+          },
+          "expected_call": {
+            "required": true,
+            "service_id": "GKH",
+            "phone_ext": "105",
+            "before_s": 180
+          },
+          "expected_comment": "В службу GKH передана информация: Частная проблема коммунального характера. Адрес: Москва, Дубнинская улица, дом 1."
+        },
+        "complications": [],
+        "origin": "template",
+        "status": "draft",
+        "teacher_comment": "Синтетический сценарий; требуется проверка преподавателя."
+      },
+      "suggested_weight": 5,
+      "validation_errors": [],
+      "provenance": {
+        "author_kind": "system",
+        "author_id": null,
+        "source_kind": "template",
+        "source_id": "classifier:046_24:14030100",
+        "source_version": "046_24",
+        "sha256": "5bd6ab85d472744f8c354909f4c7eeb5560a8f4fe9e939ccf0a3d5cf61572bfe",
+        "synthetic": true
+      },
+      "training_plan": null
+    }
+  ]
+}

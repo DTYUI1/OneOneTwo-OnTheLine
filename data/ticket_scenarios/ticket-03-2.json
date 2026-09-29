@@ -1,0 +1,70 @@
+{
+  "id": "6421c171-8e1a-5023-bf39-f210e3c1a556",
+  "version": 1,
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "15100100",
+  "target_service_id": "102",
+  "card": {
+    "number": "70320004",
+    "incident_type_code": "15100100",
+    "caller_name": "Соколов Иван Петрович",
+    "phone_aon": "+79000000302",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "бульвар Маршала Рокоссовского",
+      "house": "25",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Громко играет музыка во дворе дома.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Нарушение тишины",
+    "service_ids": [
+      "102"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "бульвар Маршала Рокоссовского",
+      "house": "25",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Громкая музыка во дворе. Москва, бульвар Маршала Рокоссовского, д. 25, двор. Направлен наряд."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 3, задача 2 (стр. 3 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

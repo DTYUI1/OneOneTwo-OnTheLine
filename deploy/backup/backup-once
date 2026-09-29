@@ -1,0 +1,63 @@
+#!/bin/sh
+set -eu
+umask 077
+
+# Журнал копий — таблица backups (C-07): корзина обезличивает только то, что уже попало
+# в успешную копию. Журнал не условие копии: если БД не ответила, копия всё равно делается,
+# а корзина подождёт следующей. BACKUP_ID передаёт backup-poll для копии по кнопке.
+id=${BACKUP_ID:-}
+status=failed
+name=''
+error='Копия прервана: ошибка pg_dump, архива или проверки сумм. Подробности — docker compose logs backup.'
+
+journal() {
+  psql -X -q -t -A -v ON_ERROR_STOP=1 "$@" || {
+    echo 'Backup journal in database was not updated' >&2
+    return 1
+  }
+}
+
+close_journal() {
+  [ -n "$id" ] || return 0
+  journal -v id="$id" -v status="$status" -v name="$name" -v error="$error" >/dev/null <<'SQL' || true
+UPDATE backups
+SET status = :'status', finished_at = now(),
+    name = CASE WHEN :'status' = 'done' THEN :'name' END,
+    error = CASE WHEN :'status' = 'failed' THEN :'error' END
+WHERE id = :'id';
+SQL
+}
+
+mkdir -p /backups
+if [ -z "$id" ]; then
+  # Время начала — по часам БД и до pg_dump: всё, что помечено раньше, окажется в копии.
+  id=$(echo "INSERT INTO backups (status, started_at) VALUES ('running', now()) RETURNING id;" | journal) || id=''
+fi
+if ! mkdir /backups/.backup.lock 2>/dev/null; then
+  error='Уже идёт другая копия, или после сбоя остался замок .backup.lock — нужна проверка.'
+  close_journal
+  echo 'Another backup is running, or a stale lock needs operator review' >&2
+  exit 1
+fi
+stamp=$(date -u +%Y%m%dT%H%M%SZ)
+name="backup-$stamp"
+work="/backups/.$name-$$"
+final="/backups/$name"
+trap 'rm -rf "$work"; rmdir /backups/.backup.lock || true; close_journal' EXIT
+trap 'exit 1' HUP INT TERM
+if [ -e "$final" ]; then
+  error="Копия $name уже есть."
+  echo "Backup already exists: $final" >&2
+  exit 1
+fi
+mkdir "$work"
+pg_dump --format=custom --no-owner --no-acl --file="$work/database.dump"
+tar -C /data/audio -czf "$work/audio.tar.gz" .
+printf 'created_utc=%s\ndatabase=%s\naudio_archive=audio.tar.gz\n' "$stamp" "$PGDATABASE" > "$work/metadata.txt"
+(cd "$work" && sha256sum database.dump audio.tar.gz metadata.txt > SHA256SUMS && sha256sum -c SHA256SUMS)
+mv "$work" "$final"
+trap - EXIT HUP INT TERM
+rmdir /backups/.backup.lock
+status=done
+close_journal
+echo "Backup complete: $final"

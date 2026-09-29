@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "note": "Учебные доклады бригад (выезд, прибытие, работы): тексты — scripts/voices/brigade_texts.py, озвучка — Piper, голос службы. Пути относительно data/voices.",
+  "messages": [
+    {
+      "service_id": "101",
+      "stage": "departure",
+      "path": "brigade/101/departure.ogg",
+      "text": "Вызов принят, расчёт выехал.",
+      "duration_ms": 2078,
+      "sha256": "1e4d070eb5768ec74a696c6cde22a1fe5f0cc62b4571afe66408b51dee219f4c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "stage": "arrival",
+      "path": "brigade/101/arrival.ogg",
+      "text": "Расчёт на месте, проводим разведку.",
+      "duration_ms": 2345,
+      "sha256": "e6fcbf7ae4dd17f686ca2becba058d3f6f9e9aa931ea6fcdd495ec425e453472",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "stage": "works",
+      "path": "brigade/101/works.ogg",
+      "text": "Подача воды начата, идёт тушение, угрозы людям нет.",
+      "duration_ms": 3855,
+      "sha256": "e38476d940ecb7fc6fdc79ab7a4c492a0d190797b8a7bc560ece48500fce11b6",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "stage": "departure",
+      "path": "brigade/102/departure.ogg",
+      "text": "Вызов принят, наряд направлен.",
+      "duration_ms": 2438,
+      "sha256": "05a3113f9cb8f383dbec25e42ca828c01afb2a6ef6556faab20cae025cc62e76",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "stage": "arrival",
+      "path": "brigade/102/arrival.ogg",
+      "text": "Наряд на месте, обстановку уточняем.",
+      "duration_ms": 3379,
+      "sha256": "83def4fa4f38cf430d45b06eceedcb8471d86229d6737e3064cc6893f2b403ae",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "stage": "works",
+      "path": "brigade/102/works.ogg",
+      "text": "Опрашиваем очевидцев, охрана места происшествия обеспечена.",
+      "duration_ms": 4377,
+      "sha256": "250768be6b37e6ae15849157a31717374b9cabc09cd29a4343a6c424cbd15431",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "stage": "departure",
+      "path": "brigade/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "duration_ms": 1765,
+      "sha256": "184510cde7ea62e991adf79a1d5fc5c420b110e7c96e5eee7710a389b55de878",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "stage": "arrival",
+      "path": "brigade/103/arrival.ogg",
+      "text": "Бригада на месте, осматриваем пострадавшего.",
+      "duration_ms": 2461,
+      "sha256": "2179a4a77bc4c9ee4ac6412deff77c6291b64eb4ee807bc0e20e65e4a1d50c11",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "stage": "works",
+      "path": "brigade/103/works.ogg",
+      "text": "Помощь оказывается, готовим к госпитализации.",
+      "duration_ms": 2659,
+      "sha256": "800d6a30383bea33e1626ad72024b334d2116ebf262655d54471b5a0e0b9a5cc",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "stage": "departure",
+      "path": "brigade/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "duration_ms": 2682,
+      "sha256": "8df7273803d3356a5623d7d86a06aedd40f374a19afd5ba933edf58c510083f1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "stage": "arrival",
+      "path": "brigade/104/arrival.ogg",
+      "text": "Бригада на месте, проверяем загазованность.",
+      "duration_ms": 2252,
+      "sha256": "71e9a0b12041e2f3a12a5767f3da306ca3328273a77c9d25e2f8554a46b3be14",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "stage": "works",
+      "path": "brigade/104/works.ogg",
+      "text": "Подача газа перекрыта, устраняем утечку, жильцов выводим.",
+      "duration_ms": 3762,
+      "sha256": "5fb10052b703bb8529aeb88dba215d7886c968024edff2ae3b934067732d6ad7",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "stage": "departure",
+      "path": "brigade/GKH/departure.ogg",
+      "text": "Заявка принята, аварийная бригада направлена.",
+      "duration_ms": 3135,
+      "sha256": "cf045fe3a2aa3b23287f003a153404df0c9645c27c4012faa3ff8d7cbd4f849c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "stage": "arrival",
+      "path": "brigade/GKH/arrival.ogg",
+      "text": "Бригада на месте, определяем место повреждения.",
+      "duration_ms": 3065,
+      "sha256": "688ff985a57941be9fb83ea994a9807d1f033915a9c15d7d1993d5b4ca2fa6ad",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "stage": "works",
+      "path": "brigade/GKH/works.ogg",
+      "text": "Участок отключён, ведём аварийные работы.",
+      "duration_ms": 3030,
+      "sha256": "520ad43994140db8e7d6f8d9184e6dfd724fd48d834dc3fb5a07ed9dc894315f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "stage": "departure",
+      "path": "brigade/MOSLIFT/departure.ogg",
+      "text": "Заявка принята, механик выехал.",
+      "duration_ms": 3030,
+      "sha256": "39e5da7e298ce17a6ee92e47a241a01baeeb5fff34149e04a26456774f4cd70e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "stage": "arrival",
+      "path": "brigade/MOSLIFT/arrival.ogg",
+      "text": "Механик на месте, связь с кабиной установлена.",
+      "duration_ms": 3889,
+      "sha256": "ba040b2e42b5cfe638e41d3ca498025a3b3a65a64b2c9b24c7ed43083c2bc311",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "stage": "works",
+      "path": "brigade/MOSLIFT/works.ogg",
+      "text": "Кабина обесточена, выводим пассажиров.",
+      "duration_ms": 3088,
+      "sha256": "4a5cca8e5f9e1932062c7ab9795667dec7a49d54d88bf036a61f189d9ae8140e",
+      "media_type": "audio/ogg"
+    }
+  ]
+}

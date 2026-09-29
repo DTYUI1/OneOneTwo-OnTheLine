@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "note": "Учебный доклад бригады о завершении работ (VO-01, этап completion): текст — scripts/voices/brigade_texts.py, озвучка — Piper, голос службы. Этап ещё не подключён к seed — подключает L-02. Пути относительно data/voices.",
+  "messages": [
+    {
+      "service_id": "101",
+      "stage": "completion",
+      "path": "brigade/101/completion.ogg",
+      "text": "Горение ликвидировано, работы завершены, расчёт возвращается.",
+      "duration_ms": 4214,
+      "sha256": "2d31dfb47236359b2de881a743c77f306414185791e089830f28a2644f31d3c8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "stage": "completion",
+      "path": "brigade/102/completion.ogg",
+      "text": "Работы на месте завершены, наряд освободился.",
+      "duration_ms": 3947,
+      "sha256": "1bde39ca12c539ed06d6d61d395b761948f20c5cb935f59ba3632906c34789d0",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "stage": "completion",
+      "path": "brigade/103/completion.ogg",
+      "text": "Помощь оказана, пострадавший передан в стационар, бригада свободна.",
+      "duration_ms": 3471,
+      "sha256": "7d7602bd271424a72c3260e717816245f70cfb3af3be4e2fef663e51a51533df",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "stage": "completion",
+      "path": "brigade/104/completion.ogg",
+      "text": "Утечка устранена, подача газа восстановлена, работы завершены.",
+      "duration_ms": 3762,
+      "sha256": "c461dd39580ae070c3e7460961970307312bb14713bf46634cc37135afab2b56",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "stage": "completion",
+      "path": "brigade/GKH/completion.ogg",
+      "text": "Повреждение устранено, подача восстановлена, работы завершены.",
+      "duration_ms": 4191,
+      "sha256": "66e3de3d532bece3609af7cae69ca99849963da130acd372f0d735f4ddd0c4b3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "stage": "completion",
+      "path": "brigade/MOSLIFT/completion.ogg",
+      "text": "Пассажиры выведены, лифт отключён до ремонта, работы завершены.",
+      "duration_ms": 4795,
+      "sha256": "6453d49ee9b10027c3c37d0444ba0bd57b1601a867c88647bf284b4f57612c06",
+      "media_type": "audio/ogg"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+name: arm112
+# Ротация stdout-журналов контейнеров: без неё json-file растёт без ограничений.
+# Журнал безопасности — audit_log в БД (бессрочно, входит в ежедневный backup);
+# срок хранения stdout ≥ 6 мес. обеспечивает вывоз журналов хоста (03_install, раздел 3.6).
+x-logging: &logging
+  driver: json-file
+  options: {max-size: '20m', max-file: '30'}
+services:
+  db:
+    image: postgres:16.10-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-arm112}
+      POSTGRES_USER: ${POSTGRES_USER:-arm112}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-dev-only}
+    volumes: [db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    logging: *logging
+  backup:
+    build: {context: .., dockerfile: deploy/backup/Dockerfile}
+    image: arm112-backup:0.1.0
+    environment:
+      PGHOST: db
+      PGDATABASE: ${POSTGRES_DB:-arm112}
+      PGUSER: ${POSTGRES_USER:-arm112}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-local-dev-only}
+    volumes:
+      - ${BACKUP_DIR:-../backups}:/backups
+      - audio-data:/data/audio:ro
+    depends_on:
+      db: {condition: service_healthy}
+    restart: unless-stopped
+    logging: *logging
+  migrate:
+    build: {context: .., dockerfile: apps/api/Dockerfile}
+    image: arm112-api:0.1.0
+    command: [alembic, -c, apps/api/alembic.ini, upgrade, head]
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://arm112:local-dev-only@db:5432/arm112}
+    depends_on:
+      db: {condition: service_healthy}
+    restart: 'no'
+  api:
+    build: {context: .., dockerfile: apps/api/Dockerfile}
+    image: arm112-api:0.1.0
+    command: [python, -m, app.api]
+    environment:
+      API_MODE: ${API_MODE:-mock}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-local}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      JWT_SECRET: ${JWT_SECRET:-}
+      SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-28800}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://arm112:local-dev-only@db:5432/arm112}
+      AI_PROVIDER: ${AI_PROVIDER:-off}
+      AUDIO_DIR: /data/audio
+      # Материалы C-07 в томе пользовательских артефактов: его архивирует backup C-08.
+      MATERIALS_DIR: /data/audio/materials
+      # Папка копий backup — только чтение: «Состояние системы» показывает последнюю (C-07).
+      BACKUP_STATUS_DIR: /backups
+    volumes: [audio-data:/data/audio, '${BACKUP_DIR:-../backups}:/backups:ro']
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    logging: *logging
+  worker:
+    image: arm112-api:0.1.0
+    build: {context: .., dockerfile: apps/api/Dockerfile}
+    command: [python, -m, app.worker]
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://arm112:local-dev-only@db:5432/arm112}
+      AI_PROVIDER: ${AI_PROVIDER:-off}
+      EMBEDDINGS_PROVIDER: ${EMBEDDINGS_PROVIDER:-off}
+      TTS_PROVIDER: ${TTS_PROVIDER:-prerendered}
+      STT_PROVIDER: ${STT_PROVIDER:-off}
+      STT_BASE_URL: ${STT_BASE_URL:-http://stt:9000}
+      STT_TIMEOUT_SECONDS: ${STT_TIMEOUT_SECONDS:-30}
+      AUDIO_DIR: /data/audio
+      WORKER_POLL_INTERVAL_SECONDS: ${WORKER_POLL_INTERVAL_SECONDS:-0.5}
+      WORKER_LEASE_SECONDS: ${WORKER_LEASE_SECONDS:-120}
+      WORKER_MAX_ATTEMPTS: ${WORKER_MAX_ATTEMPTS:-3}
+      WORKER_RETRY_BASE_SECONDS: ${WORKER_RETRY_BASE_SECONDS:-2}
+      WORKER_BATCH_SIZE: ${WORKER_BATCH_SIZE:-23}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://llm:8080/v1}
+      LLM_MODEL: ${LLM_MODEL:-qwen3-4b-2507-q4km}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-30}
+      LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.2}
+      LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-300}
+      JUDGE_TIMEOUT_SECONDS: ${JUDGE_TIMEOUT_SECONDS:-120}
+    volumes: [audio-data:/data/audio]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, python, -m, app.worker.healthcheck]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging: *logging
+  certs:
+    image: arm112-api:0.1.0
+    build: {context: .., dockerfile: apps/api/Dockerfile}
+    command: [python, deploy/certs/make_ca.py, --output, /certs]
+    user: '0:0'
+    environment:
+      CERT_HOSTNAMES: ${CERT_HOSTNAMES:-localhost,127.0.0.1}
+    volumes: [cert-data:/certs]
+    restart: 'no'
+  web:
+    build: {context: .., dockerfile: apps/web/Dockerfile}
+    image: arm112-web:0.1.0
+    ports: ['${WEB_BIND:-127.0.0.1}:8080:80', '${WEB_BIND:-127.0.0.1}:8443:443']
+    volumes: [cert-data:/etc/nginx/certs:ro]
+    depends_on:
+      certs: {condition: service_completed_successfully}
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1/healthz]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    logging: *logging
+  mock:
+    profiles: [mock]
+    image: arm112-mock:0.1.0
+    build: {context: .., dockerfile: deploy/mock/Dockerfile}
+    ports: ['127.0.0.1:4010:4010']
+  web-dev:
+    profiles: [dev]
+    image: node:20.19.5-alpine
+    working_dir: /workspace
+    command: [sh, -c, 'corepack enable && pnpm install --frozen-lockfile && pnpm --filter @112/web dev --host 0.0.0.0']
+    environment:
+      API_TARGET: http://api:8000
+      SCARF_ANALYTICS: 'false'
+    volumes: ['..:/workspace', node-modules:/workspace/node_modules, web-node-modules:/workspace/apps/web/node_modules]
+    ports: ['127.0.0.1:5173:5173']
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:5173/app/login]
+      interval: 5s
+      timeout: 3s
+      retries: 60
+  llm:
+    profiles: [llm]
+    image: arm112-llm:0.1.0
+    pull_policy: never
+    command:
+      - -m
+      - /models/model.gguf
+      - --alias
+      - qwen3-4b-2507-q4km
+      - --host
+      - 0.0.0.0
+      - --port
+      - '8080'
+      - --ctx-size
+      - '4096'
+      - --threads
+      - '8'
+      - --threads-batch
+      - '8'
+      - --parallel
+      - '1'
+      - --cont-batching
+      - --cache-prompt
+      - --metrics
+      - --no-webui
+      - --device
+      - none
+      - --n-gpu-layers
+      - '0'
+    volumes: ['${LLM_MODEL_FILE:-../models/qwen3-4b-instruct-2507-q4_k_m.gguf}:/models/model.gguf:ro']
+    restart: unless-stopped
+    logging: *logging
+  stt:
+    profiles: [stt]
+    build: {context: .., dockerfile: deploy/stt/Dockerfile}
+    image: arm112-stt:0.1.0
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    logging: *logging
+volumes:
+  db-data:
+  cert-data:
+  node-modules:
+  web-node-modules:
+  audio-data:

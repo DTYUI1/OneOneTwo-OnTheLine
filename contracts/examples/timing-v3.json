@@ -1,0 +1,2179 @@
+[
+  {
+    "name": "v3_base_0_20_40_190",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 40,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_waiting_60",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": [
+        {
+          "message_id": "00000000-0000-4000-8000-000000000800",
+          "started_at": "2026-09-24T00:01:00.000Z",
+          "ended_at": "2026-09-24T00:02:00.000Z"
+        }
+      ]
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 40,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 60,
+      "active_handling_s": 110,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_waiting_unknown",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": null
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 40,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": null,
+      "active_handling_s": null,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": null,
+      "quality": "verified",
+      "anomalies": [
+        "waiting_unavailable"
+      ],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_open_does_not_close_reaction",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:05.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-23T23:59:58.900Z",
+            "server_at": "2026-09-24T00:00:04.000Z",
+            "client_received_at": "2026-09-23T23:59:59.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:26.000Z",
+          "server_ts": "2026-09-24T00:00:31.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:24.900Z",
+            "server_at": "2026-09-24T00:00:30.000Z",
+            "client_received_at": "2026-09-24T00:00:25.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:01:35.000Z",
+          "server_ts": "2026-09-24T00:01:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:01:33.900Z",
+            "server_at": "2026-09-24T00:01:39.000Z",
+            "client_received_at": "2026-09-24T00:01:34.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 31,
+      "handling_s": 95,
+      "lifetime_s": 100,
+      "waiting_s": 0,
+      "active_handling_s": 95,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:05.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:31.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:01:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_deliver_ignored_for_reaction",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "deliver",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:07.000Z",
+          "server_ts": "2026-09-24T00:00:12.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:05.900Z",
+            "server_at": "2026-09-24T00:00:11.000Z",
+            "client_received_at": "2026-09-24T00:00:06.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001005",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 40,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:12.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_repeat_open",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:55.000Z",
+          "server_ts": "2026-09-24T00:01:00.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:53.900Z",
+            "server_at": "2026-09-24T00:00:59.000Z",
+            "client_received_at": "2026-09-24T00:00:54.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:01:05.000Z",
+          "server_ts": "2026-09-24T00:01:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:01:03.900Z",
+            "server_at": "2026-09-24T00:01:09.000Z",
+            "client_received_at": "2026-09-24T00:01:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001005",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 70,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:01:00.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:01:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_exact_limits",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:25.000Z",
+          "server_ts": "2026-09-24T00:00:30.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:23.900Z",
+            "server_at": "2026-09-24T00:00:29.000Z",
+            "client_received_at": "2026-09-24T00:00:24.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 30,
+      "handling_s": 180,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 180,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:30.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_over_limits",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:25.001Z",
+          "server_ts": "2026-09-24T00:00:30.001Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:23.901Z",
+            "server_at": "2026-09-24T00:00:29.001Z",
+            "client_received_at": "2026-09-24T00:00:24.101Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.001Z",
+          "server_ts": "2026-09-24T00:03:10.001Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.901Z",
+            "server_at": "2026-09-24T00:03:09.001Z",
+            "client_received_at": "2026-09-24T00:03:04.101Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 30.001,
+      "handling_s": 180.001,
+      "lifetime_s": 190.001,
+      "waiting_s": 0,
+      "active_handling_s": 180.001,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": true,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:30.001Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:03:10.001Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_waiting_keeps_active_in_limit",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:05:00.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:04:05.000Z",
+          "server_ts": "2026-09-24T00:04:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:04:03.900Z",
+            "server_at": "2026-09-24T00:04:09.000Z",
+            "client_received_at": "2026-09-24T00:04:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": [
+        {
+          "message_id": "00000000-0000-4000-8000-000000000800",
+          "started_at": "2026-09-24T00:01:00.000Z",
+          "ended_at": "2026-09-24T00:02:10.000Z"
+        }
+      ]
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 20,
+      "handling_s": 240,
+      "lifetime_s": 250,
+      "waiting_s": 70,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:04:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_waiting_union_and_clip",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:25.000Z",
+          "server_ts": "2026-09-24T00:00:30.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:23.900Z",
+            "server_at": "2026-09-24T00:00:29.000Z",
+            "client_received_at": "2026-09-24T00:00:24.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:15.000Z",
+          "server_ts": "2026-09-24T00:03:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:13.900Z",
+            "server_at": "2026-09-24T00:03:19.000Z",
+            "client_received_at": "2026-09-24T00:03:14.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": [
+        {
+          "message_id": "00000000-0000-4000-8000-000000000800",
+          "started_at": "2026-09-24T00:00:10.000Z",
+          "ended_at": "2026-09-24T00:00:50.000Z"
+        },
+        {
+          "message_id": "00000000-0000-4000-8000-000000000801",
+          "started_at": "2026-09-24T00:00:40.000Z",
+          "ended_at": "2026-09-24T00:01:20.000Z"
+        },
+        {
+          "message_id": "00000000-0000-4000-8000-000000000802",
+          "started_at": "2026-09-24T00:03:20.000Z",
+          "ended_at": "2026-09-24T00:03:50.000Z"
+        }
+      ]
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 30,
+      "handling_s": 180,
+      "lifetime_s": 200,
+      "waiting_s": 60,
+      "active_handling_s": 120,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:30.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:03:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_stages_arrived_working",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "responding",
+          "client_ts": "2026-09-24T00:00:55.000Z",
+          "server_ts": "2026-09-24T00:01:00.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:53.900Z",
+            "server_at": "2026-09-24T00:00:59.000Z",
+            "client_received_at": "2026-09-24T00:00:54.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "kind": "status",
+          "state": "arrived",
+          "client_ts": "2026-09-24T00:01:35.000Z",
+          "server_ts": "2026-09-24T00:01:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001005",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:01:33.900Z",
+            "server_at": "2026-09-24T00:01:39.000Z",
+            "client_received_at": "2026-09-24T00:01:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000006",
+          "kind": "status",
+          "state": "working",
+          "client_ts": "2026-09-24T00:01:55.000Z",
+          "server_ts": "2026-09-24T00:02:00.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001006",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:01:53.900Z",
+            "server_at": "2026-09-24T00:01:59.000Z",
+            "client_received_at": "2026-09-24T00:01:54.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000007",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001007",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 40,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:01:00.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "normalized_at": "2026-09-24T00:01:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000006",
+          "normalized_at": "2026-09-24T00:02:00.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000007",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_rejected_then_accepted",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:20.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "rejected",
+          "client_ts": "2026-09-24T00:00:20.000Z",
+          "server_ts": "2026-09-24T00:00:25.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:18.900Z",
+            "server_at": "2026-09-24T00:00:24.000Z",
+            "client_received_at": "2026-09-24T00:00:19.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:45.000Z",
+          "server_ts": "2026-09-24T00:00:50.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:43.900Z",
+            "server_at": "2026-09-24T00:00:49.000Z",
+            "client_received_at": "2026-09-24T00:00:44.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:15.000Z",
+          "server_ts": "2026-09-24T00:03:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001005",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:13.900Z",
+            "server_at": "2026-09-24T00:03:19.000Z",
+            "client_received_at": "2026-09-24T00:03:14.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 25,
+      "handling_s": 190,
+      "lifetime_s": 200,
+      "waiting_s": 0,
+      "active_handling_s": 190,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": true,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:25.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:00:50.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000005",
+          "normalized_at": "2026-09-24T00:03:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_final_rejected",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:01:00.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "rejected",
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 20,
+      "handling_s": 10,
+      "lifetime_s": 20,
+      "waiting_s": 0,
+      "active_handling_s": 10,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_rejected_then_redirect",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:01:00.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "rejected",
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "redirect",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 20,
+      "handling_s": 30,
+      "lifetime_s": 40,
+      "waiting_s": 0,
+      "active_handling_s": 30,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_refused",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:05.000Z",
+          "server_ts": "2026-09-24T00:00:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:03.900Z",
+            "server_at": "2026-09-24T00:00:09.000Z",
+            "client_received_at": "2026-09-24T00:00:04.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "kind": "status",
+          "state": "refused",
+          "client_ts": "2026-09-24T00:01:35.000Z",
+          "server_ts": "2026-09-24T00:01:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001004",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:01:33.900Z",
+            "server_at": "2026-09-24T00:01:39.000Z",
+            "client_received_at": "2026-09-24T00:01:34.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 20,
+      "handling_s": 90,
+      "lifetime_s": 100,
+      "waiting_s": 0,
+      "active_handling_s": 90,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-24T00:01:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_missing_direct",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:04:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001001",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "completed",
+          "client_ts": "2026-09-24T00:03:05.000Z",
+          "server_ts": "2026-09-24T00:03:10.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:03:03.900Z",
+            "server_at": "2026-09-24T00:03:09.000Z",
+            "client_received_at": "2026-09-24T00:03:04.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": null,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": null,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [
+        "missing_direct"
+      ],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_live_no_primary_status",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:00:45.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": []
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": null,
+      "handling_s": null,
+      "lifetime_s": null,
+      "waiting_s": 0,
+      "active_handling_s": null,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": null,
+      "handling_overdue": null,
+      "quality": "verified",
+      "anomalies": [
+        "missing_primary_status",
+        "missing_terminal"
+      ],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  },
+  {
+    "name": "v3_live_accepted_waiting_open",
+    "input": {
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "policy": {
+        "timing_version": 3,
+        "reaction_normative_s": 30,
+        "handling_normative_s": 180,
+        "waiting_policy": "exclude_confirmed",
+        "max_rtt_ms": 2000,
+        "max_sample_age_ms": 60000,
+        "max_buffer_delay_ms": 30000,
+        "future_tolerance_ms": 250
+      },
+      "legacy_reaction_normative_s": 30,
+      "legacy_handling_normative_s": 180,
+      "appeared_at": "2026-09-24T00:00:00.000Z",
+      "observed_at": "2026-09-24T00:02:10.000Z",
+      "events": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "kind": "direct",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:00.000Z",
+          "server_ts": "2026-09-24T00:00:00.000Z",
+          "clock": null
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "kind": "open",
+          "state": null,
+          "client_ts": "2026-09-24T00:00:15.000Z",
+          "server_ts": "2026-09-24T00:00:20.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001002",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:13.900Z",
+            "server_at": "2026-09-24T00:00:19.000Z",
+            "client_received_at": "2026-09-24T00:00:14.100Z",
+            "offset_ms": 5000
+          }
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "kind": "status",
+          "state": "accepted",
+          "client_ts": "2026-09-24T00:00:35.000Z",
+          "server_ts": "2026-09-24T00:00:40.000Z",
+          "clock": {
+            "sample_id": "00000000-0000-4000-8000-000000001003",
+            "method": "ws_midpoint_v2",
+            "client_sent_at": "2026-09-24T00:00:33.900Z",
+            "server_at": "2026-09-24T00:00:39.000Z",
+            "client_received_at": "2026-09-24T00:00:34.100Z",
+            "offset_ms": 5000
+          }
+        }
+      ],
+      "waiting": [
+        {
+          "message_id": "00000000-0000-4000-8000-000000000800",
+          "started_at": "2026-09-24T00:01:40.000Z",
+          "ended_at": null
+        }
+      ]
+    },
+    "expected": {
+      "timing_version": 3,
+      "snapshot_id": "00000000-0000-4000-8000-000000000430",
+      "reaction_s": 40,
+      "handling_s": null,
+      "lifetime_s": null,
+      "waiting_s": 30,
+      "active_handling_s": null,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": true,
+      "handling_overdue": null,
+      "quality": "verified",
+      "anomalies": [
+        "missing_terminal"
+      ],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-24T00:00:00.000Z",
+          "source": "server",
+          "reason": "server_event"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-24T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-24T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    }
+  }
+]

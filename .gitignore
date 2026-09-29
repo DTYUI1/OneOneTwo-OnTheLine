@@ -1,0 +1,79 @@
+# ── Локальное окружение владельца репо (не коммитится) ──────────────────────
+# Мультиагентная среда `agents/` (промпты ролей, план, тикеты) — в git с 19.09,
+# чтобы команда видела план и промпты. Не коммитятся только сырые логи сборки
+# промптов (`scripts/build_agents.sh`): JSON-вывод `claude -p`, stderr, run-логи.
+agents/artifacts/agent_builder/*.json
+agents/artifacts/agent_builder/*.log
+agents/artifacts/agent_builder/*.stderr
+agents/artifacts/agent_builder/.current_run
+CLAUDE.local.md
+.claude/settings.local.json
+.codegraph/
+tmp/
+backups/
+offline-bundle/
+
+# Запись встречи с кейсодержателем (542 МБ, уже расшифрована в docs/C08_meeting_2026-09-16_QA.md).
+# Нужна — попроси у владельца репо.
+docs_video/
+
+# Исходный архив комнаты-интро от участника команды; актуальная версия — intro/
+Test_animations.zip
+
+# ── Секреты ──────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+credentials.json
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Node ─────────────────────────────────────────────────────────────────────
+node_modules/
+.pnpm-store/
+.next/
+.cache/
+npm-debug.log*
+qa/results/
+qa/report/
+test-results/
+playwright-report/
+data/recordings/
+data/streets.csv.gz
+data/voices/**/*.wav
+data/voices/**/*.mp3
+data/voices/*.wav
+data/voices/*.mp3
+deploy/certs/generated/
+
+# ── Модели / данные (локальные веса и артефакты — не в git) ─────────────────
+models/
+*.gguf
+*.onnx
+*.pt
+*.safetensors
+
+# ── IDE / OS ─────────────────────────────────────────────────────────────────
+.idea/
+.vscode/PythonImportHelper-v2-Completion.json
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+docs/submission/build/

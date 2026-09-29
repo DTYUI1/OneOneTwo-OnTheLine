@@ -1,0 +1,837 @@
+{
+  "ClockSample": {
+    "sample_id": "00000000-0000-4000-8000-000000001001",
+    "method": "ws_midpoint_v2",
+    "client_sent_at": "2026-09-22T23:59:53.900Z",
+    "server_at": "2026-09-22T23:59:59.000Z",
+    "client_received_at": "2026-09-22T23:59:54.100Z",
+    "offset_ms": 5000
+  },
+  "AssignmentBatchInput": {
+    "request_id": "00000000-0000-4000-8000-000000002000",
+    "items": [
+      {
+        "participant_id": "00000000-0000-4000-8000-000000000001",
+        "scenario_id": "00000000-0000-4000-8000-000000000100",
+        "scenario_version": 1,
+        "order": 1,
+        "delay_from_start_s": 0,
+        "delivery_mode": "profile"
+      },
+      {
+        "participant_id": "00000000-0000-4000-8000-000000000003",
+        "scenario_id": "00000000-0000-4000-8000-000000000101",
+        "scenario_version": 1,
+        "order": 1,
+        "delay_from_start_s": 30,
+        "delivery_mode": "profile"
+      }
+    ]
+  },
+  "AssignmentBatch": {
+    "request_id": "00000000-0000-4000-8000-000000002000",
+    "session_id": "00000000-0000-4000-8000-000000000400",
+    "assignments": [
+      {
+        "id": "00000000-0000-4000-8000-000000000300",
+        "session_id": "00000000-0000-4000-8000-000000000400",
+        "participant_id": "00000000-0000-4000-8000-000000000001",
+        "scenario_id": "00000000-0000-4000-8000-000000000100",
+        "scenario_version": 1,
+        "order": 1,
+        "delay_from_start_s": 0,
+        "delivery_mode": "profile",
+        "due_at": null,
+        "status": "pending"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000301",
+        "session_id": "00000000-0000-4000-8000-000000000400",
+        "participant_id": "00000000-0000-4000-8000-000000000003",
+        "scenario_id": "00000000-0000-4000-8000-000000000101",
+        "scenario_version": 1,
+        "order": 1,
+        "delay_from_start_s": 30,
+        "delivery_mode": "profile",
+        "due_at": null,
+        "status": "pending"
+      }
+    ],
+    "created_at": "2026-09-23T00:00:00.000Z"
+  },
+  "FinishInput": {
+    "contract_version": 2,
+    "request_id": "00000000-0000-4000-8000-000000002007"
+  },
+  "SessionLifecycle": {
+    "session_id": "00000000-0000-4000-8000-000000000400",
+    "status": "finished",
+    "started_at": "2026-09-23T00:00:00.000Z",
+    "finished_at": "2026-09-23T00:01:40.000Z",
+    "timing_policy": {
+      "timing_version": 2,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "waiting_policy": "separate",
+      "max_rtt_ms": 2000,
+      "max_sample_age_ms": 60000,
+      "max_buffer_delay_ms": 30000,
+      "future_tolerance_ms": 250
+    },
+    "cancelled_assignment_ids": [
+      "00000000-0000-4000-8000-000000000301"
+    ],
+    "remaining_assignments": 0,
+    "attempts": [
+      {
+        "card_id": "00000000-0000-4000-8000-000000000600",
+        "participant_id": "00000000-0000-4000-8000-000000000001",
+        "status": "interrupted",
+        "interrupted_at": "2026-09-23T00:01:40.000Z",
+        "active_call_id": null,
+        "recording_status": "upload_pending"
+      }
+    ]
+  },
+  "Brigade": {
+    "id": "00000000-0000-4000-8000-000000002005",
+    "service_id": "102",
+    "name": "Учебная бригада 1",
+    "is_active": true
+  },
+  "CallTarget": {
+    "id": "00000000-0000-4000-8000-000000002006",
+    "service_id": "102",
+    "brigade_id": "00000000-0000-4000-8000-000000002005",
+    "name": "Старший бригады",
+    "phone_ext": "201",
+    "voice_profile": "male_calm",
+    "is_active": true
+  },
+  "TrainingPlan": {
+    "version": 1,
+    "required_brigade_ids": [
+      "00000000-0000-4000-8000-000000002005"
+    ],
+    "messages": [
+      {
+        "message": {
+          "id": "00000000-0000-4000-8000-000000002002",
+          "version": 1,
+          "text": "Бригада прибыла к месту происшествия.",
+          "audio": {
+            "asset_id": "00000000-0000-4000-8000-000000002001",
+            "version": 1,
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+            "duration_ms": 2000
+          }
+        },
+        "brigade_id": "00000000-0000-4000-8000-000000002005",
+        "call_target_id": "00000000-0000-4000-8000-000000002006",
+        "available_after_s": 60,
+        "expected_comment": "Отразить прибытие."
+      }
+    ],
+    "observable_defects": []
+  },
+  "CardTraining": {
+    "card_id": "00000000-0000-4000-8000-000000000600",
+    "revision": 1,
+    "selected_brigade_ids": [
+      "00000000-0000-4000-8000-000000002005"
+    ],
+    "messages": [
+      {
+        "delivery": {
+          "delivery_id": "00000000-0000-4000-8000-000000002003",
+          "card_id": "00000000-0000-4000-8000-000000000600",
+          "call_id": "00000000-0000-4000-8000-000000002004",
+          "participant_id": "00000000-0000-4000-8000-000000000001",
+          "brigade_id": "00000000-0000-4000-8000-000000002005",
+          "call_target_id": "00000000-0000-4000-8000-000000002006",
+          "message": {
+            "id": "00000000-0000-4000-8000-000000002002",
+            "version": 1,
+            "text": "Бригада прибыла к месту происшествия.",
+            "audio": {
+              "asset_id": "00000000-0000-4000-8000-000000002001",
+              "version": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+              "duration_ms": 2000
+            }
+          },
+          "delivered_at": "2026-09-23T00:01:20.000Z"
+        },
+        "state": "presented",
+        "presented_at": "2026-09-23T00:01:22.000Z",
+        "failed_at": null,
+        "presentation_event_id": "00000000-0000-4000-8000-000000002008",
+        "failure_reason": null
+      }
+    ]
+  },
+  "PresentationReceipt": {
+    "delivery_id": "00000000-0000-4000-8000-000000002003",
+    "playback_id": "00000000-0000-4000-8000-000000002009",
+    "message_version": 1,
+    "audio_version": 1,
+    "channel": "audio"
+  },
+  "PresentationFailure": {
+    "delivery_id": "00000000-0000-4000-8000-000000002003",
+    "playback_id": "00000000-0000-4000-8000-000000002009",
+    "message_version": 1,
+    "audio_version": 1,
+    "reason": "interrupted"
+  },
+  "AttemptAnalysis": {
+    "card_id": "00000000-0000-4000-8000-000000000600",
+    "participant_id": "00000000-0000-4000-8000-000000000001",
+    "attempt_status": "completed",
+    "timing": {
+      "timing_version": 2,
+      "snapshot_id": "00000000-0000-4000-8000-000000000400",
+      "reaction_s": 20,
+      "handling_s": 170,
+      "lifetime_s": 190,
+      "waiting_s": 0,
+      "active_handling_s": 170,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 180,
+      "reaction_overdue": false,
+      "handling_overdue": false,
+      "quality": "verified",
+      "anomalies": [],
+      "evidence": [
+        {
+          "event_id": "00000000-0000-4000-8000-000000000001",
+          "normalized_at": "2026-09-23T00:00:00.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000002",
+          "normalized_at": "2026-09-23T00:00:20.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000003",
+          "normalized_at": "2026-09-23T00:00:40.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        },
+        {
+          "event_id": "00000000-0000-4000-8000-000000000004",
+          "normalized_at": "2026-09-23T00:03:10.000Z",
+          "source": "corrected_client",
+          "reason": "verified"
+        }
+      ]
+    },
+    "evaluation": {
+      "evaluation_id": "00000000-0000-4000-8000-000000000500",
+      "evaluation_version": 1,
+      "status": "partial",
+      "automatic_total": 0.7,
+      "effective_total": 0.8,
+      "effective_override": {
+        "override_id": "00000000-0000-4000-8000-000000002100",
+        "decision": "disagree",
+        "new_total": 0.8,
+        "reason": "Учтён комментарий.",
+        "teacher_comment": "",
+        "created_at": "2026-09-23T00:04:00.000Z"
+      },
+      "required_layers": [
+        "rules",
+        "semantic"
+      ],
+      "layers": [
+        {
+          "layer": "rules",
+          "status": "done",
+          "version": "rules-v1",
+          "reason": null,
+          "evidence": [
+            "Карточка завершена."
+          ],
+          "explanation": "Проверены правила."
+        },
+        {
+          "layer": "semantic",
+          "status": "unavailable",
+          "version": null,
+          "reason": "provider_off",
+          "evidence": [],
+          "explanation": "Проверка смысла ещё недоступна."
+        }
+      ],
+      "partial_reasons": [
+        "semantic_unavailable"
+      ],
+      "methodology_version": "c01-v2",
+      "model_versions": {
+        "rules": "rules-v1"
+      },
+      "errors": {
+        "input": null,
+        "address": null,
+        "grammar": null,
+        "routing": 0,
+        "status_flow": 0,
+        "timing": 0,
+        "call": 0
+      },
+      "explanation": "Частичная оценка; итог изменён преподавателем."
+    },
+    "prediction": {
+      "prediction_id": "00000000-0000-4000-8000-000000002101",
+      "made_at": "2026-09-22T23:59:59.000Z",
+      "model_version": "irt-v1",
+      "methodology_version": "c01-v2",
+      "p_success": 0.75,
+      "expected_score": 0.7,
+      "expected_time_s": 170,
+      "p_timeout": 0.2,
+      "actual_score": 0.7,
+      "actual_time_s": 170,
+      "actual_timeout": false,
+      "actual_at": "2026-09-23T00:03:10.000Z"
+    }
+  },
+  "SessionAnalytics": {
+    "session_id": "00000000-0000-4000-8000-000000000400",
+    "trainees": [
+      {
+        "user_id": "00000000-0000-4000-8000-000000000001",
+        "attempt_count": 2,
+        "completed_count": 1,
+        "interrupted_count": 1,
+        "evaluated_count": 1,
+        "complete_evaluation_count": 0,
+        "mean_effective_score": 0.8,
+        "mean_reaction_s": 20,
+        "reaction_sample_count": 2,
+        "mean_handling_s": 170,
+        "handling_sample_count": 1,
+        "errors": {
+          "input": null,
+          "address": null,
+          "grammar": null,
+          "routing": 0,
+          "status_flow": 0,
+          "timing": 0,
+          "call": 0
+        },
+        "current_level": 1,
+        "recommendation": {
+          "level": 1,
+          "weight": 2,
+          "direction": "keep",
+          "based_on_attempts": 1,
+          "model_version": "irt-v1",
+          "methodology_version": "c01-v2",
+          "evidence": [
+            "Одна оценённая попытка."
+          ],
+          "explanation": "Недостаточно данных для изменения уровня."
+        },
+        "explanation": "Одна попытка прервана, одна оценена частично."
+      }
+    ],
+    "attempts": [
+      {
+        "card_id": "00000000-0000-4000-8000-000000000600",
+        "participant_id": "00000000-0000-4000-8000-000000000001",
+        "attempt_status": "completed",
+        "timing": {
+          "timing_version": 2,
+          "snapshot_id": "00000000-0000-4000-8000-000000000400",
+          "reaction_s": 20,
+          "handling_s": 170,
+          "lifetime_s": 190,
+          "waiting_s": 0,
+          "active_handling_s": 170,
+          "reaction_normative_s": 30,
+          "handling_normative_s": 180,
+          "reaction_overdue": false,
+          "handling_overdue": false,
+          "quality": "verified",
+          "anomalies": [],
+          "evidence": [
+            {
+              "event_id": "00000000-0000-4000-8000-000000000001",
+              "normalized_at": "2026-09-23T00:00:00.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            },
+            {
+              "event_id": "00000000-0000-4000-8000-000000000002",
+              "normalized_at": "2026-09-23T00:00:20.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            },
+            {
+              "event_id": "00000000-0000-4000-8000-000000000003",
+              "normalized_at": "2026-09-23T00:00:40.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            },
+            {
+              "event_id": "00000000-0000-4000-8000-000000000004",
+              "normalized_at": "2026-09-23T00:03:10.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            }
+          ]
+        },
+        "evaluation": {
+          "evaluation_id": "00000000-0000-4000-8000-000000000500",
+          "evaluation_version": 1,
+          "status": "partial",
+          "automatic_total": 0.7,
+          "effective_total": 0.8,
+          "effective_override": {
+            "override_id": "00000000-0000-4000-8000-000000002100",
+            "decision": "disagree",
+            "new_total": 0.8,
+            "reason": "Учтён комментарий.",
+            "teacher_comment": "",
+            "created_at": "2026-09-23T00:04:00.000Z"
+          },
+          "required_layers": [
+            "rules",
+            "semantic"
+          ],
+          "layers": [
+            {
+              "layer": "rules",
+              "status": "done",
+              "version": "rules-v1",
+              "reason": null,
+              "evidence": [
+                "Карточка завершена."
+              ],
+              "explanation": "Проверены правила."
+            },
+            {
+              "layer": "semantic",
+              "status": "unavailable",
+              "version": null,
+              "reason": "provider_off",
+              "evidence": [],
+              "explanation": "Проверка смысла ещё недоступна."
+            }
+          ],
+          "partial_reasons": [
+            "semantic_unavailable"
+          ],
+          "methodology_version": "c01-v2",
+          "model_versions": {
+            "rules": "rules-v1"
+          },
+          "errors": {
+            "input": null,
+            "address": null,
+            "grammar": null,
+            "routing": 0,
+            "status_flow": 0,
+            "timing": 0,
+            "call": 0
+          },
+          "explanation": "Частичная оценка; итог изменён преподавателем."
+        },
+        "prediction": {
+          "prediction_id": "00000000-0000-4000-8000-000000002101",
+          "made_at": "2026-09-22T23:59:59.000Z",
+          "model_version": "irt-v1",
+          "methodology_version": "c01-v2",
+          "p_success": 0.75,
+          "expected_score": 0.7,
+          "expected_time_s": 170,
+          "p_timeout": 0.2,
+          "actual_score": 0.7,
+          "actual_time_s": 170,
+          "actual_timeout": false,
+          "actual_at": "2026-09-23T00:03:10.000Z"
+        }
+      },
+      {
+        "card_id": "00000000-0000-4000-8000-000000000601",
+        "participant_id": "00000000-0000-4000-8000-000000000001",
+        "attempt_status": "interrupted",
+        "timing": {
+          "timing_version": 2,
+          "snapshot_id": "00000000-0000-4000-8000-000000000400",
+          "reaction_s": 20,
+          "handling_s": null,
+          "lifetime_s": null,
+          "waiting_s": 0,
+          "active_handling_s": null,
+          "reaction_normative_s": 30,
+          "handling_normative_s": 180,
+          "reaction_overdue": false,
+          "handling_overdue": null,
+          "quality": "verified",
+          "anomalies": [
+            "missing_terminal"
+          ],
+          "evidence": [
+            {
+              "event_id": "00000000-0000-4000-8000-000000000001",
+              "normalized_at": "2026-09-23T00:00:00.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            },
+            {
+              "event_id": "00000000-0000-4000-8000-000000000002",
+              "normalized_at": "2026-09-23T00:00:20.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            },
+            {
+              "event_id": "00000000-0000-4000-8000-000000000003",
+              "normalized_at": "2026-09-23T00:00:40.000Z",
+              "source": "corrected_client",
+              "reason": "verified"
+            }
+          ]
+        },
+        "evaluation": null,
+        "prediction": null
+      }
+    ],
+    "methodology_version": "c01-v2"
+  },
+  "ScenarioPreviewInput": {
+    "constructor": {
+      "incident_type_code": "2020000",
+      "target_service_id": "102",
+      "address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "victims": true,
+      "complications": [],
+      "level": 1,
+      "weight": 2,
+      "seed": 42
+    }
+  },
+  "ScenarioPreview": {
+    "scenario": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "version": 1,
+      "level": 1,
+      "weight": 2,
+      "incident_type_code": "2020000",
+      "target_service_id": "102",
+      "card": {
+        "number": "10000001",
+        "incident_type_code": "2020000",
+        "caller_name": "Учебный заявитель",
+        "phone_aon": "+79000000001",
+        "phone_provided": "",
+        "phone_scene": "",
+        "address": {
+          "city": "Москва",
+          "okrug": "Северный",
+          "district": "Учебный",
+          "street": "Дубнинская улица",
+          "house": "1",
+          "building": "",
+          "apartment": ""
+        },
+        "description": "Учебный сценарий: ДТП с пострадавшими у дома 1.",
+        "tags": [
+          "ДТП",
+          "Пострадавшие"
+        ],
+        "victims": true,
+        "ambulance_refused": false,
+        "blocked_people": false,
+        "emergency": false,
+        "incident_class": "ДТП с пострадавшими",
+        "service_ids": [
+          "102",
+          "103"
+        ]
+      },
+      "reference": {
+        "expected_flow": [
+          "received",
+          "accepted",
+          "responding",
+          "completed"
+        ],
+        "required_fields": [
+          "service_number",
+          "comment"
+        ],
+        "expected_service_ids": [
+          "102",
+          "103"
+        ],
+        "expected_address": {
+          "city": "Москва",
+          "okrug": "Северный",
+          "district": "Учебный",
+          "street": "Дубнинская улица",
+          "house": "1",
+          "building": "",
+          "apartment": ""
+        },
+        "expected_call": {
+          "required": true,
+          "service_id": "102",
+          "phone_ext": "102",
+          "before_s": 180
+        },
+        "expected_comment": "Передана информация о ДТП с пострадавшими по адресу: Москва, Дубнинская улица, дом 1. Направлен экипаж."
+      },
+      "complications": [],
+      "origin": "template",
+      "status": "draft",
+      "teacher_comment": "Синтетическая фикстура для разработки."
+    },
+    "suggested_weight": 2,
+    "validation_errors": [],
+    "provenance": {
+      "author_kind": "teacher",
+      "author_id": "00000000-0000-4000-8000-000000000002",
+      "source_kind": "manual",
+      "source_id": null,
+      "source_version": null,
+      "sha256": null,
+      "synthetic": true
+    },
+    "training_plan": null
+  },
+  "GenerateOptions": {
+    "request_id": "00000000-0000-4000-8000-000000002299",
+    "selection": {
+      "author_kinds": [
+        "system",
+        "teacher"
+      ],
+      "incident_type_codes": [
+        "2020000"
+      ],
+      "scenario_ids": []
+    },
+    "constructor": {
+      "incident_type_code": "2020000",
+      "target_service_id": "102",
+      "address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "victims": true,
+      "complications": [],
+      "level": 1,
+      "weight": 2,
+      "seed": 42
+    }
+  },
+  "ScenarioRevisionInput": {
+    "request_id": "00000000-0000-4000-8000-000000002300",
+    "version": 1,
+    "comment": "Уточнить видимость номера дома в описании."
+  },
+  "PackApprovalInput": {
+    "request_id": "00000000-0000-4000-8000-000000002301",
+    "scenarios": [
+      {
+        "scenario_id": "00000000-0000-4000-8000-000000000100",
+        "version": 1
+      }
+    ]
+  },
+  "PackApproval": {
+    "pack_id": "00000000-0000-4000-8000-000000000800",
+    "approved": [
+      {
+        "scenario_id": "00000000-0000-4000-8000-000000000100",
+        "version": 2
+      }
+    ],
+    "remaining_draft_ids": [
+      "00000000-0000-4000-8000-000000000101"
+    ]
+  },
+  "JobProgress": {
+    "job": {
+      "id": "00000000-0000-4000-8000-000000000900",
+      "kind": "generate",
+      "status": "pending",
+      "error": null
+    },
+    "completed": 0,
+    "total": 2,
+    "scenario_ids": [],
+    "pack_id": "00000000-0000-4000-8000-000000000800",
+    "warnings": []
+  },
+  "ScenarioContent": {
+    "scenario_id": "00000000-0000-4000-8000-000000000100",
+    "version": 1,
+    "provenance": {
+      "author_kind": "teacher",
+      "author_id": "00000000-0000-4000-8000-000000000002",
+      "source_kind": "manual",
+      "source_id": null,
+      "source_version": null,
+      "sha256": null,
+      "synthetic": true
+    },
+    "training_plan": {
+      "version": 1,
+      "required_brigade_ids": [
+        "00000000-0000-4000-8000-000000002005"
+      ],
+      "messages": [
+        {
+          "message": {
+            "id": "00000000-0000-4000-8000-000000002002",
+            "version": 1,
+            "text": "Бригада прибыла к месту происшествия.",
+            "audio": {
+              "asset_id": "00000000-0000-4000-8000-000000002001",
+              "version": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+              "duration_ms": 2000
+            }
+          },
+          "brigade_id": "00000000-0000-4000-8000-000000002005",
+          "call_target_id": "00000000-0000-4000-8000-000000002006",
+          "available_after_s": 60,
+          "expected_comment": "Отразить прибытие."
+        }
+      ],
+      "observable_defects": []
+    }
+  },
+  "ScenarioContentInput": {
+    "version": 1,
+    "provenance": {
+      "author_kind": "teacher",
+      "author_id": "00000000-0000-4000-8000-000000000002",
+      "source_kind": "manual",
+      "source_id": null,
+      "source_version": null,
+      "sha256": null,
+      "synthetic": true
+    },
+    "training_plan": {
+      "version": 1,
+      "required_brigade_ids": [
+        "00000000-0000-4000-8000-000000002005"
+      ],
+      "messages": [
+        {
+          "message": {
+            "id": "00000000-0000-4000-8000-000000002002",
+            "version": 1,
+            "text": "Бригада прибыла к месту происшествия.",
+            "audio": {
+              "asset_id": "00000000-0000-4000-8000-000000002001",
+              "version": 1,
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "url": "/api/cards/00000000-0000-4000-8000-000000000600/messages/00000000-0000-4000-8000-000000002003/audio?version=1",
+              "duration_ms": 2000
+            }
+          },
+          "brigade_id": "00000000-0000-4000-8000-000000002005",
+          "call_target_id": "00000000-0000-4000-8000-000000002006",
+          "available_after_s": 60,
+          "expected_comment": "Отразить прибытие."
+        }
+      ],
+      "observable_defects": []
+    }
+  },
+  "GrammarCheckInput": {
+    "version": 1,
+    "fields": [
+      "description"
+    ]
+  },
+  "GrammarCheck": {
+    "scenario_id": "00000000-0000-4000-8000-000000000100",
+    "version": 1,
+    "status": "unavailable",
+    "issues": [],
+    "model_version": null,
+    "reason": "Словарь ещё не подключён."
+  },
+  "Material": {
+    "id": "00000000-0000-4000-8000-000000002200",
+    "version": 1,
+    "title": "Учебная памятка",
+    "purpose": "reference",
+    "media_type": "application/pdf",
+    "size_bytes": 1024,
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "created_at": "2026-09-23T00:00:00.000Z"
+  },
+  "MaterialMetadata": {
+    "title": "Учебная памятка",
+    "purpose": "reference",
+    "previous_id": null,
+    "previous_version": null
+  },
+  "MaterialAssignmentInput": {
+    "request_id": "00000000-0000-4000-8000-000000002302",
+    "materials": [
+      {
+        "material_id": "00000000-0000-4000-8000-000000002200",
+        "version": 1
+      }
+    ]
+  },
+  "PredictionContext": {
+    "contract_version": 2,
+    "snapshot_id": "00000000-0000-4000-8000-000000003100",
+    "policy": {
+      "timing_version": 2,
+      "reaction_normative_s": 30,
+      "handling_normative_s": 100,
+      "waiting_policy": "separate",
+      "max_rtt_ms": 2000,
+      "max_sample_age_ms": 60000,
+      "max_buffer_delay_ms": 30000,
+      "future_tolerance_ms": 250
+    }
+  },
+  "CalibrationObservation": {
+    "card_id": "00000000-0000-4000-8000-000000003101",
+    "prediction_id": "00000000-0000-4000-8000-000000003102",
+    "made_at": "2026-09-23T00:00:00.000Z",
+    "completed_at": "2026-09-23T00:02:50.000Z",
+    "predicted_score": 0.7,
+    "automatic_score": 0.7,
+    "effective_score": 0.8,
+    "override_id": "00000000-0000-4000-8000-000000003103",
+    "handling_s": 170,
+    "timing_version": 2,
+    "snapshot_id": "00000000-0000-4000-8000-000000003100",
+    "handling_normative_s": 100,
+    "timing_quality": "verified",
+    "level": 1,
+    "weight": 2
+  }
+}

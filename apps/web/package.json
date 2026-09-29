@@ -1,0 +1,43 @@
+{
+  "name": "@112/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "lint": "eslint src && prettier --check src --ignore-path .prettierignore",
+    "format": "prettier --write src --ignore-path .prettierignore",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "spell": "cspell --config cspell.json --no-progress",
+    "gen:api": "openapi-typescript ../../contracts/openapi.draft.yaml -o src/api-client/schema.d.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.87.1",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
+    "idb": "8.0.3",
+    "openapi-fetch": "0.14.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.30.1"
+  },
+  "devDependencies": {
+    "@cspell/dict-ru_ru": "2.3.1",
+    "@eslint/js": "9.35.0",
+    "@types/node": "22.18.1",
+    "@types/react": "18.3.24",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "4.7.0",
+    "cspell": "8.19.4",
+    "eslint": "9.35.0",
+    "fake-indexeddb": "6.1.0",
+    "openapi-typescript": "7.9.1",
+    "prettier": "3.6.2",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.42.0",
+    "vite": "6.3.6",
+    "vitest": "3.2.4"
+  }
+}

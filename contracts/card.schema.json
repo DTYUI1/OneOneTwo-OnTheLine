@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/card.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "number": {
+      "type": "string",
+      "pattern": "^[0-9]{8}$",
+      "readOnly": true
+    },
+    "incident_type_code": {
+      "type": "string",
+      "readOnly": true
+    },
+    "caller_name": {
+      "type": "string",
+      "readOnly": true
+    },
+    "phone_aon": {
+      "type": "string",
+      "pattern": "^(\\+7[0-9]{10})?$",
+      "readOnly": true
+    },
+    "phone_provided": {
+      "type": "string",
+      "pattern": "^(\\+7[0-9]{10})?$",
+      "readOnly": true
+    },
+    "phone_scene": {
+      "type": "string",
+      "pattern": "^(\\+7[0-9]{10})?$",
+      "readOnly": true
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "okrug": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "house": {
+          "type": "string"
+        },
+        "building": {
+          "type": "string"
+        },
+        "apartment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "city",
+        "okrug",
+        "district",
+        "street",
+        "house",
+        "building",
+        "apartment"
+      ],
+      "readOnly": true
+    },
+    "description": {
+      "type": "string",
+      "readOnly": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true
+    },
+    "victims": {
+      "type": "boolean",
+      "readOnly": true
+    },
+    "ambulance_refused": {
+      "type": "boolean",
+      "readOnly": true
+    },
+    "blocked_people": {
+      "type": "boolean",
+      "readOnly": true
+    },
+    "emergency": {
+      "type": "boolean",
+      "readOnly": true
+    },
+    "incident_class": {
+      "type": "string",
+      "readOnly": true
+    },
+    "service_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true
+    }
+  },
+  "required": [
+    "number",
+    "incident_type_code",
+    "caller_name",
+    "phone_aon",
+    "phone_provided",
+    "phone_scene",
+    "address",
+    "description",
+    "tags",
+    "victims",
+    "ambulance_refused",
+    "blocked_people",
+    "emergency",
+    "incident_class",
+    "service_ids"
+  ]
+}

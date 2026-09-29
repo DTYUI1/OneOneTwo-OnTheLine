@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+source_dir=${1:?Usage: restore-into-empty /backups/backup-YYYYMMDDTHHMMSSZ}
+case "$source_dir" in
+  /backups/backup-*) ;;
+  *) echo 'Backup must be under /backups/backup-*' >&2; exit 2 ;;
+esac
+test -d "$source_dir"
+(cd "$source_dir" && sha256sum -c SHA256SUMS)
+if [ "$(find /data/audio -mindepth 1 -maxdepth 1 | wc -l)" -ne 0 ]; then
+  echo 'Target audio volume is not empty' >&2
+  exit 2
+fi
+if [ "$(psql -Atqc "SELECT count(*) FROM pg_tables WHERE schemaname NOT IN ('pg_catalog','information_schema')")" -ne 0 ]; then
+  echo 'Target database is not empty' >&2
+  exit 2
+fi
+if tar -tzf "$source_dir/audio.tar.gz" | grep -Eq '(^/|(^|/)\.\.(/|$))'; then
+  echo 'Unsafe audio archive paths' >&2
+  exit 2
+fi
+pg_restore --no-owner --no-acl --exit-on-error --dbname="$PGDATABASE" "$source_dir/database.dump"
+# В дампе копия, из которой восстанавливаем, ещё «идёт»: закрываем незавершённые записи журнала.
+psql -X -q -v ON_ERROR_STOP=1 -c "UPDATE backups SET status = 'failed', finished_at = now(), error = 'Не завершена к моменту снятия этой копии.' WHERE status IN ('pending', 'running')"
+tar -C /data/audio -xzf "$source_dir/audio.tar.gz"
+echo 'Restore complete; verify counts and application health before use.'

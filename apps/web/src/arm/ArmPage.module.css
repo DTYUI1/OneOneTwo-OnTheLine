@@ -1,0 +1,197 @@
+.arm {
+  padding: 0;
+  background: var(--color-list);
+  color: var(--color-on-dark);
+  min-height: calc(100vh - 70px);
+}
+.search {
+  color: var(--color-text);
+  background: var(--color-panel);
+  padding: var(--space-3);
+}
+/* Крупный тонкий заголовок с чертой во всю ширину — arm_dds/02. */
+.search h1 {
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-1);
+  font-size: 32px;
+  font-weight: normal;
+  border-bottom: 1px solid var(--color-text);
+}
+.list {
+  padding: var(--space-4);
+}
+.list table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+}
+.list td,
+.list th {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.searchInput {
+  width: 60%;
+  margin-right: var(--space-2);
+  border: 1px solid var(--color-border);
+}
+
+/* От этой подписи зависит, по какой плитке ставить статус: обычный кегль и
+   светлый цвет вместо мелкой серой строки. */
+.counter {
+  font-weight: normal;
+  font-size: var(--font-size);
+  color: var(--color-on-dark);
+}
+
+.row {
+  cursor: pointer;
+}
+
+/* Основная строка и строка «Описание:» — одна запись реестра (arm_dds/03):
+   черта только под описанием. */
+.list .mainRow > td {
+  border-bottom: none;
+}
+
+/* Описание — в одну строку с многоточием, таблицу не расширяет. */
+.description {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Строка в фокусе клавиатуры — видна так же ясно, как под мышью. */
+.row:focus-visible {
+  outline: 3px solid var(--color-active);
+  outline-offset: -3px;
+  background: #6f7b82;
+}
+
+/* Таблица шире экрана прокручивается сама, страница вбок не уезжает. */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.row:hover,
+.rowOverdue:hover {
+  background: #6f7b82;
+}
+
+/* Запись — пара строк: подсветка под мышью и в фокусе охватывает обе. */
+.mainRow:hover + tr,
+.mainRow:focus-visible + tr,
+.mainRow:has(+ tr:hover) {
+  background: #6f7b82;
+}
+
+/* Норматив реакции 30 с превышен, карточка ещё не открыта — красная строка. */
+.rowOverdue {
+  composes: row;
+  background: #9c4a43;
+}
+
+.timer {
+  font-variant-numeric: tabular-nums;
+}
+
+.timerOverdue {
+  composes: timer;
+  color: var(--color-on-dark);
+  background: var(--color-danger);
+}
+
+.cardPage {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  height: calc(100dvh - var(--shell-height, 68px));
+  background: var(--color-panel);
+}
+.cardPage > section {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+}
+/* Очередь неподтверждённых действий всплывает поверх экрана справа, в пустой части
+   строки вкладок: она мелькает на долю секунды после действия и не должна сдвигать
+   карточку или список под собой. */
+.arm,
+.cardPage {
+  position: relative;
+}
+.feedback {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  width: min(480px, 100%);
+  max-height: 25vh;
+  overflow: auto;
+}
+.feedback > * {
+  box-shadow: 0 2px 8px #10182033;
+}
+.feedback:empty {
+  display: none;
+}
+.cardPage:focus,
+.arm:focus {
+  outline: none;
+}
+.unavailable {
+  padding: var(--space-3);
+}
+
+/* Заголовок списка и сразу за ним — кнопки учебных функций (T-031). */
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+}
+
+/* Кнопки списка — одна группа в порядке пути, а не россыпь по ширине экрана. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.resultsButton {
+  padding: 6px 14px;
+  color: var(--color-on-dark);
+  font-size: 13px;
+  background: var(--color-active);
+  border: 1px solid var(--color-active);
+}
+
+.resultsButton:hover {
+  background: #146a9c;
+}
+
+/* Сообщение о запуске тренировки — отдельной строкой под кнопками списка. */
+.practiceNote {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+/* Узкий экран (телефон, узкое окно): без второстепенных колонок и полей по краям. */
+@media (max-width: 600px) {
+  .optional {
+    display: none;
+  }
+  .list {
+    padding: var(--space-2);
+  }
+  .searchInput {
+    width: 100%;
+    margin: 0 0 var(--space-2);
+  }
+  .cardPage {
+    height: auto;
+  }
+}

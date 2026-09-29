@@ -1,0 +1,44 @@
+{
+  "101": {
+    "file": "brigade/101/completion.ogg",
+    "text": "Горение ликвидировано, работы завершены, расчёт возвращается.",
+    "duration_ms": 4214,
+    "bytes": 17355,
+    "sha256": "2d31dfb47236359b2de881a743c77f306414185791e089830f28a2644f31d3c8"
+  },
+  "GKH": {
+    "file": "brigade/GKH/completion.ogg",
+    "text": "Повреждение устранено, подача восстановлена, работы завершены.",
+    "duration_ms": 4191,
+    "bytes": 17269,
+    "sha256": "66e3de3d532bece3609af7cae69ca99849963da130acd372f0d735f4ddd0c4b3"
+  },
+  "103": {
+    "file": "brigade/103/completion.ogg",
+    "text": "Помощь оказана, пострадавший передан в стационар, бригада свободна.",
+    "duration_ms": 3471,
+    "bytes": 14266,
+    "sha256": "7d7602bd271424a72c3260e717816245f70cfb3af3be4e2fef663e51a51533df"
+  },
+  "102": {
+    "file": "brigade/102/completion.ogg",
+    "text": "Работы на месте завершены, наряд освободился.",
+    "duration_ms": 3947,
+    "bytes": 15775,
+    "sha256": "1bde39ca12c539ed06d6d61d395b761948f20c5cb935f59ba3632906c34789d0"
+  },
+  "MOSLIFT": {
+    "file": "brigade/MOSLIFT/completion.ogg",
+    "text": "Пассажиры выведены, лифт отключён до ремонта, работы завершены.",
+    "duration_ms": 4795,
+    "bytes": 19225,
+    "sha256": "6453d49ee9b10027c3c37d0444ba0bd57b1601a867c88647bf284b4f57612c06"
+  },
+  "104": {
+    "file": "brigade/104/completion.ogg",
+    "text": "Утечка устранена, подача газа восстановлена, работы завершены.",
+    "duration_ms": 3762,
+    "bytes": 15813,
+    "sha256": "c461dd39580ae070c3e7460961970307312bb14713bf46634cc37135afab2b56"
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "id": "case-2",
+  "description": "Синтетический эталон, не официальный билет. Все действия используют исправленный эталонный адрес.",
+  "scenario": {
+    "id": "00000000-0000-4000-8000-000000000101",
+    "version": 1,
+    "level": 2,
+    "weight": 2,
+    "incident_type_code": "1010101",
+    "target_service_id": "101",
+    "card": {
+      "number": "10000002",
+      "incident_type_code": "1010101",
+      "caller_name": "Учебный заявитель",
+      "phone_aon": "+79000000001",
+      "phone_provided": "",
+      "phone_scene": "",
+      "address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "description": "Учебное происшествие: пожар: мусор. Москва, Дубнинская улица, дом 1.",
+      "tags": [
+        "на улице"
+      ],
+      "victims": true,
+      "ambulance_refused": false,
+      "blocked_people": false,
+      "emergency": false,
+      "incident_class": "пожар: мусор",
+      "service_ids": [
+        "101"
+      ]
+    },
+    "reference": {
+      "expected_flow": [
+        "received",
+        "accepted",
+        "responding",
+        "completed"
+      ],
+      "required_fields": [
+        "service_number",
+        "comment"
+      ],
+      "expected_service_ids": [
+        "101"
+      ],
+      "expected_address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "expected_call": {
+        "required": true,
+        "service_id": "101",
+        "phone_ext": "101",
+        "before_s": 180
+      },
+      "expected_comment": "В службу 101 передана информация: пожар: мусор. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+    },
+    "complications": [
+      "parallel"
+    ],
+    "origin": "template",
+    "status": "approved",
+    "teacher_comment": "Синтетическая фикстура для разработки."
+  },
+  "current": {
+    "service_number": "23",
+    "comment": "В службу 101 передана информация: пожар: мусор. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+  },
+  "events": [
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001020",
+      "client_ts": "2026-09-19T09:00:00.000Z",
+      "server_ts": "2026-09-19T09:00:00.000Z",
+      "clock_offset_ms": 0,
+      "type": "deliver",
+      "payload": {}
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001021",
+      "client_ts": "2026-09-19T09:00:10.000Z",
+      "server_ts": "2026-09-19T09:00:10.000Z",
+      "clock_offset_ms": 0,
+      "type": "open",
+      "payload": {}
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001022",
+      "client_ts": "2026-09-19T09:00:15.000Z",
+      "server_ts": "2026-09-19T09:00:15.000Z",
+      "clock_offset_ms": 0,
+      "type": "status_change",
+      "payload": {
+        "state": "accepted",
+        "comment": "В службу 101 передана информация: пожар: мусор. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001023",
+      "client_ts": "2026-09-19T09:00:16.000Z",
+      "server_ts": "2026-09-19T09:00:16.000Z",
+      "clock_offset_ms": 0,
+      "type": "field_change",
+      "payload": {
+        "field": "service_number",
+        "value": "23"
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001024",
+      "client_ts": "2026-09-19T09:00:20.000Z",
+      "server_ts": "2026-09-19T09:00:20.000Z",
+      "clock_offset_ms": 0,
+      "type": "status_change",
+      "payload": {
+        "state": "responding",
+        "comment": "В службу 101 передана информация: пожар: мусор. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001025",
+      "client_ts": "2026-09-19T09:00:25.000Z",
+      "server_ts": "2026-09-19T09:00:25.000Z",
+      "clock_offset_ms": 0,
+      "type": "call_dial",
+      "payload": {
+        "call_id": "00000000-0000-4000-8000-000000000601",
+        "phone_ext": "101"
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001026",
+      "client_ts": "2026-09-19T09:00:26.000Z",
+      "server_ts": "2026-09-19T09:00:26.000Z",
+      "clock_offset_ms": 0,
+      "type": "call_answer",
+      "payload": {
+        "call_id": "00000000-0000-4000-8000-000000000601"
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001027",
+      "client_ts": "2026-09-19T09:00:40.000Z",
+      "server_ts": "2026-09-19T09:00:40.000Z",
+      "clock_offset_ms": 0,
+      "type": "call_hangup",
+      "payload": {
+        "call_id": "00000000-0000-4000-8000-000000000601"
+      }
+    },
+    {
+      "client_event_id": "00000000-0000-4000-8000-000000001028",
+      "client_ts": "2026-09-19T09:01:40.000Z",
+      "server_ts": "2026-09-19T09:01:40.000Z",
+      "clock_offset_ms": 0,
+      "type": "status_change",
+      "payload": {
+        "state": "completed",
+        "comment": "В службу 101 передана информация: пожар: мусор. Москва, Дубнинская улица, дом 1. Направлен экипаж."
+      }
+    }
+  ],
+  "calls": [
+    {
+      "id": "00000000-0000-4000-8000-000000000601",
+      "service_id": "101",
+      "phone_ext": "101",
+      "started_at": "2026-09-19T09:00:25.000Z",
+      "answered_at": "2026-09-19T09:00:26.000Z",
+      "ended_at": "2026-09-19T09:00:40.000Z",
+      "transcript": null
+    }
+  ],
+  "settings": {
+    "reaction_normative_s": 30,
+    "handling_normative_s": 180,
+    "critical_cap": 0.5,
+    "weights": {
+      "reaction_time": 1,
+      "handling_time": 1,
+      "status_flow": 1,
+      "routing": 1,
+      "required_fields": 1,
+      "address": 1,
+      "call": 1
+    },
+    "parallel_cards": 1,
+    "hints_level": 0
+  },
+  "expected": {
+    "criteria": {
+      "reaction_time": 1,
+      "handling_time": 1,
+      "status_flow": 1,
+      "routing": 1,
+      "required_fields": 1,
+      "address": 1,
+      "call": 1
+    },
+    "total": 1,
+    "tolerance": 0.001
+  }
+}

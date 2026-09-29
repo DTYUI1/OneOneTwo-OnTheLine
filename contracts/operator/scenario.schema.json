@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/operator/scenario.schema.json",
+  "title": "Сценарий звонка заявителя (модуль «Оператор 112»)",
+  "description": "Заранее написанный сценарий: факты происшествия, ожидаемая маршрутизация по data/classifier.json и реплики заявителя. Диалог не генерируется — Q29. Этап 2 (docs/operator_112_review/PLAN.md): персонаж, стартовая паника, реакции в его роде и манере, ухудшение ситуации и советы. Этап 3: лишние вопросы по шагам опроса, ответы на повтор адреса, эталонный порядок звонка для разбора.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Как факт называется в пояснении оценки: «дым из квартиры»"
+        },
+        "synonyms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": ["title", "synonyms"]
+    },
+    "line": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "group_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "incident_types[].group_name классификатора; для ошибочного звонка — «нет происшествия»"
+    },
+    "incident_type_code": {
+      "type": ["string", "null"],
+      "description": "incident_types[].code классификатора; null — ошибочный звонок, происшествия нет"
+    },
+    "accepted_incident_type_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Другие коды классификатора с тем же смыслом — засчитываются как incident_type_code. В классификаторе есть дубли в разных группах: «Ребенок застрял в лифте» (Ребенок в опасности) = «Застревание в лифте (ребенок без взрослых)» (ЛИФТ). Службы по routing_rules у них те же, что у incident_type_code, — это проверяет тест."
+    },
+    "close_incident_type_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Близкие, но менее точные типы: та же ситуация без важного признака («Застревание в лифте» вместо «…(ребенок без взрослых)»). Половина балла за тип; баллы за время не отнимают."
+    },
+    "expected_tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "no_access",
+          "offense",
+          "victims",
+          "victims_off_site",
+          "gasification"
+        ]
+      }
+    },
+    "optional_tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "no_access",
+          "offense",
+          "victims",
+          "victims_off_site",
+          "gasification"
+        ]
+      },
+      "description": "Спорные теги: отметить их по ситуации разумно, но службы от них не меняются, — оценка их не требует и не штрафует («Нет доступа» у запертой квартиры, «Пострадавшие» у больного). Не пересекаются с expected_tags; что службы те же, проверяет тест."
+    },
+    "expected_services": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Службы, которые routing_rules подставляют для incident_type_code и expected_tags"
+    },
+    "questionnaire_id": {
+      "type": ["string", "null"],
+      "description": "id файла data/operator/questionnaires/; null — ошибочный звонок, карта не задаётся"
+    },
+    "caller": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+7[0-9]{10}$"
+        }
+      },
+      "required": ["name", "phone"]
+    },
+    "persona": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Кто звонит. От kind зависят голос Piper и его обработка (scripts/voices/operator_texts.py); реплики пишутся в роде и манере персонажа.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["young_woman", "adult", "elderly", "child"]
+        },
+        "age": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 100
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Как персонаж называется в интерфейсе и разборе: «Девушка, 22 года»"
+        }
+      },
+      "required": ["kind", "age", "label"]
+    },
+    "start_panic": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Паника в начале звонка. 3 — истерика: вопросы не слышны, пока оператор не применит «Успокоить» (просьба с причиной, IAED)."
+    },
+    "background": {
+      "type": "string",
+      "enum": ["stairwell_alarm", "street", "apartment", "lift"],
+      "description": "Фон в трубке; звук синтезирует scripts/voices/operator_synth.py"
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "okrug": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "house": {
+          "type": "string"
+        },
+        "building": {
+          "type": "string"
+        },
+        "apartment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "city",
+        "okrug",
+        "district",
+        "street",
+        "house",
+        "building",
+        "apartment"
+      ]
+    },
+    "named_address_fields": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["okrug", "district"]
+      },
+      "description": "Округ и район, которые заявитель называет сам. Не названное поле оценка не требует: пустое не штрафуется, неверно заполненное — ошибка. Нет поля — заявитель не называет ни округ, ни район."
+    },
+    "description_reference": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Эталон записи «Описание со слов заявителя» для полного, верного звонка; покрывает все description_facts"
+    },
+    "description_facts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Ключевые факты, которые оценка ищет в «Описании со слов заявителя». Факт учтён, если в описании есть все слова хотя бы одного синонима: окончания нормализуются, числа словами и цифрами равны, одна опечатка прощается, отрицание стоит рядом со своим словом (contracts/operator/evaluation.md, «Тип и описание»).",
+      "items": {
+        "$ref": "#/$defs/fact"
+      }
+    },
+    "answers": {
+      "type": "object",
+      "description": "Ключ — questions[].key опросной карты, кроме confirm_address (на повтор адреса отвечает address_confirmation); для ошибочного звонка — пустой объект",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "calm": {
+            "type": "string",
+            "minLength": 1
+          },
+          "panic": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["calm", "panic"]
+      }
+    },
+    "opening": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Первая реплика заявителя: звучит сама, когда оператор принял вызов. Необязательна."
+    },
+    "reactions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Реплики вне опросной карты — в роде и манере персонажа («сказала» / «сказал»). Правила, когда какая звучит, — contracts/operator/dialog.md.",
+      "properties": {
+        "hysteria": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/line"
+          },
+          "description": "Ответ на любой вопрос в истерике — по кругу"
+        },
+        "calming": {
+          "$ref": "#/$defs/line",
+          "description": "Просьба с причиной сняла истерику, но паника ещё выше порога"
+        },
+        "calmed": {
+          "$ref": "#/$defs/line",
+          "description": "Заявитель успокоился и слушает"
+        },
+        "order": {
+          "$ref": "#/$defs/line",
+          "description": "Ответ на «Успокойтесь!» без причины"
+        },
+        "repeat": {
+          "$ref": "#/$defs/line",
+          "description": "Повтор вопроса, на который уже был спокойный ответ"
+        },
+        "not_understood": {
+          "$ref": "#/$defs/line"
+        },
+        "irrelevant": {
+          "$ref": "#/$defs/line"
+        },
+        "hold": {
+          "$ref": "#/$defs/line",
+          "description": "Ответ на «Я вас слышу, записываю»"
+        },
+        "pause": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/line"
+          },
+          "description": "Оператор молчит дольше паузы: первая реплика, затем следующие"
+        }
+      },
+      "required": [
+        "hysteria",
+        "calming",
+        "calmed",
+        "order",
+        "repeat",
+        "not_understood",
+        "irrelevant",
+        "hold",
+        "pause"
+      ]
+    },
+    "advice": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "description": "Советы заявителю (меню «Советы»): что говорит оператор и что отвечает заявитель",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "text": {
+            "$ref": "#/$defs/line"
+          },
+          "reply": {
+            "$ref": "#/$defs/line"
+          }
+        },
+        "required": ["key", "text", "reply"]
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Ситуация ухудшается посреди звонка: после вопроса after_question, но не раньше after_s секунды, и самое позднее на latest_s. Ответ на ухудшение — совет advice.",
+      "properties": {
+        "after_question": {
+          "type": "string",
+          "description": "questions[].key опросной карты сценария"
+        },
+        "after_s": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latest_s": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "text": {
+          "$ref": "#/$defs/line"
+        },
+        "fact": {
+          "$ref": "#/$defs/fact",
+          "description": "Новый факт: после ухудшения оценка ищет его в описании"
+        },
+        "advice": {
+          "type": "string",
+          "description": "advice[].key — совет, который отвечает на ухудшение"
+        }
+      },
+      "required": ["after_question", "after_s", "latest_s", "text", "fact", "advice"]
+    },
+    "notes": {
+      "type": "string",
+      "description": "Заметка для преподавателя/ревью (например, ловушка в адресе)"
+    },
+    "distractors": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 10,
+      "description": "Этап 3: лишние вопросы среди вариантов шага — правдоподобные для этого шага опроса, но не по делу этого вызова (не из чужих происшествий). Заявитель отвечает своей репликой reply в роде и манере персонажа и паникует сильнее. На каждом шаге вместе с вопросами карты — 3–4 варианта (проверяет test_operator_scenarios).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "step": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Шаг опроса, среди вариантов которого стоит вопрос (как questions[].step опросной карты)"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 3
+          },
+          "reply": {
+            "$ref": "#/$defs/line"
+          }
+        },
+        "required": ["key", "step", "text", "reply"]
+      }
+    },
+    "address_confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Этап 3: ответы на повтор адреса вслух (вопрос confirm_address). Заявитель сверяет услышанное с тем, что знает: ok — адрес в карточке верный; wrong_street — улица не та (ловушка «Дубининская» ловится здесь); wrong_details — неверны или не записаны дом, корпус, квартира; empty — в карточке ещё нет улицы, оператор просит повторить; panic — в панике «да» ненадёжно. Обязательно, если в опросной карте сценария есть confirm_address.",
+      "properties": {
+        "ok": {
+          "$ref": "#/$defs/line"
+        },
+        "wrong_street": {
+          "$ref": "#/$defs/line"
+        },
+        "wrong_details": {
+          "$ref": "#/$defs/line"
+        },
+        "empty": {
+          "$ref": "#/$defs/line"
+        },
+        "panic": {
+          "$ref": "#/$defs/line"
+        }
+      },
+      "required": ["ok", "wrong_street", "wrong_details", "empty", "panic"]
+    },
+    "reference_order": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/$defs/line"
+      },
+      "description": "Этап 3: эталонный порядок звонка для разбора — что по шагам сделал бы опытный оператор (окно результата, «Эталонный порядок»)"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "group_name",
+    "incident_type_code",
+    "expected_tags",
+    "expected_services",
+    "questionnaire_id",
+    "caller",
+    "persona",
+    "start_panic",
+    "background",
+    "address",
+    "description_reference",
+    "description_facts",
+    "answers",
+    "reactions",
+    "distractors",
+    "reference_order"
+  ]
+}

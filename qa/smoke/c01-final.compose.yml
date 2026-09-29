@@ -1,0 +1,11 @@
+# Итоговая приёмка: после c01.compose.yml, отдельный проект arm112-c01-stage6-final.
+services:
+  api:
+    image: arm112-api:c01-final
+  worker:
+    image: arm112-api:c01-final
+  certs:
+    image: arm112-api:c01-final
+  web:
+    image: arm112-web:c01-final
+    ports: !override ['127.0.0.1:42080:80', '127.0.0.1:42443:443']

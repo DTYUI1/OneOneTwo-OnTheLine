@@ -1,0 +1,15 @@
+services:
+  restore:
+    image: arm112-backup:0.1.0
+    entrypoint: [/usr/local/bin/restore-into-empty]
+    environment:
+      PGHOST: db
+      PGDATABASE: ${POSTGRES_DB:-arm112}
+      PGUSER: ${POSTGRES_USER:-arm112}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-local-dev-only}
+    volumes:
+      - ${BACKUP_DIR:-../backups}:/backups:ro
+      - audio-data:/data/audio
+    depends_on:
+      db: {condition: service_healthy}
+    restart: 'no'

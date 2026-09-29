@@ -1,0 +1,774 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/golden.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "scenario": {
+      "$ref": "scenario.schema.json"
+    },
+    "current": {
+      "$ref": "current.schema.json"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "deliver"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "open"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {},
+                "required": []
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "field_change"
+                ]
+              },
+              "payload": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "service_number",
+                          "comment"
+                        ]
+                      },
+                      "value": {
+                        "type": "string",
+                        "maxLength": 4000
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "value"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "field": {
+                        "type": "string",
+                        "enum": [
+                          "address"
+                        ]
+                      },
+                      "value": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "description": "Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address.",
+                        "properties": {
+                          "city": {
+                            "type": "string",
+                            "maxLength": 200
+                          },
+                          "street": {
+                            "type": "string",
+                            "maxLength": 200
+                          },
+                          "house": {
+                            "type": "string",
+                            "maxLength": 200
+                          },
+                          "building": {
+                            "type": "string",
+                            "maxLength": 200
+                          },
+                          "apartment": {
+                            "type": "string",
+                            "maxLength": 200
+                          }
+                        },
+                        "required": [
+                          "city",
+                          "street",
+                          "house",
+                          "building",
+                          "apartment"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "field",
+                      "value"
+                    ]
+                  }
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "status_change"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "accepted",
+                      "rejected",
+                      "responding",
+                      "arrived",
+                      "working",
+                      "refused",
+                      "completed"
+                    ]
+                  },
+                  "comment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                },
+                "required": [
+                  "state",
+                  "comment"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "comment"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                },
+                "required": [
+                  "comment"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "redirect"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "service_id": {
+                    "type": "string"
+                  },
+                  "comment": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                },
+                "required": [
+                  "service_id",
+                  "comment"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "call_dial"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "call_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "phone_ext": {
+                    "type": "string",
+                    "pattern": "^[0-9]{3}$"
+                  }
+                },
+                "required": [
+                  "call_id",
+                  "phone_ext"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "call_answer"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "call_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "call_id"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "call_hangup"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "call_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": [
+                  "call_id"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "client_event_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "client_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "hint_open"
+                ]
+              },
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "hint_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "hint_id"
+                ]
+              },
+              "server_ts": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clock_offset_ms": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "client_event_id",
+              "client_ts",
+              "type",
+              "payload",
+              "server_ts",
+              "clock_offset_ms"
+            ]
+          }
+        ]
+      }
+    },
+    "calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service_id": {
+            "type": "string"
+          },
+          "phone_ext": {
+            "type": "string",
+            "pattern": "^[0-9]{3}$"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transcript": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "service_id",
+          "phone_ext",
+          "started_at",
+          "answered_at",
+          "ended_at",
+          "transcript"
+        ]
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reaction_normative_s": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "handling_normative_s": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "critical_cap": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "weights": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "parallel_cards": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 23
+        },
+        "hints_level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "reaction_normative_s",
+        "handling_normative_s",
+        "critical_cap",
+        "weights",
+        "parallel_cards",
+        "hints_level"
+      ],
+      "examples": [
+        {
+          "reaction_normative_s": 30,
+          "handling_normative_s": 180,
+          "critical_cap": 0.5,
+          "weights": {
+            "reaction_time": 1,
+            "handling_time": 1,
+            "status_flow": 1,
+            "routing": 1,
+            "required_fields": 1,
+            "address": 1,
+            "call": 1
+          },
+          "parallel_cards": 1,
+          "hints_level": 0
+        }
+      ]
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "criteria": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "reaction_time": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "handling_time": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "status_flow": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "routing": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "required_fields": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "address": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "call": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "reaction_time",
+            "handling_time",
+            "status_flow",
+            "routing",
+            "required_fields",
+            "address",
+            "call"
+          ]
+        },
+        "critical_flags": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "tolerance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.1
+        }
+      },
+      "required": [
+        "criteria",
+        "total",
+        "tolerance"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "description",
+    "scenario",
+    "current",
+    "events",
+    "calls",
+    "settings",
+    "expected"
+  ]
+}

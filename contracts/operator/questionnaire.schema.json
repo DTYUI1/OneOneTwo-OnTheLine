@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/operator/questionnaire.schema.json",
+  "title": "Опросная карта группы происшествий (модуль «Оператор 112»)",
+  "description": "Этап 3 (docs/operator_112_review/PLAN.md): у каждого вопроса — шаг опроса по стандарту приёма вызова APCO/NENA. На экране — вопросы текущего шага и лишние вопросы того же шага (scenario.distractors). Ключи с особым смыслом: address — адрес (просьба с причиной «Успокоить» просит именно его), confirm_address — повтор адреса вслух (заявитель отвечает по адресу в карточке, text — шаблон с {address}), callback — номер для обратной связи, landmark — ориентир; по ним считается критерий «Порядок опроса» (contracts/operator/evaluation.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "group_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Как вопрос звучит на кнопке и в разговоре; у confirm_address — шаблон, {address} заменяется адресом из карточки"
+          },
+          "synonyms": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Слова, по которым свой вопрос («Сложно») узнаётся как этот вопрос карты (caller.py: match_question)"
+          },
+          "step": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Шаг опроса: 1 — адрес, 2 — номер для обратной связи, 3 — что случилось, 4 — угроза людям, 5 — детали и доступ"
+          }
+        },
+        "required": ["key", "text", "synonyms", "step"]
+      }
+    }
+  },
+  "required": ["id", "group_name", "questions"]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "f7a14b35-6b09-5e97-bbf8-32953b2635a2",
+  "version": 1,
+  "level": 3,
+  "weight": 6,
+  "incident_type_code": "15060202",
+  "target_service_id": "102",
+  "card": {
+    "number": "70120003",
+    "incident_type_code": "15060202",
+    "caller_name": "Иванов Петр Иванович",
+    "phone_aon": "+79000000102",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Леонтьевский переулок",
+      "house": "16",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Дерутся 10–15 человек палками и железными прутами, 5 пострадавших с различными травмами. На тротуаре рядом с посольством Азербайджана, строение 1.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Массовая драка",
+    "service_ids": [
+      "102",
+      "103"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Леонтьевский переулок",
+      "house": "16",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Массовая драка 10–15 человек с палками и прутами, 5 пострадавших. Москва, Леонтьевский переулок, д. 16, стр. 1, у посольства Азербайджана. Направлен наряд, скорая помощь оповещена по карточке."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 1, задача 2 (стр. 1 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

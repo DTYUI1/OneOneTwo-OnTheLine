@@ -1,0 +1,256 @@
+{
+  "label": "DESKTOP-Q43RVRM",
+  "host": {
+    "cpu": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz (16 потоков)",
+    "ram": "15.7 ГБ ОЗУ",
+    "os": "MINGW64_NT-10.0-26200 3.6.3-7674c51e.x86_64",
+    "docker": "29.8.0"
+  },
+  "params": {
+    "base": "https://web",
+    "label": "DESKTOP-Q43RVRM",
+    "out": "qa/bench/results",
+    "workstations": 23,
+    "cards": 3,
+    "burst": 40,
+    "think": 1.0,
+    "settle": 10.0,
+    "card_timeout": 120.0,
+    "crowd": 100,
+    "crowd_active": 20,
+    "poll": 5.0,
+    "skip_crowd": false,
+    "llm": false,
+    "llm_cards": 6,
+    "llm_timeout": 900.0
+  },
+  "class": {
+    "workstations": 23,
+    "cards_per_workstation": 3,
+    "cards_total": 69,
+    "cards_expected": 69,
+    "duration_s": 33.9,
+    "writes": 920,
+    "write_window_s": 10.62,
+    "writes_per_s": 86.6,
+    "report_s": {
+      "report_json": 0.044,
+      "report_csv": 0.026,
+      "analytics": 0.639
+    },
+    "llm": null
+  },
+  "crowd": {
+    "users_online": 100,
+    "active_cards": 20,
+    "http_requests": 409,
+    "http_p95_ms": 1074.8,
+    "login_p95_ms": 3824.8,
+    "ws_connect_p95_ms": 2272.6,
+    "latency": {
+      "assign_batch": {
+        "n": 1,
+        "p50_ms": 28.5,
+        "p95_ms": 28.5,
+        "max_ms": 28.5
+      },
+      "create_session": {
+        "n": 1,
+        "p50_ms": 24.1,
+        "p95_ms": 24.1,
+        "max_ms": 24.1
+      },
+      "deliver": {
+        "n": 20,
+        "p50_ms": 312.6,
+        "p95_ms": 382.3,
+        "max_ms": 388.9
+      },
+      "finish_session": {
+        "n": 1,
+        "p50_ms": 37.3,
+        "p95_ms": 37.3,
+        "max_ms": 37.3
+      },
+      "get_cards": {
+        "n": 202,
+        "p50_ms": 262.2,
+        "p95_ms": 1077.0,
+        "max_ms": 1140.5
+      },
+      "get_settings": {
+        "n": 1,
+        "p50_ms": 9.8,
+        "p95_ms": 9.8,
+        "max_ms": 9.8
+      },
+      "list_scenarios": {
+        "n": 1,
+        "p50_ms": 24.3,
+        "p95_ms": 24.3,
+        "max_ms": 24.3
+      },
+      "list_users": {
+        "n": 1,
+        "p50_ms": 23.0,
+        "p95_ms": 23.0,
+        "max_ms": 23.0
+      },
+      "live_board_lag": {
+        "n": 200,
+        "p50_ms": 354.5,
+        "p95_ms": 756.3,
+        "max_ms": 1849.9
+      },
+      "login": {
+        "n": 101,
+        "p50_ms": 2384.7,
+        "p95_ms": 3824.8,
+        "max_ms": 3883.3
+      },
+      "open": {
+        "n": 20,
+        "p50_ms": 21.0,
+        "p95_ms": 29.5,
+        "max_ms": 30.8
+      },
+      "start_session": {
+        "n": 1,
+        "p50_ms": 1074.8,
+        "p95_ms": 1074.8,
+        "max_ms": 1074.8
+      },
+      "status_change": {
+        "n": 60,
+        "p50_ms": 383.6,
+        "p95_ms": 1638.1,
+        "max_ms": 1849.3
+      },
+      "write": {
+        "n": 100,
+        "p50_ms": 283.4,
+        "p95_ms": 374.7,
+        "max_ms": 464.4
+      },
+      "ws_connect": {
+        "n": 101,
+        "p50_ms": 1707.9,
+        "p95_ms": 2272.6,
+        "max_ms": 2572.4
+      }
+    },
+    "errors": {}
+  },
+  "latency": {
+    "analytics": {
+      "n": 1,
+      "p50_ms": 635.7,
+      "p95_ms": 635.7,
+      "max_ms": 635.7
+    },
+    "assign_batch": {
+      "n": 1,
+      "p50_ms": 53.6,
+      "p95_ms": 53.6,
+      "max_ms": 53.6
+    },
+    "card_appeared": {
+      "n": 69,
+      "p50_ms": 954.4,
+      "p95_ms": 2674.7,
+      "max_ms": 3094.8
+    },
+    "create_session": {
+      "n": 1,
+      "p50_ms": 27.6,
+      "p95_ms": 27.6,
+      "max_ms": 27.6
+    },
+    "deliver": {
+      "n": 69,
+      "p50_ms": 317.6,
+      "p95_ms": 618.8,
+      "max_ms": 669.8
+    },
+    "finish_session": {
+      "n": 1,
+      "p50_ms": 106.3,
+      "p95_ms": 106.3,
+      "max_ms": 106.3
+    },
+    "get_settings": {
+      "n": 1,
+      "p50_ms": 9.2,
+      "p95_ms": 9.2,
+      "max_ms": 9.2
+    },
+    "list_scenarios": {
+      "n": 1,
+      "p50_ms": 30.5,
+      "p95_ms": 30.5,
+      "max_ms": 30.5
+    },
+    "list_users": {
+      "n": 1,
+      "p50_ms": 42.2,
+      "p95_ms": 42.2,
+      "max_ms": 42.2
+    },
+    "live_board_lag": {
+      "n": 1265,
+      "p50_ms": 342.7,
+      "p95_ms": 1012.0,
+      "max_ms": 2988.9
+    },
+    "login": {
+      "n": 24,
+      "p50_ms": 1007.3,
+      "p95_ms": 1138.2,
+      "max_ms": 1143.4
+    },
+    "open": {
+      "n": 69,
+      "p50_ms": 23.0,
+      "p95_ms": 43.6,
+      "max_ms": 61.9
+    },
+    "report_csv": {
+      "n": 1,
+      "p50_ms": 26.3,
+      "p95_ms": 26.3,
+      "max_ms": 26.3
+    },
+    "report_json": {
+      "n": 1,
+      "p50_ms": 44.1,
+      "p95_ms": 44.1,
+      "max_ms": 44.1
+    },
+    "start_session": {
+      "n": 1,
+      "p50_ms": 72.8,
+      "p95_ms": 72.8,
+      "max_ms": 72.8
+    },
+    "status_change": {
+      "n": 207,
+      "p50_ms": 42.4,
+      "p95_ms": 2207.8,
+      "max_ms": 2988.6
+    },
+    "write": {
+      "n": 920,
+      "p50_ms": 252.8,
+      "p95_ms": 338.7,
+      "max_ms": 607.1
+    },
+    "ws_connect": {
+      "n": 24,
+      "p50_ms": 461.7,
+      "p95_ms": 581.6,
+      "max_ms": 600.4
+    }
+  },
+  "errors": {},
+  "finished_at": "2026-09-25 19:30 UTC"
+}

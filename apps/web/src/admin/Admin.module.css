@@ -1,0 +1,94 @@
+/* Плитки состояния системы: цвет дублируется словом в значении. */
+.healthGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.tile_ok,
+.tile_bad,
+.tile_warn,
+.tile_neutral {
+  display: grid;
+  gap: var(--space-1);
+  align-content: start;
+  padding: var(--space-3);
+  background: var(--color-panel);
+  border-top: 4px solid #9aa3a8;
+}
+
+.tile_ok {
+  border-top-color: #1f8a4c;
+}
+
+.tile_bad {
+  border-top-color: var(--color-danger);
+}
+
+.tile_warn {
+  border-top-color: #c98a0b;
+}
+
+.tileLabel {
+  color: #5c6771;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.tileValue {
+  font-size: 18px;
+}
+
+.tile_ok .tileValue {
+  color: #1f6f3a;
+}
+
+.tile_bad .tileValue {
+  color: var(--color-danger);
+}
+
+.tile_warn .tileValue {
+  color: #8a5a00;
+}
+
+.tileHint {
+  color: #5c6771;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.on,
+.off,
+.fail {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.on {
+  color: var(--color-on-dark);
+  background: #1f8a4c;
+}
+
+.off {
+  color: var(--color-text);
+  background: #dde2e5;
+}
+
+.fail {
+  color: var(--color-on-dark);
+  background: var(--color-danger);
+}
+
+/* Таблица прокручивается сама, а не растягивает страницу на узком экране. */
+.wide {
+  overflow-x: auto;
+}
+
+/* Текст сообщения об ошибке — как написал пользователь, с переносами строк. */
+.reportText {
+  min-width: 240px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

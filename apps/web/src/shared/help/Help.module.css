@@ -1,0 +1,76 @@
+.trigger {
+  flex: 0 0 36px;
+  font-weight: bold;
+}
+.marker {
+  position: fixed;
+  z-index: 1001;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid var(--color-on-dark);
+  border-radius: 50%;
+  color: var(--color-on-dark);
+  background: var(--color-header);
+  box-shadow: 0 0 0 1px var(--color-header);
+  font-weight: bold;
+  line-height: 1;
+}
+/* Номер выбранной части — цвета её рамки. */
+.marker[aria-pressed="true"] {
+  background: var(--color-active);
+  box-shadow: 0 0 0 1px var(--color-active);
+}
+.outline {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  border: 3px solid var(--color-active);
+}
+.bubble {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 1002;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  width: min(360px, calc(100vw - 32px));
+  max-height: min(420px, 48dvh);
+  overflow: hidden;
+  padding: var(--space-3);
+  color: var(--color-text);
+  background: var(--color-on-dark);
+  border: 2px solid var(--color-header);
+  font-size: var(--font-size);
+  line-height: 1.5;
+}
+.heading,
+.bubble nav {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.content {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.bubble h2 {
+  font-size: 16px;
+  margin: var(--space-2) 0;
+}
+.bubble p {
+  margin: var(--space-2) 0 var(--space-3);
+}
+.bubble button {
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+}
+.bubble button:disabled,
+.bubble button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: default;
+}

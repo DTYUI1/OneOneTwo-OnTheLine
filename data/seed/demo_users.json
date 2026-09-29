@@ -1,0 +1,65 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "login": "admin",
+    "full_name": "Администратор",
+    "role": "admin",
+    "workstation_number": null,
+    "dds_service_id": null,
+    "is_active": true
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "login": "teacher",
+    "full_name": "Преподаватель",
+    "role": "teacher",
+    "workstation_number": null,
+    "dds_service_id": null,
+    "is_active": true
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "login": "trainee01",
+    "full_name": "Обучаемый 01",
+    "role": "trainee",
+    "workstation_number": 1,
+    "dds_service_id": "102",
+    "is_active": true
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "login": "trainee02",
+    "full_name": "Обучаемый 02",
+    "role": "trainee",
+    "workstation_number": 2,
+    "dds_service_id": "101",
+    "is_active": true
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000005",
+    "login": "trainee03",
+    "full_name": "Обучаемый 03",
+    "role": "trainee",
+    "workstation_number": 3,
+    "dds_service_id": "102",
+    "is_active": true
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000006",
+    "login": "trainee04",
+    "full_name": "Обучаемый 04",
+    "role": "trainee",
+    "workstation_number": 4,
+    "dds_service_id": "103",
+    "is_active": true
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000007",
+    "login": "trainee05",
+    "full_name": "Обучаемый 05",
+    "role": "trainee",
+    "workstation_number": 5,
+    "dds_service_id": "104",
+    "is_active": true
+  }
+]

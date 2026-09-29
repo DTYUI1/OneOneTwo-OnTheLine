@@ -1,0 +1,29 @@
+[project]
+name = "oneonetwo-workspace"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["apps/api", "packages/evalcore", "scripts"]
+
+[dependency-groups]
+dev = ["pytest==8.4.2", "pytest-cov==6.3.0", "ruff==0.13.0", "mypy==1.18.1", "types-PyYAML==6.0.12.20250915", "types-jsonschema==4.25.1.20250822"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["tmp"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+files = ["apps/api/app", "packages/evalcore/evalcore", "scripts"]
+exclude = ["tmp", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["apps/api/tests", "packages/evalcore/tests", "scripts/tests"]
+addopts = "-ra --import-mode=importlib"

@@ -1,0 +1,143 @@
+/* Бригады стоят рядом с телефоном: выбор делается до звонка и виден человеку. */
+
+.panel {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size);
+  font-weight: bold;
+}
+
+.list {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+}
+
+.row input {
+  width: 20px;
+  height: 20px;
+}
+
+.busy {
+  color: #6c757b;
+}
+
+/* Состояние бригады на табло — справа в строке, словами. */
+.state {
+  margin-left: auto;
+  font-size: 13px;
+}
+
+.here {
+  font-weight: bold;
+}
+
+/* Почему кнопка «Направить выбранные» пока недоступна — рядом с ней. */
+.block {
+  margin: 0;
+  font-size: 13px;
+}
+
+.commit {
+  justify-self: start;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.commit:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.chosen {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.wait {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.message {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-danger);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* Сведения идут ОТ бригады К диспетчеру — это должно быть видно сразу. */
+.from {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* Прямые номера направленных бригад: доклад приходит только в разговоре с ними. */
+.targets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.target {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.ext {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
+}
+
+.call {
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.call:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

@@ -1,0 +1,2369 @@
+/* Цвета и размеры сняты с docs/screenshots/card_112/01–03 (окно 1920×1080). */
+.page {
+  --op-gap: #c9ced1;
+  --op-panel: #efefef;
+  --op-border: #aeb1b3;
+  --op-line: #d2d2d2;
+  --op-label: #909091;
+  --op-blue: #157dbd;
+  --op-orange: #ec653b;
+  --op-dark: #2f353a;
+  --op-red: #ff0000;
+  /* Заданный вопрос: серый, чтобы не путать с выбранным тегом (синий, card_112/02). */
+  --op-asked: #e4e7e9;
+  --op-muted: #6c6c6c;
+  /* Этап 3, как в прототипе: пройденный шаг и пометки разбора (помогло, навредило, внимание). */
+  --op-good: #1d6b42;
+  --op-good-bg: #e3f4ea;
+  --op-bad: #9b1c14;
+  --op-bad-bg: #fbe4e1;
+  --op-warn: #7a5600;
+  --op-warn-bg: #fcf1d6;
+  --op-info: #3d4a57;
+  --op-info-bg: #e8edf2;
+  --op-guide: #253c52;
+  --op-guide-title: #9fd0ff;
+  --op-guide-line: #4aa3ff;
+  display: grid;
+  grid-template-columns: minmax(0, 860fr) minmax(0, 1032fr);
+  height: 100vh;
+  background: var(--op-gap);
+  font-size: 16px;
+}
+.page input,
+.page textarea,
+.page select {
+  width: 100%;
+  min-width: 0;
+  padding: 4.444px 0;
+  font: inherit;
+  font-size: 17.778px;
+  color: var(--color-text);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--op-line);
+  border-radius: 0;
+}
+.page input::placeholder,
+.page textarea::placeholder {
+  color: var(--op-label);
+}
+.page input:focus,
+.page textarea:focus {
+  outline: none;
+  border-bottom-color: var(--op-blue);
+}
+
+/* Верх: отключение, три телефона, номер происшествия, таймер. */
+.top {
+  display: grid;
+  grid-column: 1 / -1;
+  /* Доли ширин с card_112/01; номер происшествия не уже своей надписи,
+     иначе он переносится по слову и раздувает всю строку (окно меньше 1920). */
+  overflow: hidden;
+  background: var(--op-gap);
+}
+.hangup,
+.phone,
+.incident {
+  display: flex;
+  align-items: stretch;
+  background: var(--op-panel);
+}
+.hangupIcon {
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  border-right: 1px solid var(--op-gap);
+}
+.hangupIcon svg {
+  transform: rotate(135deg);
+}
+.hangup > div {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.hangup button {
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+/* Кнопки со скриншотов без действия в тренажёре: видны, но неактивны (разбор 29.09). */
+.hangup button:disabled,
+.translate:disabled {
+  color: var(--color-text);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.caller select:disabled {
+  cursor: not-allowed;
+}
+.phoneIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  color: #76787a;
+}
+.phoneIcon svg + svg {
+  color: var(--color-text);
+}
+.phoneLabel {
+  display: flex;
+  justify-content: space-between;
+}
+.phoneMarks {
+  display: flex;
+  color: var(--color-text);
+}
+.phoneMain,
+.phoneField {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+.phoneMain {
+  padding-left: 8.889px;
+}
+.phoneMain span {
+  color: #3f51b5;
+}
+.aon {
+  align-self: center;
+  margin-right: 6.667px;
+  font-size: 12.222px;
+  border: 1px solid var(--op-line);
+}
+.incident {
+  flex-direction: column;
+  justify-content: center;
+  white-space: nowrap;
+}
+.incident h1 {
+  margin: 0;
+}
+.incident p {
+  margin: 0;
+}
+.timer,
+.timerOverdue {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  color: #ffffff;
+  text-align: center;
+  background: var(--op-dark);
+}
+.timerOverdue {
+  background: var(--op-red);
+}
+.timer strong,
+.timerOverdue strong {
+  grid-column: 1 / -1;
+  line-height: 1;
+}
+.timer span,
+.timerOverdue span {
+  font-weight: bold;
+}
+
+/* Слева: заявитель, адрес, описание. Описанию — не меньше 110 px: на низком окне
+   (1366×650 с панелью браузера) адрес прокручивается, а поле описания остаётся видно. */
+.left {
+  display: grid;
+  min-height: 0;
+}
+.caller,
+.address,
+.description {
+  background: var(--op-panel);
+}
+.caller {
+  display: grid;
+  align-items: center;
+}
+.translate {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.caller select {
+  color: var(--op-label);
+}
+.address {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.addressLine {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  font-size: 13.333px;
+  color: var(--op-label);
+  border-bottom: 1px solid var(--op-line);
+}
+.addressLabel {
+  display: flex;
+  gap: 8.889px;
+  align-items: center;
+}
+.addressLine p {
+  grid-row: 2;
+  min-height: 24.444px;
+  color: var(--color-text);
+}
+.addressLine button {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: end;
+  background: none;
+  border: 0;
+}
+.addressRow {
+  display: grid;
+}
+.field,
+.fieldList,
+.fieldWide {
+  min-width: 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.fieldList input {
+  padding-right: 20px;
+  /* Треугольник вниз, как у выпадающих списков в card_112/01. */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='5'%3E%3Cpath d='M0 0h10L5 5z' fill='%23555'/%3E%3C/svg%3E")
+    right 4.444px center / 11.111px 5.556px no-repeat;
+}
+.clearAddress {
+  align-self: flex-end;
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.description {
+  display: flex;
+  flex-direction: column;
+}
+.description textarea {
+  resize: none;
+}
+.description small {
+  align-self: flex-end;
+}
+
+/* Справа: быстрые кнопки, тип происшествия, теги. */
+.right {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+.quick {
+  display: flex;
+}
+.quickGroup {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  background: var(--op-panel);
+}
+.quickGroup + .quickGroup {
+  flex: 1;
+}
+.quickButton,
+.alertButton,
+.alertFaded {
+  font-weight: bold;
+  line-height: 1.3;
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.quickButton {
+  color: var(--color-text);
+}
+/* После выбора типа кнопки блекнут — card_112/02, 04, 07. */
+.quickButton[aria-pressed="true"],
+.alertButton[aria-pressed="true"],
+.tag[aria-pressed="true"] {
+  color: #ffffff;
+  background: var(--op-blue);
+  border-color: var(--op-blue);
+}
+.alertButton[aria-pressed="true"] {
+  background: var(--op-orange);
+  border-color: var(--op-orange);
+}
+.types {
+  position: relative;
+  background: var(--op-panel);
+}
+.typeSearch {
+  display: flex;
+  flex-direction: column;
+}
+.found {
+  position: absolute;
+  /* Список над опросной картой, под отдельным окном разговора. */
+  z-index: 4;
+  /* Не ниже полосы «Службы:» — иначе в низком окне конец списка не виден. */
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  background: #ffffff;
+}
+.found button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border-bottom: 1px solid var(--op-line);
+}
+.found button:hover {
+  color: #ffffff;
+  background: var(--op-blue);
+}
+.found small {
+  display: block;
+  margin-top: 2.222px;
+  opacity: 0.75;
+}
+.frequent {
+  display: flex;
+  flex-wrap: wrap;
+}
+.tag {
+  font-weight: bold;
+  color: var(--color-text);
+  border: 1px solid var(--op-border);
+}
+.frequent .tag {
+  background: var(--op-panel);
+}
+.significant {
+  margin: 24.444px 0 0;
+}
+.chosen {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  /* Разговор не занимает места в колонке: карта использует всю оставшуюся высоту. */
+  min-height: 0;
+}
+.chips {
+  background: var(--op-panel);
+}
+.chip {
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.card {
+  min-height: 0;
+  overflow: auto;
+}
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  background: #303335;
+}
+.cardHead h2 {
+  margin: 0;
+  text-decoration: underline;
+}
+.cardHead button {
+  padding: 0 4.444px;
+  line-height: 1;
+  color: #ffffff;
+  background: none;
+  border: 0;
+}
+.tagRow {
+  display: grid;
+  /* 300 из 1030 px колонки на card_112/02 — долей, чтобы на ноутбуке теги не теснились. */
+}
+.tagRow > div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Учебное окно над карточкой; размеры ленты сохраняют 4–5 реплик на ноутбуке. */
+.talk {
+  /* Этап 3: на шаге 3–4 варианта — две-три строки кнопок; полоса ниже, чем у викторины. */
+  --talk-hints-h: clamp(74px, 14vh, 118px);
+  position: fixed;
+  z-index: 6;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  min-height: 0;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100dvh - 16px);
+  background: #ffffff;
+  border: 1px solid var(--op-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+/* Заголовок разговора — он же панель приёмов (этап 2): место по высоте не тратится. */
+.talkHead {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 2px 6px 2px 10px;
+  color: #ffffff;
+  background: #303335;
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+.talkHead button {
+  cursor: pointer;
+}
+.moveTalk {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid #ffffff66;
+}
+.talkHead .moveTalk {
+  cursor: move;
+}
+.talkHead h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: normal;
+}
+/* Тон голоса вместо цифры паники: полоски и слова, цвет — от спокойного к крику. */
+.tone {
+  --tone: #4cc38a;
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+  font-size: 12px;
+}
+.tone i {
+  display: block;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.25);
+}
+.tone i:nth-child(1) {
+  height: 5px;
+}
+.tone i:nth-child(2) {
+  height: 8px;
+}
+.tone i:nth-child(3) {
+  height: 11px;
+}
+.tone i:nth-child(4) {
+  height: 14px;
+}
+.tone span {
+  margin-left: 6px;
+}
+.tone[data-level="1"] {
+  --tone: #f2c14e;
+}
+.tone[data-level="2"] {
+  --tone: #f08a3c;
+}
+.tone[data-level="3"] {
+  --tone: #ff5a4f;
+}
+.tone[data-level="0"] i:nth-child(1),
+.tone[data-level="1"] i:nth-child(-n + 2),
+.tone[data-level="2"] i:nth-child(-n + 3),
+.tone[data-level="3"] i {
+  background: var(--tone);
+}
+.tone[data-speaking="true"] i {
+  animation: operator-voice 0.5s ease-in-out infinite alternate;
+}
+.tone[data-speaking="true"] i:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.tone[data-speaking="true"] i:nth-child(3) {
+  animation-delay: 0.24s;
+}
+.tone[data-speaking="true"] i:nth-child(4) {
+  animation-delay: 0.36s;
+}
+@keyframes operator-voice {
+  from {
+    transform: scaleY(0.4);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+.talkTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: auto;
+}
+.talkTools button {
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+.talkTools button:hover:enabled {
+  background: rgba(255, 255, 255, 0.12);
+}
+.talkTools button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.talkTools button[data-attention="true"] {
+  border-color: var(--op-orange);
+  animation: operator-attention 1s ease-in-out infinite alternate;
+}
+@keyframes operator-attention {
+  from {
+    box-shadow: 0 0 0 0 rgba(236, 101, 59, 0);
+  }
+  to {
+    box-shadow: 0 0 0 3px rgba(236, 101, 59, 0.6);
+  }
+}
+.menuWrap {
+  position: relative;
+}
+.menu {
+  position: fixed;
+  z-index: 6;
+  width: min(460px, calc(100vw - 16px));
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--color-text);
+  background: #ffffff;
+  border: 1px solid var(--op-border);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+.talkTools .menu button {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 14px;
+  text-align: left;
+  color: var(--color-text);
+  border: 0;
+}
+.talkTools .menu button:hover {
+  background: var(--op-asked);
+}
+.menu small {
+  display: block;
+  font-size: 12px;
+  color: var(--op-muted);
+}
+.replay {
+  margin-left: 4px;
+  padding: 0 4px;
+  color: var(--op-blue);
+  vertical-align: middle;
+  background: none;
+  border: 0;
+}
+.talkLog {
+  flex: 1 1 110px;
+  min-height: 110px;
+  padding: 8px 10px 6px;
+  overflow-y: auto;
+  line-height: 1.4;
+  /* Прокрученная вверх строка гаснет у края, а не выглядит заехавшей под заголовок. */
+  mask-image: linear-gradient(to bottom, transparent 0, #000000 8px);
+}
+.talkLog ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.talkLog li + li {
+  margin-top: 4px;
+}
+.talkLog li > span {
+  color: var(--op-muted);
+}
+.talkOperator {
+  color: var(--op-muted);
+}
+.talkNote {
+  color: var(--op-orange);
+}
+.talkStart {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  color: #444444;
+  background: var(--op-panel);
+  border-left: 3px solid var(--op-border);
+}
+.talkHints {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 40px;
+  max-height: var(--talk-hints-h);
+  padding: 6px 10px;
+  overflow-y: auto;
+  border-top: 1px solid var(--op-line);
+}
+.question,
+.asked {
+  min-height: 28px;
+  padding: 3px 10px;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--color-text);
+  background: #ffffff;
+  border: 1px solid var(--op-border);
+}
+.question:hover:enabled {
+  border-color: var(--op-blue);
+}
+.asked {
+  color: var(--op-muted);
+  background: var(--op-asked);
+  border-color: var(--op-line);
+}
+.question:disabled,
+.asked:disabled {
+  opacity: 0.5;
+}
+/* Текст только для чтения с экрана («— пройден» у вкладки шага). */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Шаги опроса (этап 3, как в прототипе): вкладка — вопросы шага, галочка — шаг пройден,
+   тёмная — текущий шаг, синяя рамка — открытая вкладка. */
+.steps {
+  display: flex;
+  flex: none;
+  gap: 4px 8px;
+  align-items: center;
+  padding: 5px 8px 0 10px;
+  border-top: 1px solid var(--op-line);
+  font-size: 12px;
+}
+.stepList {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 3px;
+  min-width: 0;
+}
+/* Пять вкладок и «Сложно» — в одну строку уже на 1366 px: отступы скромные. */
+.step {
+  padding: 1px 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-text);
+  background: #ffffff;
+  border: 1px solid var(--op-line);
+  border-radius: 10px;
+}
+.step[data-done="true"] {
+  color: var(--op-good);
+  background: var(--op-good-bg);
+  border-color: #b9dcc7;
+}
+.step[aria-current="step"] {
+  color: #ffffff;
+  background: var(--op-dark);
+  border-color: var(--op-dark);
+}
+.step[aria-pressed="true"] {
+  outline: 2px solid var(--op-blue);
+  outline-offset: 1px;
+}
+.hardSwitch {
+  display: inline-flex;
+  flex: none;
+  gap: 4px;
+  align-items: center;
+  color: var(--op-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.page .hardSwitch input {
+  width: auto;
+}
+.hardForm {
+  display: flex;
+  flex: none;
+  gap: 6px;
+  padding: 6px 10px 8px;
+}
+.page .hardForm input {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 14px;
+  background: #ffffff;
+  border: 1px solid var(--op-border);
+}
+.hardForm button {
+  padding: 3px 12px;
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+
+.resizeBar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 1px 3px;
+  border-top: 1px solid var(--op-line);
+  background: var(--op-panel);
+}
+.resizeHint {
+  overflow: hidden;
+  color: var(--op-muted);
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Ручки размера по краям и углам окна (просьба капитана 29.09): полоска в 8 px, 5 px из
+   них — снаружи рамки, чтобы не перекрывать кнопки заголовка и полосы размера. */
+.talkEdge {
+  position: absolute;
+  z-index: 3;
+  touch-action: none;
+}
+.talkEdge[data-edge="n"],
+.talkEdge[data-edge="s"] {
+  right: 10px;
+  left: 10px;
+  height: 8px;
+  cursor: ns-resize;
+}
+.talkEdge[data-edge="w"],
+.talkEdge[data-edge="e"] {
+  top: 10px;
+  bottom: 10px;
+  width: 8px;
+  cursor: ew-resize;
+}
+.talkEdge[data-edge="nw"],
+.talkEdge[data-edge="ne"],
+.talkEdge[data-edge="sw"],
+.talkEdge[data-edge="se"] {
+  width: 14px;
+  height: 14px;
+}
+.talkEdge[data-edge="n"],
+.talkEdge[data-edge="nw"],
+.talkEdge[data-edge="ne"] {
+  top: -5px;
+}
+.talkEdge[data-edge="s"],
+.talkEdge[data-edge="sw"],
+.talkEdge[data-edge="se"] {
+  bottom: -5px;
+}
+.talkEdge[data-edge="w"],
+.talkEdge[data-edge="nw"],
+.talkEdge[data-edge="sw"] {
+  left: -5px;
+}
+.talkEdge[data-edge="e"],
+.talkEdge[data-edge="ne"],
+.talkEdge[data-edge="se"] {
+  right: -5px;
+}
+.talkEdge[data-edge="nw"],
+.talkEdge[data-edge="se"] {
+  cursor: nwse-resize;
+}
+.talkEdge[data-edge="ne"],
+.talkEdge[data-edge="sw"] {
+  cursor: nesw-resize;
+}
+.resizeTalk {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 20px;
+  padding: 0;
+  color: var(--op-muted);
+  background: transparent;
+  border: 0;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+/* Проводник первого звонка (этап 3): подсказка не перехватывает щелчки — под ней можно
+   нажать то, на что она указывает; работает только «Скрыть проводник». */
+.guide {
+  position: fixed;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 340px;
+  padding: 9px 12px 8px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: #ffffff;
+  background: var(--op-guide);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+.guide::after {
+  position: absolute;
+  left: var(--arrow, 24px);
+  content: "";
+  border: 8px solid transparent;
+}
+.guide[data-side="below"]::after {
+  top: -16px;
+  border-bottom-color: var(--op-guide);
+}
+.guide[data-side="above"]::after {
+  bottom: -16px;
+  border-top-color: var(--op-guide);
+}
+.guide b {
+  font-size: 12px;
+  color: var(--op-guide-title);
+}
+.guide button {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 3px;
+  pointer-events: auto;
+}
+.guideOutline {
+  position: fixed;
+  z-index: 7;
+  /* Внутри границ цели (замечание капитана 29.09): снаружи рамка наезжала на соседей —
+     вкладки шагов над вариантами вопросов. */
+  outline: 3px solid var(--op-guide-line);
+  outline-offset: -3px;
+  pointer-events: none;
+}
+
+/* Низ: оранжевая полоса «Службы:». */
+.bar {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 0;
+  color: #ffffff;
+  background: var(--op-orange);
+}
+.barLabel {
+  font-weight: bold;
+}
+.barServices {
+  display: flex;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.barServices li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-right: 1px solid rgba(255, 255, 255, 0.35);
+}
+.barServices li:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+}
+.barServices svg {
+  position: absolute;
+}
+.barServices button {
+  position: absolute;
+  padding: 2.222px 4.444px;
+  font-size: 17.778px;
+  color: #ffffff;
+  background: none;
+  border: 0;
+}
+.barAdd {
+  width: 51.111px;
+  height: 51.111px;
+  margin-left: 15.556px;
+  padding: 0;
+  font-size: 33.333px;
+  line-height: 1;
+  color: #ffffff;
+  background: var(--op-orange);
+  border: 1px solid #ffffff;
+}
+.save {
+  margin: 0 4.444px 0 auto;
+  font-weight: bold;
+  color: #ffffff;
+  background: var(--op-orange);
+  border: 1px solid #ffffff;
+}
+
+.barTools {
+  display: flex;
+}
+/* Значки со скриншота без действия в тренажёре — блёклые, с подсказкой. */
+.barTools > span {
+  display: flex;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.barTools svg,
+.barClose {
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ffffff;
+}
+.barClose {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #ffffff;
+  background: var(--op-orange);
+}
+
+/* Входящий вызов (этап 2). */
+.incoming {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(480px, 92vw);
+  padding: 24px 28px;
+  text-align: center;
+  background: #ffffff;
+}
+.incoming h2 {
+  margin: 12px 0 2px;
+  font-size: 26px;
+}
+.incoming p {
+  margin: 6px 0;
+}
+.incomingNumber {
+  font-size: 22px;
+  color: #3f51b5;
+}
+.ring {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  color: #ffffff;
+  background: #2e9e5b;
+  border-radius: 50%;
+  animation: operator-ring 1s ease-in-out infinite;
+}
+.ring svg {
+  width: 32px;
+  height: 32px;
+}
+@keyframes operator-ring {
+  0%,
+  50%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30% {
+    transform: rotate(-14deg);
+  }
+  20%,
+  40% {
+    transform: rotate(14deg);
+  }
+}
+.accept {
+  margin-top: 14px;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  background: #2e9e5b;
+  border: 0;
+}
+/* Этап 3: учебный выбор звонка перед приёмом — случайный или конкретный персонаж. */
+.incomingChoice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin: 12px 0 4px;
+  padding: 0;
+  border: 0;
+}
+.incomingChoice legend {
+  width: 100%;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #555555;
+}
+.incomingChoice label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 13px;
+  background: #efefef;
+  border: 1px solid #d2d2d2;
+  border-radius: 14px;
+  cursor: pointer;
+}
+.incomingChoice label:has(input:checked) {
+  color: #ffffff;
+  background: #157dbd;
+  border-color: #157dbd;
+}
+.incomingChoice input,
+.incomingGuide input {
+  margin: 0;
+}
+.incomingGuide {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin: 6px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring,
+  .tone[data-speaking="true"] i,
+  .talkTools button[data-attention="true"] {
+    animation: none;
+  }
+}
+
+/* Окно «Добавьте службы». */
+.backdrop {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+}
+.dialogClose {
+  position: absolute;
+  top: 4.444px;
+  right: 8.889px;
+  padding: 2.222px 6.667px;
+  background: none;
+  border: 0;
+}
+.dialogList {
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+.dialogList button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #ffffff;
+  border-bottom: 1px solid var(--op-line);
+}
+.dialogList button[aria-pressed="true"] {
+  color: #ffffff;
+  background: var(--op-blue);
+}
+.dialogSave {
+  background: #ffffff;
+  border: 1px solid var(--op-orange);
+}
+.saveError {
+  margin: 4.444px 8.889px 0 auto;
+  font-size: 15.556px;
+  color: #b00020;
+}
+
+/* Окно результата попытки и разбор звонка (этап 3): две колонки, у каждой своя прокрутка —
+   баллы не уезжают, пока читаешь ленту разговора. */
+.result {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(1320px, calc(100vw - 32px));
+  height: min(840px, calc(100dvh - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 12px 22px 18px;
+  background: #ffffff;
+}
+.resultHeader {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--op-line);
+}
+.resultClose {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 26px;
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.resultBody {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 24px;
+  min-height: 0;
+}
+.resultScore,
+.resultReview {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.result h2 {
+  margin: 4px 0 4px;
+  font-size: 26px;
+}
+.result h3 {
+  margin: 14px 0 8px;
+  font-size: 17px;
+}
+.resultReview h3 {
+  margin-top: 6px;
+}
+.resultTotal {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--op-blue);
+}
+.resultVerdict {
+  margin: 0 0 8px;
+}
+.referenceOrder {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.referenceOrder li + li {
+  margin-top: 3px;
+}
+.resultButtons {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding-top: 6px;
+  background: #ffffff;
+}
+.resultButtons button {
+  padding: 7px 16px;
+  font-weight: bold;
+  background: var(--op-panel);
+  border: 1px solid var(--op-border);
+}
+.resultButtons .resultPrimary {
+  color: #ffffff;
+  background: var(--op-orange);
+  border-color: var(--op-orange);
+}
+.stepTimes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 4px 12px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.stepTimes li {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 8px;
+  color: var(--op-muted);
+  background: var(--op-panel);
+}
+.stepTimes li[data-done="true"] {
+  color: var(--op-good);
+  background: var(--op-good-bg);
+}
+.stepTimes time,
+.timeline time {
+  font-variant-numeric: tabular-nums;
+}
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.timeline li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+.timeline time {
+  color: var(--op-muted);
+}
+.timeline p {
+  margin: 0;
+}
+.timeline p span {
+  color: var(--op-muted);
+}
+.timeline .mark {
+  display: inline-block;
+  margin-top: 3px;
+  padding: 0 6px;
+  font-size: 12px;
+  border-radius: 3px;
+}
+.mark[data-kind="good"] {
+  color: var(--op-good);
+  background: var(--op-good-bg);
+}
+.mark[data-kind="bad"] {
+  color: var(--op-bad);
+  background: var(--op-bad-bg);
+}
+.mark[data-kind="warn"] {
+  color: var(--op-warn);
+  background: var(--op-warn-bg);
+}
+.mark[data-kind="info"] {
+  color: var(--op-info);
+  background: var(--op-info-bg);
+}
+.reviewEmpty {
+  color: var(--op-muted);
+}
+@media (max-width: 1100px) {
+  .resultBody {
+    display: block;
+    overflow-y: auto;
+  }
+  .resultScore,
+  .resultReview {
+    overflow: visible;
+  }
+  .resultReview {
+    margin-top: 16px;
+  }
+}
+.resultCriteria {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.resultCriteria li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--op-line);
+}
+.resultCriteria li p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #444444;
+}
+.resultCriterionHead {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+.resultAttempts {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.resultAttempts li {
+  display: flex;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--op-line);
+}
+.resultAttempts li span:first-child {
+  flex: 1;
+}
+
+/* Ноутбук (1366, 1536 = Full HD при 125 %): ширины шапки и строки заявителя сняты с
+   1920, и подписи обрезались («спис…», «Фамилия и имя заявител»). Кнопки отключения —
+   столбиком, имени заявителя — больше места, чем пустым спискам. */
+@media (max-width: 1700px) {
+  .hangup > div {
+    padding: 4px 8px;
+  }
+  .hangup p {
+    margin: 0 0 4px;
+  }
+  .hangup button {
+    display: block;
+    margin: 0 0 3px;
+    padding: 2px 8px;
+  }
+  .caller {
+    grid-template-columns:
+      minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.8fr)
+      32px;
+    gap: 10px;
+  }
+  .caller input,
+  .caller select {
+    font-size: 14px;
+  }
+}
+
+/* Этап 3: низкое окно — ноутбук с панелью браузера (1366×650, 1536×730). Шапка, быстрые
+   кнопки и полоса служб ниже, чтобы разговор, вопросы шага и описание помещались целиком;
+   вид 1:1 со скриншотами (1920×1080) это не трогает. */
+@media (max-height: 740px) {
+  .page {
+    grid-template-rows: 60px minmax(0, 1fr) 56px;
+  }
+  .hangup > div {
+    padding: 3px 8px;
+  }
+  .hangup p {
+    margin: 0 0 2px;
+    font-size: 13px;
+  }
+  .hangup button {
+    margin-bottom: 2px;
+    padding: 1px 8px;
+    font-size: 10px;
+  }
+  .phoneMain input,
+  .phoneField input {
+    font-size: 19px;
+  }
+  .incident h1 {
+    font-size: 16px;
+  }
+  .incident p {
+    font-size: 12px;
+  }
+  .timer strong,
+  .timerOverdue strong {
+    font-size: 28px;
+  }
+  .quick {
+    height: 52px;
+  }
+  .quickButton,
+  .alertButton,
+  .alertFaded {
+    height: 40px;
+  }
+  .types {
+    padding: 6px 14px 10px;
+  }
+  .frequent {
+    gap: 8px 16px;
+    margin-top: 12px;
+  }
+  .significant {
+    margin-top: 12px;
+  }
+  .barAdd,
+  .save,
+  .barTools svg,
+  .barClose {
+    width: auto;
+    min-width: 40px;
+    height: 40px;
+  }
+  .barTools svg {
+    width: 40px;
+    padding: 7px;
+  }
+  .save {
+    font-size: 19px;
+  }
+  .barServices li {
+    padding-top: 8px;
+  }
+}
+
+/* Окно уже 1920 (ноутбук, окно в комнате): кнопки быстрых признаков плотнее,
+   чтобы «нет контакта» и «срыв звонка» оставались на экране. */
+@media (max-width: 1300px) {
+  .quickButton,
+  .alertButton,
+  .alertFaded {
+    padding: 0 8px;
+    font-size: 12px;
+  }
+  .quickGroup {
+    padding: 0 4px;
+  }
+}
+/* Эталон — область страницы y=77…1039 при масштабе 90 %. Размеры здесь в CSS px.
+   Учебный слой не участвует в геометрии свёрнутой карточки. */
+.page {
+  gap: 10px;
+  padding: 9px 10px 0 9px;
+  grid-template-rows: 80px minmax(0, 1fr) 80px;
+}
+.top {
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  grid-template-columns: 316fr 410fr 409fr 409fr 243fr 117fr;
+}
+.hangupIcon {
+  width: 80px;
+  flex: none;
+}
+.hangup > div {
+  /* На исходнике кнопки начинаются с y=49 px при масштабе 90 %. */
+  padding: 4.667px 10px 8px;
+}
+.hangup p {
+  margin: 4px 0 16px;
+}
+.hangup button {
+  padding: 4px 11px;
+  margin-right: 12px;
+  font-size: 12px;
+  line-height: 14px;
+}
+.hangup button:last-child {
+  margin-right: 0;
+}
+.hangup button:disabled,
+.translate:disabled,
+.barTools > span {
+  opacity: 1;
+}
+.phone {
+  position: relative;
+}
+.phoneIcon {
+  width: 41px;
+  flex: none;
+  background: var(--op-gap);
+  padding: 3px 0;
+}
+.phoneIcon svg {
+  width: 25px;
+  height: 25px;
+}
+.phoneIcon svg + svg {
+  width: 21px;
+  height: 21px;
+}
+.phoneMain,
+.phoneField {
+  justify-content: flex-start;
+  padding: 6px 10px 0;
+  font-size: 14px;
+  color: #666666;
+}
+.phoneLabel {
+  height: 22px;
+}
+.phoneMain input,
+.phoneField input {
+  font-size: 26px;
+  padding: 1px 0;
+  height: 32px;
+}
+.phoneMain {
+  background: var(--op-panel);
+}
+.phoneMain:focus-within {
+  background: #ffffff;
+}
+.phoneMain input {
+  border-bottom-color: var(--op-line);
+}
+.phoneMain:focus-within input {
+  border-bottom-color: #4444ff;
+}
+.phoneMarks {
+  gap: 14px;
+}
+.phoneMarks svg {
+  width: 14px;
+  height: 14px;
+}
+.phoneField input {
+  padding-right: 56px;
+}
+.aon {
+  position: absolute;
+  right: 4px;
+  bottom: 19px;
+  margin: 0;
+  padding: 5px 14px;
+  border-style: dotted;
+  background: #ffffff;
+}
+.incident {
+  margin-left: 10px;
+  padding: 0 10px;
+}
+.incident h1 {
+  font-size: 20px;
+}
+.incident p {
+  font-size: 14px;
+  line-height: 16px;
+}
+.timer,
+.timerOverdue {
+  margin-left: 10px;
+  align-content: start;
+  padding-top: 3px;
+  row-gap: 8px;
+}
+.timer strong,
+.timerOverdue strong {
+  font-size: 40px;
+}
+.timer span,
+.timerOverdue span {
+  font-size: 12px;
+}
+.left {
+  gap: 10px;
+}
+.caller,
+.address,
+.description {
+  padding: 9px 11px;
+}
+.caller {
+  grid-template-columns: 259fr 180fr 180fr 180fr 74fr;
+  gap: 15px;
+}
+.caller input,
+.caller select {
+  padding: 3px 0;
+  font-size: 18px;
+}
+.caller select {
+  appearance: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4'%3E%3Cpath d='M0 0h8L4 4z' fill='%23777'/%3E%3C/svg%3E")
+    right 1px center no-repeat;
+}
+.translate {
+  width: 35px;
+  height: 35px;
+}
+.address {
+  gap: 6px;
+}
+.addressLine {
+  flex: none;
+  height: 53px;
+  border-bottom-color: #b9b9b9;
+}
+.addressLabel {
+  font-size: 14px;
+  color: #666666;
+}
+.addressLabel span {
+  display: flex;
+  cursor: not-allowed;
+}
+.addressLine p {
+  margin: 2px 0 5px;
+  font-size: 16px;
+}
+.addressLine button {
+  padding: 0 2px 4px;
+  font-size: 28px;
+}
+.addressRow {
+  gap: 15px;
+  height: 46px;
+  flex: none;
+}
+.addressRow:first-of-type {
+  margin-top: 8px;
+}
+.field,
+.fieldList,
+.fieldWide {
+  font-size: 14px;
+  color: #666666;
+}
+.field input,
+.fieldList input {
+  height: 30px;
+  padding: 2px 0;
+  font-size: 18px;
+}
+.fieldList {
+  color: #365674;
+  font-size: 12px;
+}
+.fieldList input {
+  height: 32px;
+  background-size: 8px 4px;
+}
+.fieldWide {
+  flex: none;
+  height: 71px;
+}
+.fieldWide input {
+  flex: 1;
+  min-height: 0;
+}
+.clearAddress {
+  height: 25px;
+  margin-top: 10px;
+  padding: 2px 13px;
+  font-size: 12px;
+}
+.description {
+  font-size: 14px;
+  color: #666666;
+}
+.description textarea {
+  flex: 1;
+  min-height: 32px;
+  padding: 4px 0;
+  font-size: 16px;
+}
+.description small {
+  font-size: 12px;
+  color: #244565;
+  margin-top: 6px;
+}
+.right {
+  gap: 10px;
+}
+.quick {
+  flex: none;
+  height: 71px;
+  gap: 10px;
+}
+.quickGroup {
+  padding: 0 10px;
+  gap: 5px;
+}
+.quickButton,
+.alertButton,
+.alertFaded {
+  height: 51px;
+  padding: 0 14px;
+  font-size: 16px;
+}
+.quickButton {
+  min-width: 0;
+}
+.alertButton {
+  color: #ff633f;
+  border-color: #ff633f;
+}
+.alertFaded {
+  color: #ff9578;
+  border-color: #ff9578;
+  background: #cccccc;
+}
+.types {
+  flex: 1;
+  padding: 10px 16px 14px;
+  min-height: 0;
+}
+.types[data-chosen="true"] {
+  flex: none;
+  height: 50px;
+  padding: 7px 10px;
+}
+.typeSearch {
+  font-size: 14px;
+  color: #666666;
+}
+.typeSearch:focus-within {
+  color: #5555dd;
+}
+.typeSearch input {
+  height: 35px;
+  padding: 4px 0 0;
+  font-size: 24px;
+}
+.typeSearch input::placeholder {
+  color: #808080;
+}
+.typeSearch input:focus {
+  border-bottom-color: #4444ff;
+}
+.types:has(.typeSearch input:focus) {
+  background: #ffffff;
+}
+.frequent {
+  margin-top: 31px;
+  gap: 14px 25px;
+  padding-left: 4px;
+}
+.tag {
+  min-height: 35px;
+  padding: 5px 15px;
+  font-size: 16px;
+  line-height: 23px;
+  background: transparent;
+}
+.significant {
+  margin-top: 18px;
+  padding-left: 4px;
+  font-size: 14px;
+  color: #365674;
+}
+.found {
+  top: 72px;
+  left: 16px;
+  right: 24px;
+  height: 240px;
+  max-height: 240px;
+  margin: 0;
+  border: 0;
+  box-shadow: 0 2px 5px #00000066;
+}
+.types[data-chosen="true"] .found {
+  top: 50px;
+}
+.found button {
+  min-height: 48px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #555555;
+  border: 0;
+}
+.found small {
+  font-size: 12px;
+}
+.chosen {
+  gap: 10px;
+}
+.chips {
+  flex: none;
+  height: 50px;
+  padding: 8px 10px;
+  overflow-y: scroll;
+}
+.chip {
+  height: 32px;
+  padding: 4px 15px;
+  font-size: 14px;
+}
+.cardHead {
+  height: 39px;
+  margin: 0 0 4px;
+  padding: 4px 14px;
+}
+.cardHead h2 {
+  font-size: 16px;
+}
+.cardHead button {
+  font-size: 28px;
+}
+.card {
+  flex: 1;
+  background: var(--op-panel);
+}
+.right[data-fire="true"] .card {
+  background: #ffffff;
+}
+.tagRow {
+  gap: 8px;
+  padding: 10px;
+}
+.tagRow > span {
+  color: #858585;
+}
+.tagRow > div {
+  gap: 10px;
+}
+.tagRow input {
+  max-width: 620px;
+  height: 25px;
+  padding: 0;
+}
+.tagRow[data-field="building_floors"],
+.tagRow[data-field="card_description"],
+.tagRow[data-field="damage"] {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.bar {
+  margin: 0 -10px 0 -9px;
+}
+.barLabel {
+  flex: none;
+  width: 90px;
+  padding: 0 10px;
+  font-size: 16px;
+}
+.barServices {
+  min-width: 0;
+  max-width: calc(100% - 680px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.barServices li {
+  flex: none;
+  width: 130px;
+  padding-top: 18px;
+  font-size: 16px;
+}
+.barServices li:has(button[aria-label="Убрать: Деп. ЖКХ"]) {
+  background: #8e9091;
+}
+.barServices li:first-child > span {
+  text-decoration: underline;
+}
+.barServices button {
+  top: 6px;
+  right: 6px;
+}
+.barServices svg {
+  top: 12px;
+  left: 10px;
+  width: 15px;
+  height: 15px;
+}
+.barAdd,
+.barScroll {
+  flex: none;
+  width: 50px;
+  height: 50px;
+  margin-left: 15px;
+}
+.barScroll {
+  padding: 0;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 14px;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+.barScroll:focus:not(:focus-visible) {
+  outline: none;
+}
+.barScroll:focus-visible {
+  outline: 2px solid var(--op-blue);
+  outline-offset: 2px;
+}
+.save {
+  flex: none;
+  height: 50px;
+  padding: 0 18px;
+  font-size: 24px;
+  margin-right: 5px;
+}
+.barTools {
+  flex: none;
+  gap: 5px;
+}
+.barTools svg,
+.barClose {
+  width: 50px;
+  height: 50px;
+}
+.barClose {
+  flex: none;
+  margin: 0 10px 0 5px;
+}
+.backdrop {
+  background: #00000066;
+}
+.dialog {
+  width: 500px;
+  height: 591px;
+  padding: 10px 10px 39px;
+  box-shadow: 0 12px 20px #00000066;
+}
+.dialog h2 {
+  margin: 0 0 26px;
+  color: #383838;
+}
+.page .dialogSearch {
+  width: 450px;
+  height: 34px;
+  padding: 0;
+  font-size: 24px;
+}
+.page .dialogSearch:focus {
+  border-bottom-color: var(--op-line);
+}
+.dialogList {
+  flex: none;
+  width: 480px;
+  height: 320px;
+  max-height: none;
+  margin: 44px 0 30px;
+  border: 0;
+  overflow-y: scroll;
+}
+.dialogList button {
+  min-height: 51px;
+  font-size: 16px;
+  line-height: 20px;
+  border: 1px solid var(--op-border);
+  border-top: 0;
+}
+.dialogSave {
+  height: 51px;
+  padding: 8px 17px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff633f;
+  border-color: #ff633f;
+  white-space: nowrap;
+}
+.dialogClose {
+  font-size: 26px;
+}
+.page ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.page ::-webkit-scrollbar-track {
+  background: #f6f6f6;
+  box-shadow: inset 0 0 3px #aaaaaa;
+}
+.page ::-webkit-scrollbar-thumb {
+  background: #465158;
+  border: 1px solid #2f353a;
+  border-radius: 5px;
+}
+.collapseTalk {
+  padding: 0 5px;
+  border: 1px solid #ffffff66;
+  background: transparent;
+  color: #ffffff;
+}
+.talk[data-collapsed="true"] {
+  flex: none;
+  margin: 0;
+  box-shadow: none;
+}
+.talk[data-collapsed="true"] > :not(.talkHead),
+.talk[data-collapsed="true"] .tone,
+.talk[data-collapsed="true"] .talkTools {
+  display: none;
+}
+.talk[data-collapsed="true"] .talkHead {
+  flex-wrap: nowrap;
+  background: #ffffff;
+  color: var(--color-text);
+}
+.talk[data-collapsed="true"] button {
+  color: var(--color-text);
+  border-color: var(--op-border);
+}
+.talk[data-collapsed="true"] h2 {
+  white-space: nowrap;
+}
+@media (max-width: 1700px) {
+  .page {
+    font-size: 14px;
+  }
+  .hangup > div {
+    padding: 3px 8px;
+  }
+  .hangup p {
+    margin: 0 0 3px;
+  }
+  .hangup button {
+    display: block;
+    margin: 0 0 3px;
+    padding: 2px 8px;
+  }
+  .hangupIcon {
+    width: 48px;
+  }
+  .incident h1 {
+    font-size: 16px;
+  }
+  .incident p {
+    font-size: 12px;
+  }
+  .top {
+    grid-template-columns: 230fr 270fr 270fr 270fr 230px 106px;
+  }
+  .caller {
+    grid-template-columns: 1.6fr 1.2fr 0.8fr 0.8fr 32px;
+    gap: 10px;
+  }
+  .caller input,
+  .caller select {
+    font-size: 14px;
+  }
+  .quickGroup {
+    padding: 0 6px;
+  }
+  .quickButton,
+  .alertButton,
+  .alertFaded {
+    padding: 0 10px;
+    font-size: 14px;
+  }
+  .tag {
+    font-size: 14px;
+    padding: 4px 10px;
+  }
+  .tagRow > span {
+    font-size: 14px;
+  }
+  .barServices {
+    max-width: calc(100% - 530px);
+  }
+  .barServices li {
+    width: 108px;
+    font-size: 14px;
+  }
+  .barTools svg,
+  .barClose,
+  .barAdd,
+  .barScroll {
+    width: 42px;
+    height: 42px;
+  }
+  .barLabel {
+    width: 80px;
+    font-size: 14px;
+  }
+  .save {
+    height: 42px;
+    font-size: 20px;
+    padding: 0 12px;
+  }
+}
+@media (max-height: 800px) {
+  .page {
+    grid-template-rows: 60px minmax(0, 1fr) 56px;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .left {
+    grid-template-rows: 47px minmax(0, 1fr) minmax(110px, 0.55fr);
+    gap: 8px;
+  }
+  .description textarea {
+    min-height: 40px;
+    height: 40px;
+  }
+  .right {
+    gap: 8px;
+  }
+  .quick {
+    height: 52px;
+  }
+  .quickButton,
+  .alertButton,
+  .alertFaded {
+    height: 40px;
+  }
+  .phoneMain,
+  .phoneField {
+    padding-top: 2px;
+  }
+  .phoneMain input,
+  .phoneField input {
+    font-size: 19px;
+    height: 25px;
+  }
+  .aon {
+    bottom: 7px;
+  }
+  .timer strong,
+  .timerOverdue strong {
+    font-size: 30px;
+  }
+  .timer,
+  .timerOverdue {
+    row-gap: 4px;
+  }
+  .types:not([data-chosen="true"]) {
+    height: auto;
+    padding: 6px 14px 10px;
+  }
+  .frequent {
+    margin-top: 12px;
+    gap: 8px 16px;
+  }
+  .significant {
+    margin-top: 12px;
+  }
+  .types[data-chosen="true"] {
+    height: 40px;
+    padding: 2px 10px;
+  }
+  .chips {
+    height: 40px;
+    padding: 4px 10px;
+  }
+  .chosen {
+    gap: 8px;
+  }
+  .cardHead {
+    height: 32px;
+  }
+  .barAdd,
+  .barScroll,
+  .save,
+  .barTools svg,
+  .barClose {
+    height: 40px;
+  }
+}
+/* Уточнение по первому наложению: координаты строк и метрики системного шрифта. */
+.page {
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+.page input,
+.page textarea,
+.page select {
+  font-family: inherit;
+}
+.addressRow:nth-of-type(2) {
+  margin-top: 8px;
+}
+.quickGroup:first-child {
+  width: 500px;
+}
+.quickGroup:first-child .quickButton:nth-child(1) {
+  width: 144px;
+}
+.quickGroup:first-child .quickButton:nth-child(2) {
+  width: 154px;
+}
+.quickGroup:first-child .quickButton:nth-child(3) {
+  width: 172px;
+}
+.quickButton,
+.alertButton,
+.alertFaded,
+.tag {
+  font-weight: 600;
+}
+.types:not([data-chosen="true"]) .typeSearch input {
+  padding-top: 2px;
+}
+.tagRow {
+  grid-template-columns: minmax(0, 29.3fr) minmax(0, 70.7fr);
+}
+.right[data-fire="true"] .card {
+  padding-bottom: 24px;
+  overflow-y: scroll;
+}
+.chips {
+  scrollbar-gutter: stable;
+}
+.dialogList {
+  scrollbar-gutter: stable;
+}
+.dialogList button[aria-pressed="true"] {
+  font-weight: 600;
+}
+.dialog h2 {
+  line-height: 48px;
+  margin-bottom: 20px;
+}
+.dialogSave {
+  margin-top: auto;
+  flex: none;
+}
+@media (max-width: 1700px) {
+  .quickGroup:first-child {
+    width: auto;
+  }
+  .quickGroup:first-child .quickButton {
+    width: auto;
+  }
+}
+.page:not([data-collapsed="true"]) .description textarea {
+  min-height: 44px;
+}
+.tagRow[data-field="explosion_place"] .tag:last-child {
+  margin-right: 120px;
+}
+@media (min-width: 1701px) {
+  .tagRow[data-field="building_floors"] {
+    padding-top: 10px;
+    padding-bottom: 6px;
+  }
+  .tagRow[data-field="card_description"] {
+    padding-top: 10px;
+  }
+}
+.page {
+  padding-left: 10px;
+}
+.bar {
+  margin-left: -10px;
+}
+.left {
+  grid-template-rows: 50px minmax(0, 488.889px) minmax(110px, 1fr);
+}
+.hangup button:first-of-type {
+  width: 130px;
+}
+.hangup button:last-of-type {
+  width: 108px;
+}
+.phoneMain,
+.phoneField {
+  padding-top: 4px;
+}
+.phoneIcon svg + svg {
+  background: var(--op-panel);
+}
+.page .description {
+  padding-top: 7px;
+}
+.description textarea {
+  margin-top: 4px;
+}
+.tagRow > span {
+  padding-top: 0;
+}
+.tagRow[data-field="damage"] {
+  padding-bottom: 14px;
+}
+.alertButton,
+.alertFaded {
+  padding: 0 15px;
+}
+@media (max-height: 800px) {
+  .left {
+    grid-template-rows: 47px minmax(0, 1fr) minmax(110px, 0.55fr);
+  }
+}
+@media (max-width: 1700px) {
+  .hangup button:first-of-type,
+  .hangup button:last-of-type {
+    width: auto;
+  }
+}
+.barServices li[data-service="GKH"] {
+  background: #8e9091;
+}
+.dialog {
+  transform: translateY(-1.111px);
+  padding-top: 8px;
+}
+.dialogList {
+  margin-top: 41px;
+}
+.dialogList button {
+  padding: 15px 16px;
+}
+.dialogSave {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.card,
+.chips,
+.found,
+.dialogList {
+  scrollbar-color: #455058 #f6f6f6;
+  scrollbar-width: thin;
+}
+.quickButton,
+.alertButton,
+.alertFaded,
+.tag {
+  font-weight: 600;
+  font-size: 16.111px;
+}
+.tagRow > span {
+  font-size: 16.667px;
+  line-height: 20px;
+}
+.dialog h2 {
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 32.778px;
+}
+
+/* На ноутбуке проверяем именно видимую шапку, а не высоту переполненного потомка.
+   Учебный переключатель переносится вместе со строкой шагов, не за край окна. */
+@media (max-width: 1700px) {
+  .quickButton,
+  .alertButton,
+  .alertFaded,
+  .tag {
+    font-size: 14px;
+  }
+  .tagRow > span {
+    font-size: 14px;
+  }
+  .field,
+  .fieldWide {
+    font-size: 12px;
+  }
+  .steps {
+    flex-wrap: wrap;
+  }
+  .stepList {
+    flex-basis: 420px;
+  }
+  .hardSwitch {
+    white-space: normal;
+  }
+}
+@media (max-height: 800px) {
+  .hangup > div {
+    padding: 3px 8px;
+  }
+  .hangup p {
+    margin: 0 0 2px;
+    font-size: 13px;
+    line-height: 16px;
+  }
+  .hangup button {
+    margin-bottom: 2px;
+    padding: 1px 8px;
+    font-size: 10px;
+    line-height: 12px;
+  }
+}

@@ -1,0 +1,114 @@
+/* Окно «Мой путь» — как прочие окна поверх АРМ: светлая панель, тёмная полоса. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: #101820a6;
+}
+
+.dialog {
+  width: min(680px, 100%);
+  max-height: calc(100vh - 2 * var(--space-3));
+  overflow: auto;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border-top: 4px solid var(--color-active);
+  outline: none;
+}
+
+.dialog h2 {
+  margin: 0;
+  padding: 10px var(--space-3);
+  color: var(--color-on-dark);
+  font-size: 16px;
+  background: var(--color-header);
+}
+
+.steps {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-on-dark);
+  border-left: 4px solid var(--color-border);
+}
+
+.step p {
+  margin: 4px 0;
+}
+
+.step[data-state="passed"] {
+  border-left-color: var(--color-success, #1f7a4d);
+}
+
+.step[data-state="current"] {
+  border-left-color: var(--color-active);
+}
+
+.step[data-state="locked"] {
+  opacity: 0.65;
+}
+
+.stepHead {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.chip {
+  padding: 0 6px;
+  font-size: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+}
+
+.bar {
+  height: 6px;
+  background: #d3d8dc;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--color-active);
+}
+
+.muted {
+  color: #5c6771;
+  font-size: 13px;
+}
+
+.note {
+  margin: 0 var(--space-3);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+/* Кнопка текущей ступени — как основная кнопка окон АРМ; остальные — обычные. */
+.primary {
+  padding: 6px 14px;
+  font-size: 13px;
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border: 1px solid var(--color-active);
+  border-radius: 0;
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

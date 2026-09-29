@@ -1,0 +1,17 @@
+{
+  "name": "oneonetwo-workspace",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "pnpm --filter @112/web dev",
+    "build": "pnpm --filter @112/web build",
+    "lint": "pnpm --filter @112/web lint",
+    "typecheck": "pnpm --filter @112/web typecheck",
+    "test": "pnpm --filter @112/web test",
+    "gen:api": "pnpm --filter @112/web gen:api",
+    "mock": "prism mock contracts/openapi.draft.yaml -h 127.0.0.1 -p 4010",
+    "test:e2e": "playwright test -c qa/playwright.config.ts"
+  },
+  "devDependencies": {"@playwright/test": "1.55.0", "@stoplight/prism-cli": "5.14.2"},
+  "pnpm": {"overrides": {"@stoplight/prism-http": "5.12.0", "@stoplight/prism-http-server": "5.12.0", "@stoplight/prism-core": "5.8.0"}}
+}

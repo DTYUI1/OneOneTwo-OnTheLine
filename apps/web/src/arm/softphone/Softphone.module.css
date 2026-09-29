@@ -1,0 +1,262 @@
+/* Софтфон живёт в телефонной полосе шапки карточки (arm_dds/06.png) и
+   раскрывается из неё поверх содержимого — тем же движением, что панель
+   статуса (09.png) и история статусов (12.png). */
+
+.strip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hintSlot {
+  margin-left: auto;
+}
+
+/* Принятые доклады читаются вместе с полем комментария под полосой, поэтому
+   набраны обычным текстом: время тише, сам доклад — в полную силу. */
+.reports {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.reportsTitle {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.reportList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+  /* Около четырёх строк: доклады приходят сами, и раздвигать ими полосу нельзя —
+     поле комментария уезжало бы вниз под руками у обучаемого. */
+  max-height: 96px;
+  overflow: auto;
+}
+
+.report {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: var(--space-2);
+}
+
+.reportTime {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+.handset {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: 1px solid transparent;
+  padding: var(--space-1) var(--space-2);
+}
+
+/* Цвет трубки читается раньше подписи — состояние видно без чтения. */
+.lifted svg {
+  color: var(--color-active);
+}
+
+.state {
+  font-weight: bold;
+}
+
+.timer {
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Панель встаёт над правой колонкой карточки: слева — адрес и описание,
+   их заполняют прямо во время разговора. */
+.panel {
+  position: absolute;
+  top: 100%;
+  right: var(--space-2);
+  z-index: 10;
+  width: 620px;
+  max-width: calc(100vw - var(--space-4));
+  padding: var(--space-3);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  box-shadow: 0 8px 16px #10182033;
+  /* Высоту ставит Softphone.tsx по месту: панель прокручивается сама и не
+     заставляет прокручивать карточку. */
+  overflow: auto;
+}
+
+/* Внизу карточки места нет — панель раскрывается вверх от полосы. */
+.panelUp {
+  top: auto;
+  bottom: 100%;
+  border-top: 1px solid var(--color-border);
+  border-bottom: none;
+  box-shadow: 0 -8px 16px #10182033;
+}
+
+.panelHead {
+  display: flex;
+  justify-content: flex-end;
+  margin: calc(-1 * var(--space-2)) 0 var(--space-2);
+}
+
+.collapse {
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.panel h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size);
+  font-weight: bold;
+}
+
+/* Набор: справочник — быстрый путь, клавиатура — запасной. */
+.choose {
+  display: grid;
+  grid-template-columns: 1fr 168px;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.services {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  max-height: 232px;
+  overflow: auto;
+}
+
+.services button {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  padding: var(--space-2);
+}
+
+.ext {
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  min-width: 32px;
+}
+
+.own {
+  margin-left: auto;
+  color: var(--color-active);
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.keypad button {
+  padding: var(--space-2);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+  font-size: 16px;
+}
+
+/* Стереть — в правом нижнем углу клавиатуры, как на кнопочном телефоне. */
+.erase {
+  color: #6c757b;
+}
+
+.erase:disabled {
+  color: var(--color-border);
+  cursor: default;
+}
+
+.digits {
+  padding: var(--space-2);
+  margin-bottom: var(--space-1);
+  border: 1px solid var(--color-border);
+  background: var(--color-on-dark);
+  font-size: 20px;
+  letter-spacing: 6px;
+  min-height: 38px;
+  font-variant-numeric: tabular-nums;
+}
+
+.call {
+  width: 100%;
+  border: none;
+  color: var(--color-on-dark);
+  padding: var(--space-2);
+  background: var(--color-active);
+}
+
+.call:disabled {
+  background: var(--color-border);
+  color: var(--color-text);
+  cursor: default;
+}
+
+.notes {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+.note {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Невысокий экран ноутбука: полоса телефона ниже, чтобы карточка уместилась в окно. */
+@media (min-width: 601px) and (max-height: 820px) {
+  .strip {
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-3);
+  }
+}
+
+/* Входящий вызов бригады: одна крупная кнопка прямо в полосе телефона — искать не надо.
+   Мигает, пока не ответили: действие нужно прямо сейчас (эталон зоны). */
+.answer {
+  padding: 4px 12px;
+  color: var(--color-on-dark);
+  font-weight: bold;
+  background: var(--color-active);
+  border: none;
+  animation: answer-blink 1s steps(2, start) infinite;
+}
+
+@keyframes answer-blink {
+  to {
+    background: var(--color-header);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .answer {
+    animation: none;
+  }
+}

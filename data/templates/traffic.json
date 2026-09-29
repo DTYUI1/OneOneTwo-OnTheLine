@@ -1,0 +1,75 @@
+{
+  "id": "00000000-0000-4000-8000-000000000100",
+  "version": 1,
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "2020000",
+  "target_service_id": "102",
+  "card": {
+    "number": "10000001",
+    "incident_type_code": "2020000",
+    "caller_name": "Учебный заявитель",
+    "phone_aon": "+79000000001",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "Северный",
+      "district": "Учебный",
+      "street": "Дубнинская улица",
+      "house": "1",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Учебный сценарий: ДТП с пострадавшими у дома 1.",
+    "tags": [
+      "ДТП",
+      "Пострадавшие"
+    ],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "ДТП с пострадавшими",
+    "service_ids": [
+      "102",
+      "103"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102",
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "Северный",
+      "district": "Учебный",
+      "street": "Дубнинская улица",
+      "house": "1",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Передана информация о ДТП с пострадавшими по адресу: Москва, Дубнинская улица, дом 1. Направлен экипаж."
+  },
+  "complications": [],
+  "origin": "template",
+  "status": "approved",
+  "teacher_comment": "Синтетическая фикстура для разработки."
+}

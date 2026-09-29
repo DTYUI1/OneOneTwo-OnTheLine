@@ -1,0 +1,70 @@
+{
+  "id": "c2c01b1c-a89a-5715-87e6-1d87bf480a26",
+  "version": 1,
+  "level": 2,
+  "weight": 4,
+  "incident_type_code": "22340000",
+  "target_service_id": "103",
+  "card": {
+    "number": "70520009",
+    "incident_type_code": "22340000",
+    "caller_name": "супруг пациентки",
+    "phone_aon": "+79000000502",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Коломенская набережная",
+      "house": "18",
+      "building": "",
+      "apartment": "142"
+    },
+    "description": "Женщина случайно выпила не те лекарственные препараты, потеряла сознание. Пациент — Иванова Ирина Петровна, д/р 10.03.1975, вызывает супруг. Подъезд 3, этаж 4, код 142.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Отравление",
+    "service_ids": [
+      "103"
+    ]
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "",
+      "district": "",
+      "street": "Коломенская набережная",
+      "house": "18",
+      "building": "",
+      "apartment": "142"
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "Принята. Отравление лекарственными препаратами, пациентка без сознания, Иванова И. П., 10.03.1975 г. р. Москва, Коломенская набережная, д. 18, кв. 142, подъезд 3, этаж 4. Направлена бригада."
+  },
+  "complications": [],
+  "origin": "imported",
+  "status": "draft",
+  "teacher_comment": "Билет 5, задача 2 (стр. 5 PDF заказчика). Эталон — учебная разметка команды по памятке ДДС и классификатору 046_24; преподавателем не проверен. Телефон заявителя заменён учебным."
+}

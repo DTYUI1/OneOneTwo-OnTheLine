@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "event_id": "00000000-0000-4000-8000-000000000990",
+  "server_ts": "2026-09-19T09:00:00Z",
+  "type": "card.appeared",
+  "payload": {
+    "id": "00000000-0000-4000-8000-000000000200",
+    "assignment_id": "00000000-0000-4000-8000-000000000300",
+    "trainee_id": "00000000-0000-4000-8000-000000000001",
+    "session_id": "00000000-0000-4000-8000-000000000400",
+    "state": "added",
+    "appeared_at": "2026-09-19T09:00:00Z",
+    "delivered_at": null,
+    "opened_at": null,
+    "closed_at": null,
+    "interrupted_at": null,
+    "source": {
+      "number": "10000001",
+      "incident_type_code": "2020000",
+      "caller_name": "Учебный заявитель",
+      "phone_aon": "+79000000001",
+      "phone_provided": "",
+      "phone_scene": "",
+      "address": {
+        "city": "Москва",
+        "okrug": "Северный",
+        "district": "Учебный",
+        "street": "Дубнинская улица",
+        "house": "1",
+        "building": "",
+        "apartment": ""
+      },
+      "description": "Учебный сценарий: ДТП с пострадавшими у дома 1.",
+      "tags": [
+        "ДТП",
+        "Пострадавшие"
+      ],
+      "victims": true,
+      "ambulance_refused": false,
+      "blocked_people": false,
+      "emergency": false,
+      "incident_class": "ДТП с пострадавшими",
+      "service_ids": [
+        "102",
+        "103"
+      ]
+    },
+    "current": {
+      "service_number": "",
+      "comment": ""
+    }
+  }
+}

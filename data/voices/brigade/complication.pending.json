@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "note": "Учебный доклад-осложнение бригады (VAR-01, этап complication): текст — scripts/voices/brigade_texts.py, озвучка — Piper, голос службы. Этап подключён к seed в учебном сценарии уровня 3. Пути относительно data/voices.",
+  "messages": [
+    {
+      "service_id": "101",
+      "stage": "complication",
+      "path": "brigade/101/complication.ogg",
+      "text": "Продолжать тушение опасно, возможно обрушение, работы прекращаем.",
+      "duration_ms": 4331,
+      "sha256": "7e4901d49137da96f1eb99401f1c92f39a1c1ded8e6baf6495565d6e3db8d315",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "stage": "complication",
+      "path": "brigade/102/complication.ogg",
+      "text": "Дальнейшие действия наряда своими силами невозможны, работы прекращаем.",
+      "duration_ms": 4853,
+      "sha256": "1c5635d134f101f812fcf59554a345b8898446bca4ce9c1fa2cbae8641c96217",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "stage": "complication",
+      "path": "brigade/103/complication.ogg",
+      "text": "Пострадавший отказался от медицинской помощи, работы прекращаем.",
+      "duration_ms": 3518,
+      "sha256": "8a5e4205f3fa498f966bd7ad89a68c6902e800e83c0c76c7869f73fa5a923a52",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "stage": "complication",
+      "path": "brigade/104/complication.ogg",
+      "text": "Устранить утечку своими силами не можем, нужна другая служба, работы прекращаем.",
+      "duration_ms": 4737,
+      "sha256": "c35e8a8c507f57f3c44b43c0bcdc2841553436156ac8b32d897c4d8810e43400",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "stage": "complication",
+      "path": "brigade/GKH/complication.ogg",
+      "text": "Повреждение вне зоны ответственности бригады, работы прекращаем.",
+      "duration_ms": 4110,
+      "sha256": "04aff5525057a9b5bef0fc500f50cd9e6f7a397e14d75b59a4574ddae07f3208",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "stage": "complication",
+      "path": "brigade/MOSLIFT/complication.ogg",
+      "text": "Поднять кабину своими силами не можем, нужна другая служба, работы прекращаем.",
+      "duration_ms": 5956,
+      "sha256": "e5f46e8e4b2cc3427d46dbb778ca0edcfb8483bc6ce58aab97f25f7b3d6d5e99",
+      "media_type": "audio/ogg"
+    }
+  ]
+}
