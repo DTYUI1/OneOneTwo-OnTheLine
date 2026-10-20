@@ -37,7 +37,7 @@ export function ScoreChart({ lines }: { lines: TraineeLine[] }) {
   return (
     <figure className={styles.chart}>
       <figcaption className={styles.chartTitle}>
-        Итоговый балл по местам — эффективная оценка сервера (с учётом решения
+        Итоговый балл по местам — оценка (с учётом решения
         преподавателя)
       </figcaption>
       <svg
@@ -139,7 +139,7 @@ export function TimeChart({
   return (
     <figure className={styles.chart}>
       <figcaption className={styles.chartTitle}>
-        {title} — как считает сервер; линия — норматив{" "}
+        {title} — линия показывает допустимое время{" "}
         {formatSeconds(normative)}
       </figcaption>
       <svg viewBox={`0 0 ${WIDTH} ${height}`} role="img" aria-label={title}>

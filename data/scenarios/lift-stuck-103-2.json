@@ -1,0 +1,294 @@
+{
+  "format": 2,
+  "code": "lift-stuck-103-2",
+  "version": 3,
+  "replaces": [
+    "f20ea0fd-5931-5b6f-91fe-45aea119f8e3"
+  ],
+  "title": "Застревание в лифте, плохо пассажирке",
+  "service_id": "103",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "14100101",
+  "complications": [],
+  "teacher_comment": "Застревание в лифте, Профсоюзная улица, 98, корпус 2. Бригада повторяет адрес с ошибкой (корпус один вместо второго), на месте спрашивает этаж — он в карточке: между седьмым и восьмым. Женщину к приезду уже вывели, от осмотра она отказалась: служба 103 закрывает карточку «Работы завершены» (памятка ДДС, с. 23).",
+  "outcome": {
+    "people": "Бригада скорой поднялась к лифту во втором подъезде дома 98, корпус 2 на Профсоюзной улице. Женщину к этому времени уже вывели из кабины, на боль в сердце она больше не жаловалась и от осмотра отказалась.",
+    "late": "Карточку приняли позже норматива. Заранее не известно, что кабину откроют быстро: женщине шестидесяти пяти лет с болью в сердце в застрявшей кабине каждая минута ожидания даётся тяжело.",
+    "status": "Бригада выезжала и поднялась к женщине: у скорой такую карточку закрывают статусом «Работы завершены», а не «Отказом от выполнения работ». Ход статусов в вашей карточке отличается от доклада бригады."
+  },
+  "card": {
+    "caller_name": "Рябов Андрей Сергеевич",
+    "phone_aon": "+79000000712",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "description": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (требуется медицинская помощь)",
+    "service_ids": [
+      "101",
+      "103",
+      "MOSLIFT"
+    ],
+    "number": "70005212",
+    "incident_type_code": "14100101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть. Женщину вывели, на боль больше не жалуется, от осмотра отказалась, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла, выдвигаемся. Носилки берём сразу.",
+        "audio": "bank-v1/103/103.responding.any.6.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, поднимаемся к лифту.",
+        "audio": "bank-v2/103/103.arrived.lift.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Женщину вывели, на боль больше не жалуется, от осмотра отказалась, бригада свободна.",
+        "audio": "bank-v2/103/103.completed.lift.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Профсоюзная улица, девяносто восемь, корпус один, выезжаем!",
+        "audio": "bank-v4/103/103.readback_trap.6edf445d.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Профсоюзная улица, 98, корпус 2"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла поправку, разворачиваемся.",
+            "audio": "bank-v1/103/103.readback_fixed.any.1.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/103/103.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/103/103.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, какой этаж, не подскажете?",
+        "audio": "bank-v1/103/103.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "floor",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "floor",
+          "label": "Между седьмым и восьмым этажами"
+        },
+        {
+          "key": "low",
+          "label": "Между вторым и третьим этажами"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, ищите по этажам"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла, поднимаемся.",
+            "audio": "bank-v1/103/103.clarify_ok.any.1.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Плохо. Будем стучать во все двери, задержимся.",
+            "audio": "bank-v1/103/103.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Спасибо, но уже разобрались.",
+            "audio": "bank-v1/103/103.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада спросила этаж — он был в описании карточки",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": [
+    "readback"
+  ]
+}

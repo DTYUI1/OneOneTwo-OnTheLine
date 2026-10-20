@@ -92,7 +92,7 @@ export function FinishPrompt({ sessions }: { sessions: readonly Session[] }) {
   );
 }
 
-function FinishDialog({
+export function FinishDialog({
   session,
   onKeep,
 }: {
@@ -115,29 +115,45 @@ function FinishDialog({
           header: { "X-CSRF-Token": csrfToken() },
         },
         body: { contract_version: 2, request_id: requestId },
+        signal: AbortSignal.timeout(15_000),
       });
       if (!data) throw new Error(error?.message ?? "Занятие не завершено.");
       return data;
     },
-    onSuccess: async () => {
+    onSuccess: async (finished) => {
+      await queries.cancelQueries({ queryKey: ["sessions"], exact: true });
+      await queries.cancelQueries({
+        queryKey: ["session", session.id],
+        exact: true,
+      });
+      queries.setQueryData(["session", session.id], finished);
+      queries.setQueryData<Session[]>(["sessions"], (current) =>
+        current?.map((item) => (item.id === finished.id ? finished : item)),
+      );
       for (const key of ["sessions", "session", "lifecycle", "report"])
-        await queries.invalidateQueries({ queryKey: [key] });
+        void queries.invalidateQueries({ queryKey: [key] });
     },
   });
   const mutate = finish.mutate;
 
   useEffect(() => {
-    const tick = setInterval(() => {
+    const tick = () => {
       const rest = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
       setLeft(rest);
       if (rest === 0 && !fired.current) {
         fired.current = true;
         mutate();
       }
-    }, 250);
-    return () => clearInterval(tick);
+    };
+    const timer = setInterval(tick, 250);
+    document.addEventListener("visibilitychange", tick);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", tick);
+    };
   }, [deadline, mutate]);
 
+  if (finish.isSuccess) return null;
   const waiting = !finish.isError;
   return (
     <div className={styles.backdrop}>

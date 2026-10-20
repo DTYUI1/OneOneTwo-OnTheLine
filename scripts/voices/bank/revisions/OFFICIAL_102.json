@@ -1,0 +1,29 @@
+{
+  "service": "OFFICIAL_102",
+  "speaker": "official",
+  "gender": "male",
+  "character": "оперативный дежурный Медведев, служба 102",
+  "incidents": {},
+  "about": "Новые редакции разговорных фраз дежурного (HQ-037, «скорая — больше формальности»): служба, должность, «Информация принята», «Уточните…», «Повторите, пожалуйста…». `replaces` — старая фраза книги phrases/, её запись остаётся; окно телефона (scripts/voices/bank/web.py) берёт новую вместо старой, когда у новой есть запись в наборах data/voices/bank-v*.",
+  "phrases": [
+    {"id": "OFFICIAL_102.accepted.any.6", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, наряд направлен.", "replaces": "OFFICIAL_102.accepted.any.1"},
+    {"id": "OFFICIAL_102.accepted.any.7", "slot": "accepted", "incidents": ["*"], "text": "Принято. Участкового уполномоченного поставлю в известность.", "replaces": "OFFICIAL_102.accepted.any.4"},
+    {"id": "OFFICIAL_102.accepted.any.8", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, примем меры.", "replaces": "OFFICIAL_102.accepted.any.5"},
+    {"id": "OFFICIAL_102.registered.any.6", "slot": "registered", "incidents": ["*"], "text": "Принято. Номер наряда семьдесят два.", "number": "72", "replaces": "OFFICIAL_102.registered.any.2"},
+    {"id": "OFFICIAL_102.registered.any.7", "slot": "registered", "incidents": ["*"], "text": "Принято. Номер регистрации сто пятьдесят шесть, наряд направлен.", "number": "156", "replaces": "OFFICIAL_102.registered.any.3"},
+    {"id": "OFFICIAL_102.registered.any.8", "slot": "registered", "incidents": ["*"], "text": "Зарегистрировано, номер по книге учёта восемьдесят девять.", "number": "89", "replaces": "OFFICIAL_102.registered.any.5"},
+    {"id": "OFFICIAL_102.ask_who.any.4", "slot": "ask_who", "incidents": ["*"], "text": "Назовите вашу фамилию и должность.", "replaces": "OFFICIAL_102.ask_who.any.3"},
+    {"id": "OFFICIAL_102.ask_address.any.5", "slot": "ask_address", "incidents": ["*"], "text": "Уточните номер дома и квартиры.", "replaces": "OFFICIAL_102.ask_address.any.2"},
+    {"id": "OFFICIAL_102.ask_address.any.6", "slot": "ask_address", "incidents": ["*"], "text": "Уточните район и адрес.", "replaces": "OFFICIAL_102.ask_address.any.4"},
+    {"id": "OFFICIAL_102.ask_what.any.4", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, что требуется от полиции.", "replaces": "OFFICIAL_102.ask_what.any.2"},
+    {"id": "OFFICIAL_102.ask_card.any.3", "slot": "ask_card", "incidents": ["*"], "text": "Назовите номер карточки.", "replaces": "OFFICIAL_102.ask_card.any.1"},
+    {"id": "OFFICIAL_102.not_understood.any.4", "slot": "not_understood", "incidents": ["*"], "text": "Плохо слышно, повторите по порядку.", "replaces": "OFFICIAL_102.not_understood.any.2"},
+    {"id": "OFFICIAL_102.not_understood.any.5", "slot": "not_understood", "incidents": ["*"], "text": "Не понял вас, повторите последнее.", "replaces": "OFFICIAL_102.not_understood.any.3"},
+    {"id": "OFFICIAL_102.end_call.any.4", "slot": "end_call", "incidents": ["*"], "text": "Информация принята, отбой.", "replaces": "OFFICIAL_102.end_call.any.2"},
+    {"id": "OFFICIAL_102.end_call.any.5", "slot": "end_call", "incidents": ["*"], "text": "Принято, на связи.", "replaces": "OFFICIAL_102.end_call.any.3"},
+    {"id": "OFFICIAL_102.ask_what.any.5", "slot": "ask_what", "incidents": ["*"], "text": "Кратко доложите, что произошло.", "replaces": "OFFICIAL_102.ask_what.any.1"},
+    {"id": "OFFICIAL_102.ask_what.any.6", "slot": "ask_what", "incidents": ["*"], "text": "Доложите обстановку на месте.", "replaces": "OFFICIAL_102.ask_what.any.3"},
+    {"id": "OFFICIAL_102.ask_victims.any.4", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните, нужна ли кому-либо медицинская помощь.", "replaces": "OFFICIAL_102.ask_victims.any.2"},
+    {"id": "OFFICIAL_102.ask_victims.any.5", "slot": "ask_victims", "incidents": ["*"], "text": "Есть ли пострадавшие на месте? Скорая помощь вызвана?", "replaces": "OFFICIAL_102.ask_victims.any.3"}
+  ]
+}

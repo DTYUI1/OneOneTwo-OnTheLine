@@ -1,12 +1,15 @@
 import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api";
 import { loginDestination } from "./loginDestination";
 import { forgetWelcome } from "./welcome";
+import { useOperatorModule } from "./features";
+import { ROLE_TITLES, type DemoAccounts } from "./demoAccounts";
 import entry from "./LoginPage.module.css";
 
 export function LoginPage() {
+  const operatorModule = useOperatorModule();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,6 +20,15 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const queries = useQueryClient();
+  // Блок «Учётные записи для проверки» показывает стенд: настройка DEMO_ACCOUNTS_SHOWN,
+  // пароль приходит с сервера (рекомендации организаторов 16.10, п. 2).
+  const demo = useQuery({
+    queryKey: ["demo-accounts"],
+    queryFn: async (): Promise<DemoAccounts | null> =>
+      (await api.GET("/auth/demo-accounts")).data ?? null,
+    staleTime: Infinity,
+    retry: false,
+  }).data;
   async function submit(event: FormEvent) {
     event.preventDefault();
     setPending(true);
@@ -32,9 +44,16 @@ export function LoginPage() {
       queries.clear();
       queries.setQueryData(["me"], result.data);
       if (result.data.role === "trainee") forgetWelcome(result.data.id);
-      navigate(loginDestination(result.data.role, location.state?.returnTo), {
-        replace: true,
-      });
+      navigate(
+        loginDestination(
+          result.data.role,
+          location.state?.returnTo,
+          operatorModule,
+        ),
+        {
+          replace: true,
+        },
+      );
     } catch {
       setError("Сервер недоступен. Повторите попытку.");
     } finally {
@@ -55,7 +74,9 @@ export function LoginPage() {
             {/* Экран входа копирует Систему 112 — подпись говорит, что это тренажёр
                 (просьба капитана 29.09). */}
             <span className={entry.trainer}>
-              Учебный тренажёр оператора 112 и диспетчера служб
+              {operatorModule
+                ? "Учебный тренажёр оператора 112 и диспетчера служб"
+                : "Учебный тренажёр диспетчера служб"}
             </span>
           </span>
         </h1>
@@ -91,6 +112,40 @@ export function LoginPage() {
         <button className={entry.choice} disabled={pending}>
           {pending ? "Вход…" : "Войти"}
         </button>
+        {demo?.enabled && demo.password !== null && (
+          <section
+            className={entry.accounts}
+            aria-label="Учётные записи для проверки"
+          >
+            <h2>Учётные записи для проверки</h2>
+            <ul>
+              {ROLE_TITLES.map(([role, title]) => {
+                const rows = demo.accounts.filter((a) => a.role === role);
+                return rows.length === 0 ? null : (
+                  <li key={role}>
+                    <span>{title}</span>
+                    {rows.map((a) => (
+                      <button
+                        type="button"
+                        key={a.login}
+                        onClick={() => {
+                          setLogin(a.login);
+                          setPassword(demo.password ?? "");
+                        }}
+                      >
+                        {a.login}
+                      </button>
+                    ))}
+                  </li>
+                );
+              })}
+            </ul>
+            <p>
+              Пароль стенда: <b>{demo.password}</b>. Нажмите на логин, чтобы
+              подставить его.
+            </p>
+          </section>
+        )}
       </form>
     </main>
   );

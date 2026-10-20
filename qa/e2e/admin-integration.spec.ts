@@ -40,8 +40,9 @@ test("Админка: разделы и сохранение нормативо�
   try {
     await expect(reaction).toHaveValue(String(original.reaction_normative_s));
     const weights = page.getByRole("spinbutton", { name: /^Вес:/ });
-    // Семь критериев карточки и два комментария (#57): грамотность, ключевые сведения.
-    expect(await weights.count()).toBe(9);
+    // Семь критериев карточки, два комментария (#57): грамотность, ключевые сведения,
+    // и работа с бригадой (DT-10).
+    expect(await weights.count()).toBe(10);
     await reaction.fill("0");
     await expect(
       page.getByRole("button", { name: "Сохранить", exact: true }),

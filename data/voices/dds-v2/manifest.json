@@ -1,0 +1,1068 @@
+{
+  "version": 1,
+  "note": "Реплики сценариев ДДС (data/scenarios), набор голосов GP-15: движок и голос — поле voice, полоса рации (scripts/voices/scenario_generate.sh). Пути относительно data/voices.",
+  "messages": [
+    {
+      "service_id": "102",
+      "path": "dds-v2/fight-street/102/departure.ogg",
+      "text": "Вызов принят, наряд направлен.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 2297,
+      "sha256": "a0bd79ad111590ee010b7d2df1454837a025b2fd592d29ecbf6f46888fefe5e9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/fight-street/102/arrival-1.ogg",
+      "text": "Наряд на месте, драку прекратили, двое задержаны.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3458,
+      "sha256": "b5321a87dd27c09dc13a3dd04bfa4261276a0c9c2495a58f82e7e15423e1ec57",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/fight-street/102/works-1.ogg",
+      "text": "Опрашиваем свидетелей, пострадавшего передаём скорой.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3435,
+      "sha256": "73b0300eb6812f78f06e334420975135a6ed303e84f7199992972110d309c724",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/fight-street/102/completion-1.ogg",
+      "text": "Задержанные доставлены в отдел полиции, наряд освободился.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3911,
+      "sha256": "30c13877adf19773459740db2d99707e467a7049239a794933b4e548c53f72cf",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/fight-street/102/arrival-2.ogg",
+      "text": "Наряд на месте, осматриваем площадь у входа.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3017,
+      "sha256": "6adbd029dd90eb6f6348f8404093e59dd7b6bbba59c39da3d2c8b568faeab90a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/fight-street/102/outcome-2.ogg",
+      "text": "Драки нет, участники разошлись, свидетелей не нашли, работы не проводили.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 5025,
+      "sha256": "00d30280889423c8c24dc4858053a7251c9bd9849ee99b62c48b54d2f83d0716",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/fight-street/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 3853,
+      "sha256": "a30efd3ddf1688bcdcf5fab858b65e8979ed137add9d18b20854dec975452d6b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/fight-street/103/arrival-1.ogg",
+      "text": "Бригада на месте, пострадавший мужчина с травмой головы, в сознании.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 6569,
+      "sha256": "24b95c36ddce7bc4aef7cd267a04b1ccf02df2e9aff252ee5467da4d5b20ca47",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/fight-street/103/works-1.ogg",
+      "text": "Обрабатываем рану, подозрение на сотрясение мозга.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 5072,
+      "sha256": "8be09acdb4797467f8b6211e738dcbd7cc0f47dfc575544df5292bfc8c4db2aa",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/fight-street/103/completion-1.ogg",
+      "text": "Пострадавший госпитализирован, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4805,
+      "sha256": "5fc4631eb801e4c80d23d89094b1e743c509dc1c86b886050671828f215fe606",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/fight-street/103/arrival-2.ogg",
+      "text": "Бригада на месте, осматриваем пострадавшего.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4631,
+      "sha256": "25c3b6f658dd556bd313478a5eafb90a883faa46608cb48e9794e1470b91724e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/fight-street/103/outcome-2.ogg",
+      "text": "Пострадавший от госпитализации отказался, отказ оформлен, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 7220,
+      "sha256": "5c2b22bf77cf5add71faec8b2a9bf3446898228f1aa1af3de697a3659691496e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/gas-apartment/101/departure.ogg",
+      "text": "Вызов принят, отделение выехало.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 2657,
+      "sha256": "431d08ce94f2ad98153443dc76c420215a8af47e8ec471f2e998a06ed09e97a3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/gas-apartment/101/arrival-1.ogg",
+      "text": "Расчёт на месте, в квартире сильный запах газа, выводим жильцов.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4410,
+      "sha256": "acac26d57c30226d63ae8ba4c4c9ba4aebb58579bc5181abefffadf6cfaae806",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/gas-apartment/101/works-1.ogg",
+      "text": "Жильцы выведены, проветриваем квартиру, ждём газовую службу.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4584,
+      "sha256": "a947ed56f16c89b63a663646a60bb40ba7c7d380c2045718b079a564b3841b27",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/gas-apartment/101/completion-1.ogg",
+      "text": "Газовая служба устранила утечку, газа в квартире нет, расчёт возвращается.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 5675,
+      "sha256": "47234a09b3571d4268a55cf1efff5f71d01ac4fc6b10725136279293e0700b8b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/gas-apartment/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся на третий этаж.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3040,
+      "sha256": "eaf26961f0df9850ef16008bb4300bd32885d115e4a908e12cefd40054fbdcc5",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/gas-apartment/101/outcome-2.ogg",
+      "text": "Запах слабый, жильцы на улице, утечкой занимается газовая служба, наши работы не потребовались.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 7289,
+      "sha256": "732a82bfdb3a2bc1ecb7ce4a97a9075bb9ea14216c9cfb222a7e66abee7883a7",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/gas-apartment/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 3574,
+      "sha256": "054b668724aec63053fcc90fc9dc9e7a067129e3a1c7f204e2c8543248e3b6c4",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/gas-apartment/104/arrival-1.ogg",
+      "text": "Бригада на месте, замеряем газ в квартире прибором.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 3702,
+      "sha256": "cd8c2d51280babdaa4c0c2b48d00ccafd67982efaec8d2e6fc9e2ce750654ec6",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/gas-apartment/104/works-1.ogg",
+      "text": "Утечка на шланге плиты, газ перекрыт, меняем шланг.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 4480,
+      "sha256": "9b0153629809fb09d1914774561e58300fb9a48529b001e938e73a9db9f76fbf",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/gas-apartment/104/completion-1.ogg",
+      "text": "Шланг заменён, утечка устранена, подача газа восстановлена, работы завершены.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 6105,
+      "sha256": "2c1cbf88829f3fea2a19b5cc23bb4cf7b4daf4ee8b05e0813401491a3314754e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/gas-apartment/104/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 2901,
+      "sha256": "f8f7f67696d8d50e453ab4fdd0b5d51f4d6be6141c5c72a05c823bd5171cd234",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/gas-apartment/104/outcome-2.ogg",
+      "text": "Дверь заперта, никто не открывает, в квартиру не попасть, работы не проводили, для вскрытия двери нужна полиция.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 7719,
+      "sha256": "b19c466747355195266ee0907be55a7e8ef154191381697a4dece6b61367d2cb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/heart-street/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 3853,
+      "sha256": "0993554f5e161121060fb623259787320d0618a5c34ae2cff5a9a5d9d5d8a865",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/heart-street/103/arrival-1.ogg",
+      "text": "Бригада на месте, мужчина в сознании, снимаем кардиограмму.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 6128,
+      "sha256": "2bfd6f3db88b74418d4309a5d4048c245b346a24c27cb16cd9b7b0a6dff09926",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/heart-street/103/works-1.ogg",
+      "text": "Подозрение на инфаркт, оказываем помощь, готовим к госпитализации.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 6569,
+      "sha256": "d18d1c4b4d55a973bab5a5de81b0b6b6c0bc93dcf28813da4b5b27a6cd136b39",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/heart-street/103/completion-1.ogg",
+      "text": "Пациент госпитализирован в кардиологию, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 5710,
+      "sha256": "d3d621c3767391c978f8c0a927a0342f144c48e8ded40c26b1889f380d9f5aa3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/heart-street/103/arrival-2.ogg",
+      "text": "Бригада на месте, ищем мужчину на остановке.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 5025,
+      "sha256": "311e68ef754db51357cbdc2b12f14d99e10bb557472c146c93f1e48184517a28",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/heart-street/103/outcome-2.ogg",
+      "text": "Мужчины на остановке нет, ушёл до нашего прибытия, очевидцы его не видели, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 8450,
+      "sha256": "91e3dd1b48199ad125238d2f36ae0134bf2bc9d8fa0478dad4df5280a1173512",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/lift-stuck/101/departure.ogg",
+      "text": "Вызов принят, расчёт выехал.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 2448,
+      "sha256": "5df568730c5835a1630e1b8213900221a5bd2719daeab26e29437a370a6705f0",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/lift-stuck/101/arrival-1.ogg",
+      "text": "Расчёт на месте, кабина между седьмым и восьмым этажами, раздвигаем двери.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 5606,
+      "sha256": "1f9743a5f5d2886296f5ef687416bbca0d6698f5a77c962900c64d4a852452fb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/lift-stuck/101/works-1.ogg",
+      "text": "Двери кабины раскрыты, выводим женщину на площадку.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4085,
+      "sha256": "08447b28bf2854f2505894f65a657ec25e6a37f7b369cd0c4ba2abd30cfb3ccd",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/lift-stuck/101/completion-1.ogg",
+      "text": "Женщина выведена и передана скорой помощи, расчёт возвращается.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4828,
+      "sha256": "ed89abc86858fc33ca438a78fb3972f7f6f6b2d6390f86c7d2fdc9ca0ae489aa",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/lift-stuck/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся к кабине.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 2843,
+      "sha256": "26c528d17793793a0fa547bb80e805069a9f43751da23f36caaeb7948497f22d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/lift-stuck/101/outcome-2.ogg",
+      "text": "Механик Мослифта уже вывел женщину, наши работы не потребовались, расчёт возвращается.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 6268,
+      "sha256": "c6f2699e71a08cae29138fc37fe151dbac85d737dd2d7879c91e9cde5df88152",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/lift-stuck/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 3853,
+      "sha256": "03f561392ef1245f9fc6b71fad02a190b423a58033a0ff1ca45b3c7d2873d345",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/lift-stuck/103/arrival-1.ogg",
+      "text": "Бригада на месте, ждём, когда откроют кабину.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4921,
+      "sha256": "c46e541afc2f1c18ba8d81c666199cb71bb81f4d14726d0bca50bf8f0409732a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/lift-stuck/103/works-1.ogg",
+      "text": "Женщина выведена, давление высокое, снимаем кардиограмму, оказываем помощь.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 7742,
+      "sha256": "1ff2ed3b18ce5be76c63ef45134e3664534df45578b9410b0ffedcad6a6fc825",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/lift-stuck/103/completion-1.ogg",
+      "text": "Состояние стабильное, от госпитализации отказалась, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 6790,
+      "sha256": "0555d33c93d4e63fa344c07d2904018a48591e4960e90f968b5b179a874b48d5",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/lift-stuck/103/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к лифту.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4189,
+      "sha256": "394f768d8f97b9a0cc2381729c944a463ce9105c40267aed502b3cf9006ea197",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/lift-stuck/103/outcome-2.ogg",
+      "text": "Женщину вывели, на боль больше не жалуется, от осмотра отказалась, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 8172,
+      "sha256": "c1f6008599ff17f399bf9abdd3a4b4d4a57f5db3d905bbfa5c8a935c6fe6a37b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "dds-v2/lift-stuck/MOSLIFT/departure.ogg",
+      "text": "Заявка принята, механик выехал.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 2506,
+      "sha256": "b399b10179aa15978d9496e6e043c4f4122f938399b4850e809466cbbc55a13e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "dds-v2/lift-stuck/MOSLIFT/arrival-1.ogg",
+      "text": "Механик на месте, связь с кабиной установлена, пассажирка в сознании.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 4422,
+      "sha256": "24e4c5b84cbb24a9dc099e454ca76f5a7a4877500437cdcdaae136b0e4f5d06e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "dds-v2/lift-stuck/MOSLIFT/works-1.ogg",
+      "text": "Лифт обесточен, опускаем кабину до этажа, выводим пассажирку.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 4096,
+      "sha256": "d466876fd04cf575177d927787194b33348b1cdd345d79b685216adef90aa64d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "dds-v2/lift-stuck/MOSLIFT/completion-1.ogg",
+      "text": "Пассажирка выведена и передана скорой, лифт отключён до ремонта, работы завершены.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 5211,
+      "sha256": "f840eabd0f436f33577d837809ba4422bf9a9be0323be906a27f90296c517896",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "dds-v2/lift-stuck/MOSLIFT/arrival-2.ogg",
+      "text": "Механик на месте, осматриваем машинное помещение.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3307,
+      "sha256": "f2819987f5b8e7eb26538bf8f1c04a7c36196cf26383de97127960ae4296c6ab",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "path": "dds-v2/lift-stuck/MOSLIFT/outcome-2.ogg",
+      "text": "Этот лифт обслуживает другая организация, ключей у нас нет, работы не проводили, информацию передали её диспетчеру.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 7034,
+      "sha256": "67b681ead8956f82b0eae2939af16915d812a831efa9700e7f6efb35a76d8f92",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-1/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3586,
+      "sha256": "16586ba1537b1cb0f01215b4e541b87b2b2cb5340d5173547e6e4df6933820f7",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-1/arrival.ogg",
+      "text": "Бригада на месте, поднимаемся в квартиру двенадцать.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3516,
+      "sha256": "91efebf20ad2d71df6f02d44ae9db2d3a86cb38013cbd217241916e65d991fa3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-1/works.ogg",
+      "text": "Стояк перекрыли, меняем участок трубы.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3260,
+      "sha256": "89d899cd93a37e35906de003d9f0d99067ddca559e3423da9bbbc55721369b59",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-1/completion.ogg",
+      "text": "Трубу заменили, воду дали, работы завершены.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3725,
+      "sha256": "1e9fd4d0751c8844dfed6ca1eff0e42c14776ae33d1d762fbce0983d8ac07747",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-2/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3586,
+      "sha256": "c370f417405e1cd960c1da7be3940b8184a84481a570637240c6110526a3cd28",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-2/arrival.ogg",
+      "text": "Бригада на месте, осматриваем пятый этаж.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3214,
+      "sha256": "a994c40dee25f5f154c167b4b5b41dd1d6c3b71f4a71e01969c0538bb19f4457",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "GKH",
+      "path": "dds-v2/pipe-apartment-gkh-2/outcome.ogg",
+      "text": "Течь из квартиры сверху: жильцы сами закрыли кран, протечки нет, наши работы не потребовались.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 7045,
+      "sha256": "8e071286ebb4917131743be12d858d4cb7bf420864c6146d6ad9512f03688dc8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/pipe-basement/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 3574,
+      "sha256": "cf95d7192f088e0eac1a3f452087a63f0860f3cd55cee7efb6842d21539ff9ba",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/pipe-basement/104/arrival-1.ogg",
+      "text": "Бригада на месте, подвал залит, газопровод в зоне пара.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 4317,
+      "sha256": "0bd0e2d1b826a62062a99b3ca8ec7ad7da3a45d770a6e69b4cb518f878c853f3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/pipe-basement/104/works-1.ogg",
+      "text": "Газопровод осмотрен, повреждений нет, замеряем газ в подвале, ждём отключения воды.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 6291,
+      "sha256": "57862402ba0a2e0d872f1e7bd66d961845ac85bf0afe3000f099433bb9d216eb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/pipe-basement/104/completion-1.ogg",
+      "text": "Воду отключили, газопровод исправен, газа в подвале нет, работы завершены.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 5861,
+      "sha256": "3c0021305761c2644dbe848cfcf45da526da93e507bd424adedd0d849911f1d3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/pipe-basement/104/arrival-2.ogg",
+      "text": "Бригада на месте, спускаемся в подвал.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 2877,
+      "sha256": "8b33e4f6d067195efcacba066b9ab521039eeef4f0f3257172f8482a4eda930c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/pipe-basement/104/outcome-2.ogg",
+      "text": "Газопровод проходит в другой части подвала, вода его не касается, работы не проводили, нужна аварийная служба водоканала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 8439,
+      "sha256": "4a89bff6614fb93f1c18db134c1dbe044f411c9ceb476a3382d2b2ab1ee6ea07",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/departure.ogg",
+      "text": "Вызов принят, два отделения выехали.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 2994,
+      "sha256": "7e5ed7f043674debb3149cb8f90e9016474a3a50a6346c31ee4d61148469896a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/arrival-1.ogg",
+      "text": "Расчёт на месте, Бескудниковский бульвар, двадцать четыре. Дым из окна на верхних этажах, подъездов шесть.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 7289,
+      "sha256": "7d1a56a1d67175e9cd59b8fb4597f49d33ad8e240228f32d908efb46ccc4ae8c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/works-1.ogg",
+      "text": "Дверь вскрыта, горит кухня, подана вода.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3365,
+      "sha256": "e2ea54ff773a018e296403d5054dc0fab30ccb41dbaed8a3677d08bfffee241d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/completion-1.ogg",
+      "text": "Пожар ликвидирован, квартира проветрена, расчёт возвращается.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4398,
+      "sha256": "f817f221a0fb23c535928bd4940bd21a26e6feee9b71e40d80d74787de450a40",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-readback.ogg",
+      "text": "Диспетчер, как поняли? Бескудниковский переулок, двадцать четыре, выезжаем!",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 5594,
+      "sha256": "cd79cfabcd613b72f8dc3105c35c8f7e60f78a1f5ddcf0555eef407fca0c575a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-readback-met.ogg",
+      "text": "Понял, Бескудниковский бульвар, едем.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3098,
+      "sha256": "ca6b59cc48f3a9908fd32ee1f4872030c3f2b2b1a1ab2b6d7213a24ee4d83e62",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-readback-wrong-replace.ogg",
+      "text": "Диспетчер, мы на Бескудниковском переулке. Дыма нет, никто не вызывал. Проверьте адрес!",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 6488,
+      "sha256": "29173a702d10e69edb6760f649713c3a0194a8f3db06f04c473ac42535017589",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-floor.ogg",
+      "text": "Диспетчер, на каком этаже квартира сто пятнадцать?",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3597,
+      "sha256": "8e5f787a0d04356996bf890455634310d44538f01f146fd7e486a95d193af3f2",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-floor-met.ogg",
+      "text": "Понял, девятый. Поднимаемся.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 2401,
+      "sha256": "e6aefc1d856607c044819e5b7b2f4f072e398d131441344438f82e8f1df1034f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-floor-wrong.ogg",
+      "text": "Понял. Будем искать по подъездам, это займёт время.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4027,
+      "sha256": "acebf9b536fa4cd9000843672f24ddb8c5232818c5934c76ebdefdfc402cc206",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-floor-late.ogg",
+      "text": "Понял, девятый. Мы уже начали по подъездам, поднимаемся.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4306,
+      "sha256": "1bdd7ec2217c3b803a34daceffb9f6fb971f0a56512f781f4cac1c21eb6d969c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-ambulance.ogg",
+      "text": "Диспетчер, мужчину вынесли на площадку. Он без сознания. Срочно нужна скорая!",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 6035,
+      "sha256": "b9878c84f328376274c4dfc45af3733c3e9a583b6187ed0795ae78f2f60a3102",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-ambulance-again.ogg",
+      "text": "Диспетчер, скорая будет? Мужчина так и лежит без сознания.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4422,
+      "sha256": "1fe3eb4759aacf2b09bddcf7183b995c7a9d3da6a5e5907b62f04069bfc5b9bc",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-ambulance-again-missed-replace.ogg",
+      "text": "Пожар ликвидирован, квартира проветрена. Скорую вызвали через своих, приехала только что, мужчину забрали. Расчёт возвращается.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 8636,
+      "sha256": "06ea6a08397f773ad6e02547995e33100b6f4aba3c1fd3f972a5517ad76fcb4a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-silence-met.ogg",
+      "text": "Работы идут. Кухню потушили, проливаем, проветриваем подъезд. Скоро закончим.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 5908,
+      "sha256": "cc0c553c7bbe1df868a7b42cafc6cd0592999ca109fb071071ca3ca0895f2d33",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-silence-late.ogg",
+      "text": "Работы почти закончены, проветриваем подъезд.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3353,
+      "sha256": "44844245f0ddd3e0765c8572edbea8d8e345c7222db34f5037dadd37dd140260",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-alarm.ogg",
+      "text": "Тревога! Тревога! Боец упал в пролёт лестницы, травма ноги, сам идти не может. Срочно скорую!",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 7254,
+      "sha256": "a489ea80040f8c8c336fe08867e48a67fadf9f99ecdb449334563a78f577ff88",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-alarm-met.ogg",
+      "text": "Понял, ждём скорую. Работы продолжаем.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3412,
+      "sha256": "84c9a2118ab38cd6c1c0d791937e2de7aaa4f31bad0c1641ee73e2cd6fce75a8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/event-alarm-late.ogg",
+      "text": "Понял, скорую ждём. Работы продолжаем.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3226,
+      "sha256": "247f60c9fa226760805c38b5b29f11e4a6502558f9fa252bf2c66eeca68c2432",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся на девятый этаж.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 3086,
+      "sha256": "ae2789737619d997556f949510fe06212753840d3e0870325058b22d6bf89e8f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/smoke-apartment/101/outcome-2.ogg",
+      "text": "Хозяин открыл дверь сам, подгорела еда на плите, огня нет, наши работы не потребовались, возвращаемся.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 7463,
+      "sha256": "bd829a6cb9bfd2a1e453b685bcb42af5fd1a536ded7e734dc69f3e9d8b1b5282",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/smoke-apartment/102/departure.ogg",
+      "text": "Вызов принят, наряд направлен.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 2297,
+      "sha256": "d87c80f122bcfa1de33d3b890c2b09054b35e24e2a684b750109eaa9c206a597",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/smoke-apartment/102/arrival-1.ogg",
+      "text": "Наряд на месте, работаем вместе с пожарными, подъезд перекрыт.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3818,
+      "sha256": "c59f82d0da8c56ad3b2a828db68617d9087739911797b991442fb95b83542eb1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/smoke-apartment/102/works-1.ogg",
+      "text": "Охраняем вскрытую квартиру, устанавливаем родственников хозяина.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3946,
+      "sha256": "8d6d6ccfbe8881a38ec0dd328c00721989520b7887eaba562c7c6a8202f6833a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/smoke-apartment/102/completion-1.ogg",
+      "text": "Квартира закрыта, родственникам сообщено, наряд освободился.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 4340,
+      "sha256": "fe0734b1589a13e8d3edd3e8797bc0dd24bfbf3e7491f0b481b1c58bdadcc4a3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/smoke-apartment/102/arrival-2.ogg",
+      "text": "Наряд на месте, поднимаемся к квартире.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 2460,
+      "sha256": "6a4b53f7ade66b3013f72da0c44a80faf28aafe479d27372460eb3c1cdf10d49",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/smoke-apartment/102/outcome-2.ogg",
+      "text": "Хозяин открыл дверь сам, дым от подгоревшей еды, правонарушения нет, работы не проводили.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 5861,
+      "sha256": "36e08e09811c06c56112b0708bd171f2cbda1a56e56a5f3b60636725a3cab922",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/smoke-apartment/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 3853,
+      "sha256": "e728025e0eaeb49fa75d306a1b7d391da8295826aacb318e92dafd4378b52d31",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/smoke-apartment/103/arrival-1.ogg",
+      "text": "Бригада на месте, ждём, пока пожарные выведут жильца.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 5641,
+      "sha256": "07919b5daa9040cee40ba6f3c5b69a8fd7a5adfa136882172bc21a6dc88bb1b7",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/smoke-apartment/103/works-1.ogg",
+      "text": "Мужчина семидесяти лет, отравление дымом, оказываем помощь.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 6117,
+      "sha256": "70a509efa9b75f2b283c0f4cdba207567b369895534d653015ce6e2cc7f730df",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/smoke-apartment/103/completion-1.ogg",
+      "text": "Пострадавший госпитализирован, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4805,
+      "sha256": "226bef59da1eebf5f4dbee715b594ef21138cffa0a15fba8cb79105348fa9909",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/smoke-apartment/103/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4294,
+      "sha256": "566894b48065a7bd59ddd9bfa6be2b275666420ff18f03793e43d3fcb6d333b7",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/smoke-apartment/103/outcome-2.ogg",
+      "text": "Хозяин квартиры осмотрен, отравления нет, в помощи не нуждается, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 8253,
+      "sha256": "36bb526c7aed639dbef8bd5627ad319425b1b5ff181635710cab63b122bf8f3a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/smoke-apartment/104/departure.ogg",
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 3574,
+      "sha256": "db526febd8cf6039d7995f0843a601fb06b2a7b78d00b7f3b8a7813b1e3ec41e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/smoke-apartment/104/arrival-1.ogg",
+      "text": "Бригада на месте, ждём допуска от пожарных.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 3179,
+      "sha256": "a06d9edcde9046d0dfada59a0cad58bb0f090a7a22934a84bbd4f3226c7eebf2",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/smoke-apartment/104/works-1.ogg",
+      "text": "Газ на квартиру перекрыт, замеряем газ в подъезде прибором.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 4375,
+      "sha256": "c29f61d2148d1981ba46f8800b7b163ec9038ed5afacad88a3bdd9a2a81a4441",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/smoke-apartment/104/completion-1.ogg",
+      "text": "Газа в подъезде нет, квартира отключена от газа до ремонта плиты, работы завершены.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 6117,
+      "sha256": "77b13b92144b9b43a8999295ac222c0c0ae28cab8a0c6cb05d19239e6ce96d62",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/smoke-apartment/104/arrival-2.ogg",
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 2901,
+      "sha256": "7485620fb3db3d6ac8bbca631589ce7a749eb41ca8718b59eeac6c260679f261",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "104",
+      "path": "dds-v2/smoke-apartment/104/outcome-2.ogg",
+      "text": "Газовое оборудование исправно, дым от подгоревшей еды, работы не проводили, бригада уезжает.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_2",
+      "duration_ms": 7011,
+      "sha256": "40bdc4e0614bcc9118330b6ad08013916d83e7ac463f8b8624aef8394a61848c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/traffic-blocked/101/departure.ogg",
+      "text": "Вызов принят, расчёт со спасательным инструментом выехал.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4062,
+      "sha256": "79ab021e23c12338798795f8fc87aaa6339ff160ddf08610aace6cc62363c1f8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/traffic-blocked/101/arrival-1.ogg",
+      "text": "Расчёт на месте, водитель зажат в салоне, начинаем деблокирование.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4979,
+      "sha256": "4d0aa790f408b77b55722933a74f6a622c4b18c53beccf975beffd455d779756",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/traffic-blocked/101/works-1.ogg",
+      "text": "Вскрываем дверь инструментом, водитель в сознании, скорая рядом.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 4468,
+      "sha256": "e13b34b331746ffbd6b47329eaa2c45b77898ef9e126f399a6f6ab1e201100e9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/traffic-blocked/101/completion-1.ogg",
+      "text": "Водитель извлечён и передан скорой, аккумуляторы отключены, расчёт возвращается.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 5815,
+      "sha256": "849e44d7e83047668a686e59685aefa3f0169fc54b42c61d86a647cd25e23b2c",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/traffic-blocked/101/arrival-2.ogg",
+      "text": "Расчёт на месте, осматриваем машины.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 2785,
+      "sha256": "03ee6cc23664ee8d7cb070253b4a7b809317df8a9e69d32100dbd42d7e17db12",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "dds-v2/traffic-blocked/101/outcome-2.ogg",
+      "text": "Водитель выбрался из машины сам до нашего прибытия, деблокирование не нужно, работы не проводили.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_0",
+      "duration_ms": 6999,
+      "sha256": "a6d7edeeab5b5e559ff9a44d14fb7ac3a64d9e97db4a30e8469f0ffa4db86374",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/traffic-blocked/102/departure.ogg",
+      "text": "Вызов принят, экипаж ДПС направлен.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 2692,
+      "sha256": "f66349ebb129df4237f8f33b41ddd8d3a881243623db66fe55c7a93ca954a59d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/traffic-blocked/102/arrival-1.ogg",
+      "text": "Экипаж на месте, выставили ограждение, правый ряд перекрыт.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3911,
+      "sha256": "58ff23fde9b28a7c64ad05022f2ad3111b6dc2927d9ff5e220a1bcaf42c3e9a6",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/traffic-blocked/102/works-1.ogg",
+      "text": "Оформляем ДТП, опрашиваем водителей и очевидцев.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3516,
+      "sha256": "06eec66c2951d9579b42183c3481ac937f6f56a5db4e6356eca712d2591b58f8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/traffic-blocked/102/completion-1.ogg",
+      "text": "Схема составлена, машины убраны с проезжей части, движение открыто, экипаж освободился.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 6221,
+      "sha256": "6e4b2b76bb30026ed0d16c31dcbdb585a09d2335d4fb895af20cae60ad7a8aee",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/traffic-blocked/102/arrival-2.ogg",
+      "text": "Экипаж на месте, осматриваем участок дороги.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 3028,
+      "sha256": "494196e572bf7e01da13a538fffee5fc049eed17429178cca7c1db50b69a46e0",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "102",
+      "path": "dds-v2/traffic-blocked/102/outcome-2.ogg",
+      "text": "Машин на месте нет, участники уехали до нашего прибытия, работы не проводили.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi male_1",
+      "duration_ms": 4793,
+      "sha256": "ebdce6feffeab1d1c899136d7f0b7539680226f7927782b0f0e956a85fd2224d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/traffic-blocked/103/departure.ogg",
+      "text": "Вызов принят, бригада выехала.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 3853,
+      "sha256": "001ea3ac8dd94860a5ab341f2c0fc3ffa88a0a862b0388f8b0615a1577619e90",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/traffic-blocked/103/arrival-1.ogg",
+      "text": "Бригада на месте, двое пострадавших, водитель ещё в машине.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 6418,
+      "sha256": "18eda89cb872a76fecdcdaf03ab6a789a2dcd8bd4aeac69f6b8f9f82ec41a56b",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/traffic-blocked/103/works-1.ogg",
+      "text": "Водителя извлекли, подозрение на перелом бедра, пассажирке наложили шину на шею.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 7928,
+      "sha256": "f7acd193bd4315aeb6de5ad020f8631d293e567e4c43461ffe01d358f9f3af55",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/traffic-blocked/103/completion-1.ogg",
+      "text": "Двое пострадавших госпитализированы, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 5432,
+      "sha256": "77bc5b284e73ed6197b4887480392088531b338f1cd1985533711aee8bd422dd",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/traffic-blocked/103/arrival-2.ogg",
+      "text": "Бригада на месте, осматриваем участников.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 4491,
+      "sha256": "de83c95d27f253e45b21efc5a3187cba0cb70384dd95b5102178138047c22f1a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "103",
+      "path": "dds-v2/traffic-blocked/103/outcome-2.ogg",
+      "text": "Участники осмотрены, травм нет, от помощи отказались, бригада свободна.",
+      "voice": "vosk-tts vosk-model-tts-ru-0.9-multi female_0",
+      "duration_ms": 7800,
+      "sha256": "625ea4b858f4c310b54888ea8dd5027e243b66e4dec42091c6852465ae5f761f",
+      "media_type": "audio/ogg"
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "format": 2,
+  "code": "traffic-blocked-103-1",
+  "version": 7,
+  "replaces": [
+    "8449d8e8-a1aa-5ce6-b4fc-d5f0da186f82"
+  ],
+  "title": "ДТП, водитель зажат в машине",
+  "service_id": "103",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "2021700",
+  "complications": [],
+  "teacher_comment": "ДТП на Каширском шоссе, 26: водитель зажат в машине, у пассажирки болит шея; карточка в 102 и 103, пожарных в ней нет. На месте бригада просит пожарных деблокировать водителя (101 или 112). Не вызвали — водителя достают поздно, он в реанимации. На работах бригада молчит — нужно позвонить ей самому.",
+  "outcome": {
+    "people": "Бригада скорой приехала на Каширское шоссе, 26: в одной машине был зажат водитель, у пассажирки второй болела шея. По просьбе бригады вызвали пожарных, водителя деблокировали. У него подозрение на перелом бедра, пассажирке наложили шину на шею — обоих госпитализировали.",
+    "late": "Карточку приняли позже норматива. Зажатому водителю до приезда помощи не поможет никто, а пар из-под капота может перейти в возгорание."
+  },
+  "card": {
+    "caller_name": "Тимофеев Олег Викторович",
+    "phone_aon": "+79000000713",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "ДТП с заблокированными",
+    "service_ids": [
+      "102",
+      "103"
+    ],
+    "number": "70005321",
+    "incident_type_code": "2021700"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар. По просьбе бригады вызвана пожарная охрана, водителя деблокировали. Двое пострадавших госпитализированы, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, бригада выехала.",
+        "audio": "bank-v2/103/103.responding.injury.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, двое пострадавших, водитель ещё в машине.",
+        "audio": "bank-v2/103/103.arrived.traffic.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Водителя извлекли, подозрение на перелом бедра, пассажирке наложили шину на шею.",
+        "audio": "bank-v2/103/103.working.traffic.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожарные помогли переложить водителя на носилки. Обоих пострадавших госпитализировали, бригада свободна.",
+        "audio": "bank-v9/103/103.completed.traffic.10.ogg"
+      },
+      "after_s": 35,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "rescue",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Человека зажало, сами не достанем. Нужны пожарные, срочно!",
+        "audio": "bank-v1/103/103.request_service.any.5.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "101",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Приняла.",
+            "audio": "bank-v1/103/103.ack.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ясно.",
+            "audio": "bank-v1/103/103.ack.any.5.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, пожарные будут? Водитель зажат, а из-под капота парит всё сильнее.",
+            "audio": "bank-v3/103/103.request_service.any.18.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Водитель так и зажат. Обезболили через окно, держим ему шею.",
+                "audio": "bank-v3/103/103.working.traffic.8.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 20
+            },
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Водителя достали поздно, крови потерял много. Везём в реанимацию, пассажирку тоже забираем.",
+                "audio": "bank-v3/103/103.completed.traffic.9.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада попросила пожарных деблокировать водителя",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ещё работаем. Готовим к транспортировке.",
+            "audio": "bank-v1/103/103.status_working.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Выносим к машине, минут через десять освободимся.",
+            "audio": "bank-v1/103/103.status_working.any.7.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": []
+}

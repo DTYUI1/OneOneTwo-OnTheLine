@@ -111,7 +111,7 @@ def recommend_level(
         evidence.append("Подтверждённых сопоставимых измерений времени нет.")
 
     if based_on < COLD_START_ATTEMPTS:
-        evidence.insert(0, "Холодный старт: данных для изменения уровня мало.")
+        evidence.insert(0, "Пока оценено меньше трёх карточек, уровень не меняем.")
         return Recommendation(
             level=current_level,
             weight=current_weight,
@@ -120,7 +120,7 @@ def recommend_level(
             model_version=MODEL_VERSION,
             methodology_version=METHODOLOGY_VERSION,
             evidence=evidence,
-            explanation="Холодный старт: сохраняем текущий уровень до накопления трёх попыток.",
+            explanation="Пока у обучаемого меньше трёх оценённых карточек, уровень не меняем.",
         )
 
     decrease = bool(

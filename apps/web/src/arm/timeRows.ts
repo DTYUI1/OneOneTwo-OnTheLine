@@ -7,7 +7,7 @@ export interface TimeRow {
   label: string;
   seconds: number | null;
   normative: number | null;
-  verdict: "ok" | "over" | "unknown" | "info";
+  verdict: "ok" | "over" | "unknown" | "estimated" | "info";
 }
 
 export const QUALITY_LABELS: Record<TimingResult["quality"], string> = {
@@ -25,9 +25,9 @@ function verdict(
 ): TimeRow["verdict"] {
   if (seconds === null) return "unknown";
   if (overdue !== null) return overdue ? "over" : "ok";
-  // Сервер не выносит превышение по недостоверному времени — показываем сравнение
-  // для ориентира, а качество объясняем отдельной строкой.
-  return seconds > normative ? "over" : "ok";
+  // Сервер не выносит вердикт по недостоверному времени. Не окрашиваем
+  // арифметическое сравнение как нарушение или соблюдение норматива.
+  return "estimated";
 }
 
 export function timeRows(timing: TimingResult): TimeRow[] {

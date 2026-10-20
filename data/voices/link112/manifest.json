@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "note": "Доклады и реплики бригад связки 112 → ДДС: тексты — data/link112, озвучка — Piper, голос службы (scripts/voices/link112_generate.sh). Пути относительно data/voices.",
+  "messages": [
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/departure.ogg",
+      "text": "Вызов принят, два отделения выехали.",
+      "duration_ms": 2485,
+      "sha256": "15c0e73d6d4eacc557601ba80d4c196173d6098cbde3fb970bb093ca0169bd13",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/arrival-1.ogg",
+      "text": "Расчёт на месте, дым из квартиры сорок семь на пятом этаже, на лестнице задымление, вскрываем дверь.",
+      "duration_ms": 6293,
+      "sha256": "b01e7ed725839d79b6b21d0bce1dec4f791e7a1484b6b365786730590554d408",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/works-1.ogg",
+      "text": "Дверь вскрыта, горит кухня, подана вода. Пожилую женщину вынесли и передали скорой.",
+      "duration_ms": 5317,
+      "sha256": "9110b47bbe83a8832b48cb9511fd88e7a86816748a32557dada2166be15c6d4a",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/completion-1.ogg",
+      "text": "Пожар ликвидирован, квартира и подъезд проветрены, расчёт возвращается.",
+      "duration_ms": 4203,
+      "sha256": "8478482421952cdce3f01d9b25fe6e1660819dd0f4c431484fa2620ac287b193",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/arrival-2.ogg",
+      "text": "Расчёт на месте, поднимаемся на пятый этаж.",
+      "duration_ms": 2810,
+      "sha256": "1421570fe0c689cc23057de82ea46eed22ac583bbe1ffb499816bca65134bfd2",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/outcome-2.ogg",
+      "text": "Соседка открыла дверь сама, подгорела еда на плите, огня нет, наши работы не потребовались, возвращаемся.",
+      "duration_ms": 6838,
+      "sha256": "3b7ed7ec9b6875519e552adcd5ccc29984cab6dc5a91e31cc292d22881115ac8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/arrival-fire_apartment_smoke.wrong-street-level2.ogg",
+      "text": "Расчёт прибыл по адресу из карточки: Дубининская улица, дом 12 — дыма нет, никто не вызывал. При уточнении адреса: Дубнинская улица, дом 12, Западное Дегунино. Перебазировались, на месте: дым из квартиры сорок семь на пятом этаже, вскрываем дверь.",
+      "duration_ms": 17415,
+      "sha256": "dee45ac2c6768fa62f3f583bdd213f66926e58f8bbbe872815aadf275d8908fa",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/arrival-fire_apartment_smoke.wrong-street.ogg",
+      "text": "Расчёт прибыл по адресу из карточки: Дубининская улица, дом 12 — дыма нет, никто не вызывал. При уточнении адреса: Дубнинская улица, дом 12, Западное Дегунино. Перебазировались, на месте: дым из квартиры сорок семь на пятом этаже, вскрываем дверь.",
+      "duration_ms": 17043,
+      "sha256": "2376d5aa4765f11959972786c1ae9815ac1b8e88bf08649762c6f81e24d9754d",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/event-alarm.ogg",
+      "text": "Тревога! Тревога! Боец упал в пролёт лестницы, травма ноги, сам идти не может. Срочно скорую!",
+      "duration_ms": 6664,
+      "sha256": "3b3bb16ea45ca17c2fd1bf9219edeaef8903cbc2507d110a7edb7fd1c47a981e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/event-alarm-met.ogg",
+      "text": "Понял, ждём скорую. Работы продолжаем.",
+      "duration_ms": 2914,
+      "sha256": "059eea043da4f241fe12eb93837145681bf8291b004e83b5267024e16fe323e1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/event-alarm-late.ogg",
+      "text": "Понял, скорую ждём. Работы продолжаем.",
+      "duration_ms": 2914,
+      "sha256": "6be374f8854139163f71463ae8d2a0454a9e361a76f336a751bc9e7de1eb8d1e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/event-alarm-again.ogg",
+      "text": "Диспетчер! Скорая к бойцу едет? Боец лежит на лестнице, сам не встаёт!",
+      "duration_ms": 5329,
+      "sha256": "58a8048fafc0bc0a841dbafd0266878a7c01047a9cabde7be3cd66e2fd6cc4e9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "link112/fire_apartment_smoke/101/event-alarm-again-missed-replace.ogg",
+      "text": "Пожар ликвидирован, квартира и подъезд проветрены. Травмированного бойца увезли своей машиной — скорой так и не было. Расчёт возвращается.",
+      "duration_ms": 8742,
+      "sha256": "9d55ef164017845739ad9b041a5431938aa2b7d7931bc4e833602ca5e1b26980",
+      "media_type": "audio/ogg"
+    }
+  ]
+}

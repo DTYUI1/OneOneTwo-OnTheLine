@@ -121,9 +121,13 @@
         "phone": {
           "type": "string",
           "pattern": "^\\+7[0-9]{10}$"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["очевидец", "пострадавший", "родственник", "знакомый", "ребенок", "участник"]
         }
       },
-      "required": ["name", "phone"]
+      "required": ["name", "phone", "status"]
     },
     "persona": {
       "type": "object",
@@ -182,7 +186,13 @@
         },
         "apartment": {
           "type": "string"
-        }
+        },
+        "object": { "type": "string" },
+        "structure": { "type": "string" },
+        "entrance": { "type": "string" },
+        "floor": { "type": "string" },
+        "code": { "type": "string" },
+        "descriptive": { "type": "string" }
       },
       "required": [
         "city",
@@ -199,9 +209,16 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "enum": ["okrug", "district"]
+        "enum": ["okrug", "district", "object", "structure", "entrance", "floor", "code", "descriptive"]
       },
-      "description": "Округ и район, которые заявитель называет сам. Не названное поле оценка не требует: пустое не штрафуется, неверно заполненное — ошибка. Нет поля — заявитель не называет ни округ, ни район."
+      "description": "Поля, названные заявителем. Новые части адреса проверяются только из этого списка, неназванные не штрафуются. Округ и район также проверяются при заполнении обучаемым. Для каждого названного поля нужен непустой эталон address."
+    },
+    "landmark_synonyms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Синонимы ориентира address.descriptive, уже названного заявителем: сравнение как у description_facts."
     },
     "description_reference": {
       "type": "string",

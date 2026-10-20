@@ -29,3 +29,5 @@ export function removeKey(key: string): void {
 export const VIEW_KEY = "teacher:view";
 export const STUDIO_KEY = "teacher:studio";
 export const draftKey = (scenarioId: string) => `teacher:draft:${scenarioId}`;
+
+export const studioSectionKey = (section: string) => `${STUDIO_KEY}:${section}`;

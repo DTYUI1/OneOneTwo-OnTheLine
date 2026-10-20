@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { test, login } from "./captain-fixture";
+import { confirmAgain } from "./trainer";
 
 test.describe("Подсказки и форма карточки", () => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
@@ -13,7 +14,9 @@ test.describe("Подсказки и форма карточки", () => {
     await expect(page.locator('[data-help="card-history"]')).toContainText(
       "карточка открыта",
     );
-    await page.getByRole("button", { name: /Служба 102.*Получена/ }).click();
+    await page
+      .getByRole("button", { name: "Изменить статус", exact: true })
+      .click();
     let release = () => {};
     const ready = new Promise<void>((resolve) => {
       release = resolve;
@@ -31,6 +34,11 @@ test.describe("Подсказки и форма карточки", () => {
       await page
         .getByRole("textbox", { name: "Комментарий", exact: true })
         .fill("Требуется другая служба.");
+      await page
+        .getByRole("button", { name: "Подтвердить", exact: true })
+        .click();
+      // «Не принята» — вторым ✓: первое только взводит, у ✓ подпись (17.10).
+      await expect(confirmAgain(page)).toBeVisible();
       await page
         .getByRole("button", { name: "Подтвердить", exact: true })
         .click();
@@ -57,7 +65,14 @@ test.describe("Подсказки и форма карточки", () => {
       await page
         .getByRole("button", { name: "Объяснение экрана", exact: true })
         .click();
-      await page.getByRole("group", { name: "Действие по карточке" }).hover();
+      // Справка самой формы — по её отступу, мимо полей. «Номера наряда» в форме
+      // перенаправления нет (HQ-030, решение 18.10): только служба и причина.
+      await expect(
+        page.getByRole("textbox", { name: "Номер наряда" }),
+      ).toHaveCount(0);
+      await page
+        .getByRole("group", { name: "Действие по карточке" })
+        .hover({ position: { x: 3, y: 2 } });
       await expect(page.locator("[data-help-ui] h2")).toContainText(
         "Перенаправление карточки",
       );
@@ -69,89 +84,42 @@ test.describe("Подсказки и форма карточки", () => {
     }
   });
 
-  test("Esc после перехода к полю закрывает подсказку и сохраняет ввод", async ({
+  // Подсказки «?» у полей карточки убраны 29.09 (df0b29c): подсказывает проводник
+  // тренировки у нужной кнопки (DT-07, qa/e2e/tutor-pointer.spec.ts). Проверки
+  // подсказки у поля (Esc закрывает её, связь с кнопкой, жизнь под общей справкой)
+  // сняты; отмена ввода и выход из карточки проверяются отдельно.
+  test("Esc в строке статуса не стирает ввод; вне строки возвращает к карточке в списке", async ({
     page,
     lesson,
   }) => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    await page.getByRole("button", { name: /Служба 102.*Получена/ }).click();
-    const hint = page.getByRole("button", {
-      name: "Подсказка: статус",
-      exact: true,
-    });
-    await hint.focus();
-    await page.keyboard.press("Enter");
-    await expect(page.getByRole("note")).toBeVisible();
-    // Идём от подсказок к полю комментария. Подсказки стоят над формой статуса (форма —
-    // в строке служб, как в arm_dds/09): «номер наряда», «комментарий», затем поля
-    // «Статус», «Номер наряда», «Комментарий». Раньше подсказки шли после кнопок формы
-    // и путь был назад, Shift+Tab ×3.
-    for (let step = 0; step < 5; step++) await page.keyboard.press("Tab");
+    // Строка статуса всегда на виду (DT-19, макет B): открывать её не нужно.
     const comment = page.getByRole("textbox", {
       name: "Комментарий",
       exact: true,
     });
-    await expect(comment).toBeFocused();
+    await comment.focus();
     await page.keyboard.insertText(
       "Проверяю сведения перед принятием карточки.",
     );
+    // Esc в строке уводит фокус к карандашу, написанное не теряется (DT-19).
+    // Вне строки Esc возвращает к строке в списке.
     await page.keyboard.press("Escape");
-    await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
-    await expect(page.getByRole("note")).toHaveCount(0);
-    await expect(hint).toHaveAttribute("aria-expanded", "false");
-    await expect(comment).toBeFocused();
     await expect(comment).toHaveValue(
       "Проверяю сведения перед принятием карточки.",
     );
-    await page.screenshot({
-      path: test.info().outputPath("hint-dismissed.png"),
-    });
-    // После закрытия подсказки обычное действие Esc остаётся доступным: в форме
-    // статуса Esc закрывает форму (не уводит из карточки посреди звонка), следующий —
-    // карточку.
-    await page.keyboard.press("Escape");
-    await expect(comment).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Изменить статус", exact: true }),
+    ).toBeFocused();
     await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
+    await page
+      .getByRole("button", { name: "Закрыть карточку", exact: true })
+      .focus();
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL(/\/app\/arm$/);
     await expect(
       page.locator(`[data-card-id="${lesson.card.id}"]`),
     ).toBeFocused();
-  });
-
-  test("Подсказка связана с кнопкой и сохраняется под общей справкой", async ({
-    page,
-    lesson,
-  }) => {
-    await login(page, "trainee05");
-    await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    const hint = page.getByRole("button", {
-      name: "Подсказка: адрес",
-      exact: true,
-    });
-    await hint.click();
-    const note = page.getByRole("note");
-    await expect(note).toBeVisible();
-    await expect(hint).toHaveAccessibleDescription(await note.innerText());
-    await expect(hint).toHaveAttribute(
-      "aria-controls",
-      (await note.getAttribute("id"))!,
-    );
-    const help = page.getByRole("button", {
-      name: "Объяснение экрана",
-      exact: true,
-    });
-    await help.click();
-    await expect(page.locator("[data-help-ui] h2")).toHaveText(/^\d+\. /);
-    await page.keyboard.press("Escape");
-    await expect(page.locator("[data-help-ui]")).toHaveCount(0);
-    await expect(note).toBeVisible();
-    await expect(help).toBeFocused();
-    await page.keyboard.press("Escape");
-    await expect(note).toHaveCount(0);
-    await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
-    await expect(help).toBeFocused();
-    await expect(hint).not.toHaveAttribute("aria-describedby", /.+/);
   });
 });

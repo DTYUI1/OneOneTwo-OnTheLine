@@ -1,0 +1,276 @@
+{
+  "format": 2,
+  "code": "gas-apartment-104-2",
+  "version": 4,
+  "replaces": [
+    "8453bb2e-ba3b-551f-a636-db5d597d4979"
+  ],
+  "title": "Запах газа в квартире",
+  "service_id": "104",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "13020201",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: запах газа в квартире, улица Плеханова, 11, кв. 34. Бригада повторяет адрес с ошибкой — номер квартиры вместо номера дома («дом тридцать четыре»), поправить. У квартиры никто не открывает — бригада просит телефон заявителя, он в карточке; без него бригада ищет хозяев через соседей и докладывает позже. Жильцы сами перекрыли кран и проветрили, работ не было: карточку закрывает «Отказ от выполнения работ» с причиной. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Бригада поднялась к квартире 34 на третьем этаже, на звонки в дверь никто не открыл. По телефону из карточки дозвались заявителя, и бригада вошла. Прибор газа не показал: жильцы сами перекрыли кран и проветрили. Работ не было.",
+    "late": "Карточку приняли позже норматива. Заранее не известно, что жильцы справились сами: пока бригада не проверила квартиру прибором, газ мог копиться за закрытой дверью.",
+    "status": "Работ на месте не было: жильцы сами перекрыли кран и проветрили. Такую карточку закрывают «Отказом от выполнения работ» с причиной, а не «Работы завершены»."
+  },
+  "card": {
+    "caller_name": "Соловьёва Марина Александровна",
+    "phone_aon": "+79000000714",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ВАО",
+      "district": "Перово",
+      "street": "улица Плеханова",
+      "house": "11",
+      "building": "",
+      "apartment": "34"
+    },
+    "description": "Сильный запах газа в квартире 34 на третьем этаже. Заявитель перекрыл кран на плите, запах не уходит, окна открыты. В квартире двое взрослых.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Запах бытового газа в квартире",
+    "service_ids": [
+      "101",
+      "104"
+    ],
+    "number": "70005412",
+    "incident_type_code": "13020201"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "refused"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ВАО",
+      "district": "Перово",
+      "street": "улица Плеханова",
+      "house": "11",
+      "building": "",
+      "apartment": "34"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "Сильный запах газа в квартире 34 на третьем этаже. Заявитель перекрыл кран на плите, запах не уходит, окна открыты. В квартире двое взрослых. Жильцы сами перекрыли кран и проветрили, прибор чистый. Работ не было."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял, выезжаем.",
+        "audio": "bank-v1/104/104.responding.any.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, поднимаемся к квартире.",
+        "audio": "bank-v2/104/104.arrived.gas_flat.9.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Жильцы сами перекрыли кран и проветрили, прибор чистый. Работ не было.",
+        "audio": "bank-v1/104/104.refused.any.3.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "refused"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Как понял: улица Плеханова, дом тридцать четыре. Выезжаем!",
+        "audio": "bank-v4/104/104.readback_trap.ed2a81ab.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: улица Плеханова, дом 11, квартира 34"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял поправку, спасибо, чуть не уехали не туда.",
+            "audio": "bank-v1/104/104.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/104/104.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/104/104.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "phone",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 4,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Дайте телефон заявителя, звоним в дверь, не открывают.",
+        "audio": "bank-v1/104/104.clarify.any.4.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "phone",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "phone",
+          "label": "Телефон заявителя: {caller_phone}"
+        },
+        {
+          "key": "none",
+          "label": "Телефона нет, стучите громче"
+        },
+        {
+          "key": "force",
+          "label": "Вскрывайте дверь сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, так быстрее.",
+            "audio": "bank-v1/104/104.clarify_ok.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ясно. Тогда опросим соседей.",
+            "audio": "bank-v1/104/104.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Поздно, диспетчер, соседи подсказали.",
+            "audio": "bank-v1/104/104.clarify_late.any.2.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада не может попасть в квартиру — телефон заявителя был в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

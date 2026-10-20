@@ -44,6 +44,8 @@ function Live() {
         socket.start();
         const cards = await api.GET("/cards");
         const mine = (cards.data ?? []).find((item) => item.closed_at === null);
+        // Варианты доклада берут карточку из кэша реестра (["cards"]), как в АРМ.
+        if (cards.data) client.setQueryData(["cards"], cards.data);
         setUser(me);
         setRealtime(socket);
         setCard(mine ?? cards.data?.[0] ?? null);
@@ -83,10 +85,9 @@ function Live() {
             </p>
             <p>
               Это настоящий api: набор уходит событием `call_dial`, ответ службы
-              — `call_answer`, отбой — `call_hangup`, запись ложится файлом.
-              Сервер принимает запись только после отбоя, поэтому загрузка ждёт
-              его; если сеть моргнёт, запись придержится и кнопка повтора
-              отправит её снова.
+              — `call_answer`, отбой — `call_hangup` с докладом
+              (`report_choices`, `report_modes`). Доклад голосом распознаёт
+              `POST /calls/{"{id}"}/voice-report` (нужен `STT_PROVIDER=local`).
             </p>
           </div>
         </div>

@@ -15,7 +15,10 @@
 import type { components } from "../../api-client/schema";
 import { STATE_LABELS } from "../../arm/cardModel";
 import { timingInput, type TimingContext } from "../../arm/timingAdapter";
-import { lateAnswers, type Callback } from "../../arm/callbacks";
+import { lateAnswers, lostReports, type Callback } from "../../arm/callbacks";
+import { controlReview, type ControlCall } from "../../arm/phone/control";
+import { holdSpans } from "../../arm/phone/holdReview";
+import { memoryEventTitle } from "../../arm/memory/memoryCheck";
 import { calculateTiming } from "../../shared/timing";
 
 export type Card = components["schemas"]["Card"];
@@ -133,6 +136,14 @@ function title(
         detail: text(payload, "comment") || null,
       };
     }
+    case "status_denied": {
+      // Статус без доклада бригады, который сервер не принял (GP-26): запись сервера.
+      const state = text(payload, "state");
+      return {
+        title: `Статус не принят: ${STATE_LABEL[state] ?? state}`,
+        detail: text(payload, "message") || null,
+      };
+    }
     case "field_change": {
       const field = text(payload, "field");
       return {
@@ -166,6 +177,16 @@ function title(
       return { title: "Абонент ответил", detail: null };
     case "call_hangup":
       return { title: "Трубка положена", detail: null };
+    case "call_hold":
+      return { title: "Звонок на удержании", detail: null };
+    case "memory_check":
+    case "memory_check_answer":
+      // Проверка памяти финальной смены (HQ-033): записи сервера.
+      return (
+        memoryEventTitle(event) ?? { title: "Проверка памяти", detail: null }
+      );
+    case "call_resume":
+      return { title: "Снят с удержания", detail: null };
     case "brigades_select": {
       const ids = payload.brigade_ids;
       return {
@@ -191,6 +212,46 @@ function title(
             .join(": ") || null,
       };
     }
+    case "brigade_reply": {
+      // Ответ бригаде вариантом (DT-10): что спросила бригада и что ответил обучаемый.
+      const asked = input.messages?.find(
+        (item) => item.delivery.delivery_id === text(payload, "delivery_id"),
+      );
+      const option = asked?.delivery.reply_options?.find(
+        (item) => item.key === text(payload, "option_key"),
+      );
+      return {
+        title: `Ответ бригаде: ${option?.label ?? text(payload, "option_key")}`,
+        detail: asked?.delivery.message.text ?? null,
+      };
+    }
+    case "brigade_briefing":
+      // Вводная бригаде (GP-05): что сказал диспетчер, голосом или по частям.
+      return {
+        title:
+          text(payload, "mode") === "parts"
+            ? "Вводная бригаде по частям"
+            : "Вводная бригаде голосом",
+        detail: text(payload, "text") || null,
+      };
+    case "brigade_said":
+      // Сказанное бригаде вне вопроса (GP-11): «в квартире ребёнок», «доложите обстановку».
+      return {
+        title: `Передано бригаде: ${text(payload, "text")}`,
+        detail: null,
+      };
+    case "report_confirmed":
+      // «Принял» на «Как приняли?» в конце доклада бригады (TC-01).
+      return {
+        title: `Доклад бригады принят: ${text(payload, "text")}`,
+        detail: null,
+      };
+    case "control_reply":
+      // Пояснение отделу контроля о карточке без статуса (TC-07).
+      return {
+        title: `Пояснение отделу контроля: ${text(payload, "text")}`,
+        detail: null,
+      };
     case "hint_open": {
       const hint = text(payload, "hint_id");
       return {
@@ -234,6 +295,8 @@ export interface TimelineInput {
   readonly targets?: readonly CallTarget[];
   /** Входящие вызовы бригад (CardTraining.callbacks) — сколько бригада ждала ответа. */
   readonly callbacks?: readonly Callback[];
+  /** Звонок отдела контроля (CardTraining.control, TC-07). */
+  readonly control?: ControlCall | null;
 }
 
 /**
@@ -411,9 +474,11 @@ function findProblems(
 
   // Бригада звонила с докладом, а обучаемый долго не отвечал (27.09): только показ.
   for (const wait of lateAnswers(input.callbacks ?? [], endMs)) {
-    const name =
-      input.targets?.find((target) => target.brigade_id === wait.brigadeId)
-        ?.name ?? "Бригада";
+    // Бригада называется своим номером (19.10): «Бригада 201 позвонила…».
+    const ext = input.targets?.find(
+      (target) => target.brigade_id === wait.brigadeId,
+    )?.phone_ext;
+    const name = ext ? `Бригада ${ext}` : "Бригада";
     problems.push(
       mark(
         wait.startedMs,
@@ -424,6 +489,42 @@ function findProblems(
       ),
     );
   }
+  // Второй пропуск того же доклада (TC-02): доклад потерян, бригада больше не звонила сама.
+  for (const wait of lostReports(input.callbacks ?? [])) {
+    // Бригада называется своим номером (19.10): «Бригада 201 позвонила…».
+    const ext = input.targets?.find(
+      (target) => target.brigade_id === wait.brigadeId,
+    )?.phone_ext;
+    const name = ext ? `Бригада ${ext}` : "Бригада";
+    problems.push(
+      mark(
+        wait.startedMs,
+        "Доклад бригады потерян",
+        `${name} звонила с докладом дважды, оба вызова пропущены.`,
+      ),
+    );
+  }
+  // Собеседник не дождался на удержании (HQ-033): положил трубку через 3 мин.
+  for (const span of holdSpans(input.events, endMs).filter(
+    (item) => item.dropped,
+  ))
+    problems.push(
+      mark(
+        span.startedMs,
+        "Не дождался на удержании",
+        `Собеседник ждал на удержании ${seconds(span.waitS)} и положил трубку.`,
+      ),
+    );
+  // Отдел контроля звонил (TC-07): карточка была без статуса дольше срока сценария.
+  const control = controlReview(input.control);
+  if (input.control && control)
+    problems.push(
+      mark(
+        Date.parse(input.control.started_at),
+        "Звонок отдела контроля",
+        control.replace("Ваше пояснение", "Пояснение"),
+      ),
+    );
   return problems.sort((left, right) => left.atMs - right.atMs);
 }
 

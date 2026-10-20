@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { newPack, readiness, summarizePack, type Pack } from "./packModel";
+import {
+  displayPackTitle,
+  packPersonalization,
+  newPack,
+  readiness,
+  summarizePack,
+  type Pack,
+} from "./packModel";
 import type { Scenario } from "./studioModel";
 
 const pack = (id: string) => ({ id }) as Pack;
@@ -73,4 +80,21 @@ describe("пакеты сценариев", () => {
       blocked: 1,
     });
   });
+});
+
+it("выносит причины персонального подбора из названия, отличает карточки от ошибок", () => {
+  const title =
+    "Подобрано для trainee01: 1 из 1 с вызовом другой службы — ранее допускал ошибки; 1 из 1 с быстрой реакцией на тревогу — ранее допускал ошибки.";
+  expect(displayPackTitle(title)).toBe("Подобрано для trainee01");
+  expect(packPersonalization(title)?.errors).toEqual([
+    { skill: "Вызов другой службы", count: 1, total: 1 },
+    { skill: "Реакция на тревогу", count: 1, total: 1 },
+  ]);
+  expect(packPersonalization("Обычный пакет")).toBeNull();
+  expect(
+    packPersonalization(
+      "Подобрано для trainee02: обычный подбор, подтверждённых слабых мест для этих вариантов нет.",
+    )?.errors,
+  ).toEqual([]);
+  expect(displayPackTitle("Обычный пакет")).toBe("Обычный пакет");
 });

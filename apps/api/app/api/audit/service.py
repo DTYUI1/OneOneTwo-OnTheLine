@@ -24,13 +24,14 @@ ADMIN = {
     "restoreUser",
     "purgeUser",
     "requestBackup",
+    "readJobError",
     "updateService",
     "updateSettings",
 }
 ACCESS = {"login", "logout"}
 TECHNICAL = {"registerClockSample", "unknown"}
 # Только здесь «до/после» — данные самого администрирования, без результатов обучаемых.
-DETAIL_ENTITIES = {"users", "services", "settings", "backups"}
+DETAIL_ENTITIES = {"users", "services", "settings", "backups", "job_error_reads"}
 
 
 class AuditPageView(C01Input):

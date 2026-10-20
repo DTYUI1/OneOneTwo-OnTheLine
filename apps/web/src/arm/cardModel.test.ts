@@ -2,22 +2,35 @@ import { describe, expect, it } from "vitest";
 import type { Card } from "../shared/api";
 import {
   availableStatuses,
+  withConfirmedState,
   canRedirect,
   closesCard,
+  commentHint,
+  confirmAgainText,
   commentOnStatusChange,
   formatAddress,
   formatDuration,
   formatOkrug,
+  fullAddress,
+  fullDateTime,
+  clockDate,
+  clockParts,
   handlingTimer,
   isClosed,
+  latePrimaryId,
   newestFirst,
+  okrugName,
+  previewRows,
   reactionTimer,
   REASON_REQUIRED,
+  shortDate,
+  STATE_LABELS,
   statusFormKey,
   timerLabel,
   visibleHistory,
 } from "./cardModel";
 import { findParticipant } from "./useParticipant";
+import { otherServiceStatus } from "./otherServices";
 
 const base: Card = {
   id: "00000000-0000-4000-8000-000000000200",
@@ -97,6 +110,17 @@ describe("жизненный цикл карточки", () => {
     expect(closesCard("completed")).toBe(true);
     expect(closesCard("refused")).toBe(true);
     expect(closesCard("working")).toBe(false);
+  });
+
+  it("второе нажатие ✓ подписано: что именно оно сделает", () => {
+    expect(confirmAgainText("completed")).toBe(
+      "Нажмите ✓ или Enter ещё раз — карточка закроется",
+    );
+    expect(confirmAgainText("refused")).toMatch(/карточка закроется$/);
+    // «Не принята» карточку не закрывает: дальше перенаправление.
+    expect(confirmAgainText("rejected")).toBe(
+      "Нажмите ✓ или Enter ещё раз — статус «Не принята» сохранится",
+    );
   });
 
   it("в закрытых состояниях действий не остаётся", () => {
@@ -208,6 +232,22 @@ describe("подписи полей", () => {
     ).toBe("Дубнинская улица, 1 к2, кв. 15");
   });
 
+  it("данные оператора о доступе и ориентире доходят до адреса ДДС", () => {
+    expect(
+      formatAddress({
+        ...base.source.address,
+        object: "жилой дом",
+        structure: "3",
+        entrance: "2",
+        floor: "5",
+        code: "123",
+        descriptive: "Напротив школы",
+      }),
+    ).toBe(
+      "Дубнинская улица, 1, жилой дом, стр. 3, подъезд 2, этаж 5, код 123, Напротив школы",
+    );
+  });
+
   it("округ и район показываются в скобках, как в шапке карточки", () => {
     expect(formatOkrug(base.source.address)).toBe(
       "Москва, (Северный, Учебный)",
@@ -215,6 +255,24 @@ describe("подписи полей", () => {
     expect(
       formatOkrug({ ...base.source.address, okrug: "", district: "" }),
     ).toBe("Москва");
+  });
+
+  it("адрес одной строкой и полное название округа — как в arm_dds/06", () => {
+    expect(fullAddress(base.source.address)).toBe(
+      "Москва, (Северный, Учебный), Дубнинская улица, 1",
+    );
+    expect(okrugName(base.source.address)).toBe("");
+    expect(okrugName({ ...base.source.address, okrug: "ТАО" })).toBe(
+      "Троицкий административный округ",
+    );
+  });
+
+  it("дата и часы — в записи АРМ, месяц в именительном падеже", () => {
+    const moment = new Date(2026, 8, 17, 11, 3, 8);
+    expect(shortDate(moment)).toBe("17.09.26");
+    expect(fullDateTime(moment)).toBe("17.09.2026 11:03:08");
+    expect(clockDate(moment)).toBe("Четверг, 17 Сентябрь 2026");
+    expect(clockParts(moment)).toEqual({ hm: "11:03", s: "08" });
   });
 
   it("длительность выводится как мм:сс", () => {
@@ -334,5 +392,127 @@ describe("история статусов", () => {
   it("«все действия» возвращает журнал целиком и в прежнем порядке", () => {
     expect(visibleHistory(events, true)).toEqual(events);
     expect(visibleHistory(events, true)).not.toBe(events);
+  });
+});
+
+describe("рабочее поле по памятке ДДС (GP-16)", () => {
+  it("служба 103 не ставит «Не принята» и «Отказ от выполнения работ» (с. 23)", () => {
+    expect(availableStatuses("received", "103")).toEqual(["accepted"]);
+    expect(availableStatuses("accepted", "103")).toEqual([
+      "responding",
+      "arrived",
+      "working",
+      "completed",
+    ]);
+    expect(availableStatuses("received", "102")).toEqual([
+      "accepted",
+      "rejected",
+    ]);
+    expect(commentHint("completed", "103")).toContain(
+      "Завершение работ без бригады",
+    );
+    expect(commentHint("completed", "102")).not.toContain("без бригады");
+  });
+
+  const status = (id: string, state: string, at: number) => ({
+    id,
+    type: "status_change",
+    server_ts: new Date(at).toISOString(),
+    payload: { state },
+  });
+
+  it("первичный статус позже 30 с — время красным (с. 21, 25)", () => {
+    const shown = { ...base, delivered_at: base.appeared_at };
+    expect(
+      latePrimaryId(shown, [status("a", "accepted", appeared + 29_000)]),
+    ).toBeNull();
+    expect(
+      latePrimaryId(shown, [status("a", "accepted", appeared + 31_000)]),
+    ).toBe("a");
+    // «Принята» после ошибочной «Не принята» — исправление, не опоздание (с. 32).
+    expect(
+      latePrimaryId(shown, [
+        status("r", "rejected", appeared + 10_000),
+        status("a", "accepted", appeared + 90_000),
+      ]),
+    ).toBeNull();
+    // Срок — от показа карточки службе.
+    expect(
+      latePrimaryId(
+        { ...base, delivered_at: new Date(appeared + 60_000).toISOString() },
+        [status("a", "accepted", appeared + 80_000)],
+      ),
+    ).toBeNull();
+    expect(latePrimaryId(shown, [])).toBeNull();
+  });
+
+  it("предпросмотр строки: службы со статусами, заявитель, признаки (с. 13)", () => {
+    const services = [
+      { id: "102", name: "Служба 102" },
+      { id: "103", name: "Служба 103" },
+    ];
+    const at = new Date(appeared + 75_000);
+    const hms = (moment: Date) =>
+      `${clockParts(moment).hm}:${clockParts(moment).s}`;
+    const rows = previewRows(
+      { ...base, state: "accepted" },
+      services,
+      "102",
+      at.toISOString(),
+    );
+    expect(rows).toEqual([
+      {
+        label: "Службы:",
+        text: `Служба 102 — ${hms(at)} Принята, Служба 103 — ${hms(new Date(appeared))} Добавлена`,
+      },
+      { label: "Заявитель:", text: "Учебный заявитель   АОН +79000000001" },
+      { label: "Информация:", text: "ДТП." },
+    ]);
+  });
+
+  it("предпросмотр: чужая служба — по расписанию мира (TC-07)", () => {
+    const services = [
+      { id: "102", name: "Служба 102" },
+      { id: "103", name: "Служба 103" },
+    ];
+    const now = appeared + 120_000;
+    const step = otherServiceStatus(
+      "card-1",
+      "103",
+      new Date(appeared).toISOString(),
+      now,
+    );
+    const moment = new Date(step.atMs);
+    const [notified] = previewRows(
+      { ...base, id: "card-1", state: "accepted" },
+      services,
+      "102",
+      new Date(appeared + 75_000).toISOString(),
+      now,
+    );
+    expect(step.state).not.toBe("added");
+    expect(notified.text).toContain(
+      `Служба 103 — ${clockParts(moment).hm}:${clockParts(moment).s} ${STATE_LABELS[step.state]}`,
+    );
+  });
+});
+
+describe("withConfirmedState", () => {
+  const cards = [
+    { id: "a", state: "received" as const, number: 1 },
+    { id: "b", state: "received" as const, number: 2 },
+  ];
+
+  it("принятый сервером статус сразу в списке, у других карточек — без изменений", () => {
+    const next = withConfirmedState(cards, "a", "accepted");
+    expect(next).toEqual([
+      { id: "a", state: "accepted", number: 1 },
+      { id: "b", state: "received", number: 2 },
+    ]);
+    expect(next?.[1]).toBe(cards[1]);
+  });
+
+  it("списка ещё нет — нечего обновлять", () => {
+    expect(withConfirmedState(undefined, "a", "accepted")).toBeUndefined();
   });
 });

@@ -32,7 +32,9 @@ export function useLiveBoard(sessionId?: string | null): LiveBoardView {
   const client = useQueryClient();
   const [cards, setCards] = useState<ReadonlyMap<string, Card>>(new Map());
   const [sessions, setSessions] = useState<readonly Session[]>([]);
-  const [online, setOnline] = useState<ReadonlySet<string>>(new Set());
+  const [online, setOnline] = useState<ReadonlySet<string>>(() =>
+    realtime.onlineUsers(),
+  );
   const [now, setNow] = useState(() => Date.now());
   const seeded = useRef(false);
 
@@ -101,6 +103,8 @@ export function useLiveBoard(sessionId?: string | null): LiveBoardView {
           seeded.current = true;
           setCards(new Map(event.payload.cards.map((card) => [card.id, card])));
           setSessions(event.payload.sessions);
+          // Список «в сети» сервер пришлёт заново сразу после snapshot.
+          setOnline(new Set());
           // После переподключения журналы могли уйти вперёд.
           void client.invalidateQueries({ queryKey: ["card-events"] });
           void client.invalidateQueries({ queryKey: ["card-analysis"] });

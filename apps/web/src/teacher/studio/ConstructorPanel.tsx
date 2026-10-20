@@ -1,3 +1,4 @@
+import { FieldCaption } from "../../shared/FieldHelp";
 // Конструктор C-05 (D-01, п. 1): сервер собирает сценарий по классификатору 046_24
 // из выбора преподавателя и seed. Ничего не сохраняется — форма лишь заполняется
 // предложением сервера, дальше преподаватель правит и сохраняет как обычно.
@@ -67,8 +68,12 @@ export function ConstructorPanel({
     <div aria-label="Конструктор по классификатору">
       <div className={kit.actions}>
         <label className={kit.field}>
-          Исходное число
+          <FieldCaption
+            label="Число для генерации"
+            help="Число влияет на выбор деталей происшествия. При одинаковых полях и числе конструктор повторит результат."
+          />
           <input
+            aria-label="Число для генерации"
             type="number"
             value={seed}
             className={kit.number}
@@ -102,7 +107,7 @@ export function ConstructorPanel({
           ? "Выберите тип и службу — конструктор соберёт карточку и эталон по классификатору."
           : noAddress
             ? "Заполните «Адрес происшествия» ниже (город, улица, дом) — по нему конструктор соберёт сценарий."
-            : "Сервер соберёт карточку и эталон по типу, службе, адресу, пострадавшим и осложнениям. То же исходное число — тот же сценарий. Сохраните результат кнопкой «Сохранить черновик»."}
+            : "Карточка и образец выполнения будут составлены по полям ниже. При тех же полях и числе результат повторится. Сохраните результат кнопкой «Сохранить черновик»."}
       </p>
       {error && (
         <p className={kit.problems} role="alert">
@@ -111,12 +116,12 @@ export function ConstructorPanel({
       )}
       {result && (
         <div className={kit.note} role="status">
-          Заполнено конструктором (исходное число {seed}).{" "}
+          Заполнено конструктором (число для генерации {seed}).{" "}
           {source.map((line) => `${line.label}: ${line.value}.`).join(" ")}
           {result.suggested_weight !== form.weight && (
             <>
               {" "}
-              Сервер оценивает вес в {result.suggested_weight}.{" "}
+              Предлагаемый вес задания: {result.suggested_weight}.{" "}
               <button
                 type="button"
                 className={kit.plain}
@@ -125,7 +130,7 @@ export function ConstructorPanel({
                   onApply({ ...form, weight: result.suggested_weight })
                 }
               >
-                Взять вес {result.suggested_weight}
+                Установить вес {result.suggested_weight}
               </button>
             </>
           )}

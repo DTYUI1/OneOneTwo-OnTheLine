@@ -1,0 +1,208 @@
+{
+  "format": 2,
+  "code": "child-fever-103-2",
+  "version": 1,
+  "title": "Высокая температура и вялость у девочки",
+  "service_id": "103",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "22520000",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Чердановская улица, 48» на Чертановскую улицу, 48. Девочка с высокой температурой и вялостью, без судорог. Мать сопровождает ребёнка при госпитализации; статусы после докладов.",
+  "outcome": {
+    "people": "В квартире 61 у девочки пяти лет температура 39,5 градуса. Ребёнок вялый, но в сознании, отвечает матери. Мать находится рядом, волнуется и вызывает скорую. Судорог не было. Бригада снижает температуру, проводит обтирание; девочка остаётся в сознании. Ребёнка госпитализируют вместе с матерью в детскую больницу.",
+    "late": "Карточку приняли позже норматива. В квартире 61 у девочки пяти лет температура 39,5 градуса. Ребёнок вялый, но в сознании, отвечает матери. Мать находится рядом, волнуется и вызывает скорую. Судорог не было."
+  },
+  "card": {
+    "caller_name": "Лукина Эвелина Денисовна",
+    "phone_aon": "+79000000884",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Центральное",
+      "street": "Чертановская улица",
+      "house": "48",
+      "building": "",
+      "apartment": "61"
+    },
+    "description": "В квартире 61 у девочки пяти лет температура 39,5 градуса. Ребёнок вялый, но в сознании, отвечает матери. Мать находится рядом, волнуется и вызывает скорую. Судорог не было.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Температура",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70008524",
+    "incident_type_code": "22520000"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Центральное",
+      "street": "Чертановская улица",
+      "house": "48",
+      "building": "",
+      "apartment": "61"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "В квартире 61 у девочки пяти лет температура 39,5 градуса. Ребёнок вялый, но в сознании, отвечает матери. Мать находится рядом, волнуется и вызывает скорую. Судорог не было. Бригада снижает температуру, проводит обтирание; девочка остаётся в сознании. Ребёнка госпитализируют вместе с матерью в детскую больницу."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла. Едем с сиреной.",
+        "audio": "bank-v1/103/103.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Девочка, температура высокая, вялая, мама в панике.",
+        "audio": "bank-v1/103/103.arrived.child.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Сбиваем температуру, обтираем. Ребёнок в сознании.",
+        "audio": "bank-v1/103/103.working.child.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Госпитализируем вместе с мамой в детскую больницу.",
+        "audio": "bank-v1/103/103.completed.child.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Чердановская улица, 48.",
+        "audio": "bank-v6/103/103.readback.5d342bdf.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Приняла поправку. Хорошо, что сказали, мы уже туда сворачивали.",
+            "audio": "bank-v1/103/103.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/103/103.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/103/103.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

@@ -36,6 +36,105 @@ describe("Часы v2", () => {
 });
 
 describe("Очередь действий", () => {
+  it("line_busy removes only the rejected call and skips removed snapshot dependents", async () => {
+    const outbox = new Outbox(crypto.randomUUID());
+    const callId = crypto.randomUUID();
+    const dial: CardEvent = {
+      ...event(), type: "call_dial_target",
+      payload: { call_id: callId, call_target_id: crypto.randomUUID(), brigade_id: crypto.randomUUID() },
+    };
+    const dependent = (type: "call_answer" | "call_hangup"): CardEvent => ({
+      ...event(), type, payload: { call_id: callId },
+    });
+    const status: CardEvent = {
+      ...event(), type: "status_change", payload: { state: "accepted", comment: "" },
+    };
+    const otherCall: CardEvent = {
+      ...event(), type: "call_hangup", payload: { call_id: crypto.randomUUID() },
+    };
+    try {
+      await outbox.add("user", "card", dial);
+      await outbox.add("user", "card", dependent("call_answer"));
+      await outbox.add("user", "card", status);
+      await outbox.add("user", "card", dependent("call_hangup"));
+      await outbox.add("user", "card", otherCall);
+      await outbox.add("other-user", "card", dependent("call_answer"));
+      await outbox.add("user", "other-card", dependent("call_answer"));
+      const sent: CardEvent[] = [];
+      const outcomes = vi.fn();
+      await flushOutbox(outbox, "user", async (item) => {
+        sent.push(item.event);
+        if (item.id === dial.client_event_id)
+          return { status: 409, code: "line_busy", message: "Линия занята." };
+        // Keep unrelated actions as evidence: no ACK, no automatic deletion.
+        if (item.cardId === "other-card") return { status: 503 };
+        return { status: 422, message: "another rejection" };
+      }, outcomes);
+      expect(sent).toEqual([dial, status, (await outbox.list("user")).find((i) => i.cardId === "other-card")!.event]);
+      expect((await outbox.list("user")).map((i) => i.event)).toEqual([
+        status, otherCall, expect.objectContaining({ type: "call_answer" }),
+      ]);
+      expect(await outbox.list("other-user")).toHaveLength(1);
+      expect(outcomes.mock.calls[0][0]).toMatchObject({
+        item: { id: dial.client_event_id, cardId: "card" },
+        status: "rejected", code: "line_busy", message: "Линия занята.",
+      });
+    } finally { await outbox.close(); }
+  });
+
+  it("busy rejection allows status and a new dial without manual card cleanup, including reload", async () => {
+    const name = crypto.randomUUID();
+    const outbox = new Outbox(name);
+    const dial = (): CardEvent => ({
+      ...event(), type: "call_dial_target",
+      payload: { call_id: crypto.randomUUID(), call_target_id: crypto.randomUUID(), brigade_id: crypto.randomUUID() },
+    });
+    await outbox.add("user", "card", dial());
+    await flushOutbox(outbox, "user", async () => ({ status: 409, code: "line_busy" }));
+    expect(await outbox.list("user")).toEqual([]);
+    await outbox.close();
+    const restored = new Outbox(name);
+    try {
+      const status: CardEvent = {
+        ...event(), type: "status_change", payload: { state: "accepted", comment: "" },
+      };
+      const retry = dial();
+      await restored.add("user", "card", status);
+      await restored.add("user", "card", retry);
+      const send = vi.fn(async () => ({ status: 200 }));
+      await flushOutbox(restored, "user", send);
+      expect(send.mock.calls).toHaveLength(2);
+      expect(await restored.list("user")).toEqual([]);
+    } finally { await restored.close(); }
+  });
+
+  it.each([[409, "other_conflict"], [422, "line_busy"], [503, "line_busy"]] as const)(
+    "retains target dial for non-definitive response %s/%s", async (status, code) => {
+      const outbox = new Outbox(crypto.randomUUID());
+      const action: CardEvent = {
+        ...event(), type: "call_dial_target",
+        payload: { call_id: crypto.randomUUID(), call_target_id: crypto.randomUUID(), brigade_id: crypto.randomUUID() },
+      };
+      try {
+        await outbox.add("user", "card", action);
+        await flushOutbox(outbox, "user", async () => ({ status, code }));
+        const pending = await outbox.list("user");
+        expect(pending).toHaveLength(1);
+        expect(pending[0].event).toEqual(action);
+        expect(Boolean(pending[0].failure)).toBe(status < 500);
+      } finally { await outbox.close(); }
+    },
+  );
+
+  it("does not discard a non-dial merely because its code is line_busy", async () => {
+    const outbox = new Outbox(crypto.randomUUID());
+    try {
+      await outbox.add("user", "card", event());
+      await flushOutbox(outbox, "user", async () => ({ status: 409, code: "line_busy" }));
+      expect((await outbox.list("user"))[0].failure).toBeTruthy();
+    } finally { await outbox.close(); }
+  });
+
   it("обновляет старую базу без counters, сохраняя события и порядок", async () => {
     const name = crypto.randomUUID();
     const legacy = await openDB(name, 1, {
@@ -185,6 +284,28 @@ describe("Очередь действий", () => {
     expect(await outbox.list("user")).toEqual([]);
     await outbox.close();
   });
+  it("связь пропадает посреди очереди: действия дошлют по порядку, без повторов (TC-08)", async () => {
+    const outbox = new Outbox(crypto.randomUUID());
+    const events = [event(), event(), event(), event()];
+    for (const [index, item] of events.entries())
+      await outbox.add("user", index % 2 ? "b" : "a", item);
+    const delivered: string[] = [];
+    const run = (budget: number) =>
+      flushOutbox(outbox, "user", async (item) => {
+        if (budget-- <= 0) throw new TypeError("Failed to fetch");
+        delivered.push(item.id);
+        return { status: 200 };
+      });
+    await run(0);
+    expect(delivered).toEqual([]);
+    expect(await outbox.list("user")).toHaveLength(4);
+    await run(2);
+    expect(delivered).toEqual(events.slice(0, 2).map((e) => e.client_event_id));
+    await run(10);
+    expect(delivered).toEqual(events.map((e) => e.client_event_id));
+    expect(await outbox.list("user")).toEqual([]);
+    await outbox.close();
+  });
   it("повторный deliver после reload не блокирует open той же карточки", async () => {
     const outbox = new Outbox(crypto.randomUUID());
     const deliver = deliverEvent();
@@ -199,6 +320,76 @@ describe("Очередь действий", () => {
         : { status: 200 };
     });
     expect(sent).toEqual(["deliver", "open"]);
+    expect(await outbox.list("user")).toEqual([]);
+    await outbox.close();
+  });
+  it("ответ на вызов, который сервер уже погасил, не блокирует карточку (TC-02)", async () => {
+    const outbox = new Outbox(crypto.randomUUID());
+    const answer: CardEvent = {
+      client_event_id: crypto.randomUUID(),
+      client_ts: new Date().toISOString(),
+      type: "call_answer",
+      payload: { call_id: crypto.randomUUID() },
+    };
+    const open = event();
+    await outbox.add("user", "card", answer);
+    await outbox.add("user", "card", open);
+    const sent: string[] = [];
+    await flushOutbox(outbox, "user", async (item) => {
+      sent.push(item.event.type);
+      return item.event.type === "call_answer"
+        ? { status: 409, code: "call_ended" }
+        : { status: 200 };
+    });
+    expect(sent).toEqual(["call_answer", "open"]);
+    expect(await outbox.list("user")).toEqual([]);
+    await outbox.close();
+  });
+  it("несошедшаяся отметка удержания не блокирует карточку (HQ-033)", async () => {
+    const outbox = new Outbox(crypto.randomUUID());
+    const mark = (type: "call_hold" | "call_resume"): CardEvent => ({
+      client_event_id: crypto.randomUUID(),
+      client_ts: new Date().toISOString(),
+      type,
+      payload: { call_id: crypto.randomUUID() },
+    });
+    await outbox.add("user", "card", mark("call_hold"));
+    await outbox.add("user", "card", mark("call_resume"));
+    await outbox.add("user", "card", event());
+    const sent: string[] = [];
+    await flushOutbox(outbox, "user", async (item) => {
+      sent.push(item.event.type);
+      if (item.event.type === "call_hold")
+        return { status: 409, code: "hold_state" };
+      if (item.event.type === "call_resume")
+        return { status: 409, code: "call_ended" };
+      return { status: 200 };
+    });
+    expect(sent).toEqual(["call_hold", "call_resume", "open"]);
+    expect(await outbox.list("user")).toEqual([]);
+    await outbox.close();
+  });
+  it("несошедшаяся реплика заявителя не блокирует карточку (HQ-019)", async () => {
+    const outbox = new Outbox(crypto.randomUUID());
+    const said = (phrase: string): CardEvent => ({
+      client_event_id: crypto.randomUUID(),
+      client_ts: new Date().toISOString(),
+      type: "caller_said",
+      payload: { call_id: crypto.randomUUID(), phrase_id: phrase },
+    });
+    await outbox.add("user", "card", said("CALLER_CALM.answer.animal_shaft.1"));
+    await outbox.add("user", "card", said("CALLER_CALM.answer.animal_shaft.9"));
+    await outbox.add("user", "card", event());
+    const sent: string[] = [];
+    await flushOutbox(outbox, "user", async (item) => {
+      sent.push(item.event.type);
+      const payload = item.event.payload as { phrase_id?: string };
+      if (payload.phrase_id?.endsWith(".1"))
+        return { status: 409, code: "caller_line" };
+      if (payload.phrase_id?.endsWith(".9")) return { status: 422 };
+      return { status: 200 };
+    });
+    expect(sent).toEqual(["caller_said", "caller_said", "open"]);
     expect(await outbox.list("user")).toEqual([]);
     await outbox.close();
   });
@@ -354,4 +545,92 @@ describe("coalesce: отправка очереди без потерь", () => 
     await flush();
     expect(calls).toBe(2);
   });
+});
+
+describe("Окончательные квитанции входящего звонка", () => {
+  it.each(["call_answer", "report_confirmed"] as const)(
+    "Окончательный отказ %s разрешает новую попытку",
+    async (type) => {
+      const outbox = new Outbox(crypto.randomUUID());
+      const callId = crypto.randomUUID();
+      const action: CardEvent =
+        type === "call_answer"
+          ? { ...event(), type, payload: { call_id: callId } }
+          : {
+              ...event(),
+              type,
+              payload: {
+                call_id: callId,
+                delivery_id: crypto.randomUUID(),
+                text: "Принял",
+              },
+            };
+      const other = event();
+      const receipts = vi.fn();
+      try {
+        await outbox.add("user", "card", action);
+        await outbox.add("user", "card", other);
+        await flushOutbox(
+          outbox,
+          "user",
+          async (item) =>
+            item.id === action.client_event_id
+              ? {
+                  status: 409,
+                  code: type === "call_answer" ? "call_ended" : "brigade_line",
+                }
+              : { status: 200 },
+          receipts,
+        );
+        expect(receipts.mock.calls[0][0]).toMatchObject({
+          item: { id: action.client_event_id },
+          status: "rejected",
+        });
+        expect(await outbox.list("user")).toEqual([]);
+        const retry = { ...action, client_event_id: crypto.randomUUID() };
+        await outbox.add("user", "card", retry);
+        await flushOutbox(
+          outbox,
+          "user",
+          async () => ({ status: 200 }),
+          receipts,
+        );
+        expect(receipts.mock.calls.at(-1)![0]).toMatchObject({
+          item: { id: retry.client_event_id },
+          status: "accepted",
+        });
+      } finally {
+        await outbox.close();
+      }
+    },
+  );
+});
+
+it("Старое отклонённое подтверждение доклада не блокирует повтор после перезагрузки", async () => {
+  const name = crypto.randomUUID();
+  const outbox = new Outbox(name);
+  const ack: CardEvent = {
+    ...event(),
+    type: "report_confirmed",
+    payload: {
+      call_id: crypto.randomUUID(),
+      delivery_id: crypto.randomUUID(),
+      text: "Принял",
+    },
+  };
+  await outbox.add("user", "card", ack);
+  const old = (await outbox.list("user"))[0];
+  await outbox.fail(old, "Бригаде говорят, пока идёт разговор с ней");
+  await outbox.close();
+  const restored = new Outbox(name);
+  try {
+    expect(await restored.list("user")).toEqual([]);
+    const retry = { ...ack, client_event_id: crypto.randomUUID() };
+    await restored.add("user", "card", retry);
+    const sent = vi.fn(async () => ({ status: 200 }));
+    await flushOutbox(restored, "user", sent);
+    expect(sent).toHaveBeenCalledTimes(1);
+  } finally {
+    await restored.close();
+  }
 });

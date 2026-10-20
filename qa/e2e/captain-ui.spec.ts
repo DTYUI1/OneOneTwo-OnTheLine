@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { test, login } from "./captain-fixture";
+import { openPhone } from "./phone";
 
 test("Значок вкладки и чистая консоль входа", async ({ page }) => {
   const errors: string[] = [];
@@ -190,8 +191,8 @@ test.describe("Стенд с БД", () => {
       "карточка открыта",
     );
     await expect(
-      page.getByRole("button", { name: /Служба 102.*Получена/ }),
-    ).toBeVisible();
+      page.getByRole("button", { name: "Изменить статус", exact: true }),
+    ).toBeEnabled();
     await expect(
       page.getByText("Действия ещё не подтверждены сервером", { exact: true }),
     ).toHaveCount(0, { timeout: 30_000 });
@@ -248,8 +249,8 @@ test.describe("Стенд с БД", () => {
       "карточка открыта",
     );
     await expect(
-      page.getByRole("button", { name: /Служба 102.*Получена/ }),
-    ).toBeVisible();
+      page.getByRole("button", { name: "Изменить статус", exact: true }),
+    ).toBeEnabled();
     await expect(
       page.getByText("Действия ещё не подтверждены сервером", { exact: true }),
     ).toHaveCount(0, { timeout: 30_000 });
@@ -349,7 +350,9 @@ test.describe("Стенд с БД", () => {
       page.getByRole("button", { name: "Объяснение экрана" }),
     ).toBeVisible();
     await row.focus();
-    await row.locator("td").last().scrollIntoViewIfNeeded();
+    // На узком экране значки строки (макет B, arm_dds/03) скрыты: докручиваем
+    // до последней видимой колонки — «Состояние».
+    await row.locator("td:visible").last().scrollIntoViewIfNeeded();
     const position = await row.evaluate((element) => ({
       y: scrollY,
       tableX: element.closest("table")!.parentElement!.scrollLeft,
@@ -404,11 +407,7 @@ test.describe("Стенд с БД", () => {
     await page.setViewportSize({ width: 1280, height: 600 });
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    await page.getByRole("button", { name: /Служба 102.*Получена/ }).click();
-    await page
-      .getByRole("button", { name: "Подсказка: комментарий", exact: true })
-      .click();
-    await expect(page.getByRole("note")).toBeVisible();
+    // Строка статуса всегда на виду (DT-19); подсказок «?» у полей с 29.09 нет.
     await expect(
       page.getByRole("button", { name: "Подтвердить", exact: true }),
     ).toBeInViewport({ ratio: 1 });
@@ -424,10 +423,13 @@ test.describe("Стенд с БД", () => {
     await page.screenshot({
       path: "scripts/ralph/artwox/logs/recheck/card-action-1280x600.png",
     });
+    // Esc уводит фокус из строки статуса, карточка остаётся (DT-19).
+    await page.getByLabel("Комментарий", { exact: true }).focus();
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
-    await page.getByRole("button", { name: "Отменить", exact: true }).click();
-    await page.getByRole("button", { name: "Телефон", exact: true }).click();
+    // Связь службы — окно телефона ДДС (GP-09): значок на панели, окно плавает над
+    // карточкой и не добавляет прокрутки.
+    await openPhone(page);
     expect(
       await page.evaluate(() => ({
         width: document.documentElement.scrollWidth,
@@ -518,16 +520,9 @@ test.describe("Первый экран реестра", () => {
       page.getByText("Происшествий нет. Дождитесь карточки от Системы 112."),
     ).toHaveCount(0);
 
-    // Подпись службы — обычным кеглем, имя службы выделено.
-    const counter = page.locator("h2 span", { hasText: "ваша служба:" });
-    await expect(counter.locator("strong")).toHaveText("занятие не начато");
-    const sizes = await counter.evaluate((el) => ({
-      size: getComputedStyle(el).fontSize,
-      token: getComputedStyle(document.documentElement)
-        .getPropertyValue("--font-size")
-        .trim(),
-    }));
-    expect(sizes.size).toBe(sizes.token);
+    // Своя служба — в блоке даты и часов справа от поиска, где в АРМ стоит
+    // пользователь (arm_dds/02); до занятия служба не известна. Запятая — в конце даты.
+    await expect(page.getByText(/^занятие не начато/)).toBeVisible();
 
     // Кнопки — одной группой в порядке пути, «Тренировка» — текущая ступень.
     const group = page
@@ -536,14 +531,15 @@ test.describe("Первый экран реестра", () => {
     await expect(group.getByRole("button")).toHaveText([
       "Тренировка: ступень 3",
       "Мой путь",
-      "Проверьте себя",
+      "Каталог сценариев",
+      "Разминка",
       "Мои результаты",
       "Справка",
     ]);
 
     // «/» вне поля ввода — к поиску; в поле «/» печатается как обычно.
     const search = page.getByRole("textbox", { name: "Поиск происшествий" });
-    await expect(search).toHaveAttribute("placeholder", /\/ — поиск/);
+    await expect(search).toHaveAttribute("placeholder", "Поиск происшествий");
     await page.locator("body").click({ position: { x: 5, y: 300 } });
     await page.keyboard.press("/");
     await expect(search).toBeFocused();

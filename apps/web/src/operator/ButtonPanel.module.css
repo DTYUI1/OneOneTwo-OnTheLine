@@ -1,0 +1,47 @@
+.panel {
+  position: fixed;
+  z-index: 25;
+  width: 420px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid var(--color-header);
+  border-radius: 6px;
+  background: var(--color-on-dark);
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.panel header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.panel h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.panel p {
+  margin: 12px 0;
+}
+.panel button {
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.panel button:focus-visible {
+  outline: 2px solid var(--color-active);
+  outline-offset: 2px;
+}
+.recordings {
+  padding: 0;
+  list-style: none;
+  max-height: 50vh;
+  overflow: auto;
+}
+.recordings li {
+  padding: 10px 0;
+  border-top: 1px solid var(--color-border);
+}

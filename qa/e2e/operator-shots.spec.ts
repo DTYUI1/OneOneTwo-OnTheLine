@@ -8,6 +8,9 @@ import {
   openCall,
   talk,
 } from "./operator-call";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 // Снимки этапа 3 для docs/operator_112_review/stage3/ — только по запросу (OPERATOR_SHOTS=1):
 // шаги опроса, проводник, «?», разбор звонка на окнах ноутбука и 1920×1080, в том числе на

@@ -11,6 +11,14 @@ export interface PendingEvent {
   failure?: string;
 }
 
+/** Локальный результат HTTP/очереди после сохранения, не событие протокола WS. */
+export interface OutboxOutcome {
+  item: PendingEvent;
+  status: "accepted" | "rejected";
+  code?: string;
+  message?: string;
+}
+
 interface OutboxSchema extends DBSchema {
   events: { key: string; value: PendingEvent };
   counters: { key: string; value: number };
@@ -84,9 +92,45 @@ export class Outbox {
 
   async list(userId: string): Promise<PendingEvent[]> {
     const db = await this.database;
-    return (await db.getAll("events"))
-      .filter((item) => item.userId === userId)
+    // Старый outbox записывал failure только после окончательного HTTP-отказа
+    // (401 и 5xx оставались неопределёнными). Реплика и ACK не создают зависимостей.
+    // Убираем именно такие исторические отказы до discovery и blockedCards.
+    const transaction = db.transaction("events", "readwrite");
+    const store = transaction.objectStore("events");
+    const items = await store.getAll();
+    const terminal = (item: PendingEvent) =>
+      item.userId === userId &&
+      (item.event.type === "brigade_said" ||
+        item.event.type === "report_confirmed") &&
+      !!item.failure;
+    for (const item of items) if (terminal(item)) await store.delete(item.id);
+    await transaction.done;
+    return items
+      .filter((item) => item.userId === userId && !terminal(item))
       .sort((a, b) => a.sequence - b.sequence);
+  }
+
+  async has(id: string): Promise<boolean> {
+    return (await (await this.database).get("events", id)) !== undefined;
+  }
+
+  /** Подтверждённый отказ набора отменяет только этот звонок, но не всю карточку. */
+  async discardCall(dial: PendingEvent, callId: string): Promise<void> {
+    const db = await this.database;
+    const transaction = db.transaction("events", "readwrite");
+    const events = transaction.objectStore("events");
+    for (const item of await events.getAll()) {
+      if (
+        item.userId === dial.userId &&
+        item.cardId === dial.cardId &&
+        (item.id === dial.id ||
+          (item.sequence > dial.sequence &&
+            "call_id" in item.event.payload &&
+            item.event.payload.call_id === callId))
+      )
+        await events.delete(item.id);
+    }
+    await transaction.done;
   }
 
   async remove(id: string): Promise<void> {
@@ -120,9 +164,12 @@ export async function flushOutbox(
   send: (
     item: PendingEvent,
   ) => Promise<{ status: number; message?: string; code?: string }>,
+  outcome: (result: OutboxOutcome) => void = () => {},
 ): Promise<void> {
   const blockedCards = new Set<string>();
   for (const item of await outbox.list(userId)) {
+    // Отказ предыдущего набора мог удалить зависимые действия из этого снимка очереди.
+    if (!(await outbox.has(item.id))) continue;
     // list уже изолирован по пользователю; отказ блокирует только свою карточку.
     if (item.failure) blockedCards.add(item.cardId);
     if (blockedCards.has(item.cardId)) continue;
@@ -132,17 +179,92 @@ export async function flushOutbox(
     } catch {
       break;
     }
+    if (
+      item.event.type === "call_dial_target" &&
+      result.status === 409 &&
+      result.code === "line_busy"
+    ) {
+      await outbox.discardCall(item, item.event.payload.call_id);
+      outcome({
+        item,
+        status: "rejected",
+        code: result.code,
+        message: result.message,
+      });
+      continue;
+    }
+    // Отказ на ответ не даёт владения линией, в том числе при call_ended. Удаляем
+    // зависимые действия звонка, сохраняя чужие звонки и статусы карточки.
+    if (
+      item.event.type === "call_answer" &&
+      result.status >= 400 &&
+      result.status < 500 &&
+      result.status !== 401
+    ) {
+      await outbox.discardCall(item, item.event.payload.call_id);
+      outcome({
+        item,
+        status: "rejected",
+        code: result.code,
+        message: result.message,
+      });
+      continue;
+    }
     // Повтор deliver после reload: сервер уже учёл доставку, карточку не блокируем.
     const alreadyDelivered =
       item.event.type === "deliver" &&
       result.status === 409 &&
       result.code === "card_already_delivered";
-    if ((result.status >= 200 && result.status < 300) || alreadyDelivered)
+    // Ответ или отбой одновременно с тем, как сервер погасил вызов бригады (пропущенный,
+    // TC-02): звонка уже нет, ждать нечего — карточку из-за гонки не блокируем.
+    const callEnded =
+      item.event.type === "call_hangup" &&
+      result.status === 409 &&
+      result.code === "call_ended";
+    // Отметка удержания (HQ-033) нужна только разбору: не сошлась с журналом (звонок уже
+    // кончился, повтор после обновления страницы) — карточку не блокируем.
+    const holdMark =
+      (item.event.type === "call_hold" || item.event.type === "call_resume") &&
+      result.status === 409 &&
+      (result.code === "call_ended" || result.code === "hold_state");
+    // Реплика заявителя (HQ-019) нужна оценке и разбору: звонок оказался не заявителю
+    // (настройки занятия сменились) или фразы нет — карточку не блокируем.
+    const callerMark =
+      item.event.type === "caller_said" &&
+      ((result.status === 409 && result.code === "caller_line") ||
+        result.status === 404 ||
+        result.status === 422);
+    if (
+      (result.status >= 200 && result.status < 300) ||
+      alreadyDelivered ||
+      callEnded ||
+      holdMark ||
+      callerMark
+    ) {
       await outbox.remove(item.id);
-    else if (result.status === 401 || result.status >= 500) break;
+      outcome({ item, status: "accepted", code: result.code });
+    } else if (result.status === 401 || result.status >= 500) break;
     else {
-      await outbox.fail(item, result.message ?? "Событие отклонено сервером.");
-      blockedCards.add(item.cardId);
+      // Отклонённая реплика или ACK не меняют состояние звонка. Удаляем только
+      // её: иначе исправленный ручной ответ навсегда застрянет за старым отказом.
+      if (
+        item.event.type === "brigade_said" ||
+        item.event.type === "report_confirmed"
+      )
+        await outbox.remove(item.id);
+      else {
+        await outbox.fail(
+          item,
+          result.message ?? "Событие отклонено сервером.",
+        );
+        blockedCards.add(item.cardId);
+      }
+      outcome({
+        item,
+        status: "rejected",
+        code: result.code,
+        message: result.message,
+      });
     }
   }
 }

@@ -102,3 +102,57 @@
     background: rgb(106 171 211 / 80%);
   }
 }
+
+/* Учётные записи для проверки: на светлом небе фона белый текст терялся (проверка капитана
+   19.10, проверяющим около 50 лет) — тёмная подложка, обычное начертание, логины жирные. */
+.accounts {
+  margin-top: 28px;
+  padding: 14px 16px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #ffffff;
+  background: rgb(16 32 48 / 72%);
+  border-left: 4px solid #ffffff;
+}
+.accounts h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.accounts ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.accounts li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin-bottom: 6px;
+}
+.accounts li span {
+  min-width: 120px;
+  font-weight: 400;
+}
+.accounts p {
+  margin: 10px 0 0;
+}
+.accounts button {
+  padding: 0;
+  color: #ffffff;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.accounts button:hover {
+  color: #ffe08a;
+  border-bottom-color: #ffe08a;
+}
+.accounts button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}

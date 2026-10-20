@@ -1,0 +1,22 @@
+[
+  {
+    "document": "01_technical_description",
+    "pages": 15,
+    "text_outside_safety_margin": []
+  },
+  {
+    "document": "02_administrator_guide",
+    "pages": 15,
+    "text_outside_safety_margin": []
+  },
+  {
+    "document": "03_teacher_guide",
+    "pages": 20,
+    "text_outside_safety_margin": []
+  },
+  {
+    "document": "04_trainee_guide",
+    "pages": 23,
+    "text_outside_safety_margin": []
+  }
+]

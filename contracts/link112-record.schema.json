@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/link112-record.schema.json",
+  "title": "Запись оператора-бота для шага 1 связки 112 → ДДС (проект DT-03)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "operator_scenario_id",
+    "level",
+    "elapsed_s",
+    "card"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "operator_scenario_id": { "type": "string", "minLength": 1 },
+    "level": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "elapsed_s": { "type": "number", "minimum": 0, "maximum": 86400 },
+    "teacher_note": { "type": "string", "maxLength": 1000 },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "incident_type_code",
+        "tags",
+        "services",
+        "address",
+        "description",
+        "caller_name",
+        "caller_status",
+        "phone_provided",
+        "phone_scene",
+        "off_site",
+        "emergency"
+      ],
+      "properties": {
+        "incident_type_code": { "type": "string", "pattern": "^[0-9]{7,8}$" },
+        "tags": {
+          "type": "array",
+          "maxItems": 10,
+          "items": { "type": "string" }
+        },
+        "services": {
+          "type": "array",
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": { "enum": ["101", "102", "103", "104", "MOSLIFT", "GKH"] }
+        },
+        "address": {
+          "$ref": "https://arm112.local/contracts/card.schema.json#/properties/address"
+        },
+        "description": { "type": "string", "maxLength": 1999 },
+        "caller_name": { "type": "string", "maxLength": 200 },
+        "caller_status": {
+          "$ref": "https://arm112.local/contracts/card.schema.json#/properties/caller_status"
+        },
+        "phone_provided": { "type": "string", "pattern": "^$|^\\+7[0-9]{10}$" },
+        "phone_scene": { "type": "string", "pattern": "^$|^\\+7[0-9]{10}$" },
+        "off_site": { "type": "boolean" },
+        "emergency": { "type": "boolean" }
+      }
+    }
+  }
+}

@@ -33,14 +33,15 @@ def test_classifier_artifact_is_reproducible():
 def test_seed_references():
     users = json.loads((ROOT / "data/seed/demo_users.json").read_text(encoding="utf-8"))
     phones = json.loads((ROOT / "data/phonebook.json").read_text(encoding="utf-8"))
-    services = {item["id"] for item in phones}
+    # Система-112 — адресат звонка, не служба ДДС (contracts/data_formats.md).
+    services = {item["id"] for item in phones if item["category"] != "system112"}
     cases = [
         json.loads(path.read_text(encoding="utf-8"))
         for path in (ROOT / "data/golden_scenarios").glob("*.json")
     ]
     assert {case["scenario"]["target_service_id"] for case in cases} == services
     assert {case["scenario"]["level"] for case in cases} == {1, 2, 3, 4}
-    assert len({item["phone_ext"] for item in phones}) == 6
+    assert len({item["phone_ext"] for item in phones}) == len(phones) == 7
     assert all(len(item["phone_ext"]) == 3 for item in phones)
     assert all(user["dds_service_id"] in services for user in users if user["role"] == "trainee")
     assert {user["login"] for user in users} == {

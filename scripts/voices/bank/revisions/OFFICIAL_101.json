@@ -1,0 +1,32 @@
+{
+  "service": "OFFICIAL_101",
+  "speaker": "official",
+  "gender": "male",
+  "character": "дежурный Соколов, служба 101",
+  "incidents": {},
+  "about": "Новые редакции разговорных фраз дежурного (HQ-037, «скорая — больше формальности»): служба, должность, «Информация принята», «Уточните…», «Повторите, пожалуйста…». `replaces` — старая фраза книги phrases/, её запись остаётся; окно телефона (scripts/voices/bank/web.py) берёт новую вместо старой, когда у новой есть запись в наборах data/voices/bank-v*.",
+  "phrases": [
+    {"id": "OFFICIAL_101.accepted.any.6", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, отделение направлено.", "replaces": "OFFICIAL_101.accepted.any.1"},
+    {"id": "OFFICIAL_101.accepted.any.7", "slot": "accepted", "incidents": ["*"], "text": "Принято. Отделение направляю.", "replaces": "OFFICIAL_101.accepted.any.3"},
+    {"id": "OFFICIAL_101.accepted.any.8", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, доведу до старшего на месте.", "replaces": "OFFICIAL_101.accepted.any.4"},
+    {"id": "OFFICIAL_101.accepted.any.9", "slot": "accepted", "incidents": ["*"], "text": "Принято. Направляю дополнительное отделение.", "replaces": "OFFICIAL_101.accepted.any.5"},
+    {"id": "OFFICIAL_101.registered.any.6", "slot": "registered", "incidents": ["*"], "text": "Информация принята, отделение направлено. Номер регистрации сто тридцать восемь.", "number": "138", "replaces": "OFFICIAL_101.registered.any.2"},
+    {"id": "OFFICIAL_101.registered.any.7", "slot": "registered", "incidents": ["*"], "text": "Зарегистрировано под номером двести шестьдесят один.", "number": "261", "replaces": "OFFICIAL_101.registered.any.3"},
+    {"id": "OFFICIAL_101.registered.any.8", "slot": "registered", "incidents": ["*"], "text": "Зарегистрировано, номер пятьсот четыре. Отделение выезжает.", "number": "504", "replaces": "OFFICIAL_101.registered.any.5"},
+    {"id": "OFFICIAL_101.ask_who.any.4", "slot": "ask_who", "incidents": ["*"], "text": "Представьтесь, пожалуйста: фамилия, должность.", "replaces": "OFFICIAL_101.ask_who.any.3"},
+    {"id": "OFFICIAL_101.ask_address.any.6", "slot": "ask_address", "incidents": ["*"], "text": "Повторите, пожалуйста, номер дома.", "replaces": "OFFICIAL_101.ask_address.any.3"},
+    {"id": "OFFICIAL_101.ask_address.any.7", "slot": "ask_address", "incidents": ["*"], "text": "Уточните номер подъезда и проезд к дому.", "replaces": "OFFICIAL_101.ask_address.any.4"},
+    {"id": "OFFICIAL_101.ask_address.any.8", "slot": "ask_address", "incidents": ["*"], "text": "Уточните адрес: улица, дом.", "replaces": "OFFICIAL_101.ask_address.any.5"},
+    {"id": "OFFICIAL_101.ask_what.any.5", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, какая помощь требуется от пожарной охраны.", "replaces": "OFFICIAL_101.ask_what.any.3"},
+    {"id": "OFFICIAL_101.ask_what.any.6", "slot": "ask_what", "incidents": ["*"], "text": "Кратко доложите, что произошло.", "replaces": "OFFICIAL_101.ask_what.any.4"},
+    {"id": "OFFICIAL_101.ask_card.any.3", "slot": "ask_card", "incidents": ["*"], "text": "Назовите номер карточки.", "replaces": "OFFICIAL_101.ask_card.any.1"},
+    {"id": "OFFICIAL_101.ask_victims.any.4", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните: есть ли пострадавшие, заблокированные?", "replaces": "OFFICIAL_101.ask_victims.any.3"},
+    {"id": "OFFICIAL_101.not_understood.any.4", "slot": "not_understood", "incidents": ["*"], "text": "Не расслышал, повторите, пожалуйста.", "replaces": "OFFICIAL_101.not_understood.any.1"},
+    {"id": "OFFICIAL_101.end_call.any.4", "slot": "end_call", "incidents": ["*"], "text": "Информация принята. До связи.", "replaces": "OFFICIAL_101.end_call.any.1"},
+    {"id": "OFFICIAL_101.end_call.any.5", "slot": "end_call", "incidents": ["*"], "text": "Принято, конец связи.", "replaces": "OFFICIAL_101.end_call.any.2"},
+    {"id": "OFFICIAL_101.ask_who.any.5", "slot": "ask_who", "incidents": ["*"], "text": "Представьтесь, пожалуйста. Какая служба передаёт?", "replaces": "OFFICIAL_101.ask_who.any.2"},
+    {"id": "OFFICIAL_101.ask_what.any.7", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, что горит: квартира, подвал?", "replaces": "OFFICIAL_101.ask_what.any.1"},
+    {"id": "OFFICIAL_101.ask_card.any.4", "slot": "ask_card", "incidents": ["*"], "text": "Продиктуйте номер карточки для сверки.", "replaces": "OFFICIAL_101.ask_card.any.2"},
+    {"id": "OFFICIAL_101.ask_victims.any.5", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните, остались ли люди в здании.", "replaces": "OFFICIAL_101.ask_victims.any.2"}
+  ]
+}

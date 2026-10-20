@@ -3,9 +3,14 @@
 // факты по карточке: путь статусов и служба; время — из серверного разбора.
 import type { components } from "../../api-client/schema";
 import { isClosed, STATE_LABELS, type CardState } from "../cardModel";
-import { hasScore, type Evaluation } from "../../teacher/console/model";
+import {
+  formatScore,
+  hasScore,
+  readable,
+  type Evaluation,
+} from "../../teacher/console/model";
 import type { AttemptAnalysis } from "../useAnalysis";
-import { attemptVerdict, type AttemptVerdict } from "./debrief";
+import { attemptVerdict, verdictHeading, type AttemptVerdict } from "./debrief";
 
 type Card = components["schemas"]["Card"];
 type StoredEvent = components["schemas"]["StoredEvent"];
@@ -16,8 +21,32 @@ type StoredEvent = components["schemas"]["StoredEvent"];
  * эталон сценария; это правило жизненного цикла, а не эталон конкретного задания.
  */
 export const REGULATION_PATH: CardState[] = ["accepted", "completed"];
-export const REGULATION_TEXT =
-  "Принята → этапы по ходу работ (начало реагирования, прибытие, проведение работ) → Работы завершены";
+
+/**
+ * Чем по правилам закрывают карточку этого сценария — последний статус эталона из разбора
+ * («Эталон: … → Отказ от выполнения работ»). Памятка ДДС закрывает карточку и «Работами
+ * завершены», и «Отказом от выполнения работ»; без эталона — «Работы завершены».
+ */
+export function regulationEnd(
+  criteria: readonly { key: string; evidence: string[] }[],
+): CardState {
+  const line = criteria
+    .find((item) => item.key === "status_flow")
+    ?.evidence.map(readable)
+    .find((text) => text.startsWith("Эталон"));
+  const last = line?.split("→").pop()?.trim();
+  const state = (Object.keys(STATE_LABELS) as CardState[]).find(
+    (key) => STATE_LABELS[key] === last,
+  );
+  return state ?? "completed";
+}
+
+/** Строка «По правилам» в таблице разбора. */
+export function regulationText(end: CardState = "completed"): string {
+  return end === "completed" || end === "refused"
+    ? `Принята → этапы по ходу работ (начало реагирования, прибытие, проведение работ) → ${STATE_LABELS[end]}`
+    : STATE_LABELS[end];
+}
 
 export interface ResultRow {
   card: Card;
@@ -40,9 +69,12 @@ export function groupResults(
   cards: Card[],
   evaluations: Evaluation[],
   finishedSessions: ReadonlySet<string> = new Set(),
+  // Тренировки-показы (`settings_snapshot.demo`, HQ-034): карточку вёл курсор — не попытка.
+  demoSessions: ReadonlySet<string> = new Set(),
 ): SessionGroup[] {
   const byCard = new Map(evaluations.map((item) => [item.card_id, item]));
   const shown = cards
+    .filter((card) => !demoSessions.has(card.session_id))
     .filter((card) => isClosed(card) || finishedSessions.has(card.session_id))
     .sort((a, b) => closedAt(b) - closedAt(a));
   const groups: SessionGroup[] = [];
@@ -77,9 +109,44 @@ export function formatPath(path: CardState[]): string {
     : path.map((state) => STATE_LABELS[state]).join(" → ");
 }
 
-/** Прошла ли карточка цикл: была принята и завершена «Работы завершены». */
-export function fullCycle(path: CardState[]): boolean {
-  return path.includes("accepted") && path[path.length - 1] === "completed";
+/**
+ * Прошла ли карточка цикл: была принята и закрыта тем статусом, которым её закрывает эталон
+ * (`regulationEnd`). Эталон без принятия («Не принята», «Перенаправлена») — решение без цикла.
+ */
+export function fullCycle(
+  path: CardState[],
+  end: CardState = "completed",
+): boolean {
+  const cycle = end === "completed" || end === "refused";
+  return (!cycle || path.includes("accepted")) && path[path.length - 1] === end;
+}
+
+/**
+ * Комментарии диспетчера по карточке, которые читает оценка (`evalcore` `_all_comments`):
+ * каждый статус затирает текущий комментарий, а ключевые сведения пишут при «Принята».
+ */
+export function statusComments(
+  events: StoredEvent[],
+  current: string,
+): { status: string | null; text: string }[] {
+  const found: { status: string | null; text: string }[] = [];
+  for (const event of events) {
+    if (!["status_change", "redirect", "comment"].includes(event.type))
+      continue;
+    const payload = event.payload as { state?: CardState; comment?: unknown };
+    const text = typeof payload.comment === "string" ? payload.comment : "";
+    if (!text.trim() || found.some((item) => item.text === text)) continue;
+    const status =
+      event.type === "redirect"
+        ? STATE_LABELS.redirected
+        : payload.state
+          ? STATE_LABELS[payload.state]
+          : null;
+    found.push({ status, text });
+  }
+  if (current.trim() && !found.some((item) => item.text === current))
+    found.push({ status: null, text: current });
+  return found;
 }
 
 export interface ResultsSummary {
@@ -87,7 +154,9 @@ export interface ResultsSummary {
   interrupted: number;
   scored: number;
   passed: number;
+  verdictsReady: number;
   reactionInNorm: number;
+  reactionKnown: number;
   withComment: number;
 }
 
@@ -108,28 +177,49 @@ export function summarize(
     interrupted: all.length - rows.length,
     scored: rows.filter((row) => row.evaluation && hasScore(row.evaluation))
       .length,
-    passed: rows.filter(
-      (row) => rowVerdict(row, analyses.get(row.card.id))?.passed,
+    // Пока итоговый разбор не загрузился, зачёт не утверждаем по автоматическому
+    // баллу: решение преподавателя ещё может его изменить.
+    passed: rows.filter((row) => {
+      const analysis = analyses.get(row.card.id);
+      return rowVerdict(row, analysis)?.passed;
+    }).length,
+    verdictsReady: rows.filter((row) =>
+      rowVerdict(row, analyses.get(row.card.id)),
     ).length,
     reactionInNorm: rows.filter((row) => {
-      const timing = analyses.get(row.card.id)?.timing;
-      return (
-        timing?.reaction_s != null &&
-        timing.reaction_s <= timing.reaction_normative_s
-      );
+      return analyses.get(row.card.id)?.timing?.reaction_overdue === false;
     }).length,
+    reactionKnown: rows.filter(
+      (row) => analyses.get(row.card.id)?.timing?.reaction_overdue != null,
+    ).length,
     withComment: rows.filter((row) =>
       Boolean(row.evaluation?.teacher_comment.trim()),
     ).length,
   };
 }
 
-/** Балл попытки в списке — тот же, что в разборе: с учётом решения преподавателя. */
+/** Разбор относится именно к показанной версии оценки, а не к старому ответу API. */
+export function currentEvaluationAnalysis(
+  row: ResultRow,
+  analysis: AttemptAnalysis | undefined,
+): NonNullable<AttemptAnalysis["evaluation"]> | null {
+  const evaluation = row.evaluation;
+  const details = analysis?.evaluation;
+  return evaluation &&
+    details?.evaluation_id === evaluation.id &&
+    details.evaluation_version === evaluation.version &&
+    Math.abs(details.effective_total - evaluation.total) <= 0.00001
+    ? details
+    : null;
+}
+
+/** Балл попытки в списке — только из согласованного с оценкой разбора. */
 export function rowScore(
   row: ResultRow,
   analysis: AttemptAnalysis | undefined,
 ): number | null {
-  return analysis?.evaluation?.effective_total ?? row.evaluation?.total ?? null;
+  if (!row.evaluation || !hasScore(row.evaluation)) return null;
+  return currentEvaluationAnalysis(row, analysis)?.effective_total ?? null;
 }
 
 /** Вердикт попытки для списка и счётчиков — по тем же правилам, что в разборе. */
@@ -138,12 +228,44 @@ export function rowVerdict(
   analysis: AttemptAnalysis | undefined,
 ): AttemptVerdict | null {
   if (!row.evaluation || !hasScore(row.evaluation)) return null;
-  const override = analysis?.evaluation?.effective_override;
+  const details = currentEvaluationAnalysis(row, analysis);
+  if (
+    !details ||
+    (details.status !== "complete" && !details.effective_override)
+  )
+    return null;
+  const override = details.effective_override;
   return attemptVerdict(
-    rowScore(row, analysis) ?? 0,
+    details.effective_total,
     row.evaluation.criteria,
     override?.decision === "disagree" ? override.new_total : null,
   );
+}
+
+/** Подпись в списке: не называем автоматический балл окончательным решением. */
+export function rowLabel(
+  row: ResultRow,
+  analysis: AttemptAnalysis | undefined,
+): string {
+  const verdict = rowVerdict(row, analysis);
+  const details = currentEvaluationAnalysis(row, analysis);
+  if (verdict && details) {
+    const pending =
+      details.status === "partial" ? " · проверка продолжается" : "";
+    return `${verdictHeading(verdict, details.effective_override?.decision ?? null)} · ${formatScore(details.effective_total)}${pending}`;
+  }
+  if (
+    details?.status === "partial" &&
+    row.evaluation &&
+    hasScore(row.evaluation)
+  )
+    return `Автоматическая оценка: ${formatScore(details.automatic_total)} · проверка продолжается`;
+  if (row.evaluation && hasScore(row.evaluation))
+    // GET /evaluations возвращает уже изменённый преподавателем total. Без
+    // разбора нельзя честно назвать этот балл автоматическим или окончательным.
+    return "Балл и решение преподавателя загружаются";
+  if (row.evaluation) return "Оценщик пока не вернул балл";
+  return row.interrupted ? "прервана" : "разбор готовится";
 }
 
 /** «Карточек пока нет» — только когда обе загрузки удались, иначе это ошибка связи. */

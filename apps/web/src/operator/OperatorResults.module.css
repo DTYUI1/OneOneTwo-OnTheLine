@@ -1,5 +1,19 @@
 /* Экран результатов тренировок 112: палитра и кнопки — как у карточки и окна «Результат
    попытки» (OperatorPage.module.css), разбор попытки — те же классы оттуда. */
+.traineeFilter {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  color: var(--color-text);
+  background: var(--color-panel);
+}
+.traineeFilter select {
+  max-width: 100%;
+  padding: 6px;
+  font: inherit;
+}
 .page {
   --op-panel: #efefef;
   --op-border: #aeb1b3;

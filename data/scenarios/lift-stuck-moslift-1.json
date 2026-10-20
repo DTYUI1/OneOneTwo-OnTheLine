@@ -1,0 +1,326 @@
+{
+  "format": 2,
+  "code": "lift-stuck-moslift-1",
+  "version": 4,
+  "replaces": [
+    "002cdb43-fb19-5359-9ae8-05756d58d53b"
+  ],
+  "title": "Застревание в лифте, плохо пассажирке",
+  "service_id": "MOSLIFT",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "14100101",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: застревание в лифте, плохо пассажирке, Профсоюзная улица, 98, корпус 2. По пути механик спрашивает подъезд — он в карточке (второй). На месте пассажирке хуже, механик просит скорую: позвонить в 103 или 112 (скорой в карточке нет — она приедет, только если её вызовет диспетчер). Не вызвали — механик перезванивает, выводит женщину сам и ждёт врачей; вызвали поздно — её выносят на руках и увозят в больницу. На работах механик замолкает — позвонить ему. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Механик Мослифта приехал ко второму подъезду на Профсоюзной улице, 98, корпус 2. Женщине шестидесяти пяти лет в кабине стало хуже, она задыхалась — по просьбе механика вызвали скорую. Механик обесточил лифт, опустил кабину вручную, вывел пассажирку и передал её врачам. Лифт отключён до ремонта.",
+    "late": "Карточку приняли позже норматива. Женщина шестидесяти пяти лет с болью в сердце всё это время сидела в кабине между седьмым и восьмым этажами."
+  },
+  "card": {
+    "caller_name": "Рябов Андрей Сергеевич",
+    "phone_aon": "+79000000712",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "description": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (требуется медицинская помощь)",
+    "service_ids": [
+      "101",
+      "MOSLIFT"
+    ],
+    "number": "70005221",
+    "incident_type_code": "14100101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "MOSLIFT"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "MOSLIFT",
+      "phone_ext": "106",
+      "before_s": 180
+    },
+    "expected_comment": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть. Пассажирке плохо, задыхается — вызвана скорая. Обесточил, опускаю вручную. Пассажирка выведена и передана скорой, лифт отключён до ремонта, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, еду.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Механик на месте, связь с кабиной установлена, пассажирка в сознании.",
+        "audio": "bank-v2/MOSLIFT/MOSLIFT.arrived.lift_ill.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Обесточил, опускаю вручную. Пассажиру сказал сесть и дышать медленно.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.working.lift_ill.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Женщину вывел, посадил на лавочку у подъезда, соседи с ней. Врачей пока нет. Лифт отключил до ремонта.",
+        "audio": "bank-v3/MOSLIFT/MOSLIFT.completed.lift_ill.8.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 8,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, подъезд какой? Дом длинный, подъездов много.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "second",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "second",
+          "label": "Второй подъезд"
+        },
+        {
+          "key": "first",
+          "label": "Первый подъезд"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, спросите у жильцов"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, иду туда.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_ok.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, спрошу у жильцов.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашёл сам.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик спросил подъезд — он был в описании карточки",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, пассажиру плохо, задыхается. Нужна скорая, срочно!",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.request_service.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, работаю.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.ack.any.5.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Пассажирка выведена и передана скорой, лифт отключён до ремонта, работы завершены.",
+                "audio": "bank-v2/MOSLIFT/MOSLIFT.completed.lift_ill.7.ogg"
+              }
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Ясно, понял.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.ack.any.3.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Бабушку вынесли на руках, врачи увезли в больницу. Лифт закрыл до проверки.",
+                "audio": "bank-v1/MOSLIFT/MOSLIFT.completed.lift_ill.5.ogg"
+              }
+            }
+          ]
+        },
+        "missed": {
+          "line": {
+            "text": "Нужна скорая. Женщину вывел, она сознание теряет.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.request_service.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик попросил скорую пассажирке",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Пока в машинном помещении. Ещё немного.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.status_working.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Работы идут, как закончу — доложу.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.status_working.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик долго работал без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

@@ -3,11 +3,19 @@
 // Модульное состояние, а не контекст: софтфон живёт внутри карточки, а переход
 // начинается во вкладках и реестре — снаружи неё.
 
+import type { HeldLine } from "./phone/hold";
+
 export interface ActiveCall {
   cardId: string;
   /** Кому звонят — для вопроса «Разговор с … будет завершён». */
   label: string;
   hangup: () => Promise<void>;
+  /**
+   * Поставить разговор на удержание (TC-02, вкладки 17.10): бригада, служба, абонент ДДС или
+   * отдел контроля. `null` — удерживать нечего; нет функции — этот разговор сейчас не
+   * удерживается (набор и гудки, собеседник уже прощается).
+   */
+  hold?: () => Omit<HeldLine, "heldAt"> | null;
 }
 
 let active: ActiveCall | null = null;
@@ -19,4 +27,9 @@ export function setActiveCall(call: ActiveCall | null): void {
 /** Звонок, который оборвётся при переходе к карточке `cardId`; null — переходить можно. */
 export function callInterruptedBy(cardId: string | null): ActiveCall | null {
   return active && active.cardId !== cardId ? active : null;
+}
+
+/** Идущий разговор на АРМ, если есть. */
+export function activeCall(): ActiveCall | null {
+  return active;
 }

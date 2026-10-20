@@ -1,0 +1,545 @@
+{
+  "format": 2,
+  "code": "smoke-apartment-101-1",
+  "version": 13,
+  "replaces": [
+    "57fc7d30-12f8-5ddf-9cb8-a3e55355d2f6"
+  ],
+  "title": "Задымление в квартире",
+  "service_id": "101",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "1050102",
+  "complications": [],
+  "teacher_comment": "Сценарий на финал (101): задымление в квартире, Бескудниковский бульвар, 24. Расчёт повторяет адрес с ошибкой, спрашивает этаж, просит скорую жильцу; вводная преподавателя — тревога: травмирован боец. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Расчёт нашёл очаг: в квартире 115 горела проводка за шкафом. Её обесточили, огонь потушили, квартиру проветрили — дым ушёл. Подъезд был задымлён до самого верха, жильцы выходили сами. Мужчина, который не открывал дверь, оказался без сознания и тяжело дышал; для него вызвали скорую.",
+    "late": "Карточку приняли позже норматива, и расчёт выехал позже. Подъезд был задымлён до самого верха, а пожилой мужчина в квартире 115 не открывал дверь: когда расчёт добрался до него, он был без сознания и дышал тяжело.",
+    "why": "В комнате с современной мебелью общая вспышка наступает через 3:20–4:50, а на выход у людей меньше 3 минут (UL FSRI)."
+  },
+  "card": {
+    "caller_name": "Громова Светлана Игоревна",
+    "phone_aon": "+79000000711",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "115"
+    },
+    "description": "Из-под двери квартиры 115 на девятом этаже идёт дым, открытого огня не видно. В квартире живёт пожилой мужчина, на звонки в дверь не открывает. Дом газифицирован.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "задымление: квартира",
+    "service_ids": [
+      "101",
+      "102",
+      "103",
+      "104"
+    ],
+    "number": "70005101",
+    "incident_type_code": "1050102"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "115"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "Из-под двери квартиры 115 на девятом этаже идёт дым, открытого огня не видно. В квартире живёт пожилой мужчина, на звонки в дверь не открывает. Дом газифицирован. Очаг потушен, квартиру проветрили, дым ушёл. Расчёт возвращается."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял, выдвигаемся двумя машинами.",
+        "audio": "bank-v1/101/101.responding.any.6.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Подъезд задымлён до самого верха, жильцы выходят сами, звено в аппаратах пошло на разведку.",
+        "audio": "bank-v1/101/101.arrived.smoke.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Нашли очаг: горит проводка за шкафом. Обесточили, разбираем.",
+        "audio": "bank-v1/101/101.working.smoke.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Очаг потушили, квартиру проветрили. Мужчину передали скорой, расчёт возвращается.",
+        "audio": "bank-v9/101/101.completed.smoke.8.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Бескудниковский переулок, двадцать четыре, выезжаем!",
+        "audio": "bank-v4/101/101.readback_trap.d2101e1c.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Бескудниковский бульвар, 24"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял поправку, перестраиваем маршрут.",
+            "audio": "bank-v1/101/101.readback_fixed.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/101/101.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/101/101.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт повторил адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, на каком этаже квартира?",
+        "audio": "bank-v1/101/101.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "floor_9",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "floor_9",
+          "label": "Девятый этаж"
+        },
+        {
+          "key": "unknown",
+          "label": "Этаж не знаю — ищите по подъездам"
+        },
+        {
+          "key": "later",
+          "label": "Уточню у заявителя и перезвоню"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, поднимаемся.",
+            "audio": "bank-v1/101/101.clarify_ok.any.1.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ясно. Ищем сами, это займёт время.",
+            "audio": "bank-v1/101/101.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 60
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Понял, но мы уже разобрались, спасибо.",
+            "audio": "bank-v1/101/101.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 60
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт спросил этаж — он был в описании карточки",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Диспетчер, срочно скорую! Мужчина без сознания, дышит плохо.",
+        "audio": "bank-v1/101/101.request_service.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {},
+      "review": {
+        "label": "Расчёт попросил скорую",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance-again",
+      "kind": "request_service",
+      "trigger": {
+        "on": "event",
+        "branch": "missed",
+        "after_s": 0,
+        "event": "ambulance"
+      },
+      "line": {
+        "text": "Диспетчер, скорая будет? Мужчина так и лежит без сознания, дышит плохо.",
+        "audio": "bank-v1/101/101.request_service.smoke.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Очаг потушили. Скорую не дождались, вызвали через своих, мужчину забрали в больницу.",
+                "audio": "bank-v1/101/101.completed.smoke.7.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт снова спросил про скорую",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Работы идут, пока без изменений.",
+            "audio": "bank-v1/101/101.status_working.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Заканчиваем, осталось всё проверить и свернуться.",
+            "audio": "bank-v1/101/101.status_working.any.8.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт долго работал без доклада",
+        "critical": false
+      }
+    },
+    {
+      "key": "alarm",
+      "kind": "alarm",
+      "priority": "alarm",
+      "trigger": {
+        "on": "inject",
+        "requires_state": "arrived"
+      },
+      "line": {
+        "text": "Тревога! Тревога! Боец упал с лестницы, травма ноги, сам идти не может. Скорую!",
+        "audio": "bank-v1/101/101.alarm.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "answer_call",
+          "within_s": 15,
+          "weight": 0.1
+        },
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 60,
+          "weight": 0.9,
+          "critical": true
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, ждём скорую. Работы продолжаем.",
+            "audio": "bank-v1/101/101.alarm_ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Принял. Бойца вынесли на улицу, встречаем врачей.",
+            "audio": "bank-v1/101/101.alarm_ack.any.2.ogg"
+          },
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Тревога: травмирован боец",
+        "critical": false
+      },
+      "injectable": true
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": [
+    "readback"
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 101",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Бескудниковский бульвар, 24",
+        "correct": true
+      },
+      {
+        "text": "Бескудниковский переулок, 24",
+        "correct": false
+      },
+      {
+        "text": "Бескудниковский бульвар, 42",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Задымление в квартире 115",
+        "correct": true
+      },
+      {
+        "text": "Пожар в подъезде",
+        "correct": false
+      },
+      {
+        "text": "Запах газа",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Пожилой мужчина, не открывает",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Есть пострадавшие",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю расчёт",
+        "correct": true
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      }
+    ]
+  }
+}

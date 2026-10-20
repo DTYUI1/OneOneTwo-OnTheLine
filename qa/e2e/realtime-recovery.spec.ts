@@ -89,7 +89,7 @@ test("LISTEN восстанавливает открытый пульт без �
   const created = await page.request.post("/api/sessions", {
     headers,
     data: {
-      title: `Восстановление LISTEN ${randomUUID()}`,
+      title: `Восстановление пульта ${randomUUID()}`,
       participants: [
         {
           user_id: trainee.id,

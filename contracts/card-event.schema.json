@@ -128,7 +128,7 @@
                 "value": {
                   "type": "object",
                   "additionalProperties": false,
-                  "description": "Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address.",
+                  "description": "Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address. Не используется АРМ ДДС с 08.10 (DT-14): адрес проверяется в комментариях; поле остаётся для старых событий.",
                   "properties": {
                     "city": {
                       "type": "string",
@@ -444,10 +444,308 @@
             "call_id": {
               "type": "string",
               "format": "uuid"
+            },
+            "report_choices": {
+              "type": "array",
+              "description": "Виды доклада службе в порядке доклада: голосом (распознанный текст, сведённый к виду по частям памятки ДДС, с. 32) или вариантом ответа. full — все обязательные части: в звонке в 112 четыре (кто вы, адрес и повод, карточка, что изменилось), в остальных звонках три — карточку памятка требует только в звонке в 112; no_who, no_address, no_card, no_change — без этой части (первой недостающей обязательной); extra — с лишними догадками. no_victims и no_incident — виды до 08.10.2026, только в старых журналах. Нет поля — доклад не записан.",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "full",
+                  "no_who",
+                  "no_address",
+                  "no_card",
+                  "no_change",
+                  "extra",
+                  "no_victims",
+                  "no_incident"
+                ]
+              }
+            },
+            "report_modes": {
+              "type": "array",
+              "description": "Как сделан каждый доклад из report_choices, в том же порядке: voice — голосом, option — вариантом ответа; нет поля — все вариантом (отбой до голосового ввода).",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "voice",
+                  "option"
+                ]
+              }
+            },
+            "voice_failures": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Сколько раз доклад голосом не расслышан (речи нет); после двух предлагаются варианты ответа. Фраза с низкой уверенностью, которую обучаемый проверил в поле правки, сюда не входит — переспрос не штрафуется (TC-04)."
+            },
+            "report_parts": {
+              "type": "array",
+              "description": "Какие части памятки ДДС, с. 32, прозвучали в каждом докладе из report_choices, в том же порядке: who — кто вы, address — адрес и повод, card — карточка, change — что изменилось. Нет поля или элемента — части по виду доклада (вариант ответа или отбой до 08.10.2026).",
+              "maxItems": 20,
+              "items": {
+                "type": "array",
+                "uniqueItems": true,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "who",
+                    "address",
+                    "card",
+                    "change"
+                  ]
+                }
+              }
+            },
+            "report_loudness": {
+              "type": "array",
+              "description": "Громкость каждого доклада из report_choices, в том же порядке: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null — доклад вариантом ответа или громкость не измерена. Нет поля — отбой до 12.10.2026.",
+              "maxItems": 20,
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "quiet",
+                      "ok",
+                      "loud"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "registration_number": {
+              "type": "string",
+              "pattern": "^[0-9]{1,6}$",
+              "description": "Номер регистрации (наряда, заявки, вызова), который назвало должностное лицо службы в этом звонке, цифрами (TC-03): фраза банка озвучки места registered (scripts/voices/bank, поле number). Диспетчер записывает его в комментарий карточки; критерий comment_keywords засчитывает только этот номер отдельным числом, чужой — нет. Нет поля — номер не назван (дежурный без персонажа, звонок бригаде, отбой до 17.10.2026)."
             }
           },
           "required": [
             "call_id"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Разговор поставлен на удержание: только отвеченный, не завершённый звонок карточки, ещё не удержанный (иначе 404 или 409 hold_state/call_ended). Необязательный накопительный снимок доклада совпадает с call_hangup и сохраняется в журнале без изменения payload. call_resume снимает удержание; через 180 с непрерывного удержания сервер завершает звонок, даже если вкладка или карточка закрыта. Оценщик использует сохранённый снимок; отсутствие доклада при удержании не считается полным докладом. Повтор client_event_id идемпотентен, новый call_hold удержанного звонка — 409 hold_state.",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "call_hold"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "report_choices": {
+              "type": "array",
+              "description": "Виды доклада службе в порядке доклада: голосом (распознанный текст, сведённый к виду по частям памятки ДДС, с. 32) или вариантом ответа. full — все обязательные части: в звонке в 112 четыре (кто вы, адрес и повод, карточка, что изменилось), в остальных звонках три — карточку памятка требует только в звонке в 112; no_who, no_address, no_card, no_change — без этой части (первой недостающей обязательной); extra — с лишними догадками. no_victims и no_incident — виды до 08.10.2026, только в старых журналах. Нет поля — доклад не записан.",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "full",
+                  "no_who",
+                  "no_address",
+                  "no_card",
+                  "no_change",
+                  "extra",
+                  "no_victims",
+                  "no_incident"
+                ]
+              }
+            },
+            "report_modes": {
+              "type": "array",
+              "description": "Как сделан каждый доклад из report_choices, в том же порядке: voice — голосом, option — вариантом ответа; нет поля — все вариантом (отбой до голосового ввода).",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "voice",
+                  "option"
+                ]
+              }
+            },
+            "voice_failures": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Сколько раз доклад голосом не расслышан (речи нет); после двух предлагаются варианты ответа. Фраза с низкой уверенностью, которую обучаемый проверил в поле правки, сюда не входит — переспрос не штрафуется (TC-04)."
+            },
+            "report_parts": {
+              "type": "array",
+              "description": "Какие части памятки ДДС, с. 32, прозвучали в каждом докладе из report_choices, в том же порядке: who — кто вы, address — адрес и повод, card — карточка, change — что изменилось. Нет поля или элемента — части по виду доклада (вариант ответа или отбой до 08.10.2026).",
+              "maxItems": 20,
+              "items": {
+                "type": "array",
+                "uniqueItems": true,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "who",
+                    "address",
+                    "card",
+                    "change"
+                  ]
+                }
+              }
+            },
+            "report_loudness": {
+              "type": "array",
+              "description": "Громкость каждого доклада из report_choices, в том же порядке: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null — доклад вариантом ответа или громкость не измерена. Нет поля — отбой до 12.10.2026.",
+              "maxItems": 20,
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "quiet",
+                      "ok",
+                      "loud"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "registration_number": {
+              "type": "string",
+              "pattern": "^[0-9]{1,6}$",
+              "description": "Номер регистрации (наряда, заявки, вызова), который назвало должностное лицо службы в этом звонке, цифрами (TC-03): фраза банка озвучки места registered (scripts/voices/bank, поле number). Диспетчер записывает его в комментарий карточки; критерий comment_keywords засчитывает только этот номер отдельным числом, чужой — нет. Нет поля — номер не назван (дежурный без персонажа, звонок бригаде, отбой до 17.10.2026)."
+            }
+          },
+          "required": [
+            "call_id"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Разговор снят с удержания: собеседник снова на связи. Только звонок карточки, который сейчас на удержании (последнее событие удержания по нему — call_hold): иначе 404 или 409. Пишется в журнал карточки.",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "call_resume"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "required": [
+            "call_id"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Реплика живого заявителя прозвучала в звонке (HQ-019, docs/dds_caller.md): окно телефона говорит за заявителя фразы его книги банка (scripts/voices/bank/callers) и сообщает id каждой прозвучавшей. Только звонок карточки на номер роли «Заявитель» телефона ДДС этого занятия и только фраза книги заявителя: иначе 404 (звонка нет), 409 caller_line (звонок не заявителю) или 422 (нет такой фразы). Пишется в журнал карточки: реплика со сведением сюжета (tells, кроме неполного ответа on: first) входит в EvalContext.lines с моментом, когда прозвучала; разбор «Работа с заявителем» читает паузы и отбой заявителя.",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "caller_said"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "phrase_id": {
+              "type": "string",
+              "pattern": "^CALLER_[A-Z0-9_]+\\.[a-z_]+\\.[a-z0-9_]+\\.[0-9]+$",
+              "description": "Id фразы книги заявителя: CALLER_<характер>.<место>.<сюжет>.<n>."
+            }
+          },
+          "required": [
+            "call_id",
+            "phrase_id"
           ]
         },
         "clock_sample_id": {
@@ -750,6 +1048,340 @@
             "message_version",
             "audio_version",
             "reason"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Ответ бригаде в окне разговора (DT-10, DT-16): реплика с вариантами ответа (DeliveredMessage.reply_options), выбранный вариант — кнопкой или голосом, сопоставленным с вариантом (mode). Отвечают один раз, пока идёт разговор этого звонка.",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "brigade_reply"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "delivery_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "option_key": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "voice",
+                "option"
+              ],
+              "description": "Как дан ответ (DT-16): voice — сказан голосом и сопоставлен с вариантом (POST /calls/{id}/voice-reply), option — выбран кнопкой варианта. Нет поля — вариантом (ответы до голосового ввода)."
+            },
+            "text": {
+              "type": "string",
+              "maxLength": 1000,
+              "description": "Распознанный текст ответа голосом (mode = voice); у ответа вариантом поля нет."
+            },
+            "loudness": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "quiet",
+                    "ok",
+                    "loud"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Громкость ответа голосом: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null или нет поля — ответ вариантом или громкость не измерена."
+            },
+            "voice_failures": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Сколько фраз на эту реплику до ответа не расслышано или не сопоставлено с вариантом; после двух раскрываются варианты ответа. Нет поля — 0."
+            }
+          },
+          "required": [
+            "call_id",
+            "delivery_id",
+            "option_key"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Вводная бригаде в разговоре с ней (GP-05): адрес и что случилось — голосом (распознанная фраза) или собранные по частям. Сервер проверяет фразу правилом evalcore.briefing и записывает, что поняла бригада; первая полная вводная (адрес назван, повод прозвучал) отправляет бригаду по услышанному адресу, без неё бригада не выезжает. Только идущий разговор со свободной или уже направленной сюда бригадой своей службы после статуса «Принята»: иначе 409.",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "brigade_briefing"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "voice",
+                "parts"
+              ],
+              "description": "Способ вводной: voice — сказана голосом (POST /calls/{id}/voice-reply без delivery_id), parts — собрана по частям."
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000,
+              "description": "Вводная — распознанная фраза или части (адрес, что случилось), склеенные в одну фразу. Адрес и повод сервер берёт из неё: POST /calls/{id}/briefing-check заранее говорит, что поймёт бригада."
+            }
+          },
+          "required": [
+            "call_id",
+            "mode",
+            "text"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Сказанное бригаде в разговоре (GP-11): фраза диспетчера, которая не вводная и не ответ на вопрос бригады — «доложите обстановку», «в квартире ребёнок». Голос — распознанный текст POST /calls/{id}/voice-reply без delivery_id. Событие пишется в журнал карточки и попадает в разбор («передано бригаде: …»); ответ бригады на фразу в браузере, из банка озвучки службы. Вводная, не ставшая полной (адрес или повод не названы), тоже приходит этим событием. Только идущий разговор с бригадой своей карточки: иначе 404 или 409.",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "brigade_said"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000,
+              "description": "Что сказал диспетчер: распознанная фраза или части вводной, склеенные в одну фразу."
+            }
+          },
+          "required": [
+            "call_id",
+            "text"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Подтверждение приёма доклада бригады (TC-01): в конце доклада старший спрашивает «Как приняли?», диспетчер отвечает «Принял» — кнопкой или голосом. Событие пишется в журнал карточки («доклад бригады принят: …») и попадает в разбор. Только идущий разговор с бригадой своей карточки и доклад этой бригады, уже предъявленный: иначе 404 (звонка или доклада нет) или 409 (звонок завершён, не с бригадой, доклад другой бригады или ещё не прозвучал).",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "report_confirmed"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "delivery_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Выдача доклада (CardTraining.messages[].delivery_id), приём которого подтверждён."
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000,
+              "description": "Что сказал диспетчер: «Принял.» кнопкой или распознанная фраза."
+            }
+          },
+          "required": [
+            "call_id",
+            "delivery_id",
+            "text"
+          ]
+        },
+        "clock_sample_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "client_event_id",
+        "client_ts",
+        "type",
+        "payload"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Пояснение отделу контроля (TC-07): ответ диспетчера на звонок отдела контроля о карточке без статуса — голосом (распознанный текст POST /calls/{id}/voice-reply без delivery_id) или вариантом (option_key из CardTraining.control.reply_options). Пишется в журнал карточки и попадает в разбор; на оценку не влияет. Только идущий разговор с отделом контроля по этой карточке: иначе 404 (звонка нет) или 409 (не отвечен или завершён).",
+      "properties": {
+        "client_event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "client_ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "control_reply"
+          ]
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "call_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "voice",
+                "parts"
+              ]
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000,
+              "description": "Что сказал диспетчер: распознанная фраза или подпись выбранного варианта."
+            },
+            "option_key": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Выбранный вариант (mode = parts); голосом — null."
+            }
+          },
+          "required": [
+            "call_id",
+            "mode",
+            "text"
           ]
         },
         "clock_sample_id": {

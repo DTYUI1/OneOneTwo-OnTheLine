@@ -2,5 +2,5 @@ services:
   api:
     environment:
       COOKIE_SECURE: 'false'
-    command: [python, -m, uvicorn, app.api.main:app, --host, 0.0.0.0, --reload]
+    command: [python, -m, uvicorn, app.api.main:app, --host, 0.0.0.0, --reload, --ws-max-size, '327680']
     volumes: ['../apps/api/app:/workspace/apps/api/app']

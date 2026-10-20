@@ -1,6 +1,7 @@
 // Копии и корзина (C-07). Кнопка не выполняет команд на сервере: она записывает запрос,
 // контейнер backup забирает его в течение минуты. Корзина показывает удалённые учётки:
 // их ФИО и логин сотрутся только после успешной копии, начатой позже удаления.
+import { DeletedDrafts } from "./DeletedDrafts";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, csrfToken } from "../shared/api";
@@ -87,6 +88,7 @@ export function BackupsPanel() {
 
   return (
     <div className={kit.tabBody}>
+      <DeletedDrafts />
       {notice && (
         <p role="status" className={kit.message}>
           {notice}

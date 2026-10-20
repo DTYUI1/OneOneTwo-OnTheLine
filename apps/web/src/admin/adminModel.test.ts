@@ -50,6 +50,10 @@ const base: Settings = {
   parallel_cards: 1,
   hints_level: 0,
   spelling_hints: false,
+  voice_only: false,
+  final_shift: false,
+  demo: false,
+  report_choice_factor: 0.5,
 };
 
 describe("нормативы и веса", () => {
@@ -74,6 +78,16 @@ describe("нормативы и веса", () => {
         handling_normative_s: 30,
       }),
     ).toContain("Норматив отработки должен быть не меньше норматива реакции.");
+  });
+
+  it("блокирует неразобранное время и отработку больше часа", () => {
+    for (const seconds of [Number.NaN, 3601]) {
+      expect(
+        validateSettings({ ...base, handling_normative_s: seconds }),
+      ).toContain(
+        "Отработка карточки — время в формате мм:сс, от 0:01 до 60:00.",
+      );
+    }
   });
 
   it("держит границы параллельных карточек и потолка", () => {
@@ -154,6 +168,23 @@ describe("состояние системы", () => {
       tone: "bad",
     });
     expect(byLabel["ИИ-оценка текста"].value).toBe("выключена");
+    // Рабочий режим — норма, плитки нет.
+    expect(byLabel["Режим сервера"]).toBeUndefined();
+  });
+
+  it("режим разработки — только предупреждением", () => {
+    const items = describeHealth({
+      status: "ok",
+      mode: "mock",
+      database: "not_connected",
+      worker: "stub",
+      ai_provider: "off",
+    });
+    expect(items[1]).toMatchObject({
+      label: "Режим сервера",
+      value: "демонстрационный — без базы",
+      tone: "bad",
+    });
   });
 });
 
@@ -412,7 +443,7 @@ describe("состояние системы (C-07)", () => {
     const tiles = Object.fromEntries(
       describeStatus(status, now).map((tile) => [tile.label, tile]),
     );
-    expect(tiles["Очередь заданий"].value).toBe("с ошибкой: 2");
+    expect(tiles["Очередь заданий"].value).toBe("непрочитанных ошибок: 2");
     expect(tiles["Очередь заданий"].tone).toBe("warn");
     expect(tiles["Резервные копии"].value).toBe("устарели");
     expect(tiles["Резервные копии"].hint).toMatch(/Последняя 2 дн назад/);
@@ -427,6 +458,16 @@ describe("состояние системы (C-07)", () => {
     );
     // Обработчик уже есть в сводке капитана — второй плитки нет.
     expect(tiles["Фоновый обработчик"]).toBeUndefined();
+  });
+
+  it("прочитанные ошибки остаются в истории, но не подсвечивают очередь", () => {
+    const tile = describeStatus(
+      { ...status, queue: { ...status.queue, failed_unread: 0 } },
+      now,
+    ).find((item) => item.label === "Очередь заданий")!;
+    expect(tile.value).toBe("нет непрочитанных ошибок");
+    expect(tile.hint).toContain("Ошибок в журнале: 2");
+    expect(tile.tone).toBe("ok");
   });
 
   it("полоса админки — только предупреждения: сбои уже в общей шапке", () => {

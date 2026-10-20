@@ -1,3 +1,4 @@
+import { validationMessage } from "./validationErrors";
 import createClient from "openapi-fetch";
 import type { components, paths } from "../api-client/schema";
 
@@ -24,5 +25,29 @@ api.use({
       request.headers.set("X-CSRF-Token", csrfToken());
     }
     return request;
+  },
+});
+
+// Все формы получают уже расшифрованное message, включая формы преподавателя.
+api.use({
+  async onResponse({ response }) {
+    if (
+      response.status !== 422 ||
+      !response.headers.get("content-type")?.includes("json")
+    )
+      return response;
+    const body = await response
+      .clone()
+      .json()
+      .catch(() => null);
+    const message = validationMessage(body);
+    if (!message) return response;
+    const headers = new Headers(response.headers);
+    headers.delete("content-length");
+    return new Response(JSON.stringify({ ...body, message }), {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
   },
 });

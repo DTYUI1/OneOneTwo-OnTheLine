@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { placeTalkMenu, type Point } from "./talkWindow";
+import { placeWindowMenu, type Point } from "../shared/floatingWindow";
 import styles from "./OperatorPage.module.css";
 
 /** Меню следует за окном, но привязано к экрану: у нижнего края раскрывается вверх. */
@@ -13,7 +13,7 @@ export function TalkMenu({
   children: ReactNode;
 }) {
   const menu = useRef<HTMLUListElement>(null);
-  const [place, setPlace] = useState<ReturnType<typeof placeTalkMenu> | null>(
+  const [place, setPlace] = useState<ReturnType<typeof placeWindowMenu> | null>(
     null,
   );
   useLayoutEffect(() => {
@@ -21,7 +21,7 @@ export function TalkMenu({
     const anchor = element?.parentElement?.querySelector("button");
     if (!element || !anchor) return;
     const update = () => {
-      const next = placeTalkMenu(
+      const next = placeWindowMenu(
         anchor.getBoundingClientRect(),
         {
           width: element.offsetWidth,

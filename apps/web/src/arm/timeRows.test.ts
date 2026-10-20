@@ -33,11 +33,11 @@ describe("строки времени разбора", () => {
     expect(rows[0].label).toMatch(/Принята \/ Не принята/);
   });
 
-  it("оценочное время: сервер не выносит превышение — сравнение для ориентира", () => {
+  it("оценочное время не называется ни нормой, ни нарушением", () => {
     const rows = timeRows({
       ...base,
       timing_version: 3,
-      reaction_s: 9,
+      reaction_s: 49,
       handling_s: 7,
       waiting_s: 0,
       active_handling_s: 7,
@@ -45,7 +45,8 @@ describe("строки времени разбора", () => {
       handling_overdue: null,
       quality: "estimated",
     } as unknown as TimingResult);
-    expect(rows[0].verdict).toBe("ok");
+    expect(rows[0].verdict).toBe("estimated");
+    expect(rows[1].verdict).toBe("estimated");
   });
 
   it("неизвестное время — «unknown», а не ноль", () => {

@@ -1,0 +1,208 @@
+{
+  "format": 2,
+  "code": "missing-schoolboy-102-2",
+  "version": 1,
+  "title": "Школьник не вернулся домой после уроков",
+  "service_id": "102",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "17020201",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Рюблинская улица, 1004» на Люблинскую улицу, 100. До выезда местонахождение ребёнка неизвестно. По ходу поиска выясняется, что он у друга и телефон разрядился; передача родителям без медицинской помощи.",
+  "outcome": {
+    "people": "Мальчик одиннадцати лет не вернулся домой после школы, задерживается на два часа. Телефон выключен. Мать ждёт наряд в квартире 37, подготовила свежую фотографию сына и телефоны его друзей. Где находится ребёнок, неизвестно. Наряд опросил мать, обзвонил больницы и друзей, проверил телефон. Мальчик нашёлся у друга: телефон разрядился. Ребёнка вернули родителям.",
+    "late": "Карточку приняли позже норматива. Мальчик одиннадцати лет не вернулся домой после школы, задерживается на два часа. Телефон выключен. Мать ждёт наряд в квартире 37, подготовила свежую фотографию сына и телефоны его друзей. Где находится ребёнок, неизвестно."
+  },
+  "card": {
+    "caller_name": "Дорофеева Нелли Арсеньевна",
+    "phone_aon": "+79000000881",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": "37"
+    },
+    "description": "Мальчик одиннадцати лет не вернулся домой после школы, задерживается на два часа. Телефон выключен. Мать ждёт наряд в квартире 37, подготовила свежую фотографию сына и телефоны его друзей. Где находится ребёнок, неизвестно.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Пропал человек (несовершеннолетний)",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70008521",
+    "incident_type_code": "17020201"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": "37"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Мальчик одиннадцати лет не вернулся домой после школы, задерживается на два часа. Телефон выключен. Мать ждёт наряд в квартире 37, подготовила свежую фотографию сына и телефоны его друзей. Где находится ребёнок, неизвестно. Наряд опросил мать, обзвонил больницы и друзей, проверил телефон. Мальчик нашёлся у друга: телефон разрядился. Ребёнка вернули родителям."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Мы тут рядом, через пару минут будем.",
+        "audio": "bank-v1/102/102.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли к заявительнице. Мама в слезах, ребёнок не вернулся из школы.",
+        "audio": "bank-v1/102/102.arrived.missing.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Обзваниваем больницы и друзей, пробиваем телефон.",
+        "audio": "bank-v1/102/102.working.missing.3.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Нашёлся! Сидел у друга, телефон разрядился. Вернули родителям.",
+        "audio": "bank-v1/102/102.completed.missing.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Рюблинская улица, 1004.",
+        "audio": "bank-v6/102/102.readback.ef99f125.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, понял. Перестраиваемся, это рядом.",
+            "audio": "bank-v1/102/102.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/102/102.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/102/102.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

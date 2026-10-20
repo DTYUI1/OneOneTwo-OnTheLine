@@ -68,7 +68,9 @@ def test_catalog_roles_and_seeded_responses(database_client, role):
         read_json(path.relative_to(ROOT).as_posix())
         for path in (ROOT / "data/packs").glob("*.json")
     ]
-    assert packs.json() == sorted(expected_packs, key=lambda item: item["id"])
+    assert [
+        {k: v for k, v in pack.items() if k != "created_at"} for pack in packs.json()
+    ] == sorted(expected_packs, key=lambda item: item["id"])
     for item in packs.json():
         validate_json(item, "urn:openapi#/components/schemas/Pack")
 
@@ -158,7 +160,8 @@ def test_packs_preserve_item_order_and_empty_packs(database_client, database_url
         assert by_id[str(empty_id)]["scenario_ids"] == []
         assert by_id[str(empty_id)]["status"] == "retired"
         assert all(
-            set(pack) == {"id", "title", "status", "scenario_ids", "origin"} for pack in packs
+            set(pack) == {"id", "title", "status", "scenario_ids", "origin", "created_at"}
+            for pack in packs
         )
     finally:
         run_db(database_url, remove)

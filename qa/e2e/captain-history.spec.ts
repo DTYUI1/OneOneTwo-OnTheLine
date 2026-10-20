@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { test, login } from "./captain-fixture";
+import { confirmAgain } from "./trainer";
 
 test.describe("Восстановление списка происшествий", () => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
@@ -16,7 +17,9 @@ test.describe("Восстановление списка происшестви�
       const row = page.locator(`[data-card-id="${lesson.card.id}"]`);
       await expect(row).toContainText("Получена службой");
       await row.focus();
-      await row.locator("td").last().scrollIntoViewIfNeeded();
+      // На узком экране значки строки (макет B, arm_dds/03) скрыты: докручиваем
+      // до последней видимой колонки — «Состояние».
+      await row.locator("td:visible").last().scrollIntoViewIfNeeded();
       const position = await row.evaluate((element) => ({
         y: scrollY,
         tableX: element.closest("table")!.parentElement!.scrollLeft,
@@ -89,7 +92,10 @@ test.describe("Восстановление списка происшестви�
 
   test.describe("Загрузка отдельной карточки", () => {
     test.use({ secondCard: true });
-    test("Переход из списка отменяет незавершённую загрузку скрытой истории", async ({
+    // Реестр истории строк не грузит (колонки «Реакция» нет — макет B). На занятии
+    // (тест) строк «Принята» ждёт нет совсем (решение 17.10): историю другой карточки
+    // не читает никто, и открытие своей ничто не задерживает.
+    test("История другой карточки на занятии не грузится и не задерживает открытие", async ({
       page,
       lesson,
     }) => {
@@ -99,13 +105,8 @@ test.describe("Восстановление списка происшестви�
       const ready = new Promise<void>((resolve) => {
         release = resolve;
       });
-      // Наблюдаем отмену браузером, не меняя fetch, ответ API или его данные.
       let requested = false;
-      let cancelled = false;
       const path = `/api/cards/${second.id}/events`;
-      page.on("requestfailed", (request) => {
-        if (new URL(request.url()).pathname === path) cancelled = true;
-      });
       await page.route(`**${path}`, async (route) => {
         if (route.request().method() === "GET") {
           requested = true;
@@ -115,18 +116,20 @@ test.describe("Восстановление списка происшестви�
       });
       try {
         await login(page, "trainee05");
-        await page
-          .locator(`[data-card-id="${second.id}"]`)
-          .scrollIntoViewIfNeeded();
-        await expect.poll(() => requested).toBe(true);
+        await expect(
+          page.locator(`[data-card-id="${second.id}"]`),
+        ).toBeVisible();
         await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
         await expect(page).toHaveURL(
           new RegExp(`/arm/cards/${lesson.card.id}$`),
         );
-        await expect.poll(() => cancelled).toBe(true);
         await expect(page.locator('[data-help="card-history"]')).toContainText(
           "карточка открыта",
         );
+        expect(requested).toBe(false);
+        await expect(
+          page.getByRole("region", { name: "Подсказка тренажёра" }),
+        ).toHaveCount(0);
       } finally {
         release();
         await page.unrouteAll({ behavior: "wait" });
@@ -154,10 +157,13 @@ test.describe("Восстановление списка происшестви�
       await expect(page.locator('[data-help="card-history"]')).toContainText(
         "карточка открыта",
       );
-      expect(historyRequests.length).toBeGreaterThan(0);
-      expect([...new Set(historyRequests)]).toEqual([
-        `/api/cards/${lesson.card.id}/events`,
-      ]);
+      // Кроме открытой карточки историю не читает никто: строк «Принята» ждёт по
+      // другим карточкам на занятии нет (решение 17.10), скрытый реестр историй не грузит.
+      const visible = new Set([`/api/cards/${lesson.card.id}/events`]);
+      expect(historyRequests).toContain(`/api/cards/${lesson.card.id}/events`);
+      expect(
+        [...new Set(historyRequests)].filter((item) => !visible.has(item)),
+      ).toEqual([]);
     });
   });
 });
@@ -165,7 +171,7 @@ test.describe("Восстановление списка происшестви�
 test.describe("История статусов в карточке", () => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
 
-  test("Свежий статус виден без прокрутки, служебное — по «все действия»", async ({
+  test("Панель истории: свежий статус виден, служебное скрыто", async ({
     page,
     lesson,
   }) => {
@@ -173,28 +179,71 @@ test.describe("История статусов в карточке", () => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
     const history = page.locator('[data-help="card-history"]');
+    // Журнал целиком в разметке, но окно закрыто, пока его не откроют (arm_dds/06).
     await expect(history).toContainText("карточка открыта");
-    // По умолчанию на экране только ключевые записи (arm_dds/12).
-    await expect(history.getByText(/карточка открыта/)).toBeHidden();
-    await expect(history.getByText("Статусов пока нет.")).toBeVisible();
-    for (const [state, text] of [
-      ["rejected", "Требуется уточнение адреса у заявителя."],
-      ["accepted", "Адрес уточнён, наряд направлен."],
-    ] as const) {
-      await page.getByRole("button", { name: /^Служба 102/ }).click();
-      await page.getByLabel("Статус", { exact: true }).selectOption(state);
-      await page.getByLabel("Комментарий", { exact: true }).fill(text);
-      await page.keyboard.press("Enter");
-      // Форма остаётся открытой: успешная отправка сбрасывает выбор статуса.
-      await expect(page.getByLabel("Статус", { exact: true })).toHaveValue("");
+    await expect(history).toBeHidden();
+    const toggle = page.getByRole("button", {
+      name: "История статусов",
+      exact: true,
+    });
+    await toggle.click();
+    await expect(history).toBeVisible();
+    await expect(history).toContainText("Добавлена");
+    let releaseHistory = () => {};
+    const historyReady = new Promise<void>((resolve) => {
+      releaseHistory = resolve;
+    });
+    const eventsRoute = `**/api/cards/${lesson.card.id}/events`;
+    // После подтверждённого статуса строка уже готова к следующему. Медленная
+    // история не должна блокировать отправку следующего статуса по Enter (#93).
+    await page.route(eventsRoute, async (route) => {
+      if (route.request().method() === "GET") await historyReady;
+      await route.continue();
+    });
+    try {
+      for (const [state, text] of [
+        ["rejected", "Требуется уточнение адреса у заявителя."],
+        ["accepted", "Адрес уточнён, наряд направлен."],
+      ] as const) {
+        await page
+          .getByRole("button", { name: "Изменить статус", exact: true })
+          .click();
+        await page.getByLabel("Статус", { exact: true }).selectOption(state);
+        await page.getByLabel("Комментарий", { exact: true }).fill(text);
+        await page.keyboard.press("Enter");
+        // «Не принята» — второй Enter сохраняет её (первый взводит, подпись у ✓).
+        if (state === "rejected") {
+          await expect(confirmAgain(page)).toBeVisible();
+          await page.keyboard.press("Enter");
+        }
+        // Строка статуса всегда на виду (DT-19): после сохранения она очищена.
+        await expect(page.getByLabel("Статус", { exact: true })).toHaveValue(
+          "",
+        );
+      }
+    } finally {
+      releaseHistory();
+      await page.unrouteAll({ behavior: "wait" });
     }
-    const last = history.locator("li:not([hidden])").last();
+    await toggle.click();
+    // По умолчанию видны статусы и комментарии, технические записи — в «Все действия».
+    const last = history.locator("tr[data-history-id]:not([hidden])").last();
     await expect(last).toContainText("Адрес уточнён, наряд направлен.");
     await expect(last).toBeInViewport();
-    await history.getByRole("button", { name: "все действия" }).click();
-    await expect(history.getByText(/карточка открыта/)).toBeVisible();
-    await expect(history.locator("li").last()).toBeInViewport();
-    await history.getByRole("button", { name: "только статусы" }).click();
     await expect(history.getByText(/карточка открыта/)).toBeHidden();
+    await history.getByRole("button", { name: "Все действия", exact: true }).click();
+    await expect(history.getByText(/карточка открыта/)).toBeVisible();
+    await history.getByRole("button", { name: "Статусы и комментарии", exact: true }).click();
+    await history.getByRole("searchbox", { name: "Поиск по истории" }).fill("Адрес уточнён");
+    const comment = history.getByRole("button", { name: /^Комментарий: Принята,/ });
+    await comment.click();
+    await expect(history.getByRole("region", { name: "Полный комментарий: Принята" })).toHaveText(
+      "Адрес уточнён, наряд направлен.",
+    );
+    // Esc закрывает окно истории, карточка остаётся открытой.
+    await page.keyboard.press("Escape");
+    await expect(history).toBeHidden();
+    await expect(toggle).toBeFocused();
+    await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
   });
 });

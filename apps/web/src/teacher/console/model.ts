@@ -164,13 +164,23 @@ export function ordersByParticipant(
  * задание (ответ капитана §2): иначе сервер вернёт ошибку на всё занятие.
  */
 export function startBlockers(
-  session: Pick<Session, "status" | "participants">,
+  session: Pick<Session, "status" | "participants" | "ai_preparation">,
   assignments: Pick<Assignment, "participant_id">[],
 ): string[] {
   const problems: string[] = [];
   if (session.status === "running") problems.push("Занятие уже идёт.");
   if (session.status === "finished")
     problems.push("Занятие завершено: запустить его заново нельзя.");
+  if (session.ai_preparation && session.ai_preparation.state !== "ready") {
+    problems.push(
+      session.ai_preparation.state === "cancelled"
+        ? "Подбор остановлен. Готовые сценарии можно утвердить в Студии и выдать в новом занятии."
+        : session.ai_preparation.state === "failed"
+          ? "Подготовка ИИ-заданий завершилась ошибкой."
+          : "Дождитесь подготовки всего набора ИИ-заданий.",
+    );
+    return problems;
+  }
   const assigned = new Set(assignments.map((item) => item.participant_id));
   const without = session.participants.filter(
     (participant) => !assigned.has(participant.user_id),
@@ -207,8 +217,13 @@ export function evaluationNote(evaluation: Evaluation): string | null {
 }
 
 /** Самые слабые критерии занятия — для «лидеров и отстающих и почему». */
-export function weakestFirst(evaluation: Evaluation) {
-  return [...evaluation.criteria].sort((a, b) => a.score - b.score);
+export function weakestFirst(evaluation: Evaluation, appliedOnly = false) {
+  return evaluation.criteria
+    .filter((item) => !appliedOnly || item.weight !== 0)
+    .sort(
+      (a, b) =>
+        Number(a.weight === 0) - Number(b.weight === 0) || a.score - b.score,
+    );
 }
 
 /** Статусы занятия по-русски: сырые draft/running на экране преподавателя не показываем. */
@@ -310,6 +325,14 @@ export const COMMENT_CRITERION_LABELS: Record<string, string> = {
   comment_keywords: "Ключевые сведения в комментарии",
 };
 
+/**
+ * «Работа с бригадой» (DT-10, evalcore/brigade.py): реакция на события бригады. Вес по
+ * желанию — в занятиях до 08.10 его нет; без событий на карточке критерия в разборе нет.
+ */
+export const BRIGADE_CRITERION_LABELS: Record<string, string> = {
+  brigade_work: "Работа с бригадой",
+};
+
 // Критерии ИИ-судьи (worker/judging.py): в разборе есть, весов в настройках нет.
 const JUDGE_LABELS: Record<string, string> = {
   comment_completeness: "Полнота комментария",
@@ -321,6 +344,7 @@ export function criterionLabel(key: string): string {
   return (
     CRITERION_LABELS[key] ??
     COMMENT_CRITERION_LABELS[key] ??
+    BRIGADE_CRITERION_LABELS[key] ??
     JUDGE_LABELS[key] ??
     key
   );
@@ -334,6 +358,7 @@ const TERMS: Record<string, string> = {
     Object.entries({
       ...CRITERION_LABELS,
       ...COMMENT_CRITERION_LABELS,
+      ...BRIGADE_CRITERION_LABELS,
       ...JUDGE_LABELS,
     }).map(([key, label]) => [key, label.toLowerCase()]),
   ),

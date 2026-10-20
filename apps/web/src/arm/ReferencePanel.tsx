@@ -1,43 +1,77 @@
-// Справка обучаемого (D-03, FR-1.7): материалы, которые преподаватель назначил на
-// занятие (только reference; материалы для оценивания сервер ученику не выдаёт).
-// Открывается по отдельному адресу /arm/reference под общей шапкой.
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../shared/api";
+// Материалы сгруппированы сервером по занятиям; версии разных занятий не смешиваются.
 import {
   contentUrl,
   formatSize,
-  latestVersions,
   MEDIA_TYPES,
 } from "../teacher/materials/materialsModel";
 import { WorkflowSteps } from "../shared/WorkflowGuide";
+import { lessonFiles, type LessonMaterials } from "./referenceModel";
+import { useReferenceMaterials } from "./useReferenceMaterials";
 import styles from "./results/Results.module.css";
+import reference from "./ReferencePanel.module.css";
 
-export function ReferencePanel({ onClose }: { onClose: () => void }) {
-  const materials = useQuery({
-    queryKey: ["materials"],
-    queryFn: async () => {
-      const { data, error, response } = await api.GET("/materials");
-      if (!data)
-        throw new Error(
-          response.status === 501
-            ? "Справочная база на сервере ещё не подключена."
-            : (error?.message ?? "Справка недоступна."),
-        );
-      return data;
-    },
-  });
-  const list = latestVersions(materials.data ?? []);
-
+function LessonFiles({ lesson }: { lesson: LessonMaterials }) {
+  const files = lessonFiles(lesson);
   return (
-    <section className={styles.panel} aria-labelledby="reference-title">
+    <div className={reference.lesson}>
+      <h3>{lesson.title}</h3>
+      <p className={styles.muted}>
+        {lesson.date
+          ? new Date(lesson.date).toLocaleDateString("ru-RU", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          : "Дата занятия не указана"}
+      </p>
+      {files.length === 0 ? (
+        <p>Преподаватель пока не прикрепил материалы к этому занятию.</p>
+      ) : (
+        <ul className={styles.referenceList} data-help="reference-materials">
+          {files.map((item) => (
+            <li key={`${item.id}:${item.version}`}>
+              <a href={contentUrl(item)} target="_blank" rel="noreferrer">
+                {item.title}
+              </a>
+              <span className={styles.muted}>
+                {MEDIA_TYPES[item.media_type]?.label ?? item.media_type} ·{" "}
+                {formatSize(item.size_bytes)} · версия {item.version}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export function ReferencePanel({
+  onClose,
+  sessionId,
+  side = false,
+}: {
+  onClose: () => void;
+  sessionId?: string;
+  side?: boolean;
+}) {
+  const materials = useReferenceMaterials();
+  const current = (materials.data ?? []).filter(
+    (lesson) =>
+      lesson.is_current && (!sessionId || lesson.session_id === sessionId),
+  );
+  const past = (materials.data ?? []).filter(
+    (lesson) => !lesson.is_current && lesson.materials.length > 0,
+  );
+  return (
+    <section
+      className={side ? reference.content : styles.panel}
+      aria-labelledby="reference-title"
+    >
       <header className={styles.head} data-help="reference-heading">
         <h2 id="reference-title">Справка</h2>
-        <p className={styles.counters}>
-          материалы, назначенные преподавателем на ваши занятия
-        </p>
         <button
           type="button"
-          className={styles.close}
+          className={`${styles.close} ${reference.close}`}
           onClick={onClose}
           aria-label="Закрыть справку"
         >
@@ -49,34 +83,36 @@ export function ReferencePanel({ onClose }: { onClose: () => void }) {
       )}
       {materials.isError && (
         <p role="alert" className={styles.empty}>
-          {materials.error.message}
+          {materials.error.message}{" "}
+          <button onClick={() => void materials.refetch()}>Повторить</button>
         </p>
       )}
-      {/* Без материалов преподавателя справка не тупик: порядок работы с
-          карточкой — тот же список, что в «Порядке работы» шапки. */}
-      {materials.data && list.length === 0 && (
-        <p className={styles.empty}>
-          Преподаватель пока не назначил справочных материалов. Ниже — порядок
-          работы с карточкой.
-        </p>
-      )}
-      {(materials.isError || (materials.data && list.length === 0)) && (
-        <WorkflowSteps />
-      )}
-      {list.length > 0 && (
-        <ul className={styles.referenceList} data-help="reference-materials">
-          {list.map((item) => (
-            <li key={item.id}>
-              <a href={contentUrl(item)} target="_blank" rel="noreferrer">
-                {item.title}
-              </a>
-              <span className={styles.muted}>
-                {MEDIA_TYPES[item.media_type]?.label ?? item.media_type} ·{" "}
-                {formatSize(item.size_bytes)} · версия {item.version}
-              </span>
-            </li>
-          ))}
-        </ul>
+      {materials.data && (
+        <div className={reference.body}>
+          <h2>К этому занятию</h2>
+          {current.length ? (
+            current.map((lesson) => (
+              <LessonFiles key={lesson.session_id} lesson={lesson} />
+            ))
+          ) : (
+            <p>Сейчас у вас нет идущего занятия.</p>
+          )}
+          <details className={reference.past}>
+            <summary>С прошлых занятий ({past.length})</summary>
+            {past.length ? (
+              past.map((lesson) => (
+                <LessonFiles key={lesson.session_id} lesson={lesson} />
+              ))
+            ) : (
+              <p>Материалов с прошлых занятий пока нет.</p>
+            )}
+          </details>
+          <details className={reference.past}>
+            <summary>Общий порядок работы</summary>
+            <p>Это памятка по интерфейсу, а не решение текущего задания.</p>
+            <WorkflowSteps />
+          </details>
+        </div>
       )}
     </section>
   );

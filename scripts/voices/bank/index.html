@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Банк фраз ДДС</title>
+<style>
+  :root { --bg: #f6f5f2; --card: #fff; --ink: #1d1d1b; --muted: #77756f; --line: #e3e1db; --accent: #2f5d8a; --redo: #a4462f; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #171716; --card: #21211f; --ink: #ecebe6; --muted: #9a988f; --line: #33322f; --accent: #8fb5dc; --redo: #e08a72; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 20px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; align-items: center; }
+  .bar button { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 6px 12px; font: inherit; cursor: pointer; }
+  .bar button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  .bar .label { color: var(--muted); margin-right: 4px; }
+  .count { color: var(--muted); font-size: 14px; margin-left: 2px; }
+  h2 { font-size: 18px; margin: 28px 0 2px; }
+  .hint { color: var(--muted); margin: 0 0 8px; font-size: 15px; }
+  .row { display: flex; gap: 12px; align-items: baseline; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin-bottom: 6px; }
+  .row.redo { border-color: var(--redo); }
+  .play { flex: 1; text-align: left; border: 0; background: none; color: var(--ink); font: inherit; padding: 0; cursor: pointer; }
+  .play::before { content: "▶"; color: var(--accent); margin-right: 10px; font-size: 12px; }
+  .play.playing { color: var(--accent); }
+  .meta { color: var(--muted); font-size: 14px; }
+  .row label { color: var(--muted); font-size: 14px; white-space: nowrap; cursor: pointer; }
+  .row.redo label { color: var(--redo); }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; white-space: pre-wrap; }
+  .empty { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Банк фраз ДДС</h1>
+  <p class="lead">Из этих записей ИИ собирает сценарии. Послушайте, что звучит фальшиво или не по-служебному, отметьте «переделать» — внизу соберётся список.</p>
+  <div class="bar" id="services"></div>
+  <div class="bar" id="incidents"></div>
+  <div class="bar"><span class="label">Слушать</span>
+    <button id="phone" aria-pressed="true">в трубке</button>
+    <button id="clean" aria-pressed="false">чисто</button>
+  </div>
+  <div id="list"><p class="empty">Загружаю…</p></div>
+  <h2>Переделать</h2>
+  <p class="hint">Пришлите этот список, можно с пометкой, что не так.</p>
+  <pre id="redo"></pre>
+</main>
+<script>
+const SERVICES = { "101": "Пожарные", "102": "Полиция", "103": "Скорая", "104": "Газовая", "GKH": "ЖКХ", "MOSLIFT": "Мослифт", "OFFICIAL": "Дежурный и 112", "OFFICIAL_101": "Дежурный 101", "OFFICIAL_102": "Дежурный 102", "OFFICIAL_103": "Диспетчер 103", "OFFICIAL_104": "Диспетчер 104" };
+const SLOTS = [
+  ["answer", "Снимает трубку"], ["intro", "Звонит сам: кто на связи"], ["no_reply", "Диспетчер молчит"], ["responding", "Выезд"], ["enroute", "В пути: доложите обстановку"],
+  ["delay", "Задержка в пути"], ["readback_fixed", "Поправку адреса принял"], ["wrong_place", "Приехали не туда"],
+  ["arrived", "Прибытие"], ["working", "Работы"], ["update", "Обстановка изменилась"],
+  ["status_working", "На работах: доложите обстановку"], ["completed", "Итог: работы завершены"],
+  ["refused", "Работ не было"], ["clarify", "Вопрос диспетчеру"], ["clarify_ok", "Ответ получен"],
+  ["clarify_unknown", "Диспетчер не знает"], ["clarify_late", "Ответ опоздал"],
+  ["request_service", "Просит другую службу"], ["service_coming", "Служба уже едет"], ["service_surprise", "Служба приехала сама"], ["alarm", "Тревога"], ["alarm_ack", "После тревоги"],
+  ["accepted", "Принял информацию"], ["registered", "Принял, номер регистрации"], ["ask_who", "Переспрос: кто"], ["ask_address", "Переспрос: адрес"],
+  ["ask_what", "Переспрос: что случилось"], ["ask_card", "Переспрос: карточка"], ["ask_victims", "Переспрос: пострадавшие"],
+  ["confirm_request", "Как приняли?"], ["repeat_report", "Повторяю доклад"], ["ack", "Понял"], ["not_understood", "Не расслышал"], ["end_call", "Конец связи"],
+];
+const STORE = "bank-redo";
+let redo = {};
+try { redo = JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) {}
+let bank, service = "101", incident = "", phone = true, ctx, current;
+
+function route(audio) {
+  ctx = ctx || new AudioContext();
+  const source = ctx.createMediaElementSource(audio);
+  const high = new BiquadFilterNode(ctx, { type: "highpass", frequency: 300 });
+  const low = new BiquadFilterNode(ctx, { type: "lowpass", frequency: 3400 });
+  const squeeze = new DynamicsCompressorNode(ctx, { threshold: -24, ratio: 6 });
+  source.connect(high).connect(low).connect(squeeze).connect(ctx.destination);
+}
+
+function play(button, src) {
+  if (current) { current.pause(); document.querySelectorAll(".playing").forEach(b => b.classList.remove("playing")); }
+  const audio = new Audio(src);
+  if (phone) route(audio);
+  current = audio;
+  button.classList.add("playing");
+  audio.onended = () => button.classList.remove("playing");
+  if (ctx) ctx.resume();
+  audio.play();
+}
+
+function chips(box, items, active, pick) {
+  box.replaceChildren();
+  for (const [key, label, count] of items) {
+    const b = document.createElement("button");
+    b.setAttribute("aria-pressed", key === active);
+    b.textContent = label;
+    if (count !== undefined) { const c = document.createElement("span"); c.className = "count"; c.textContent = " " + count; b.append(c); }
+    b.onclick = () => pick(key);
+    box.append(b);
+  }
+}
+
+function render() {
+  const book = bank.services[service];
+  chips(document.getElementById("services"),
+    Object.keys(bank.services).map(k => [k, SERVICES[k] || k, bank.services[k].phrases.length]),
+    service, k => { service = k; incident = ""; render(); });
+  const incidents = [["", "Все"], ["*", "Подходит всегда"], ...Object.entries(book.incidents)];
+  chips(document.getElementById("incidents"),
+    incidents.map(([k, label]) => [k, label, k ? book.phrases.filter(p => p.incidents.includes(k)).length : undefined]),
+    incident, k => { incident = k; render(); });
+  const list = document.getElementById("list");
+  list.replaceChildren();
+  const shown = book.phrases.filter(p => !incident || p.incidents.includes(incident));
+  for (const [slot, title] of SLOTS) {
+    const items = shown.filter(p => p.slot === slot);
+    if (!items.length) continue;
+    const h = document.createElement("h2");
+    h.textContent = title;
+    list.append(h);
+    for (const p of items) {
+      const row = document.createElement("div");
+      row.className = "row" + (redo[p.id] ? " redo" : "");
+      const b = document.createElement("button");
+      b.className = "play";
+      b.textContent = p.text;
+      b.onclick = () => play(b, "../bank/" + p.audio);
+      const meta = document.createElement("span");
+      meta.className = "meta";
+      const where = p.incidents.includes("*") ? "" : p.incidents.map(i => book.incidents[i] || i).join(", ");
+      meta.textContent = [where, p.needs ? "просит " + (SERVICES[p.needs] || p.needs).toLowerCase() : "", p.asks || ""].filter(Boolean).join(" · ");
+      const label = document.createElement("label");
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = !!redo[p.id];
+      box.onchange = () => {
+        if (box.checked) redo[p.id] = p.text; else delete redo[p.id];
+        try { localStorage.setItem(STORE, JSON.stringify(redo)); } catch (e) {}
+        render();
+      };
+      label.append(box, " переделать");
+      row.append(b, meta, label);
+      list.append(row);
+    }
+  }
+  const lines = Object.entries(redo).map(([id, text]) => `${id} — ${text}`);
+  document.getElementById("redo").textContent = lines.join("\n") || "Пока ничего.";
+}
+
+function mode(on) {
+  phone = on;
+  document.getElementById("phone").setAttribute("aria-pressed", on);
+  document.getElementById("clean").setAttribute("aria-pressed", !on);
+}
+document.getElementById("phone").onclick = () => mode(true);
+document.getElementById("clean").onclick = () => mode(false);
+
+fetch("out/manifest.json")
+  .then(r => r.json())
+  .then(m => { bank = m; service = Object.keys(m.services)[0]; render(); })
+  .catch(() => {
+    document.getElementById("list").innerHTML =
+      '<p class="empty">Банк ещё не озвучен: python3 scripts/voices/bank/bank.py synth --go</p>';
+  });
+</script>
+</body>
+</html>

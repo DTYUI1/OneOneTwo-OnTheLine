@@ -1,0 +1,577 @@
+{
+  "note": "Примеры правил живого заявителя (HQ-019): общие для окна телефона (conversation.test.ts) и прогона связности (apps/api/tests/test_coherence_caller.py). expect — реплики каждого шага: «место.номер» фразы книги, HANGUP — заявитель кладёт трубку.",
+  "plot": "animal_shaft",
+  "address": {
+    "house": "22",
+    "flat": "58"
+  },
+  "cases": [
+    {
+      "name": "спокойная: ответ сразу и полностью, просьба подойти, прощание",
+      "character": "calm",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where", "eta"],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["box", "danger", "owner"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["other"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["come"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["bye"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        ["tell_where.1", "tell_eta.1"],
+        ["tell_box.1", "tell_danger.1", "tell_owner.1"],
+        ["unknown.1"],
+        ["agree.2"],
+        ["end_call.1", "HANGUP"]
+      ]
+    },
+    {
+      "name": "спокойная: без службы — один раз «кто звонит», потом отложенный вопрос",
+      "character": "calm",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": true,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["eta"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [["answer.1"], ["ask_who.1"], ["tell_where.1"], ["tell_eta.1"]]
+    },
+    {
+      "name": "спокойная: повтор вопроса и «повторите»",
+      "character": "calm",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["eta"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["eta"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["again"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        [],
+        ["tell_eta.1"],
+        ["repeat.1", "tell_eta.1"],
+        ["repeat.1", "tell_eta.1"],
+        ["not_understood.1"]
+      ]
+    },
+    {
+      "name": "спокойная: адрес вслух — подтверждение и поправки",
+      "character": "calm",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["readback:22:58"],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["readback:22:85"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["readback:2:58"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["readback:2:85"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["readback::58"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        ["confirm_address.1"],
+        ["correct_address.1"],
+        ["correct_address.2"],
+        ["correct_address.2"],
+        ["confirm_address.1"]
+      ]
+    },
+    {
+      "name": "растерянная: кто звонит — пока не назовут службу и повод; «да» на догадку",
+      "character": "confused",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": false,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": false,
+            "reason": false,
+            "yes": true
+          }
+        },
+        {
+          "say": {
+            "asks": ["eta"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        ["ask_who.1"],
+        ["ask_who.2"],
+        ["tell_where.1"],
+        ["tell_eta.1"]
+      ]
+    },
+    {
+      "name": "растерянная: неполно, затем полностью на уточнение; повторы",
+      "character": "confused",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["address"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["address"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["danger"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["danger"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["eta"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["eta"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["box"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["box"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        [],
+        ["tell_address.1"],
+        ["tell_address.2"],
+        ["tell_danger.1"],
+        ["tell_danger.2"],
+        ["tell_eta.1"],
+        ["tell_eta.2"],
+        ["tell_box.1"],
+        ["tell_box.2"],
+        ["tell_where.1"],
+        ["repeat.1", "tell_where.1"],
+        ["repeat.2", "tell_where.1"]
+      ]
+    },
+    {
+      "name": "растерянная: из двух вопросов — только первый",
+      "character": "confused",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where", "owner"],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["owner"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [["answer.1"], ["tell_where.1"], ["tell_owner.1"]]
+    },
+    {
+      "name": "тишина: два «Алло, вы тут?», отбой на третьей паузе, перезвон — «это опять вы?»",
+      "character": "calm",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "silence": true
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "silence": true
+        },
+        {
+          "silence": true
+        },
+        {
+          "silence": true
+        },
+        {
+          "hungup": false
+        },
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        ["no_reply.1"],
+        [],
+        ["no_reply.1"],
+        ["no_reply.2"],
+        ["hangup.1", "HANGUP"],
+        [],
+        ["answer_again.1"],
+        ["tell_where.1"]
+      ]
+    },
+    {
+      "name": "растерянная: тишина и перезвон",
+      "character": "confused",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "silence": true
+        },
+        {
+          "silence": true
+        },
+        {
+          "silence": true
+        },
+        {
+          "hungup": false
+        },
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        ["no_reply.1"],
+        ["no_reply.2"],
+        ["hangup.1", "HANGUP"],
+        [],
+        ["answer_again.1"],
+        ["tell_where.1"]
+      ]
+    },
+    {
+      "name": "перезвон после прощания — обычное «Алло», сказанное помнит",
+      "character": "confused",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["bye"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        },
+        {
+          "hungup": true
+        },
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": ["where"],
+            "service": false,
+            "reason": false,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [
+        ["answer.1"],
+        ["tell_where.1"],
+        ["end_call.1", "HANGUP"],
+        [],
+        ["answer.2"],
+        ["repeat.1", "tell_where.1"]
+      ]
+    },
+    {
+      "name": "вопрос не по сюжету со словом повода («Где котёнок?») — «не знаю», не молчание",
+      "character": "calm",
+      "steps": [
+        {
+          "pickup": true
+        },
+        {
+          "say": {
+            "asks": [],
+            "service": true,
+            "reason": true,
+            "yes": false
+          }
+        },
+        {
+          "say": {
+            "asks": ["other"],
+            "service": false,
+            "reason": true,
+            "yes": false
+          }
+        }
+      ],
+      "expect": [["answer.1"], [], ["unknown.2"]]
+    }
+  ]
+}

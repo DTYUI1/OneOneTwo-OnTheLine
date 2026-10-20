@@ -43,8 +43,8 @@ import type { Address } from "./model";
 import styles from "./OperatorPage.module.css";
 import { createCallerAudio } from "./voice";
 import { TalkMenu } from "./TalkMenu";
-import { TALK_EDGES } from "./talkWindow";
-import type { useTalkWindow } from "./useTalkWindow";
+import { WINDOW_EDGES } from "../shared/floatingWindow";
+import type { useFloatingWindow } from "../shared/useFloatingWindow";
 
 const WHO: Record<Line["who"], string> = {
   caller: "Заявитель",
@@ -93,7 +93,7 @@ export function Talk({
   onStateChange,
   onJournalChange,
 }: {
-  floating: ReturnType<typeof useTalkWindow>;
+  floating: ReturnType<typeof useFloatingWindow>;
   scenario: CallScenario;
   data: OperatorData;
   /** Входящий номер (АОН) — для подсказки в начале звонка. */
@@ -272,7 +272,7 @@ export function Talk({
     setBusy(true);
     void (async () => {
       for (const line of firstLines(scenario)) {
-        record(openingEvent(line.text, scenario.start_panic));
+        record(openingEvent(line.text, scenario.start_panic, line.voice));
         await say(line);
       }
       busyRef.current = false;
@@ -593,7 +593,7 @@ export function Talk({
           </svg>
         </button>
       </div>
-      {TALK_EDGES.map(({ name, edge }) => (
+      {WINDOW_EDGES.map(({ name, edge }) => (
         <span
           key={name}
           className={styles.talkEdge}

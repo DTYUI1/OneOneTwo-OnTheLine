@@ -1,23 +1,6 @@
-// Что показывает телефон в полосе и крупной строке панели. Чистые функции без
-// React: Softphone.tsx только подставляет состояние, решения проверяются тестами.
+// Строка ожидания в разговоре: чья реплика или чего ждём. Чистая функция без React:
+// Softphone.tsx только подставляет состояние, решение проверяется тестами.
 import type { CallState } from "./machine";
-
-/**
- * Сворачивать ли панель после отбоя. Направленная бригада ещё не доложила —
- * следующий звонок ей, и панель со списком бригад нужна открытой: иначе между
- * звонком службе и звонком бригаде её приходится раскрывать заново.
- */
-export function shouldAutoCollapse(input: {
-  readonly committed: number;
-  readonly accepted: number;
-  /** Вызов сброшен до ответа: итог нужно прочитать. */
-  readonly aborted?: boolean;
-  /** Нужна реакция обучаемого: запись не ушла, номер не принят. */
-  readonly attention?: boolean;
-}): boolean {
-  if (input.aborted || input.attention) return false;
-  return input.committed <= input.accepted;
-}
 
 export interface Phrase {
   readonly text: string;
@@ -26,8 +9,8 @@ export interface Phrase {
 }
 
 /**
- * Крупная строка панели. В разговоре с бригадой её доклад — главное на экране:
- * он и стоит в крупной строке, а не только мелким текстом под списком бригад.
+ * Строка разговора. В разговоре с бригадой её доклад — главное: он и стоит в строке;
+ * пока реплики нет — строка про ожидание.
  */
 export function phraseFor(
   call: {
@@ -51,31 +34,3 @@ export function phraseFor(
     waiting: true,
   };
 }
-
-/**
- * Входящий звонок не смешивается со старым итогом: пока бригада вызывает, в
- * полосе не видно «Звонок завершён» и номер прошлого разговора — только «Ответить».
- */
-export function stripSummary(input: {
-  readonly state: CallState;
-  readonly aborted: boolean;
-  readonly ringingIn: boolean;
-}): { readonly label: string; readonly showExt: boolean } {
-  if (input.ringingIn && (input.state === "idle" || input.state === "ended"))
-    return { label: STATE_LABEL.idle, showExt: false };
-  return {
-    label:
-      input.state === "ended" && input.aborted
-        ? "Вызов сброшен"
-        : STATE_LABEL[input.state],
-    showExt: true,
-  };
-}
-
-const STATE_LABEL: Record<CallState, string> = {
-  idle: "Телефон",
-  dialing: "Соединение",
-  ringing: "Идёт вызов",
-  talking: "Разговор",
-  ended: "Звонок завершён",
-};

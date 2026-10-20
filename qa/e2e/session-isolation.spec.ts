@@ -3,6 +3,17 @@ import { expect, test, type Page } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
 import type { PendingEvent } from "../../apps/web/src/shared/ws/outbox";
 import { passWelcome } from "./captain-fixture";
+import {
+  backToContacts,
+  callHead,
+  closePhone,
+  contact,
+  expectTalking,
+  openDial,
+  openPhone,
+  phoneWindow,
+} from "./phone";
+import { confirmAgain } from "./trainer";
 
 type Card = components["schemas"]["Card"];
 type Scenario = components["schemas"]["Scenario"];
@@ -50,7 +61,6 @@ async function pending(page: Page): Promise<PendingEvent[]> {
 test("Завершённые занятия: просмотр без действий, отказ старой карточки не блокирует новую", async ({
   page,
   browser,
-  browserName,
 }, testInfo) => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный database-стенд");
   test.setTimeout(120_000);
@@ -74,40 +84,12 @@ test("Завершённые занятия: просмотр без дейст�
     (s) => s.id === "00000000-0000-4000-8000-000000000100",
   )!;
   const settings = await (await page.request.get("/api/settings")).json();
-  const services: components["schemas"]["Service"][] = await (
-    await page.request.get("/api/services")
-  ).json();
-  const serviceName = services.find((service) => service.id === "102")!.name;
   const lessons: Session[] = [];
   const scenarios: string[] = [];
   const context = await browser.newContext({
     baseURL: testInfo.project.use.baseURL,
     ignoreHTTPSErrors: true,
   });
-  // В Firefox без аудиоустройства Web Audio остаётся suspended: нужен встроенный
-  // тестовый микрофон. В обоих браузерах кодек настоящий, физический микрофон не нужен.
-  await context.addInitScript((nativeMicrophone: boolean) => {
-    const probe = window as Window & { c01RecordedAudioBytes: number };
-    probe.c01RecordedAudioBytes = 0;
-    const start = MediaRecorder.prototype.start;
-    MediaRecorder.prototype.start = function (timeslice?: number) {
-      this.addEventListener("dataavailable", (event) => {
-        probe.c01RecordedAudioBytes += event.data.size;
-      });
-      // Наблюдаем настоящий кодек: hangup допустим только после непустой записи.
-      start.call(this, timeslice ?? 100);
-    };
-    if (nativeMicrophone) return;
-    navigator.mediaDevices.getUserMedia = async () => {
-      const audio = new AudioContext();
-      const oscillator = audio.createOscillator();
-      const destination = audio.createMediaStreamDestination();
-      oscillator.connect(destination);
-      oscillator.start();
-      await audio.resume();
-      return destination.stream;
-    };
-  }, browserName === "firefox");
   const arm = await context.newPage();
   arm.setDefaultTimeout(15_000);
   await arm.addLocatorHandler(
@@ -219,7 +201,9 @@ test("Завершённые занятия: просмотр без дейст�
       await route.continue();
     });
     await login(arm, trainee.login);
-    await arm.getByRole("button", { name: "Диспетчер служб" }).click();
+    await arm
+      .getByRole("button", { name: /^(Диспетчер служб|Перейти в тренажёр)$/ })
+      .click();
     // Стрелка знакомства с «?» бывает поверх строки реестра в новом контексте.
     await arm.keyboard.press("Escape");
     const oldView = await openCard(old.card);
@@ -236,7 +220,13 @@ test("Завершённые занятия: просмотр без дейст�
         "Занятие завершено. Карточка доступна только для просмотра.",
       ),
     ).toBeVisible();
-    await expect(oldView.getByText("Действий пока нет.")).toBeVisible();
+    // История статусов — синее окно над плиткой (DT-17, arm_dds/10–20): в нём только
+    // «Добавлена» от 112 — карточку не получили и не открыли. Служебные записи
+    // журнала окно скрывает; действий обучаемого нет — проверка mutations ниже.
+    await oldView.getByRole("button", { name: "История статусов" }).click();
+    const oldHistory = oldView.locator('[data-help="card-history"] li:visible');
+    await expect(oldHistory).toHaveCount(1);
+    await expect(oldHistory).toContainText("Добавлена");
     expect(mutations.filter((m) => m.cardId === old.card.id)).toEqual([]);
     expect(await readCard(old.card.id)).toMatchObject({
       state: "added",
@@ -248,50 +238,29 @@ test("Завершённые занятия: просмотр без дейст�
     await expect
       .poll(async () => (await readCard(current.card.id)).opened_at)
       .not.toBeNull();
-    // Первую загрузку готовой записи прерываем; повтор понадобится после finish.
-    await arm.route("**/api/calls/*/audio", (route) =>
-      route.fulfill({
-        status: 503,
-        contentType: "application/json",
-        body: JSON.stringify({
-          code: "test_unavailable",
-          message: "Тестовый обрыв загрузки",
-          details: null,
-        }),
-      }),
-    );
-    await currentView
-      .getByRole("button", { name: "Телефон", exact: true })
-      .click();
-    await currentView
-      .getByRole("button", { name: /^102.*ваша служба/ })
-      .click();
-    await expect(
-      currentView.getByRole("button", { name: "Разговор", exact: true }),
-    ).toBeVisible();
-    await expect
-      .poll(
-        () =>
-          arm.evaluate(
-            () =>
-              (window as Window & { c01RecordedAudioBytes: number })
-                .c01RecordedAudioBytes,
-          ),
-        { timeout: 15_000 },
-      )
-      .toBeGreaterThan(0);
-    await currentView
+    // Связь службы — окно телефона ДДС (GP-09), не внутри карточки: своя служба
+    // набирается вручную.
+    const talk = phoneWindow(arm);
+    const ownService = async () => {
+      const win = await openPhone(arm);
+      await (await openDial(win)).fill("102");
+      await win.getByRole("button", { name: "Позвонить", exact: true }).click();
+    };
+    // После завершения занятия набирать нечем: поле «Номер» и контакты недоступны.
+    const dialOff = async () => {
+      // Контакты — на вкладке «Справочник», поле «Номер» — на «Наборе» (правка 19.10).
+      await openPhone(arm);
+      await expect(contact(talk, "Скорая помощь 103")).toBeDisabled();
+      await expect(await openDial(talk)).toBeDisabled();
+    };
+    await ownService();
+    await expectTalking(talk);
+    // Микрофона нет (29.09): звонок кладётся без доклада, записи и её загрузки нет.
+    await talk
       .getByRole("button", { name: "Положить трубку", exact: true })
       .click();
-    await expect(
-      currentView.getByRole("button", { name: "Отправить запись ещё раз" }),
-    ).toBeVisible({ timeout: 15_000 });
-    await currentView
-      .getByRole("button", { name: "Звонок завершён", exact: true })
-      .click();
-    await currentView
-      .getByRole("button", { name: `Развернуть ${serviceName}`, exact: true })
-      .click();
+    await backToContacts(talk);
+    await closePhone(arm);
     await currentView
       .getByRole("button", { name: "Изменить статус", exact: true })
       .click();
@@ -342,9 +311,7 @@ test("Завершённые занятия: просмотр без дейст�
     await expect(
       currentView.getByRole("button", { name: "Изменить статус", exact: true }),
     ).toBeDisabled();
-    await expect(
-      currentView.getByRole("button", { name: "Вызов", exact: true }),
-    ).toHaveCount(0);
+    await dialOff();
     await expect
       .poll(
         async () =>
@@ -374,23 +341,7 @@ test("Завершённые занятия: просмотр без дейст�
     );
     expect(repeated.status()).toBe(200);
     expect((await repeated.json()).duplicate).toBe(true);
-    await currentView
-      .getByRole("button", { name: "Звонок завершён", exact: true })
-      .click();
-    await expect(
-      currentView.getByRole("button", { name: "Вызов", exact: true }),
-    ).toBeDisabled();
-    await arm.unroute("**/api/calls/*/audio");
-    const uploaded = arm.waitForResponse(
-      (r) =>
-        /\/calls\/[^/]+\/audio$/.test(r.url()) &&
-        r.request().method() === "POST",
-    );
-    await currentView
-      .getByRole("button", { name: "Отправить запись ещё раз" })
-      .click();
-    expect((await uploaded).status()).toBe(200);
-    expect(await events(current.card.id)).toEqual(before);
+    await dialOff();
 
     const next = await createLesson();
     await arm.reload();
@@ -403,9 +354,6 @@ test("Завершённые занятия: просмотр без дейст�
     await expect
       .poll(async () => (await readCard(next.card.id)).opened_at)
       .not.toBeNull();
-    await nextView
-      .getByRole("button", { name: `Развернуть ${serviceName}`, exact: true })
-      .click();
     for (const state of ["accepted", "responding", "completed"]) {
       await nextView
         .getByRole("button", { name: "Изменить статус", exact: true })
@@ -418,21 +366,22 @@ test("Завершённые занятия: просмотр без дейст�
         .getByRole("button", { name: "Подтвердить", exact: true })
         .click();
       if (state === "completed") {
-        await expect(nextView.getByText(/Нажмите ✓ ещё раз/)).toBeVisible();
+        // Необратимый статус — вторым ✓: у ✓ подпись «Нажмите ✓ или Enter ещё раз» (17.10).
+        await expect(confirmAgain(arm)).toBeVisible();
         await nextView
           .getByRole("button", { name: "Подтвердить", exact: true })
           .click();
       }
-      // HTTP-состояние меняется раньше завершения refetch/reset формы в UI.
-      // Форма видна, пока карточка открыта: после завершающего статуса она
-      // исчезает, после остальных — остаётся с пустым выбором статуса.
+      // HTTP-состояние меняется раньше завершения refetch формы в UI.
+      // Строка статуса всегда на виду (DT-19): после сохранения она очищена, а после
+      // завершающего статуса её нет — карточка закрыта.
       if (state === "completed")
         await expect(
           nextView.getByRole("group", { name: "Действие по карточке" }),
         ).toHaveCount(0);
       else
         await expect(
-          nextView.getByLabel("Статус", { exact: true }),
+          nextView.getByLabel("Комментарий", { exact: true }),
         ).toHaveValue("");
       await expect
         .poll(async () => (await readCard(next.card.id)).state)
@@ -473,18 +422,13 @@ test("Завершённые занятия: просмотр без дейст�
     await expect
       .poll(async () => (await readCard(ringing.card.id)).opened_at)
       .not.toBeNull();
-    await ringingView
-      .getByRole("button", { name: "Телефон", exact: true })
-      .click();
     const dialed = arm.waitForResponse(
       (r) =>
         r.url().endsWith(`/cards/${ringing.card.id}/events`) &&
         r.request().postDataJSON()?.type === "call_dial" &&
         r.status() === 200,
     );
-    await ringingView
-      .getByRole("button", { name: /^102.*ваша служба/ })
-      .click();
+    await ownService();
     await dialed;
     await finish(ringing.lesson.id);
     await expect(
@@ -492,9 +436,7 @@ test("Завершённые занятия: просмотр без дейст�
         "Занятие завершено. Карточка доступна только для просмотра.",
       ),
     ).toBeVisible();
-    await expect(
-      ringingView.getByRole("button", { name: "Вызов сброшен", exact: true }),
-    ).toBeVisible();
+    await expect(callHead(talk)).toContainText("вызов сброшен");
     const stoppedEvents = await events(ringing.card.id);
     const stoppedRequests = mutations.filter(
       (m) => m.cardId === ringing.card.id,

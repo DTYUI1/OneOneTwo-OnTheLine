@@ -1,0 +1,206 @@
+{
+  "format": 2,
+  "code": "roof-leak-gkh-1",
+  "version": 1,
+  "title": "После дождя протекает кровля над квартирами",
+  "service_id": "GKH",
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "14030100",
+  "complications": [],
+  "teacher_comment": "ЖКХ, уровень 1. Протечка после дождя: сообщить, кто откроет люк на кровлю. При отсутствии сведений бригада ищет держателя ключа, работы задерживаются. Заплатка временная, не подменять её капитальным ремонтом.",
+  "outcome": {
+    "people": "После дождя в квартире 89 на последнем этаже и в соседней квартире течёт с потолка. Жильцы подставили ёмкости. Люк выхода на кровлю заперт. Ключ хранит заявитель из квартиры 89, он дома и откроет люк бригаде. Пострадавших нет. Бригада получила доступ на кровлю, закрыла повреждение рубероида временной заплаткой. На чердаке сухо, дальнейший ремонт кровли передаётся кровельщикам.",
+    "late": "Карточку приняли позже норматива. После дождя в квартире 89 на последнем этаже и в соседней квартире течёт с потолка. Жильцы подставили ёмкости. Люк выхода на кровлю заперт. Ключ хранит заявитель из квартиры 89, он дома и откроет люк бригаде. Пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Тихонов Матвей Львович",
+    "phone_aon": "+79000000870",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "89"
+    },
+    "description": "После дождя в квартире 89 на последнем этаже и в соседней квартире течёт с потолка. Жильцы подставили ёмкости. Люк выхода на кровлю заперт. Ключ хранит заявитель из квартиры 89, он дома и откроет люк бригаде. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Частная проблема коммунального характера",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008510",
+    "incident_type_code": "14030100"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "89"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "GKH",
+      "phone_ext": "105",
+      "before_s": 180
+    },
+    "expected_comment": "После дождя в квартире 89 на последнем этаже и в соседней квартире течёт с потолка. Жильцы подставили ёмкости. Люк выхода на кровлю заперт. Ключ хранит заявитель из квартиры 89, он дома и откроет люк бригаде. Пострадавших нет. Бригада получила доступ на кровлю, закрыла повреждение рубероида временной заплаткой. На чердаке сухо, дальнейший ремонт кровли передаётся кровельщикам."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. После дождя на последнем этаже течёт с потолка в нескольких квартирах.",
+        "audio": "bank-v1/GKH/GKH.arrived.roof.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Кладём заплатку на рубероид, временно, до кровельщиков.",
+        "audio": "bank-v1/GKH/GKH.working.roof.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Закончили. Дыру в кровле закрыли, на чердаке сухо.",
+        "audio": "bank-v1/GKH/GKH.completed.roof.2.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "roof_keys",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "arrival",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, кто откроет выход на кровлю? Люк под замком.",
+        "audio": "bank-v1/GKH/GKH.clarify.roof.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Люк откроет заявитель {caller_name}"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у соседей"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, поспрашиваю у соседей.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, кто откроет выход на кровлю? Люк под замком.",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

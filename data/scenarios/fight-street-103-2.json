@@ -1,0 +1,324 @@
+{
+  "format": 2,
+  "code": "fight-street-103-2",
+  "version": 7,
+  "replaces": [
+    "4c49d17d-6296-505e-a14c-86fc5b2d04a5"
+  ],
+  "title": "Драка на улице с пострадавшим",
+  "service_id": "103",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "15250501",
+  "complications": [],
+  "teacher_comment": "Драка у торгового центра, Люблинская улица, 100, карточка только в 103. Бригада повторяет адрес с ошибкой (дом десять вместо ста). На месте травма криминальная — бригада просит сообщить в полицию (102 или 112); не сообщили — мужчина уходит, и опросить его некому. Мужчина отказывается от госпитализации: служба 103 закрывает карточку «Работы завершены» (памятка ДДС, с. 23).",
+  "outcome": {
+    "people": "Бригада скорой приехала к торговому центру на Люблинской улице, 100 и осмотрела мужчину с разбитой головой. Травма криминальная — по просьбе бригады сообщили в полицию. Ехать в больницу мужчина отказался, отказ оформили.",
+    "late": "Карточку приняли позже норматива. Мужчина с разбитой головой лежал на асфальте у входа в торговый центр: пока бригада не выехала, помощь ему не оказывал никто.",
+    "status": "Мужчина отказался от госпитализации, помощь ему оказали: у скорой такую карточку закрывают статусом «Работы завершены», а не «Отказом от выполнения работ». Ход статусов в вашей карточке отличается от доклада бригады."
+  },
+  "card": {
+    "caller_name": "Никитин Сергей Павлович",
+    "phone_aon": "+79000000717",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "У входа в торговый центр после драки на асфальте лежит мужчина, разбита голова. Рядом его приятели, шумят. Нападавшие убежали.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Беспорядки - драка на улице",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70005712",
+    "incident_type_code": "15250501"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "У входа в торговый центр после драки на асфальте лежит мужчина, разбита голова. Рядом его приятели, шумят. Нападавшие убежали. Травма криминальная, по просьбе бригады сообщено в полицию. Пострадавший от госпитализации отказался, отказ оформлен, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла, выезжаем.",
+        "audio": "bank-v1/103/103.responding.any.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, осматриваем пострадавшего.",
+        "audio": "bank-v2/103/103.arrived.injury.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Полиция приехала, его опросили. От госпитализации отказался, отказ оформили, бригада свободна.",
+        "audio": "bank-v9/103/103.completed.injury.11.ogg"
+      },
+      "after_s": 35,
+      "requires_state": "arrived",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Люблинская улица, десять, выезжаем!",
+        "audio": "bank-v4/103/103.readback_trap.d56c8206.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Люблинская улица, 100"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Так, записала правильный адрес. Едем.",
+            "audio": "bank-v1/103/103.readback_fixed.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/103/103.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/103/103.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "police",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, травма криминальная, его избили. Сообщите в полицию.",
+        "audio": "bank-v3/103/103.request_service.any.13.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "102",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Записала.",
+            "audio": "bank-v1/103/103.ack.any.7.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ага, услышала.",
+            "audio": "bank-v1/103/103.ack.any.8.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Полицию так и не вызвали? Он уходить собрался, а опросить его некому.",
+            "audio": "bank-v3/103/103.request_service.any.14.ogg"
+          },
+          "effects": [
+            {
+              "replace": "outcome",
+              "with": {
+                "text": "От госпитализации отказался и ушёл, полиция его так и не опросила. Бригада свободна.",
+                "audio": "bank-v3/103/103.completed.injury.10.ogg"
+              }
+            },
+            {
+              "delay": "outcome",
+              "by_s": 20
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада попросила сообщить в полицию: травма криминальная",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "arrived",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Работаем, оказываем помощь. Закончим — доложу.",
+            "audio": "bank-v1/103/103.status_working.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ещё на месте. Ждём, когда подействует укол.",
+            "audio": "bank-v1/103/103.status_working.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": [
+    "readback"
+  ]
+}

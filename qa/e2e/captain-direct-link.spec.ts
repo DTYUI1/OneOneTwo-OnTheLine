@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { passWelcome, test } from "./captain-fixture";
+import { TRAINEE_BEGIN } from "./operator-module";
 
 test.describe("Прямая ссылка до входа", () => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
@@ -32,7 +33,7 @@ test.describe("Прямая ссылка до входа", () => {
         .getByLabel("Пароль")
         .fill(process.env.DEMO_PASSWORD ?? "demo-local");
       await page.getByRole("button", { name: "Войти", exact: true }).click();
-      await page.getByRole("button", { name: "Диспетчер служб" }).click();
+      await page.getByRole("button", { name: TRAINEE_BEGIN }).click();
       await page.screenshot({
         path: test.info().outputPath("after-login.png"),
       });
@@ -87,7 +88,7 @@ test.describe("Прямая ссылка до входа", () => {
       .getByLabel("Пароль")
       .fill(process.env.DEMO_PASSWORD ?? "demo-local");
     await page.getByRole("button", { name: "Войти", exact: true }).click();
-    await page.getByRole("button", { name: "Диспетчер служб" }).click();
+    await page.getByRole("button", { name: TRAINEE_BEGIN }).click();
     await expect(page).toHaveURL(new RegExp(`${path}$`));
     await expect(page.getByRole("alert")).toHaveText(
       "Карточка не найдена или недоступна.",
@@ -119,7 +120,7 @@ test.describe("Одна дорога к результатам", () => {
       .getByLabel("Пароль")
       .fill(process.env.DEMO_PASSWORD ?? "demo-local");
     await page.getByRole("button", { name: "Войти", exact: true }).click();
-    await page.getByRole("button", { name: "Диспетчер служб" }).click();
+    await page.getByRole("button", { name: TRAINEE_BEGIN }).click();
     await page.goto("/app/results");
     await expect(page).toHaveURL(/\/app\/arm\/results$/);
     await page.goto("/app/arm");

@@ -1,0 +1,58 @@
+.inputWrap {
+  position: relative;
+}
+.inputWrap input {
+  width: 100%;
+  padding-right: 30px;
+}
+.arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.menu {
+  position: fixed;
+  z-index: 1200;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background: #fff;
+  color: #17212b;
+  border: 1px solid #929da5;
+  box-shadow: 0 4px 12px #0003;
+  padding: 4px;
+}
+.groupTitle {
+  padding: 8px;
+  font-weight: bold;
+  color: #53616c;
+}
+.option {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  background: #fff;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  white-space: normal;
+}
+.option:hover,
+.option[aria-selected="true"] {
+  background: #dcedf5;
+}
+.empty {
+  padding: 12px;
+}
+
+.sort {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid #d2d8dc;
+}

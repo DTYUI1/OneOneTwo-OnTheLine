@@ -11,6 +11,10 @@ async def list_scenarios(request: Request) -> list[schemas.Scenario]:
     return await service.list_scenarios(request.state.db)
 
 
+async def list_playable_scenarios(request: Request) -> schemas.PlayableScenarios:
+    return await service.playable_scenarios(request.state.db)
+
+
 async def get_scenario(request: Request, id: UUID) -> schemas.Scenario:
     return await service.get_scenario(request.state.db, id)
 
@@ -29,6 +33,7 @@ async def retire_scenario(request: Request, id: UUID) -> schemas.Scenario:
 
 ENDPOINTS: dict[str, tuple[Callable[..., Any], Any]] = {
     "listScenarios": (list_scenarios, list[schemas.Scenario]),
+    "listPlayableScenarios": (list_playable_scenarios, schemas.PlayableScenarios),
     "getScenario": (get_scenario, schemas.Scenario),
     "createScenario": (create_scenario, schemas.Scenario),
     "updateScenario": (update_scenario, schemas.Scenario),

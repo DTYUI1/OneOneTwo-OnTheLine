@@ -1,11 +1,19 @@
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from fastapi import HTTPException, Request
 
 from app.api.c01 import FinishInput
-from app.api.sessions import batches, lifecycle, practice, schemas, service
+from app.api.sessions import (
+    background,
+    batches,
+    lifecycle,
+    memory_check,
+    practice,
+    schemas,
+    service,
+)
 
 
 async def list_sessions(request: Request) -> list[schemas.Session]:
@@ -23,8 +31,16 @@ async def get_session(request: Request, id: UUID) -> schemas.Session:
     return await service.get_session(request, id)
 
 
-async def start_session(request: Request, id: UUID) -> schemas.Session:
-    return await service.start_session(request, id)
+async def update_session_norms(
+    request: Request, id: UUID, body: schemas.SessionNormsInput
+) -> schemas.Session:
+    return await service.update_session_norms(request, id, body)
+
+
+async def start_session(
+    request: Request, id: UUID, body: schemas.StartInput | None = None
+) -> schemas.Session:
+    return await service.start_session(request, id, body)
 
 
 async def finish_session(
@@ -40,8 +56,30 @@ async def finish_session(
     return await lifecycle.finish(request, id)
 
 
-async def start_practice(request: Request, step: int | None = None) -> schemas.Session:
-    return await practice.start_practice(request, step)
+async def start_practice(
+    request: Request,
+    step: int | None = None,
+    scenario_id: UUID | None = None,
+    scenario: UUID | None = None,
+    again: UUID | None = None,
+    demo: Literal["watch", "expert"] | None = None,
+) -> schemas.Session:
+    return await practice.start_practice(
+        request,
+        step,
+        scenario_id=scenario_id,
+        catalog_scenario_id=scenario,
+        again_card=again,
+        demo=demo,
+    )
+
+
+async def take_over_practice(request: Request, id: UUID) -> schemas.Session:
+    return await practice.take_over_practice(request, id)
+
+
+async def list_practice_catalog(request: Request) -> list[schemas.PracticeScenario]:
+    return await practice.practice_catalog(request)
 
 
 async def create_batch(
@@ -58,6 +96,20 @@ async def get_lifecycle(request: Request, id: UUID) -> lifecycle.SessionLifecycl
     return await lifecycle.get_lifecycle(request, id)
 
 
+async def list_background(request: Request, id: UUID) -> list[background.BackgroundCardView]:
+    return await background.list_background(request, id)
+
+
+async def start_memory_check(request: Request, id: UUID) -> memory_check.MemoryCheckView:
+    return await memory_check.start(request, id)
+
+
+async def answer_memory_check(
+    request: Request, id: UUID, body: memory_check.MemoryCheckAnswers
+) -> memory_check.MemoryCheckView:
+    return await memory_check.answer(request, id, body)
+
+
 async def list_assignments(request: Request, id: UUID) -> list[schemas.Assignment]:
     return await service.list_assignments(request, id)
 
@@ -72,12 +124,18 @@ ENDPOINTS: dict[str, tuple[Callable[..., Any], Any]] = {
     "listSessions": (list_sessions, list[schemas.Session]),
     "createSession": (create_session, schemas.Session),
     "getSession": (get_session, schemas.Session),
+    "updateSessionNorms": (update_session_norms, schemas.Session),
     "startSession": (start_session, schemas.Session),
     "finishSession": (finish_session, schemas.Session),
     "listAssignments": (list_assignments, list[schemas.Assignment]),
+    "listBackgroundCards": (list_background, list[background.BackgroundCardView]),
+    "startMemoryCheck": (start_memory_check, memory_check.MemoryCheckView),
+    "answerMemoryCheck": (answer_memory_check, memory_check.MemoryCheckView),
     "createAssignment": (create_assignment, schemas.Assignment),
     "createAssignmentBatch": (create_batch, batches.BatchReceipt),
     "listAssignmentBatches": (list_batches, list[batches.BatchReceipt]),
     "getSessionLifecycle": (get_lifecycle, lifecycle.SessionLifecycle),
     "startPractice": (start_practice, schemas.Session),
+    "listPracticeCatalog": (list_practice_catalog, list[schemas.PracticeScenario]),
+    "takeOverPractice": (take_over_practice, schemas.Session),
 }

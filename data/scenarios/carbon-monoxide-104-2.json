@@ -1,0 +1,267 @@
+{
+  "format": 2,
+  "code": "carbon-monoxide-104-2",
+  "version": 1,
+  "title": "Жильцу плохо при работающей газовой колонке",
+  "service_id": "104",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "22340200",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «улица Плишвина, 17». По просьбе бригады вызвать 103 или 112 и сообщить о вызове. При пропуске вызова нет доклада об осмотре врачами: колонка отключена и опломбирована, выдано предписание. В штатной ветке хозяин осмотрен скорой и отказался от больницы.",
+  "outcome": {
+    "people": "В квартире 23 пожилой хозяин находится один. При работающей газовой колонке сработал датчик угарного газа. Мужчина жалуется на головокружение, тошноту и сильную сонливость, остаётся в сознании и может открыть дверь. Он сам сообщил о происшествии. Бригада вывела мужчину на лестницу и перекрыла колонку. По просьбе газовщиков вызвали скорую: врачи осмотрели хозяина на месте, от больницы он отказался. Колонка опломбирована, работы завершены.",
+    "late": "Карточку приняли позже норматива. В квартире 23 пожилой хозяин находится один. При работающей газовой колонке сработал датчик угарного газа. Мужчина жалуется на головокружение, тошноту и сильную сонливость, остаётся в сознании и может открыть дверь. Он сам сообщил о происшествии."
+  },
+  "card": {
+    "caller_name": "Быков Анатолий Савельевич",
+    "phone_aon": "+79000000878",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": "23"
+    },
+    "description": "В квартире 23 пожилой хозяин находится один. При работающей газовой колонке сработал датчик угарного газа. Мужчина жалуется на головокружение, тошноту и сильную сонливость, остаётся в сознании и может открыть дверь. Он сам сообщил о происшествии.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Отравление угарным газом",
+    "service_ids": [
+      "104"
+    ],
+    "number": "70008518",
+    "incident_type_code": "22340200"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": "23"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "В квартире 23 пожилой хозяин находится один. При работающей газовой колонке сработал датчик угарного газа. Мужчина жалуется на головокружение, тошноту и сильную сонливость, остаётся в сознании и может открыть дверь. Он сам сообщил о происшествии. Бригада вывела мужчину на лестницу и перекрыла колонку. По просьбе газовщиков вызвали скорую: врачи осмотрели хозяина на месте, от больницы он отказался. Колонка опломбирована, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял заявку, выезжаем, прибор с собой.",
+        "audio": "bank-v1/104/104.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Хозяин один, пожилой, сонный, еле дверь открыл.",
+        "audio": "bank-v1/104/104.arrived.co.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Деда вывели на лестницу, дышит, но заговаривается. Колонку перекрыли.",
+        "audio": "bank-v1/104/104.working.co.5.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Хозяин от больницы отказался, врачи посмотрели на месте. Колонку опломбировали, работы завершены.",
+        "audio": "bank-v1/104/104.completed.co.5.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: улица Плишвина, 17.",
+        "audio": "bank-v6/104/104.readback.9b1703c5.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял поправку, спасибо, чуть не уехали не туда.",
+            "audio": "bank-v1/104/104.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/104/104.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/104/104.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, вызовите скорую жильцу. Голова кружится, тошнит его.",
+        "audio": "bank-v1/104/104.request_service.any.3.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял.",
+            "audio": "bank-v1/104/104.ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Так точно.",
+            "audio": "bank-v1/104/104.ack.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Колонку отключили и опломбировали, хозяевам предписание на прочистку. Работы завершены.",
+                "audio": "bank-v1/104/104.completed.co.1.ogg"
+              }
+            },
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Газовая бригада попросила скорую жильцу",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

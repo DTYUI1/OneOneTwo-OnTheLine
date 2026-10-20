@@ -20,10 +20,10 @@ const content = (
 });
 
 describe("provenanceLines", () => {
-  it("синтетическое задание из шаблона команды", () => {
+  it("учебная история из шаблона команды", () => {
     const lines = provenanceLines(content({}));
-    expect(lines[0].value).toBe("синтетическое задание · шаблон команды");
-    expect(lines[1].value).toBe("команда (встроенный набор)");
+    expect(lines[0].value).toBe("учебная история · готовый учебный шаблон");
+    expect(lines[1].value).toBe("разработчики тренажёра");
   });
 
   it("билет из материалов — с идентификатором и версией источника", () => {
@@ -38,16 +38,14 @@ describe("provenanceLines", () => {
       }),
     );
     expect(lines[0].value).toBe(
-      "билет/задача из материалов · импорт («Билет 7», версия 2)",
+      "задание из материалов · загружено из файла («Билет 7», версия 2)",
     );
-    expect(lines[1].value).toBe(
-      "преподаватель · контрольная сумма aaaaaaaaaaaa…",
-    );
+    expect(lines[1].value).toBe("преподаватель");
   });
 
   it("проверка преподавателем не выдумывается", () => {
     const last = provenanceLines(content({})).at(-1);
     expect(last?.label).toBe("Проверка преподавателем");
-    expect(last?.value).toMatch(/не считается проверенным/);
+    expect(last?.value).toMatch(/Нет сведений о проверке преподавателем/);
   });
 });

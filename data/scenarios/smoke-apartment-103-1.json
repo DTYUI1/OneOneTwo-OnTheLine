@@ -1,0 +1,341 @@
+{
+  "format": 2,
+  "code": "smoke-apartment-103-1",
+  "version": 7,
+  "replaces": [
+    "bbe13d80-529c-52a2-8566-b1ded19fb47e"
+  ],
+  "title": "Задымление в квартире",
+  "service_id": "103",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "1050102",
+  "complications": [],
+  "teacher_comment": "Задымление в квартире 115, Бескудниковский бульвар, 24, карточка только в 103. Бригада спрашивает этаж (в карточке — девятый), у двери просит пожарных: в квартире дым, внутрь не попасть (101 или 112). Не вызвали — дверь вскрывают поздно, мужчину везут в реанимацию. На работах бригада молчит — нужно позвонить ей самому.",
+  "outcome": {
+    "people": "Бригада скорой поднялась к квартире 115 на девятом этаже: из-под двери шёл дым, хозяин не открывал. По просьбе бригады вызвали пожарных, дверь вскрыли. Мужчину семидесяти лет с отравлением дымом госпитализировали.",
+    "late": "Карточку приняли позже норматива. Из-под двери шёл дым, а пожилой мужчина в квартире не открывал: «не открывает» может значить «без сознания».",
+    "why": "В комнате с современной мебелью общая вспышка наступает через 3:20–4:50, а на выход у людей меньше 3 минут (UL FSRI)."
+  },
+  "card": {
+    "caller_name": "Громова Светлана Игоревна",
+    "phone_aon": "+79000000711",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "115"
+    },
+    "description": "Из-под двери квартиры 115 на девятом этаже идёт дым, открытого огня не видно. В квартире живёт пожилой мужчина, на звонки в дверь не открывает. Дом газифицирован.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "задымление: квартира",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70005121",
+    "incident_type_code": "1050102"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "115"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "Из-под двери квартиры 115 на девятом этаже идёт дым, открытого огня не видно. В квартире живёт пожилой мужчина, на звонки в дверь не открывает. Дом газифицирован. По просьбе бригады вызвана пожарная охрана, дверь вскрыли. Мужчина с отравлением дымом госпитализирован, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Поняла. Мы на другом конце района, но едем.",
+        "audio": "bank-v1/103/103.responding.any.7.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, поднимаемся к квартире.",
+        "audio": "bank-v2/103/103.arrived.smoke.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Мужчина семидесяти лет, отравление дымом, оказываем помощь.",
+        "audio": "bank-v2/103/103.working.smoke.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожарные помогли спустить его к машине. Пострадавший госпитализирован, бригада свободна.",
+        "audio": "bank-v9/103/103.completed.smoke.8.ogg"
+      },
+      "after_s": 35,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, какой этаж, не подскажете?",
+        "audio": "bank-v1/103/103.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "floor_9",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "floor_9",
+          "label": "Девятый этаж"
+        },
+        {
+          "key": "floor_5",
+          "label": "Пятый этаж"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, ищите по этажам"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла, идём.",
+            "audio": "bank-v1/103/103.clarify_ok.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Плохо. Будем стучать во все двери, задержимся.",
+            "audio": "bank-v1/103/103.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/103/103.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада спросила этаж — он был в описании карточки",
+        "critical": false
+      }
+    },
+    {
+      "key": "fire",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 10,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, в квартире дым. Без пожарных не зайдём.",
+        "audio": "bank-v1/103/103.request_service.any.6.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "101",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Да, поняла.",
+            "audio": "bank-v1/103/103.ack.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Принято.",
+            "audio": "bank-v1/103/103.ack.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Пожарных так и нет? Из-под двери валит дым, за дверью тихо.",
+            "audio": "bank-v3/103/103.request_service.any.17.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Ждём у двери, внутрь не попасть. Дым идёт, хозяин не откликается.",
+                "audio": "bank-v3/103/103.working.smoke.8.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 20
+            },
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Дверь вскрыли поздно, мужчина без сознания. Везём в реанимацию, состояние тяжёлое.",
+                "audio": "bank-v3/103/103.completed.smoke.7.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада попросила пожарных: в квартире дым, внутрь не попасть",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Состояние тяжёлое, стабилизируем. Пока не до разговоров.",
+            "audio": "bank-v1/103/103.status_working.any.8.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ещё работаем. Готовим к транспортировке.",
+            "audio": "bank-v1/103/103.status_working.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": []
+}

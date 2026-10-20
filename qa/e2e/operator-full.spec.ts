@@ -8,6 +8,9 @@ import {
   openCall,
   scenario,
 } from "./operator-call";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 const ID = "fire_apartment_smoke";
 const QUESTION = Object.fromEntries(
@@ -68,6 +71,14 @@ test("спокойный путь — верные вопросы, полная 
   await page.getByLabel("Улица:").fill("Дубнинская улица");
   await page.getByLabel("Дом/Вл:").fill("12");
   await page.getByLabel("Квартира/офис:").fill("47");
+  await page.getByLabel("Подъезд:").fill("2");
+  await page.getByLabel("Этаж:").fill("5");
+  await page
+    .getByLabel("Описательный адрес:")
+    .fill("Напротив дома продуктовый магазин");
+  const status = page.getByLabel("Статус заявителя");
+  await status.selectOption({ label: "очевидец" });
+  await expect(status).toHaveValue("очевидец");
   await confirmAddress(page);
   expect(await lastLine(page)).toBe(
     `Заявитель: ${GIRL.address_confirmation.ok}`,
@@ -100,6 +111,10 @@ test("спокойный путь — верные вопросы, полная 
   await expect(result).toContainText("Адрес указан верно");
   await expect(result).toContainText("Заявитель полностью успокоился");
   await expect(result).toContainText("Порядок по стандарту");
+  await expect(result).toContainText("Статус заявителя указан верно: очевидец");
+  const address = result.getByRole("group", { name: "Сохранённый адрес" });
+  await expect(address).toContainText("Подъезд: 2");
+  await expect(address).toContainText("Этаж: 5");
 
   await assertRussian(page);
   expect(errors).toEqual([]);
@@ -110,6 +125,12 @@ test("панический путь — нерелевантные вопрос�
 }) => {
   const errors = watch(page);
   await openCall(page, ID, { user: "trainee01" });
+  const status = page.getByLabel("Статус заявителя");
+  await status.focus();
+  await status.press("Home");
+  await status.press("ArrowDown");
+  await status.press("Tab");
+  await expect(status).toHaveValue("очевидец");
   // Без «Успокоить» девушка в истерике вопросов не слышит — и лишних тоже.
   for (const text of EXTRA) await ask(page, text);
   expect(scenario(ID).reactions.hysteria).toContain(

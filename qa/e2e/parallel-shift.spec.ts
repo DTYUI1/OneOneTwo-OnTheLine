@@ -6,6 +6,8 @@ import {
   type Page,
 } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
+import { expectTalking, lineTab, openPhone } from "./phone";
+import { briefingText } from "./brigade-briefing";
 
 type Card = components["schemas"]["Card"];
 type Session = components["schemas"]["Session"];
@@ -128,7 +130,9 @@ test("Параллельная смена: вкладки, предупрежд�
     await page.getByLabel("Логин", { exact: true }).fill(login);
     await page.getByLabel("Пароль").fill(PASSWORD);
     await page.getByRole("button", { name: "Войти", exact: true }).click();
-    await page.getByRole("button", { name: "Диспетчер служб" }).click();
+    await page
+      .getByRole("button", { name: /^(Диспетчер служб|Перейти в тренажёр)$/ })
+      .click();
 
     // Предупреждение до работы: медлить нельзя.
     const notice = page.getByRole("dialog", { name: "Параллельная работа" });
@@ -155,12 +159,12 @@ test("Параллельная смена: вкладки, предупрежд�
     });
     await expect(cardView).toBeVisible();
 
-    // Вторая приходит, пока открыта первая: вкладка появляется, реакция по ней идёт.
+    // Вторая приходит, пока открыта первая: вкладка появляется (учебного таймера
+    // на вкладке нет — макет B).
     const secondTab = tabs.getByRole("button", {
       name: new RegExp(`Происшествие ${second.card.number}`),
     });
     await expect(secondTab).toBeVisible({ timeout: 30_000 });
-    await expect(secondTab).toContainText("реакция");
     await expect(cardView).toBeVisible();
 
     // Первая: «Принята», бригада отправлена и сразу положена трубка — «Выехали» не
@@ -199,18 +203,27 @@ test("Параллельная смена: вкладки, предупрежд�
       brigade_id: target.brigade_id,
     });
     await event(page, card!.id, "call_answer", { call_id: dispatch });
+    // GP-05: вводная — бригада выезжает; доклад о выезде не дослушали — она перезвонит.
+    await event(page, card!.id, "brigade_briefing", {
+      call_id: dispatch,
+      mode: "parts",
+      text: briefingText(card!.source),
+    });
     await event(page, card!.id, "call_hangup", { call_id: dispatch });
 
-    // Бригада вызывает: вкладка и кнопка в полосе телефона карточки.
+    // Бригада вызывает: вкладка, значок телефона со счётчиком и мигающая вкладка линии в
+    // окне телефона ДДС (GP-09, вкладки линий 17.10) — щелчок по ней отвечает.
     await expect(firstTab).toContainText("Бригада вызывает", {
       timeout: 30_000,
     });
-    const answer = cardView.getByRole("button", {
-      name: /Ответить: .* вызывает/,
-    });
+    await expect(
+      page.getByRole("button", { name: "Телефон: входящих 1", exact: true }),
+    ).toBeVisible();
+    const win = await openPhone(page);
+    const answer = lineTab(win, "ringing");
     await expect(answer).toBeVisible();
     await answer.click();
-    await expect(cardView.getByText("Разговор", { exact: true })).toBeVisible();
+    await expectTalking(win);
     await expect
       .poll(
         async () => {

@@ -1,0 +1,4 @@
+{
+  "note": "Фразы банка, написанные под реплики сценариев и ждущие записи (синтез — капитан, набор bank-vN). После записи: python3 scripts/voices/bank/place.py — ставит фразу с записью на место «was», поднимает version сценария и убирает запись отсюда. Проверка плана — apps/api/tests/test_scenario_phrases.py.",
+  "placements": []
+}

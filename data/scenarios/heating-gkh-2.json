@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "heating-gkh-2",
+  "version": 1,
+  "title": "Сорвало радиатор отопления в комнате",
+  "service_id": "GKH",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "14020300",
+  "complications": [],
+  "teacher_comment": "ЖКХ, уровень 2. Исправить повтор «Гировоградская улица, 224» на Кировоградскую улицу, 22. После прибытия бригада уточняет вход в подвал: со двора, дверь открыта. При отсутствии ответа или сведений бригада ищет вход сама, доклад о работах задерживается. Радиатор заменяют заглушкой, тепло по стояку восстанавливают; другая служба не требуется.",
+  "outcome": {
+    "people": "В комнате квартиры 64 в четвёртом подъезде сорвало радиатор отопления. Горячая вода льётся на пол, в комнате пар. Хозяин дома, к батарее не подходит. Пострадавших нет. Вход в подвал со двора, дверь открыта. Бригада перекрыла отопление по стояку, слила воду и поставила заглушку вместо батареи. Тепло по стояку дали; новый радиатор должна установить управляющая компания.",
+    "late": "Карточку приняли позже норматива. В комнате квартиры 64 в четвёртом подъезде сорвало радиатор отопления. Горячая вода льётся на пол, в комнате пар. Хозяин дома, к батарее не подходит. Пострадавших нет. Вход в подвал со двора, дверь открыта."
+  },
+  "card": {
+    "caller_name": "Лавров Олег Михайлович",
+    "phone_aon": "+79000000867",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "64"
+    },
+    "description": "В комнате квартиры 64 в четвёртом подъезде сорвало радиатор отопления. Горячая вода льётся на пол, в комнате пар. Хозяин дома, к батарее не подходит. Пострадавших нет. Вход в подвал со двора, дверь открыта.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Течь (прорыв трубы) в квартире (подъезде подвале)",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008507",
+    "incident_type_code": "14020300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "64"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "GKH",
+      "phone_ext": "105",
+      "before_s": 180
+    },
+    "expected_comment": "В комнате квартиры 64 в четвёртом подъезде сорвало радиатор отопления. Горячая вода льётся на пол, в комнате пар. Хозяин дома, к батарее не подходит. Пострадавших нет. Вход в подвал со двора, дверь открыта. Бригада перекрыла отопление по стояку, слила воду и поставила заглушку вместо батареи. Тепло по стояку дали; новый радиатор должна установить управляющая компания."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Батарею в комнате сорвало, кипяток на полу, пар стоит.",
+        "audio": "bank-v1/GKH/GKH.arrived.heating.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Перекрыли отопление по стояку, сливаем, будем ставить заглушку.",
+        "audio": "bank-v1/GKH/GKH.working.heating.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Готово. Вместо батареи заглушка, тепло дали. Новую пусть управляющая ставит.",
+        "audio": "bank-v1/GKH/GKH.completed.heating.3.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Гировоградская улица, 224.",
+        "audio": "bank-v6/GKH/GKH.readback.06a34d84.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, исправил. Едем по верному адресу.",
+            "audio": "bank-v1/GKH/GKH.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/GKH/GKH.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/GKH/GKH.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "basement",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "arrival",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Вход в подвал откуда — со двора или из подъезда?",
+        "audio": "bank-v1/GKH/GKH.clarify.any.10.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Вход в подвал со двора, дверь открыта"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у жильцов"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, поспрашиваю у соседей.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада уточнила вход в подвал — он указан в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

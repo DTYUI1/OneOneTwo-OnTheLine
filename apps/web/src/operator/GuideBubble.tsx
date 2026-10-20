@@ -7,13 +7,6 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { placeBubble, type BubblePlace, type GuideTip } from "./guide";
 import styles from "./OperatorPage.module.css";
 
-interface Rect {
-  readonly left: number;
-  readonly top: number;
-  readonly width: number;
-  readonly height: number;
-}
-
 export function GuideBubble({
   tip,
   onHide,
@@ -23,7 +16,6 @@ export function GuideBubble({
 }) {
   const bubble = useRef<HTMLDivElement>(null);
   const [place, setPlace] = useState<BubblePlace | null>(null);
-  const [outline, setOutline] = useState<Rect | null>(null);
 
   useLayoutEffect(() => {
     let frame = 0;
@@ -36,7 +28,6 @@ export function GuideBubble({
         const own = bubble.current;
         if (!target || !own || !target.getClientRects().length) {
           setPlace(null);
-          setOutline(null);
           return;
         }
         const box = target.getBoundingClientRect();
@@ -52,15 +43,6 @@ export function GuideBubble({
         );
         setPlace((old) =>
           JSON.stringify(old) === JSON.stringify(next) ? old : next,
-        );
-        const rect = {
-          left: box.left,
-          top: box.top,
-          width: box.width,
-          height: box.height,
-        };
-        setOutline((old) =>
-          JSON.stringify(old) === JSON.stringify(rect) ? old : rect,
         );
       });
     };
@@ -86,36 +68,27 @@ export function GuideBubble({
   }, [tip.target, tip.title]);
 
   return (
-    <>
-      {outline && (
-        <div
-          className={styles.guideOutline}
-          style={outline}
-          aria-hidden="true"
-        />
-      )}
-      <div
-        ref={bubble}
-        role="status"
-        aria-label="Проводник"
-        className={styles.guide}
-        data-side={place?.side ?? "below"}
-        style={
-          place
-            ? {
-                left: place.left,
-                top: place.top,
-                ["--arrow" as string]: `${place.arrow}px`,
-              }
-            : { visibility: "hidden" }
-        }
-      >
-        <b>Проводник · {tip.title}</b>
-        <span>{tip.text}</span>
-        <button type="button" onClick={onHide}>
-          Скрыть проводник
-        </button>
-      </div>
-    </>
+    <div
+      ref={bubble}
+      role="status"
+      aria-label="Проводник"
+      className={styles.guide}
+      data-side={place?.side ?? "below"}
+      style={
+        place
+          ? {
+              left: place.left,
+              top: place.top,
+              ["--arrow" as string]: `${place.arrow}px`,
+            }
+          : { visibility: "hidden" }
+      }
+    >
+      <b>Проводник · {tip.title}</b>
+      <span>{tip.text}</span>
+      <button type="button" onClick={onHide}>
+        Скрыть проводник
+      </button>
+    </div>
   );
 }

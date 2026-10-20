@@ -44,7 +44,7 @@ export function barWidth(value: number, required: number): number {
 }
 
 // Ступеней в evalcore/progress.py (STEPS).
-const STEP_COUNT = 4;
+const STEP_COUNT = 5;
 
 /** Строка для итогов попытки: как карточка сдвинула обучаемого по ступени. */
 export function attemptProgressLine(
@@ -72,4 +72,56 @@ export function cards(count: number): string {
   if (ones === 1) return "карточка";
   if (ones >= 2 && ones <= 4) return "карточки";
   return "карточек";
+}
+
+export type Advice = NonNullable<
+  components["schemas"]["TraineeProgress"]["advice"]
+>;
+
+/** Рекомендация (GP-14) строками: что подтянуть — по пункту на слабое место, затем шаг. */
+export function adviceLines(advice: Advice): string[] {
+  const focus = advice.focus.map((item) => `${item.label}: ${item.text}`);
+  return [...(focus.length > 0 ? focus : [advice.summary]), advice.next];
+}
+
+/** Отметка новой попытки у прошлой рекомендации (TC-11, AdviceCheck.status). */
+export const CHECK_LABELS: Record<
+  NonNullable<Advice["previous"]>["focus"][number]["status"],
+  string
+> = {
+  done: "выполнена",
+  not_done: "не выполнена",
+  unchecked: "в новой попытке не проверялась",
+};
+
+/**
+ * Прошлые рекомендации строками: «Адрес — выполнена». `cardId` — разбор карточки: отметку
+ * показываем только у той попытки, по которой она сделана.
+ */
+export function previousLines(advice: Advice, cardId?: string): string[] {
+  const previous = advice.previous;
+  if (!previous || (cardId !== undefined && previous.card_id !== cardId))
+    return [];
+  return previous.focus.map(
+    (item) => `${item.label} — ${CHECK_LABELS[item.status]}`,
+  );
+}
+
+export type Repeat = components["schemas"]["ScenarioRepeat"];
+
+const percent = (score: number) => `${Math.round(score * 100)} %`;
+
+/** Повтор незачтённой карточки: «было 45 % → стало 82 % · исправлено». */
+export function repeatLine(repeat: Repeat): string {
+  if (repeat.now === null) return `было ${percent(repeat.was)}`;
+  return `было ${percent(repeat.was)} → стало ${percent(repeat.now)} · ${
+    repeat.passed ? "исправлено" : "пока не зачтено"
+  }`;
+}
+
+/** Повторы пути; ответ сервера до TC-11 их не содержит. */
+export function repeatsOf(progress: {
+  repeats?: readonly Repeat[];
+}): readonly Repeat[] {
+  return progress.repeats ?? [];
 }

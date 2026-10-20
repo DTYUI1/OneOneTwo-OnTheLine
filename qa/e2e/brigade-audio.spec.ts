@@ -1,5 +1,15 @@
 import { expect, test, type Page } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
+import { briefBrigade } from "./brigade-briefing";
+import { passWelcome } from "./practice-play";
+import {
+  answer,
+  backToContacts,
+  callHead,
+  closePhone,
+  expectEnded,
+  openPhone,
+} from "./phone";
 
 type Scenario = components["schemas"]["Scenario"];
 type Card = components["schemas"]["Card"];
@@ -13,6 +23,7 @@ async function login(page: Page, name: string) {
     .fill(process.env.DEMO_PASSWORD ?? "demo-local");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
   await expect(page).not.toHaveURL(/\/login$/);
+  await passWelcome(page);
 }
 
 async function csrf(page: Page) {
@@ -83,6 +94,17 @@ test("Бригада: выбор → звонок → озвученный до�
     baseURL: testInfo.project.use.baseURL,
     ignoreHTTPSErrors: true,
   });
+  // Микрофон не нужен (29.09): разрешение не выдаётся, шпион считает запросы.
+  await traineeContext.addInitScript(() => {
+    const spy = window as Window & { micRequests?: number };
+    spy.micRequests = 0;
+    const devices = navigator.mediaDevices;
+    if (!devices) return;
+    devices.getUserMedia = async () => {
+      spy.micRequests = (spy.micRequests ?? 0) + 1;
+      throw new DOMException("Микрофон не нужен", "NotAllowedError");
+    };
+  });
   try {
     const assigned = await page.request.post(
       `/api/sessions/${lesson.id}/assignments`,
@@ -106,7 +128,6 @@ test("Бригада: выбор → звонок → озвученный до�
     const arm = await traineeContext.newPage();
     arm.setDefaultTimeout(15_000);
     await login(arm, trainee.login);
-    await arm.getByRole("button", { name: "Диспетчер служб" }).click();
     const number = scenario!.card.number;
     // Номер сценария повторяется в прошлых занятиях: берём строку своей карточки
     // по её id (реестр показывает новые сверху, не в порядке сервера).
@@ -124,17 +145,18 @@ test("Бригада: выбор → звонок → озвученный до�
         return cardId;
       })
       .not.toBe("");
+    const trainingReady = arm.waitForResponse(
+      (response) =>
+        response.url().endsWith(`/api/cards/${cardId}/training`) &&
+        response.status() === 200,
+    );
     await arm.locator(`[data-card-id="${cardId}"]`).click();
     const cardView = arm.getByRole("region", {
       name: `Происшествие ${number}`,
       exact: true,
     });
     await expect(cardView).toBeVisible();
-    const services = await (await page.request.get("/api/services")).json();
-    const police = services.find((item: { id: string }) => item.id === "102");
-    await cardView
-      .getByRole("button", { name: `Развернуть ${police.name}`, exact: true })
-      .click();
+    await trainingReady;
 
     async function status(state: string) {
       await cardView
@@ -148,54 +170,67 @@ test("Бригада: выбор → звонок → озвученный до�
       await cardView
         .getByRole("button", { name: "Подтвердить", exact: true })
         .click();
-      // Форма остаётся открытой: успешная отправка сбрасывает выбор статуса.
-      await expect(cardView.getByLabel("Статус", { exact: true })).toHaveValue(
-        "",
-      );
+      // Строка статуса всегда на виду (DT-19): после сохранения она очищается.
+      await expect(
+        cardView.getByLabel("Комментарий", { exact: true }),
+      ).toHaveValue("");
+      await expect
+        .poll(async () => {
+          const card: Card = await (
+            await arm.request.get(`/api/cards/${cardId}`)
+          ).json();
+          return card.state;
+        })
+        .toBe(state);
     }
-    // Табло сил видно до решения по карточке, но направить бригаду до «Принята»
-    // нельзя: кнопка недоступна, рядом сказано почему (28.09).
-    const strip = arm.getByRole("button", {
-      name: /^(Телефон|Звонок завершён)$/,
-    });
-    await strip.click();
-    const panel = arm.getByRole("region", { name: "Бригады службы" });
-    const firstBrigade = panel.getByRole("checkbox", {
-      name: "Учебная бригада 1 службы 102",
-    });
+    // Статус хода работ без доклада бригады: сервер его не примет (409
+    // report_required), строка статуса объясняет причину и остаётся открытой.
+    async function expectReportRequired() {
+      await cardView
+        .getByRole("button", { name: "Изменить статус", exact: true })
+        .click();
+      await cardView
+        .getByLabel("Статус", { exact: true })
+        .selectOption("responding");
+      await cardView
+        .getByLabel("Комментарий", { exact: true })
+        .fill("Проверка доклада");
+      await cardView
+        .getByRole("button", { name: "Подтвердить", exact: true })
+        .click();
+      await expect(
+        cardView.getByText(
+          "Сначала получите и прослушайте доклад бригады об этом этапе.",
+        ),
+      ).toBeVisible();
+    }
+    // Силы службы видны в телефоне до решения по карточке, но направить бригаду до
+    // «Принята» нельзя, рядом сказано почему (28.09). Флажков нет: направляет вводная в
+    // разговоре (GP-05). Связь службы — окно телефона ДДС (GP-09).
+    const win = await openPhone(arm);
+    const firstBrigade = win.locator('button[data-state="free"]').first();
     await expect(firstBrigade).toBeVisible();
-    await expect(panel.getByText("свободна").first()).toBeVisible();
-    await firstBrigade.check();
+    const brigadeExt = await firstBrigade.getAttribute("data-ext");
+    expect(brigadeExt).toBeTruthy();
+    await expect(firstBrigade).toHaveAccessibleName(
+      `Позвонить: Бригада ${brigadeExt}`,
+    );
     await expect(
-      panel.getByRole("button", { name: "Направить выбранные" }),
-    ).toBeDisabled();
-    await expect(panel.getByText(/Сначала примите решение/)).toBeVisible();
+      win.locator('button[data-state="free"]').first(),
+    ).toBeVisible();
+    await expect(win.getByText("свободна").first()).toBeVisible();
+    await expect(win.getByRole("checkbox")).toHaveCount(0);
+    await expect(win.getByText(/Сначала примите решение/)).toBeVisible();
 
-    // Номер ненаправленной бригады не запрещён: звонок проходит, бригада отвечает
+    // До решения звонок бригаде не запрещён: звонок проходит, бригада отвечает
     // отказом и сама кладёт трубку, доклада нет, очередь карточки не останавливается.
-    const brigades: { id: string; name: string }[] = await (
-      await arm.request.get("/api/services/102/brigades")
-    ).json();
-    const targets: { brigade_id: string | null; phone_ext: string }[] = await (
-      await arm.request.get("/api/services/102/call-targets")
-    ).json();
-    const secondBrigade = brigades.find(
-      (item) => item.name === "Учебная бригада 2 службы 102",
-    )!;
-    const secondExt = targets.find(
-      (item) => item.brigade_id === secondBrigade.id,
-    )!.phone_ext;
-    for (const digit of secondExt)
-      await arm.getByRole("button", { name: digit, exact: true }).click();
-    await arm.getByRole("button", { name: "Вызов", exact: true }).click();
+    await win.locator('button[data-state="free"]').nth(1).click();
     await expect(
       arm.getByText(
         /^Бригада не направлена на это происшествие — доклада не будет/,
       ),
     ).toBeVisible({ timeout: 20_000 });
-    await expect(
-      arm.getByRole("button", { name: "Звонок завершён", exact: true }),
-    ).toBeVisible();
+    await expectEnded(win);
     const refusedCards: Card[] = await (
       await arm.request.get("/api/cards")
     ).json();
@@ -206,43 +241,35 @@ test("Бригада: выбор → звонок → озвученный до�
       await arm.request.get(`/api/cards/${refusedCard.id}/training`)
     ).json();
     expect(afterRefusal.messages).toEqual([]);
-    // Окно разговора после отбоя остаётся с итогом, пока его не закроют.
-    await arm.getByRole("button", { name: "Закрыть окно разговора" }).click();
-    await arm.getByRole("button", { name: "Свернуть телефон" }).click();
+    // Разговор после отбоя остаётся с итогом, пока не вернутся к контактам.
+    await backToContacts(win);
+    // Окно телефона не заслоняет карточку, пока меняется статус.
+    await closePhone(arm);
 
     await status("accepted");
-    await cardView
-      .getByRole("button", { name: "Изменить статус", exact: true })
-      .click();
-    await expect(
-      cardView
-        .getByLabel("Статус", { exact: true })
-        .locator('option[value="responding"]'),
-    ).toBeDisabled();
+    // Список статусов открыт целиком, как на arm_dds/14; без доклада о выезде
+    // «Начало реагирования» не сохраняется — причина под строкой статуса.
+    await expectReportRequired();
+    // Попытка записана в журнал карточки (GP-26): её видят лента и разбор.
+    await expect
+      .poll(async () => {
+        const events: { type: string; payload: { state?: string } }[] = await (
+          await arm.request.get(`/api/cards/${cardId}/events`)
+        ).json();
+        return events
+          .filter((item) => item.type === "status_denied")
+          .map((item) => item.payload.state);
+      })
+      .toEqual(["responding"]);
     await cardView
       .getByRole("button", { name: "Отменить", exact: true })
       .click();
 
-    await strip.click();
-    await firstBrigade.check();
-    await panel.getByRole("button", { name: "Направить выбранные" }).click();
-    await expect(panel.getByText("Направлено бригад: 1.")).toBeVisible();
+    // Вводная по частям (GP-05): бригада повторяет адрес и выезжает.
+    const line = await briefBrigade(arm, firstBrigade);
+    await expect(callHead(line)).toHaveAttribute("data-call-state", "talking");
 
-    // Неизвестный номер не уходит на сервер: иначе 422 заблокировал бы очередь карточки.
-    for (const digit of "999")
-      await arm.getByRole("button", { name: digit, exact: true }).click();
-    await arm.getByRole("button", { name: "Вызов", exact: true }).click();
-    await expect(
-      arm.getByText("Номер не обслуживается. Проверьте его в справочнике."),
-    ).toBeVisible();
-
-    const links = panel.getByRole("list", { name: "Связь с бригадами" });
-    await links.getByRole("button", { name: "Позвонить" }).first().click();
-    await expect(
-      arm.getByRole("button", { name: "Разговор", exact: true }),
-    ).toBeVisible({ timeout: 15_000 });
-
-    // Первый доклад выдаётся через 3 с после ответа. Засчитывается только
+    // Доклад о выезде выдаётся сразу после вводной. Засчитывается только
     // прозвучавший целиком: без звукового устройства это честный сбой, не успех.
     const cards: Card[] = await (await arm.request.get("/api/cards")).json();
     const card = cards.find((item) => item.session_id === lesson.id)!;
@@ -265,46 +292,51 @@ test("Бригада: выбор → звонок → озвученный до�
       .toMatch(/^(presented|failed)$/);
     expect(first!.delivery.message.audio).not.toBeNull();
     const report = first!.delivery.message.text;
-    const reports = arm.getByRole("region", { name: "Доклады бригад" });
+    const reports = win.getByRole("region", { name: "Доклады бригад" });
     if (first!.state === "presented") {
       expect(first!.presentation_event_id).toBeTruthy();
-      await expect(
-        reports.getByRole("listitem").filter({ hasText: report }),
-      ).toBeVisible();
-      // Доклад на линии — крупной строкой в окне разговора, а не только в
-      // списке докладов: окно с «Положить трубку», вне регионов «Бригады службы»
-      // и «Доклады бригад».
-      const line = arm.getByRole("region", { name: /^Разговор: / });
+      // Доклад на линии — в ленте разговора окна телефона, с «Положить трубку».
       await expect(
         line.getByRole("button", { name: "Положить трубку" }),
       ).toBeVisible();
-      await expect(line.getByText(report, { exact: true })).toBeVisible();
+      await expect(line.getByText(report)).toBeVisible();
+      // Ответ бригаде — вариантом с реакцией: она повторяет прозвучавший доклад.
+      await answer(line)
+        .getByRole("button", { name: "Повторите доклад" })
+        .click();
+      await expect(
+        line.getByText(/^Вы сказали:?\s+Повторите доклад\.$/),
+      ).toBeVisible();
     } else {
       // Chromium в CI всегда играет через фейковое устройство — там сбой был бы дефектом.
       expect(testInfo.project.name).not.toBe("chromium");
       expect(first!.failure_reason).toBe("playback_error");
       expect(first!.presented_at).toBeNull();
-      await expect(panel.getByText(report)).toBeVisible();
+      await expect(line.getByText(report)).toBeVisible();
       await expect(
-        panel.getByRole("button", { name: "Прослушать ещё раз" }),
+        line.getByRole("button", { name: "Повторить реплику" }).first(),
       ).toBeVisible();
     }
 
-    await arm.getByRole("button", { name: "Положить трубку" }).click();
+    await line.getByRole("button", { name: "Положить трубку" }).click();
+    await expectEnded(line);
+    expect(
+      await arm.evaluate(
+        () => (window as Window & { micRequests?: number }).micRequests,
+      ),
+    ).toBe(0);
+    await backToContacts(line);
+    // Бригада направлена сюда: в контактах её состояние сменилось.
     await expect(
-      arm.getByRole("button", { name: "Звонок завершён", exact: true }),
-    ).toBeVisible();
-    await arm.getByRole("button", { name: "Закрыть окно разговора" }).click();
-    await arm
-      .getByRole("button", { name: "Звонок завершён", exact: true })
-      .click();
-    await expect(panel).toHaveCount(0);
-    // Доклад нужен именно сейчас — при свёрнутой панели, когда по нему пишется
-    // комментарий в карточке. Значит, он не должен исчезать вместе с панелью.
+      win.locator(`button[data-state="here"][data-ext="${brigadeExt}"]`),
+    ).toHaveCount(1);
+    // Доклад нужен и после разговора, когда по нему пишется комментарий в
+    // карточке. Значит, он не должен исчезать вместе с разговором.
     if (first!.state === "presented")
       await expect(
         reports.getByRole("listitem").filter({ hasText: report }),
       ).toBeVisible();
+    await closePhone(arm);
     if (first!.state === "presented") {
       // После доклада статус снова доступен и очередь принимает действие.
       await status("responding");
@@ -317,14 +349,7 @@ test("Бригада: выбор → звонок → озвученный до�
         )
         .toBe("responding");
     } else {
-      await cardView
-        .getByRole("button", { name: "Изменить статус", exact: true })
-        .click();
-      await expect(
-        cardView
-          .getByLabel("Статус", { exact: true })
-          .locator('option[value="responding"]'),
-      ).toBeDisabled();
+      await expectReportRequired();
     }
   } finally {
     await page.request.post(`/api/sessions/${lesson.id}/finish`, { headers });

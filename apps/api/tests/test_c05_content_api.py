@@ -8,7 +8,7 @@ from app.core.contracts import read_json, validate_json
 from app.core.models import Job, Scenario, ScenarioPack, ScenarioPackItem
 from app.worker.runtime import Worker
 from fastapi.testclient import TestClient
-from sqlalchemy import delete
+from sqlalchemy import delete, update
 
 from .test_lifecycle import login, run_db
 
@@ -45,7 +45,12 @@ def generate(client, headers, database_config, database_url, count=3):
         worker = Worker(database_config)
         try:
             row = await db.get(Job, UUID(job["id"]))
-            await worker.handlers.handle_generate(db, row.payload)
+            for _ in range(count):
+                result = await worker.handlers.handle_generate(db, row.payload)
+                row.result = result
+                row.status = "done" if result["complete"] else "pending"
+                if result["complete"]:
+                    break
         finally:
             await worker.close()
 
@@ -59,8 +64,11 @@ def remove_pack(database_url, pack_id, scenario_ids):
     """Общая тестовая БД: сгенерированный пакет не должен влиять на каталог других тестов."""
 
     async def remove(db):
+        ids = [UUID(i) for i in scenario_ids]
         await db.execute(delete(ScenarioPackItem).where(ScenarioPackItem.pack_id == UUID(pack_id)))
-        await db.execute(delete(Scenario).where(Scenario.id.in_([UUID(i) for i in scenario_ids])))
+        # Сценарий из файла формата 2 записан с учебным планом (GP-14), а журнал планов
+        # только дописывается: сценарий не удаляем, а снимаем с выдачи.
+        await db.execute(update(Scenario).where(Scenario.id.in_(ids)).values(status="retired"))
         await db.execute(delete(ScenarioPack).where(ScenarioPack.id == UUID(pack_id)))
 
     run_db(database_url, remove)
@@ -123,3 +131,52 @@ def test_content_provenance_for_ticket_and_template(database_client):
     assert template["provenance"]["source_kind"] == "template"
     assert template["provenance"]["synthetic"] is True and template["training_plan"] is None
     assert client.get(f"/api/scenarios/{uuid4()}/content").status_code == 404
+
+
+def test_generation_estimate_prefers_local_measurement_then_active_benchmark(monkeypatch):
+    import asyncio
+
+    from app.api.ai_models import service as models
+    from app.api.content.service import generation_estimate
+
+    async def measured(db):
+        return {"mean_seconds": 42.0}
+
+    async def absent(db):
+        return {"mean_seconds": None}
+
+    async def choice(db):
+        return {"model": "qwen3-4b", "mode": "gpu"}
+
+    monkeypatch.setattr(models, "local_generation", measured)
+    assert asyncio.run(generation_estimate(None)) == 42.0
+    monkeypatch.setattr(models, "local_generation", absent)
+    monkeypatch.setattr(models, "active_choice", choice)
+    assert asyncio.run(generation_estimate(None)) == 5.0
+
+
+def test_content_keeps_plan_after_approval_increments_version(database_client, database_url):
+    from app.core.models import ScenarioTrainingPlan
+    from sqlalchemy import select
+
+    login(database_client)
+
+    async def choose(db):
+        plan = await db.scalar(select(ScenarioTrainingPlan).limit(1))
+        scenario = await db.get(Scenario, plan.scenario_id)
+        original = scenario.version
+        scenario.version = original + 1
+        return str(scenario.id), original
+
+    scenario_id, version = run_db(database_url, choose)
+    try:
+        response = database_client.get(f"/api/scenarios/{scenario_id}/content")
+        assert response.status_code == 200, response.text
+        assert response.json()["training_plan"] is not None
+    finally:
+
+        async def restore(db):
+            row = await db.get(Scenario, UUID(scenario_id))
+            row.version = version
+
+        run_db(database_url, restore)

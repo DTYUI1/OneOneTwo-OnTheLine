@@ -1,0 +1,284 @@
+{
+  "format": 2,
+  "code": "unwell-street-103-2",
+  "version": 6,
+  "title": "Человеку плохо на улице",
+  "service_id": "103",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "22360000",
+  "complications": [],
+  "teacher_comment": "Сценарий на финал (103): мужчине плохо у аптеки, Чертановская улица, 48. Бригада спрашивает, у какого входа мужчина, — это есть в карточке. На месте он отказывается от госпитализации. Служба 103 «Отказ от выполнения работ» не ставит: карточку закрывает «Работы завершены» — завершение работ без бригады (памятка ДДС, с. 23).",
+  "outcome": {
+    "people": "Бригада скорой приехала к аптеке на Чертановской улице, 48. Мужчина жаловался на боль за грудиной, был бледный и весь в поту. Приступ сняли, но ехать в больницу он отказался — бригада передала актив участковому врачу.",
+    "late": "Карточку приняли позже норматива. Мужчине около семидесяти лет, у него боль за грудиной, он бледный и в поту: помощь нужна сразу, а ожидание ему тяжело.",
+    "status": "Мужчина отказался от госпитализации, бригада сняла приступ: у скорой такую карточку закрывают статусом «Работы завершены», а не «Отказом от выполнения работ». Ход статусов в вашей карточке отличается от доклада бригады."
+  },
+  "card": {
+    "caller_name": "Рябова Ольга Николаевна",
+    "phone_aon": "+79000000731",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Центральное",
+      "street": "Чертановская улица",
+      "house": "48",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "У входа в аптеку мужчине около семидесяти лет стало плохо: сидит на ступеньках, жалуется на головокружение и слабость, в сознании.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Плохо",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70008301",
+    "incident_type_code": "22360000"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Центральное",
+      "street": "Чертановская улица",
+      "house": "48",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "У входа в аптеку мужчине около семидесяти лет стало плохо: сидит на ступеньках, жалуется на головокружение и слабость, в сознании. Приступ сняли. Ехать отказался, передали актив участковому врачу. Работы завершены без бригады: от госпитализации отказался."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла, выезжаем.",
+        "audio": "bank-v1/103/103.responding.any.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Мужчина, жалуется на боль за грудиной, бледный, весь в поту.",
+        "audio": "bank-v1/103/103.arrived.heart.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Приступ сняли. Ехать отказался, передали актив участковому врачу.",
+        "audio": "bank-v1/103/103.completed.heart.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, какой подъезд? Их тут много, все одинаковые.",
+        "audio": "bank-v1/103/103.clarify.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "pharmacy",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "pharmacy",
+          "label": "У входа в аптеку, на ступеньках"
+        },
+        {
+          "key": "shop",
+          "label": "У продуктового, на скамейке"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, ищите на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла, идём.",
+            "audio": "bank-v1/103/103.clarify_ok.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Поняла, будем искать сами, это займёт время.",
+            "audio": "bank-v1/103/103.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Спасибо, но уже разобрались.",
+            "audio": "bank-v1/103/103.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада спросила, у какого входа мужчина, — это было в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": [],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер скорой, служба 103",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Чертановская улица, 48",
+        "correct": true
+      },
+      {
+        "text": "Чертановская улица, 18",
+        "correct": false
+      },
+      {
+        "text": "Черноморский бульвар, 48",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Мужчине плохо у аптеки",
+        "correct": true
+      },
+      {
+        "text": "ДТП с пострадавшим",
+        "correct": false
+      },
+      {
+        "text": "Драка на улице",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Мужчина около 70 лет, в сознании",
+        "correct": true
+      },
+      {
+        "text": "Пострадавших нет",
+        "correct": false
+      },
+      {
+        "text": "Без сознания",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю бригаду",
+        "correct": true
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      },
+      {
+        "text": "Нужна полиция",
+        "correct": false
+      }
+    ]
+  }
+}

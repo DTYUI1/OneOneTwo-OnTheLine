@@ -1,0 +1,27 @@
+/* Размеры значков — prototype-b/proto.css (.ico, .ico.tiny, .ch-hang .ico). */
+.normal,
+.tiny,
+.large {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.tiny {
+  width: 13px;
+  height: 13px;
+}
+
+.large {
+  width: 26px;
+  height: 26px;
+}
+
+.normal svg,
+.tiny svg,
+.large svg {
+  width: 100%;
+  height: 100%;
+}

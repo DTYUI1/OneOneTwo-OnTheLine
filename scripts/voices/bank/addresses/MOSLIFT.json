@@ -1,0 +1,90 @@
+{
+  "service": "MOSLIFT",
+  "speaker": "brigade",
+  "gender": "male",
+  "phrases": [
+    {
+      "id": "MOSLIFT.arrived.c04.arrival",
+      "slot": "arrived",
+      "incidents": [
+        "*"
+      ],
+      "text": "Механик на месте, связь с кабиной установлена."
+    },
+    {
+      "id": "MOSLIFT.completed.c04.completion",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пассажиры выведены, лифт отключён до ремонта, работы завершены."
+    },
+    {
+      "id": "MOSLIFT.readback.02af5340",
+      "slot": "readback",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю: Плофсоюзная улица, 98.",
+      "say": "Повторяю: Плофсоюзная улица, девяносто восемь."
+    },
+    {
+      "id": "MOSLIFT.readback.66d97c16",
+      "slot": "readback",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю: Профсоюзная улица, 98.",
+      "say": "Повторяю: Профсоюзная улица, девяносто восемь."
+    },
+    {
+      "id": "MOSLIFT.readback.a81a4f46",
+      "slot": "readback",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю: Брофсоюзная улица, 984.",
+      "say": "Повторяю: Брофсоюзная улица, девятьсот восемьдесят четыре."
+    },
+    {
+      "id": "MOSLIFT.readback_trap.96ec6e5f",
+      "slot": "readback_trap",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял: Профсоюзная, восемьдесят девять, корпус два. Еду!"
+    },
+    {
+      "id": "MOSLIFT.refused.c04.complication",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поднять кабину своими силами не можем, нужна другая служба, работы прекращаем."
+    },
+    {
+      "id": "MOSLIFT.working.c04.works",
+      "slot": "working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Кабина обесточена, выводим пассажиров."
+    },
+    {
+      "id": "MOSLIFT.wrong_place.moved",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время."
+    },
+    {
+      "id": "MOSLIFT.wrong_place.moved2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли."
+    }
+  ]
+}

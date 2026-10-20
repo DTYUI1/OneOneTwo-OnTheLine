@@ -98,9 +98,9 @@ describe("phraseDurationMs", () => {
     );
   });
 
-  it("тексты фраз — обязательные по Q14", () => {
-    expect(PHRASE_TEXT.listen).toBe("Слушаю вас");
-    expect(PHRASE_TEXT.accepted).toBe("Я вас понял, информация принята");
+  it("тексты фраз — обязательные по Q14 и фразы банка дежурного", () => {
+    expect(PHRASE_TEXT.listen).toBe("Слушаю вас.");
+    expect(PHRASE_TEXT.accepted).toBe("Я вас понял, информация принята.");
   });
 
   it("реплика в роде голоса: женский — «поняла», мужской — «понял»", () => {
@@ -111,7 +111,7 @@ describe("phraseDurationMs", () => {
       "Я вас понял, информация принята",
     );
     expect(phraseText("accepted", null)).toBe(
-      "Я вас понял, информация принята",
+      "Я вас понял, информация принята.",
     );
   });
 });
@@ -206,5 +206,39 @@ describe("createVoices", () => {
     void voices.play("listen", "voice-1");
     await Promise.resolve();
     expect(FakeAudio.last?.muted).toBe(true);
+  });
+});
+
+describe("сколько ещё звучать реплике (HQ-052)", () => {
+  it("текст без звука — до конца времени чтения; после — ничего", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    const voices = createVoices();
+    expect(voices.remainingMs()).toBeNull();
+    const done = voices.playAsset(null, 3000);
+    vi.advanceTimersByTime(1200);
+    expect(voices.remainingMs()).toBe(1800);
+    vi.advanceTimersByTime(1800);
+    await done;
+    expect(voices.remainingMs()).toBeNull();
+  });
+
+  it("запись — по её длительности и позиции; не загрузилась — неизвестно", () => {
+    withAudio();
+    const voices = createVoices();
+    void voices.playAsset("/a.ogg", 3000);
+    const audio = FakeAudio.last as unknown as {
+      duration: number;
+      currentTime: number;
+      playbackRate: number;
+    };
+    audio.duration = Number.NaN;
+    expect(voices.remainingMs()).toBeNull();
+    audio.duration = 4;
+    audio.currentTime = 3.25;
+    audio.playbackRate = 1;
+    expect(voices.remainingMs()).toBe(750);
+    voices.cancel();
+    expect(voices.remainingMs()).toBeNull();
   });
 });

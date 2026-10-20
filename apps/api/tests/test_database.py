@@ -15,6 +15,7 @@ from app.core.db import Database
 from app.core.models import AuditLog, Base, Setting, User
 from app.core.security import issue_token, verify_password
 from app.seed.loader import seed
+from evalcore.defaults import BRIGADE_WEIGHTS, COMMENT_WEIGHTS
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select, text, update
 from sqlalchemy.exc import DBAPIError
@@ -65,7 +66,7 @@ def test_seed_is_idempotent_and_preserves_edits(database_url):
         assert counts == {
             "streets": 0,
             "users": 7,
-            "services": 6,
+            "services": 7,
             "scenarios": 21,
             "incident_types": 1283,
             "routing_rules": 3835,
@@ -81,6 +82,52 @@ def test_seed_is_idempotent_and_preserves_edits(database_url):
         setting.value = original_settings
 
     run_db(database_url, check)
+
+
+def test_seed_replaces_only_legacy_demo_names(database_url, database_client):
+    expected = {
+        row["login"]: row["full_name"]
+        for row in read_json("data/seed/demo_users.json")
+        if row["role"] in {"teacher", "trainee"}
+    }
+
+    async def check(db):
+        accounts = list(await db.scalars(select(User).where(User.login.in_(expected))))
+        assert len(accounts) == len(expected)
+        before = {
+            account.login: {
+                column.name: getattr(account, column.name)
+                for column in User.__table__.columns
+                if column.name != "full_name"
+            }
+            for account in accounts
+        }
+        for account in accounts:
+            account.full_name = (
+                "Преподаватель" if account.login == "teacher" else f"Обучаемый {account.login[-2:]}"
+            )
+        await db.flush()
+        await seed(db, "must-not-replace-password")
+        for account in accounts:
+            await db.refresh(account)
+            assert account.full_name == expected[account.login]
+            assert {column: getattr(account, column) for column in before[account.login]} == before[
+                account.login
+            ]
+
+        # Повторная загрузка не должна затереть ФИО, которое исправили вручную.
+        custom = accounts[0]
+        custom.full_name = "Морозов Павел Игоревич"
+        await db.flush()
+        await seed(db, "must-not-replace-password")
+        await db.refresh(custom)
+        assert custom.full_name == "Морозов Павел Игоревич"
+        custom.full_name = expected[custom.login]
+
+    run_db(database_url, check)
+    for username, full_name in expected.items():
+        assert login(database_client, username).json()["full_name"] == full_name
+        assert database_client.get("/api/auth/me").json()["full_name"] == full_name
 
 
 def test_auth_survives_restart_and_logout_revokes_token(database_config):
@@ -177,6 +224,86 @@ def test_csrf_validation_persistence_and_audit(database_client, database_url, da
 
     run_db(database_url, audit)
     assert client.put("/api/settings", json=original, headers=csrf(client)).status_code == 200
+
+
+def test_settings_audit_before_normalizes_legacy_row(database_client, database_url):
+    """Строка настроек, сохранённая до phone_contacts и весов комментария/бригады, попадает
+    в журнал (before) такой, какой её отдаёт GET, — со значениями по умолчанию."""
+    client = database_client
+    login(client)
+    optional_weights = {*COMMENT_WEIGHTS, *BRIGADE_WEIGHTS}
+
+    async def make_legacy(db):
+        setting = await db.get(Setting, "training")
+        stored = setting.value
+        legacy = {key: value for key, value in stored.items() if key != "phone_contacts"}
+        legacy["weights"] = {
+            key: weight for key, weight in stored["weights"].items() if key not in optional_weights
+        }
+        setting.value = legacy
+        return stored
+
+    stored = run_db(database_url, make_legacy)
+    try:
+        shown = client.get("/api/settings").json()
+        assert "phone_contacts" in shown
+        assert optional_weights <= shown["weights"].keys()
+        changed = {**shown, "handling_normative_s": shown["handling_normative_s"] + 7}
+        response = client.put("/api/settings", json=changed, headers=csrf(client))
+        assert response.status_code == 200, response.text
+
+        async def audit(db):
+            row = await db.scalar(
+                select(AuditLog)
+                .where(AuditLog.action == "updateSettings")
+                .order_by(AuditLog.ts.desc())
+            )
+            assert row.before == shown
+            assert row.after == changed
+
+        run_db(database_url, audit)
+    finally:
+
+        async def restore(db):
+            (await db.get(Setting, "training")).value = stored
+
+        run_db(database_url, restore)
+
+
+def test_settings_put_repairs_invalid_row(database_client, database_url):
+    """Строка настроек, не проходящая схему (лишний ключ), не ломает PUT: в журнал (before)
+    попадает сырая строка, сама строка перезаписывается присланными настройками."""
+    client = database_client
+    login(client)
+    original = client.get("/api/settings").json()
+
+    async def make_broken(db):
+        setting = await db.get(Setting, "training")
+        stored = setting.value
+        setting.value = {**stored, "obsolete_key": 1}
+        return stored, setting.value
+
+    stored, broken = run_db(database_url, make_broken)
+    try:
+        response = client.put("/api/settings", json=original, headers=csrf(client))
+        assert response.status_code == 200, response.text
+
+        async def audit(db):
+            row = await db.scalar(
+                select(AuditLog)
+                .where(AuditLog.action == "updateSettings")
+                .order_by(AuditLog.ts.desc())
+            )
+            assert row.before == broken
+            assert row.after == original
+
+        run_db(database_url, audit)
+    finally:
+
+        async def restore(db):
+            (await db.get(Setting, "training")).value = stored
+
+        run_db(database_url, restore)
 
 
 def test_forged_csrf_and_invalid_login(database_client):
@@ -501,3 +628,55 @@ def test_openapi_export_matches_committed_contract():
     generated = create_database_app(Settings(_env_file=None, api_mode="database")).openapi()
     assert generated == read_json("contracts/openapi.json")
     assert json.dumps(generated)
+
+
+def test_seed_refreshes_only_legacy_card_descriptions(database_url):
+    """Обновление текста не меняет эталон и сохраняет описание преподавателя."""
+    from uuid import UUID
+
+    from app.core.models import Scenario
+
+    source = read_json("data/golden_scenarios/case-01.json")["scenario"]
+
+    async def check(db):
+        scenario = await db.get(Scenario, UUID(source["id"]))
+        original_card = dict(scenario.card)
+        original_reference = dict(scenario.reference)
+        original_status = scenario.status
+        scenario.card = {
+            **original_card,
+            "description": "Учебное происшествие: ДТП с пострадавшими. "
+            "Москва, Дубнинская улица, дом 1.",
+            "caller_name": "Имя, изменённое преподавателем",
+        }
+        await db.flush()
+        await seed(db, "keep-password")
+        await db.refresh(scenario)
+        assert scenario.card == {
+            **original_card,
+            "description": source["card"]["description"],
+            "caller_name": "Имя, изменённое преподавателем",
+        }
+        assert scenario.reference == original_reference
+        assert scenario.status == original_status
+        scenario.card = {**scenario.card, "description": "Текст преподавателя"}
+        await db.flush()
+        await seed(db, "keep-password")
+        await db.refresh(scenario)
+        assert scenario.card["description"] == "Текст преподавателя"
+        # Старый текст при изменённых обстоятельствах тоже не заменяем автоматически.
+        legacy = "Учебное происшествие: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1."
+        for patch in (
+            {"address": {**original_card["address"], "house": "27"}},
+            {"victims": False},
+            {"incident_class": "Другое происшествие"},
+        ):
+            changed = {**original_card, **patch, "description": legacy}
+            scenario.card = changed
+            await db.flush()
+            await seed(db, "keep-password")
+            await db.refresh(scenario)
+            assert scenario.card == changed
+        scenario.card = original_card
+
+    run_db(database_url, check)

@@ -38,6 +38,7 @@ describe("журнал звонка (этап 3)", () => {
       key: "reason",
       said: "Я вам помогу.",
       reply: "Я... хорошо... я пытаюсь.",
+      voice: "fire_apartment_smoke/calming",
       outcome: "calming",
       panic_before: 3,
       panic_after: 2,

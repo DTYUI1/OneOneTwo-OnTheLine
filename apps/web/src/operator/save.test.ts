@@ -13,6 +13,12 @@ describe("тело запроса «сохранить»", () => {
       house: "12",
       korpus: "",
       apartment: "47",
+      object: "Жилой дом",
+      structure: "1",
+      entrance: "2",
+      floor: "5",
+      code: "58",
+      descriptive: "Напротив школы",
     };
     const body = cardInput({
       incidentTypeCode: "1050102",
@@ -21,6 +27,7 @@ describe("тело запроса «сохранить»", () => {
       address,
       description: "Задымление в квартире.",
       callerName: "Соснина Ольга Викторовна",
+      callerStatus: "очевидец",
       phoneProvided: "",
       phoneScene: "",
       offSite: false,
@@ -37,9 +44,16 @@ describe("тело запроса «сохранить»", () => {
         house: "12",
         building: "",
         apartment: "47",
+        object: "Жилой дом",
+        structure: "1",
+        entrance: "2",
+        floor: "5",
+        code: "58",
+        descriptive: "Напротив школы",
       },
       description: "Задымление в квартире.",
       caller_name: "Соснина Ольга Викторовна",
+      caller_status: "очевидец",
       phone_provided: "",
       phone_scene: "",
       off_site: false,
@@ -54,10 +68,21 @@ describe("тело запроса «сохранить»", () => {
       address: EMPTY_ADDRESS,
       description: "",
       callerName: "",
+      callerStatus: "",
       phoneProvided: "",
       phoneScene: "",
       offSite: false,
     });
     expect(body.incident_type_code).toBeNull();
+    expect(body.caller_status).toBe("");
+    for (const field of [
+      "object",
+      "structure",
+      "entrance",
+      "floor",
+      "code",
+      "descriptive",
+    ] as const)
+      expect(body.address[field]).toBe("");
   });
 });

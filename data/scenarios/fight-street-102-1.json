@@ -1,0 +1,361 @@
+{
+  "format": 2,
+  "code": "fight-street-102-1",
+  "version": 4,
+  "replaces": [
+    "151c3902-35ae-5285-bc7d-d1745c6c23e3"
+  ],
+  "title": "Драка на улице с пострадавшим",
+  "service_id": "102",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "15250501",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: драка у торгового центра, Люблинская улица, 100. По пути наряд спрашивает, сколько участников (в карточке — четверо); на месте просит скорую мужчине с разбитой головой — скорую вызывает диспетчер (103 или 112), в карточке её нет. На работах наряд замолкает — диспетчер должен позвонить сам. Вводная преподавателя — тревога: нападение на наряд. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Наряд прекратил драку у входа в торговый центр и задержал зачинщиков. Мужчине с разбитой головой по просьбе наряда вызвали скорую, она его забрала. Задержанных доставили в отдел.",
+    "late": "Карточку приняли позже норматива, и наряд выехал позже. Пока его не было, драка у торгового центра продолжалась, а мужчина с разбитой головой лежал на асфальте без помощи."
+  },
+  "card": {
+    "caller_name": "Никитин Сергей Павлович",
+    "phone_aon": "+79000000717",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "У входа в торговый центр дерутся четверо мужчин. У одного разбита голова, лежит на асфальте.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Беспорядки - драка на улице",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70005701",
+    "incident_type_code": "15250501"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "У входа в торговый центр дерутся четверо мужчин. У одного разбита голова, лежит на асфальте. Зачинщиков доставили в отдел, пострадавшего забрала скорая. Наряд свободен."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, наряд направлен.",
+        "audio": "bank-v2/102/102.responding.fight.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Наряд на месте, драку прекратили, двое задержаны.",
+        "audio": "bank-v2/102/102.arrived.fight.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Опрашиваем очевидцев, смотрим камеры у магазина.",
+        "audio": "bank-v1/102/102.working.fight.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Зачинщиков доставили в отдел, пострадавшего забрала скорая. Наряд свободен.",
+        "audio": "bank-v1/102/102.completed.fight.1.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "people",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, сколько их там, по карточке?",
+        "audio": "bank-v1/102/102.clarify.any.7.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "four",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "four",
+          "label": "Четверо, у одного разбита голова"
+        },
+        {
+          "key": "two",
+          "label": "Двое, пострадавших нет"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, разберётесь на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Нет так нет. Разберёмся на месте.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, прибыли. Участники разбегаются, одного держим.",
+                "audio": "bank-v1/102/102.arrived.fight.3.ogg"
+              }
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "На месте. Драки уже нет, один лежит на асфальте, лицо в крови.",
+                "audio": "bank-v1/102/102.arrived.fight.2.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд спросил, сколько участников, — в карточке их четверо",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, нужна скорая! Мужчине разбили голову, кровь не останавливается.",
+        "audio": "bank-v1/102/102.request_service.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял.",
+            "audio": "bank-v1/102/102.ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Понял вас.",
+            "audio": "bank-v1/102/102.ack.any.4.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Срочно скорую, человек без сознания, дышит плохо.",
+            "audio": "bank-v1/102/102.request_service.any.2.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Скорая так и не приехала, пострадавшего отвезли в травмпункт сами. Задержанных доставили в отдел.",
+                "audio": "bank-v3/102/102.completed.fight.8.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд попросил скорую мужчине с разбитой головой",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Опрашиваем людей, пока без изменений.",
+            "audio": "bank-v1/102/102.status_working.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ещё на месте, пишем протокол.",
+            "audio": "bank-v1/102/102.status_working.any.5.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд долго работал без доклада",
+        "critical": false
+      }
+    },
+    {
+      "key": "alarm",
+      "kind": "alarm",
+      "priority": "alarm",
+      "trigger": {
+        "on": "inject",
+        "requires_state": "arrived"
+      },
+      "line": {
+        "text": "Тревога! Нападение на наряд, напарника ударили ножом! Срочно скорую и подкрепление!",
+        "audio": "bank-v1/102/102.alarm.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "answer_call",
+          "within_s": 15,
+          "weight": 0.1
+        },
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 60,
+          "weight": 0.9,
+          "critical": true
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, ждём скорую.",
+            "audio": "bank-v1/102/102.alarm_ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Понял. Руку перетянули, ждём.",
+            "audio": "bank-v1/102/102.alarm_ack.any.3.ogg"
+          },
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Тревога: нападение на наряд, ранен сотрудник",
+        "critical": false
+      },
+      "injectable": true
+    }
+  ]
+}

@@ -1,11 +1,15 @@
 // Администрирование (T-016) в том же языке, что пульт преподавателя: светлая
 // шапка, стальная колонка разделов, тёмная полоса заголовка раздела.
 import { useState } from "react";
+import { AIModelsPanel } from "./AIModelsPanel";
 import { AuditPanel } from "./AuditPanel";
 import { BackupsPanel } from "./BackupsPanel";
 import { adminWarnings } from "./adminModel";
 import { useSystemStatus } from "./useSystemStatus";
+import { AdminWarningBanner } from "./AdminWarningBanner";
+import { JobErrorsPanel } from "./JobErrorsPanel";
 import { HealthPanel } from "./HealthPanel";
+import { ModulesPanel } from "./ModulesPanel";
 import { ProblemReportsPanel } from "./ProblemReportsPanel";
 import { ServicesPanel } from "./ServicesPanel";
 import { SettingsForm } from "./SettingsForm";
@@ -16,11 +20,14 @@ import { useHelpGuide } from "../shared/help/HelpProvider";
 import { ADMIN_GUIDE } from "./help/topics";
 
 type Section =
+  | "job-errors"
   | "health"
   | "settings"
+  | "modules"
   | "users"
   | "backups"
   | "services"
+  | "models"
   | "audit"
   | "reports";
 
@@ -31,9 +38,19 @@ const SECTIONS: { key: Section; title: string; lead: string }[] = [
     lead: "Компоненты, нагрузка, место и резервные копии — перед занятием смотреть сюда.",
   },
   {
+    key: "job-errors",
+    title: "Ошибки очереди",
+    lead: "Неудачные фоновые задания: подробности и отметки о прочтении.",
+  },
+  {
     key: "settings",
     title: "Нормативы и оценка",
     lead: "Нормативы времени, нагрузка и веса критериев для новых занятий.",
+  },
+  {
+    key: "modules",
+    title: "Модули",
+    lead: "Включить или скрыть обучение оператора 112.",
   },
   {
     key: "users",
@@ -49,6 +66,11 @@ const SECTIONS: { key: Section; title: string; lead: string }[] = [
     key: "services",
     title: "Службы ДДС",
     lead: "Справочник служб, которым адресуются карточки.",
+  },
+  {
+    key: "models",
+    title: "Модели ИИ",
+    lead: "Какая модель ИИ генерирует сценарии и проверяет комментарии — на процессоре или видеокарте.",
   },
   {
     key: "audit",
@@ -100,18 +122,17 @@ export function AdminPage() {
           ))}
         </nav>
         <div className={page.content}>
-          {warnings.length > 0 && section !== "health" && (
-            <div className={kit.warning} role="status">
-              {warnings.join(" ")}{" "}
-              <button
-                type="button"
-                className={kit.plain}
-                onClick={() => setSection("health")}
-              >
-                Состояние системы
-              </button>
-            </div>
-          )}
+          <AdminWarningBanner
+            warnings={warnings}
+            hidden={section === "health"}
+            hasQueueErrors={
+              (status.data?.queue.failed_unread ??
+                status.data?.queue.failed ??
+                0) > 0
+            }
+            onHealth={() => setSection("health")}
+            onJobErrors={() => setSection("job-errors")}
+          />
           <section
             className={kit.view}
             aria-labelledby="admin-section"
@@ -122,13 +143,21 @@ export function AdminPage() {
                 <h2 id="admin-section">{current.title}</h2>
               </div>
             </header>
-            {section === "health" && <HealthPanel />}
+            {section === "health" && (
+              <HealthPanel
+                onModels={() => setSection("models")}
+                onJobErrors={() => setSection("job-errors")}
+              />
+            )}
+            {section === "job-errors" && <JobErrorsPanel />}
             {section === "settings" && <SettingsForm />}
+            {section === "modules" && <ModulesPanel />}
             {section === "users" && (
               <UsersPanel onTrash={() => setSection("backups")} />
             )}
             {section === "backups" && <BackupsPanel />}
             {section === "services" && <ServicesPanel />}
+            {section === "models" && <AIModelsPanel />}
             {section === "audit" && <AuditPanel />}
             {section === "reports" && <ProblemReportsPanel />}
           </section>

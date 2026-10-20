@@ -1,0 +1,208 @@
+{
+  "format": 2,
+  "code": "fall-stairs-103-2",
+  "version": 1,
+  "title": "Пожилая женщина упала на лестнице",
+  "service_id": "103",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "22530000",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить повтор «проспект Мила, 26» на проспект Мира, 26. Пожилая женщина после падения на лестнице; обезболивание, носилки, госпитализация. Статусы после докладов, отказ от выполнения работ не соответствует исходу.",
+  "outcome": {
+    "people": "В первом подъезде на лестнице у второго этажа пожилая женщина оступилась и упала. Лежит, жалуется на сильную боль в бедре, встать не может, в сознании. Дочь из квартиры 18 находится рядом и вызывает скорую. Бригада заподозрила перелом шейки бедра, обезболила пациентку и переложила на носилки. Женщину везут в больницу с подозрением на перелом бедра.",
+    "late": "Карточку приняли позже норматива. В первом подъезде на лестнице у второго этажа пожилая женщина оступилась и упала. Лежит, жалуется на сильную боль в бедре, встать не может, в сознании. Дочь из квартиры 18 находится рядом и вызывает скорую."
+  },
+  "card": {
+    "caller_name": "Капустина Инесса Борисовна",
+    "phone_aon": "+79000000877",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЦАО",
+      "district": "Мещанский",
+      "street": "проспект Мира",
+      "house": "26",
+      "building": "",
+      "apartment": "18"
+    },
+    "description": "В первом подъезде на лестнице у второго этажа пожилая женщина оступилась и упала. Лежит, жалуется на сильную боль в бедре, встать не может, в сознании. Дочь из квартиры 18 находится рядом и вызывает скорую.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Травма",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70008517",
+    "incident_type_code": "22530000"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЦАО",
+      "district": "Мещанский",
+      "street": "проспект Мира",
+      "house": "26",
+      "building": "",
+      "apartment": "18"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "В первом подъезде на лестнице у второго этажа пожилая женщина оступилась и упала. Лежит, жалуется на сильную боль в бедре, встать не может, в сознании. Дочь из квартиры 18 находится рядом и вызывает скорую. Бригада заподозрила перелом шейки бедра, обезболила пациентку и переложила на носилки. Женщину везут в больницу с подозрением на перелом бедра."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла. Едем с сиреной.",
+        "audio": "bank-v1/103/103.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бабушка оступилась на лестнице в подъезде, лежит, встать не может.",
+        "audio": "bank-v1/103/103.arrived.fall.5.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Подозрение на перелом шейки бедра. Обезболиваем, перекладываем на носилки.",
+        "audio": "bank-v1/103/103.working.fall.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Бабушку везём в больницу, подозрение на перелом бедра.",
+        "audio": "bank-v1/103/103.completed.fall.5.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: проспект Мила, 26.",
+        "audio": "bank-v6/103/103.readback.f047b269.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Приняла поправку. Хорошо, что сказали, мы уже туда сворачивали.",
+            "audio": "bank-v1/103/103.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/103/103.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/103/103.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

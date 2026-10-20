@@ -2,6 +2,7 @@ import asyncio
 from datetime import UTC, datetime, timedelta
 from uuid import UUID, uuid4
 
+import pytest
 from app.core.config import Settings
 from app.core.db import Database
 from app.core.models import (
@@ -11,6 +12,8 @@ from app.core.models import (
     Participant,
     Prediction,
     Scenario,
+    ScenarioPack,
+    ScenarioTrainingPlan,
     Session,
     User,
 )
@@ -230,6 +233,7 @@ def test_legacy_prediction_fallback_uses_passed_snapshot():
     assert make_prediction(participant, scenario, {}) == second
 
 
+@pytest.mark.usefixtures("clean_generated_content")
 def test_generate_handler_finishes_job_idempotently(database_url, tmp_path):
     async def check():
         config = Settings(
@@ -243,6 +247,17 @@ def test_generate_handler_finishes_job_idempotently(database_url, tmp_path):
             await clear_open_jobs(worker.database)
             pack_id = uuid4()
             async with worker.database.sessions.begin() as db:
+                teacher = await db.scalar(select(User).where(User.role == "teacher"))
+                db.add(
+                    ScenarioPack(
+                        id=pack_id,
+                        title="Генерация",
+                        status="draft",
+                        origin="template",
+                        created_by=teacher.id,
+                    )
+                )
+                await db.flush()
                 job = await enqueue_job(
                     db,
                     kind="generate",
@@ -256,6 +271,14 @@ def test_generate_handler_finishes_job_idempotently(database_url, tmp_path):
                     entity_id=pack_id,
                 )
                 job_id = job.id
+            claimed = await worker.queue.claim()
+            assert claimed is not None and claimed.id == job_id
+            assert await worker.process(claimed)
+            async with worker.database.sessions() as db:
+                partial = await db.get(Job, job_id)
+                assert partial.status == "pending" and partial.attempts == 0
+                assert partial.result["complete"] is False
+                assert len(partial.result["scenario_ids"]) == 1
             claimed = await worker.queue.claim()
             assert claimed is not None and claimed.id == job_id
             assert await worker.process(claimed)
@@ -275,7 +298,45 @@ def test_generate_handler_finishes_job_idempotently(database_url, tmp_path):
                 generated = list(
                     (await db.scalars(select(Scenario).where(Scenario.id.in_(scenario_ids)))).all()
                 )
-                assert all("MVP-STUB" in item.teacher_comment for item in generated)
+                assert all(
+                    item.origin == "template" and item.status == "draft" for item in generated
+                )
+                assert all(item.generation_metadata["fallback_used"] for item in generated)
+                for item in generated:
+                    plan = await db.get(ScenarioTrainingPlan, (item.id, item.version))
+                    assert plan is not None and len(plan.plan["messages"]) == 4
+                    assert item.reference["expected_flow"][-1] == "completed"
+        finally:
+            await worker.close()
+
+    run(check())
+
+
+@pytest.mark.parametrize("temporary", [False, True])
+def test_generation_refusal_is_final_but_model_outage_retries(database_url, monkeypatch, temporary):
+    from app.worker.generators.validation import GenerationRejected, GenerationUnavailable
+
+    async def check():
+        worker = Worker(Settings(_env_file=None, database_url=database_url, ai_provider="off"))
+        try:
+            await clear_open_jobs(worker.database)
+            async with worker.database.sessions.begin() as db:
+                job = await enqueue_job(db, kind="insights", entity_id=uuid4(), payload={})
+                job_id = job.id
+            reason = "Сервер ИИ не ответил." if temporary else "ИИ не смог обработать замечание."
+
+            async def reject(*args):
+                raise (GenerationUnavailable if temporary else GenerationRejected)(reason)
+
+            monkeypatch.setattr(worker.handlers, "run", reject)
+            assert not await worker.work()
+            row = await worker.job(job_id)
+            assert row.status == ("pending" if temporary else "failed")
+            assert row.error == reason and row.attempts == 1
+            assert row.locked_by is None and row.locked_at is None
+            if not temporary:
+                assert not await worker.work()
+                assert (await worker.job(job_id)).attempts == 1
         finally:
             await worker.close()
 

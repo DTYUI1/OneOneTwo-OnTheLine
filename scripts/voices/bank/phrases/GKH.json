@@ -1,0 +1,3365 @@
+{
+  "service": "GKH",
+  "speaker": "brigade",
+  "gender": "male",
+  "incidents": {
+    "pipe_flat": "Прорыв трубы в квартире",
+    "leak_ceiling": "Течь с потолка, топят сверху",
+    "sewer": "Засор канализации, затопило подвал",
+    "heating": "Прорвало батарею, нет отопления",
+    "no_water": "Нет воды в доме",
+    "electric": "Нет света в подъезде, искрит щиток",
+    "roof": "Протекает кровля",
+    "animal": "Спасти животное"
+  },
+  "phrases": [
+    {
+      "id": "GKH.answer.any.1",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Аварийная бригада, слушаю.",
+      "facts": []
+    },
+    {
+      "id": "GKH.answer.any.2",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, диспетчер, на связи.",
+      "facts": []
+    },
+    {
+      "id": "GKH.answer.any.3",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, слушаю, говорите.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.1",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.2",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, собираемся, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.3",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Инструмент в машине, едем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.4",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записал. Как раз с прошлого вызова освободились, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.5",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, едем. Если что поменяется — сразу звоните.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.6",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, понял. Выдвигаемся.",
+      "facts": []
+    },
+    {
+      "id": "GKH.enroute.any.1",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, минут через десять будем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.enroute.any.2",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "В пути. На выезде пробка, но уже подъезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.enroute.any.3",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, уже во дворах, дом ищем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.enroute.any.4",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока в дороге, на месте доложу.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.1",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, стоим. Двор заставлен, машина не проходит, идём пешком с инструментом.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.2",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаемся: впереди авария, всё стоит, объезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.3",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, колесо пробили. Меняем, потом сразу туда.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.4",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Шлагбаум во дворе закрыт, охраны нет. Ищем, как заехать.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.5",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дорогу перекопали, едем в объезд. Минут на десять позже будем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.wrong_place.any.1",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, мы на месте, а тут всё в порядке. Никто не вызывал. Проверьте адрес!",
+      "facts": []
+    },
+    {
+      "id": "GKH.wrong_place.any.2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приехали, обошли подъезды — никакой аварии, жильцы ничего не знают. Адрес точно этот?",
+      "facts": []
+    },
+    {
+      "id": "GKH.wrong_place.any.3",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, по этому адресу вызова нет. Уточните, куда ехать!",
+      "facts": []
+    },
+    {
+      "id": "GKH.readback_fixed.any.1",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял поправку, разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "GKH.readback_fixed.any.2",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "А, другой дом. Понял, перестраиваемся.",
+      "facts": []
+    },
+    {
+      "id": "GKH.readback_fixed.any.3",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, исправил. Едем по верному адресу.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.1",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.2",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.3",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, понял вас.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.4",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, записал.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.5",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, учтём.",
+      "facts": []
+    },
+    {
+      "id": "GKH.not_understood.any.1",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял, повторите.",
+      "facts": []
+    },
+    {
+      "id": "GKH.not_understood.any.2",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, плохо слышно, повторите ещё раз.",
+      "facts": []
+    },
+    {
+      "id": "GKH.not_understood.any.3",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Шумно тут, не расслышал. Повторите.",
+      "facts": []
+    },
+    {
+      "id": "GKH.end_call.any.1",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "GKH.end_call.any.2",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, отбой.",
+      "facts": []
+    },
+    {
+      "id": "GKH.end_call.any.3",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, работаем дальше. Конец связи.",
+      "facts": []
+    },
+    {
+      "id": "GKH.end_call.any.4",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ладно, до связи.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.1",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем. Ещё минут двадцать, потом доложу.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.2",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы идут, пока всё нормально.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.3",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, ещё возимся. Как закончим — сразу позвоню.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.4",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем, осталось немного, убираем за собой.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.5",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока работаем. Запчасть должны подвезти, ждём.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify.any.1",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, какой этаж у заявителя?",
+      "facts": [],
+      "asks": "floor"
+    },
+    {
+      "id": "GKH.clarify.any.2",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, подъезд какой? Тут их много, а номера на дверях стёрты.",
+      "facts": [],
+      "asks": "entrance"
+    },
+    {
+      "id": "GKH.clarify.any.3",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, код домофона есть? Стоим у двери.",
+      "facts": [],
+      "asks": "intercom"
+    },
+    {
+      "id": "GKH.clarify.any.4",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, дайте телефон заявителя, не открывают.",
+      "facts": [],
+      "asks": "caller_phone"
+    },
+    {
+      "id": "GKH.clarify.any.5",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, ключи от подвала у кого? Там замок висит.",
+      "facts": [],
+      "asks": "basement_keys"
+    },
+    {
+      "id": "GKH.clarify.any.6",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, хозяева дома будут? Квартира закрыта, никто не отвечает.",
+      "facts": [],
+      "asks": "access"
+    },
+    {
+      "id": "GKH.clarify.any.7",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, какая управляющая у дома? Им тоже сообщить надо.",
+      "facts": [],
+      "asks": "management"
+    },
+    {
+      "id": "GKH.clarify.electric.1",
+      "slot": "clarify",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Диспетчер, у кого ключи от щитовой? Без них не попадём.",
+      "facts": [],
+      "asks": "keys"
+    },
+    {
+      "id": "GKH.clarify.leak_ceiling.1",
+      "slot": "clarify",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Диспетчер, заявитель не сказал, из какой квартиры топит? Сверху никто не открывает.",
+      "facts": [],
+      "asks": "neighbors"
+    },
+    {
+      "id": "GKH.clarify.pipe_flat.1",
+      "slot": "clarify",
+      "incidents": [
+        "pipe_flat",
+        "leak_ceiling"
+      ],
+      "text": "Диспетчер, не говорили, горячая течёт или холодная?",
+      "facts": [],
+      "asks": "water"
+    },
+    {
+      "id": "GKH.clarify.roof.1",
+      "slot": "clarify",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Диспетчер, кто откроет выход на кровлю? Люк под замком.",
+      "facts": [],
+      "asks": "roof_keys"
+    },
+    {
+      "id": "GKH.clarify_ok.any.1",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, работаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_ok.any.2",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, есть. Идём.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_ok.any.3",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, так и сделаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_ok.any.4",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, спасибо.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_unknown.any.1",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, будем искать сами, это займёт время.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_unknown.any.2",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ладно, поспрашиваю у соседей.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_unknown.any.3",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Плохо. Попробуем через управляющую, но это надолго.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_late.any.1",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже нашли сами.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_late.any.2",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да мы уже разобрались, соседи подсказали.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify_late.any.3",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поздно, диспетчер, уже на месте разобрались. Но принял.",
+      "facts": []
+    },
+    {
+      "id": "GKH.request_service.any.1",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут бабушке плохо, переволновалась, давление. Вызовите скорую!",
+      "facts": [
+        "victims",
+        "victim_elderly"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.request_service.pipe_flat.1",
+      "slot": "request_service",
+      "incidents": [
+        "pipe_flat",
+        "leak_ceiling",
+        "heating",
+        "sewer"
+      ],
+      "text": "Женщина поскользнулась на мокром полу, ударилась головой. Нужна скорая.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.request_service.heating.1",
+      "slot": "request_service",
+      "incidents": [
+        "heating",
+        "pipe_flat"
+      ],
+      "text": "Диспетчер, хозяина кипятком обварило, сам перекрывать полез. Скорую срочно!",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.request_service.electric.1",
+      "slot": "request_service",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Диспетчер, щиток горит, дым по лестнице пошёл! Вызывайте пожарных!",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.request_service.any.2",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, из подвала дымом тянет, похоже, кабель горит. Нужны пожарные.",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.request_service.pipe_flat.2",
+      "slot": "request_service",
+      "incidents": [
+        "pipe_flat",
+        "leak_ceiling",
+        "heating"
+      ],
+      "text": "Диспетчер, нужны пожарные дверь вскрывать: хозяев нет, а там вода вниз хлещет.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.request_service.any.3",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, хозяин пьяный, не пускает, на слесаря кидается. Нужен наряд.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.request_service.pipe_flat.3",
+      "slot": "request_service",
+      "incidents": [
+        "pipe_flat",
+        "leak_ceiling",
+        "heating"
+      ],
+      "text": "Квартиру вскрывать надо, хозяев нет, а соседей заливает. Вызовите полицию, без них не можем.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.request_service.sewer.1",
+      "slot": "request_service",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Диспетчер, в подвале какие-то люди живут, работать не дают. Нужна полиция.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.request_service.any.4",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, в подвале газом пахнет. Мы туда не идём, вызывайте газовую службу!",
+      "facts": [
+        "gas"
+      ],
+      "needs": "104"
+    },
+    {
+      "id": "GKH.request_service.any.5",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, в подъезде газом тянет, сильно. Вызывайте Мосгаз, мы людей пока не пускаем.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "104"
+    },
+    {
+      "id": "GKH.alarm.any.1",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Слесаря током ударило, лежит, не отвечает! Скорую срочно!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "GKH.alarm.any.2",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, беда! Напарник в подвале с лестницы сорвался, нога, похоже, сломана. Скорую!",
+      "facts": [],
+      "tone": "[out of breath]"
+    },
+    {
+      "id": "GKH.alarm.any.3",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, срочно! Слесарю трубой по голове прилетело, кровь, путается. Скорую!",
+      "facts": [],
+      "tone": "[urgent]"
+    },
+    {
+      "id": "GKH.alarm.heating.1",
+      "slot": "alarm",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Диспетчер! Напарника кипятком окатило, руки обварены! Срочно скорую!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "GKH.alarm.roof.1",
+      "slot": "alarm",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Тревога! Напарник на кровле поскользнулся, упал на козырёк. Живой, но не встаёт. Скорую!",
+      "facts": [],
+      "tone": "[panicked]"
+    },
+    {
+      "id": "GKH.alarm_ack.any.1",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ждём скорую.",
+      "facts": []
+    },
+    {
+      "id": "GKH.alarm_ack.any.2",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял. Напарника вынесли на воздух, сидим с ним, ждём.",
+      "facts": []
+    },
+    {
+      "id": "GKH.alarm_ack.any.3",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, скорую встретим у подъезда. Работы пока стоят.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.any.1",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы завершены, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.any.2",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё сделали, у жильцов претензий нет, уезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.any.3",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, закончили. Акт подписали, возвращаемся на базу.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.any.4",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Закончили, никто не пострадал. Всё проверили, работает.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.refused.any.1",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тут всё в порядке, жильцы никого не вызывали. Вызов ложный.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.refused.any.2",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дверь никто не открыл, соседи говорят — хозяев нет. Доступа нет, уезжаем.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.refused.any.3",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока ехали, жильцы сами всё устранили. Наши работы не нужны.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.refused.any.4",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не наше хозяйство, диспетчер. Это чужие сети, мы тут ничего не трогаем.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.1",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "На месте. В ванной хлещет из стояка, хозяин тряпками затыкает, пол весь в воде.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.2",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Прибыли. Квартира закрыта, а из-под двери течёт. Звоним — никто не открывает.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.3",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Бригада на месте. На кухне трубу разорвало, хозяйка сама кран прикрутила, течёт меньше.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.4",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Так, на месте. Горячая бьёт из-под раковины, пар по всей квартире. Людей вывели на площадку.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.working.pipe_flat.1",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Стояк перекрыли, сбрасываем воду, меняем кусок трубы.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.pipe_flat.2",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Воду по подъезду отключили, ставим хомут, пока временно.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.pipe_flat.3",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Режем ржавый участок, там вся труба гнилая, ставим новую.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.pipe_flat.4",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Работаем. Соседей снизу тоже залило, отправил напарника посмотреть.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.pipe_flat.1",
+      "slot": "update",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Диспетчер, хуже, чем думали: трубу прорвало прямо в стене. Вскрываем плитку, это надолго.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.pipe_flat.2",
+      "slot": "update",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Диспетчер, тут проще: течёт подводка, стояк целый. Быстро закончим.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.pipe_flat.1",
+      "slot": "completed",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Трубу заменили, воду дали, течи нет. Работы закончены.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.pipe_flat.2",
+      "slot": "completed",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Закончили. Поставили хомут, стояк запустили. Хозяевам сказал — пусть вызывают сантехника на замену.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.pipe_flat.3",
+      "slot": "completed",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Готово, воду всему стояку дали. Соседей снизу тоже проверили, у них подсыхает.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.pipe_flat.1",
+      "slot": "refused",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Хозяин сам перекрыл кран под раковиной и всё вытер. Делать нам нечего, уезжаем.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.refused.pipe_flat.2",
+      "slot": "refused",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Течёт после отсекающего крана, это уже квартирная разводка. Не наше, пусть зовут своего сантехника.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.1",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "На месте. С потолка на кухне капает, по стене разводы. Идём к соседям сверху.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.2",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Прибыли. Льёт через люстру, свет в квартире выбило. Хозяйка пожилая, перепугалась.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.3",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Бригада на месте. Сверху никто не открывает, а течёт всё сильнее.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.4",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "На месте. Заявительница в тазы собирает, соседи сверху дома, поднимаемся к ним.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.leak_ceiling.1",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Нашли: у соседей сверху стиралка шланг сорвала. Воду им перекрыли, убираем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.leak_ceiling.2",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Перекрыли стояк на весь подъезд, пока не найдём, откуда идёт.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.leak_ceiling.3",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Течёт из квартиры через этаж, там ремонт, трубу задели. Меняем кусок.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.leak_ceiling.4",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Работаем. Сверху уже сухо, у заявителя капает остатками.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.leak_ceiling.1",
+      "slot": "update",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Диспетчер, сверху так и не открыли. Перекрыли стояк целиком, подъезд без воды, пока хозяин не появится.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.update.leak_ceiling.2",
+      "slot": "update",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Диспетчер, хозяева сверху пришли, открыли. Там бачок унитаза треснул, сейчас перекроем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.leak_ceiling.1",
+      "slot": "completed",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Течь устранили, у соседей сверху поменяли кран. Акт о заливе пусть управляющая составляет.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.leak_ceiling.2",
+      "slot": "completed",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Закончили. Причину нашли, заменили, стояк запустили обратно.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.leak_ceiling.3",
+      "slot": "completed",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Готово. С потолка больше не течёт. Жильцам сказал проветривать, чтобы плесени не было.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.leak_ceiling.1",
+      "slot": "refused",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Соседи сверху сами перекрыли воду, пока мы ехали. Течь прекратилась, работ нет.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.refused.leak_ceiling.2",
+      "slot": "refused",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Заявительница путает: это старое пятно, давно высохло. Течи нет, вызов ложный.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.arrived.sewer.1",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "На месте. Подвал затоплен по щиколотку, вонь страшная, лежак забит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.sewer.2",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Прибыли. Подвал заперт, а вода уже в подъезд из люка лезет. Ищем, кто откроет.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.sewer.3",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Бригада на месте. У жильцов внизу из унитаза всё обратно идёт, квартира залита.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.sewer.4",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "На месте. В подвале воды по колено, кабель в воде. Подвал обесточили, потом полезем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.sewer.1",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Пробиваем лежак тросом. Засор плотный, тряпки какие-то.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.sewer.2",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Подогнали откачку, качаем воду из подвала.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.sewer.3",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Засор в колодце во дворе, оттуда всё и шло. Чистим.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.sewer.4",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Работаем. Жильцам по стояку сказал — пока ничего не сливать.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.sewer.1",
+      "slot": "update",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Диспетчер, засор глубже, чем думали, тросом не берёт. Вызываем свою машину на промывку.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.sewer.2",
+      "slot": "update",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Диспетчер, пошло! Пробили, вода из подвала уходит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.sewer.1",
+      "slot": "completed",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Засор пробили, подвал откачали. Работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.sewer.2",
+      "slot": "completed",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Закончили. Лежак прочистили, промыли, проверили сливом со всех стояков.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.sewer.3",
+      "slot": "completed",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Готово. Подвал сухой, а дезинфекцию пусть управляющая заказывает, это уже не мы.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.sewer.1",
+      "slot": "refused",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Диспетчер, это городская ливнёвка забита, не наша сеть. Пусть Мосводосток едет.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.refused.sewer.2",
+      "slot": "refused",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Пока доехали, дворники сами пробили. Вода ушла, делать нечего.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.arrived.heating.1",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "На месте. Батарею в комнате сорвало, кипяток на полу, пар стоит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.heating.2",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Прибыли. В квартирах холодно, батареи ледяные по всему стояку. Идём в тепловой узел.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.heating.3",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Бригада на месте. Хозяин руку кипятком обжёг, пока ведро подставлял. От скорой отказывается.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "GKH.arrived.heating.4",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "На месте. Кран Маевского сорвали, видно, сами крутили. Бьёт струйкой, перекрываем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.heating.1",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Перекрыли отопление по стояку, сливаем, будем ставить заглушку.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.heating.2",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Меняем секцию радиатора, старая прогнила насквозь.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.heating.3",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "В тепловом узле задвижку заклинило, не открывается. Разбираем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.heating.4",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Стравливаем воздух по этажам. Стояк завоздушен, потому и холодно.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.heating.1",
+      "slot": "update",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Диспетчер, тут не одна батарея: в подвале на разводке свищ. Весь дом часа на три без отопления останется.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.heating.2",
+      "slot": "update",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Диспетчер, полегче стало: течь остановили, теперь спокойно меняем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.heating.1",
+      "slot": "completed",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Радиатор заменили, стояк запустили, батареи греют. Работы закончены.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.heating.2",
+      "slot": "completed",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Закончили. Воздух спустили, отопление пошло, жильцы проверили — тёплые.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.heating.3",
+      "slot": "completed",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Готово. Вместо батареи заглушка, тепло дали. Новую пусть управляющая ставит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.heating.1",
+      "slot": "refused",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Пока ехали, отопление на дом дали по графику. Батареи греют, работ нет.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.refused.heating.2",
+      "slot": "refused",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Диспетчер, батарею они сами ставили, после своего крана. Это не к нам, пусть зовут тех, кто ставил.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.arrived.no_water.1",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "На месте. Воды нет во всём подъезде, ни холодной, ни горячей.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.no_water.2",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Прибыли. Краны только шипят. Идём в подвал к вводной задвижке.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.no_water.3",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Бригада на месте. Наверху воды нет совсем, внизу еле течёт. Похоже, насос.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.no_water.4",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "На месте. Жильцы с вёдрами во дворе, у кого-то лежачая бабушка, просят побыстрее.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.no_water.1",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Вводная задвижка закрыта: кто-то перекрыл и не открыл. Открываем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.no_water.2",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Насос подкачки встал. Разбираем, смотрим.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.no_water.3",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Нашли порыв на вводе в подвале, перекрыли, варим.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.no_water.4",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Работаем. Объявление повесили, чтобы краны пока не открывали.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.no_water.1",
+      "slot": "update",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Диспетчер, порыв не у нас, а на городской сети перед домом. Без водоканала не обойтись.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.no_water.2",
+      "slot": "update",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Диспетчер, причина нашлась: задвижку после ремонта закрыли и забыли. Сейчас дадим воду.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.no_water.1",
+      "slot": "completed",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Воду дали, напор нормальный, по стоякам проверили. Работы закончены.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.no_water.2",
+      "slot": "completed",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Закончили. Насос запустили, наверх вода пошла.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.no_water.3",
+      "slot": "completed",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Готово, вода есть. Сначала ржавая пойдёт — жильцам сказал, пусть сливают.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.no_water.1",
+      "slot": "refused",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Диспетчер, это плановое отключение, объявление на двери висит. Водоканал работает, нам делать нечего.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.refused.no_water.2",
+      "slot": "refused",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Пока ехали, вода пошла сама, на сети давление подняли. Работ нет.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.arrived.electric.1",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "На месте. В подъезде темно, щиток на площадке трещит, пахнет горелым.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.electric.2",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Прибыли. Щиток искрит, жильцы толпились рядом — разогнали всех.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.electric.3",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Бригада на месте. Свет погас на весь подъезд, а щитовая закрыта.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.electric.4",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "На месте. Щиток мокрый: сверху с трубы капает прямо на автоматы.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.electric.1",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Обесточили подъезд, меняем сгоревший автомат.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.electric.2",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Электрик зачищает провода, там всё оплавилось. Тянем новый кабель.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.electric.3",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Перекрыли трубу над щитком, сушим, потом будем включать.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.electric.4",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Работаем. На лестнице временный свет кинули, чтобы люди не падали.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.electric.1",
+      "slot": "update",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Диспетчер, сгорел не только автомат, кабель в стене оплавлен. Нужен электрик управляющей, сами не сделаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.electric.2",
+      "slot": "update",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Диспетчер, нашли: кто-то от щитка самодельную розетку тянул. Сняли, искрить перестало.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.electric.1",
+      "slot": "completed",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Автомат заменили, свет в подъезде есть, щиток закрыли на замок.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.electric.2",
+      "slot": "completed",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Закончили. Проводку восстановили, всё сухое, включили — работает.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.electric.3",
+      "slot": "completed",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Готово. Свет дали, ключ от щитка отдали старшей по дому.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.electric.1",
+      "slot": "refused",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Диспетчер, свет отключила городская сеть, весь квартал тёмный. Это энергетики, не мы.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.refused.electric.2",
+      "slot": "refused",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Жилец сам автомат поднял, свет горит, щиток целый. Нам делать нечего.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.arrived.roof.1",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "На месте. После дождя на последнем этаже течёт с потолка в нескольких квартирах.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.roof.2",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Прибыли. Выход на кровлю закрыт, ключа ни у кого нет.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.roof.3",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Бригада на месте. Поднялись на чердак — вода прямо по балкам, рубероид порван.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.roof.4",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "На месте. Водосточную воронку листьями забило, на крыше вода озером стоит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.roof.1",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Чистим воронку, сгоняем воду с кровли.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.roof.2",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Кладём заплатку на рубероид, временно, до кровельщиков.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.roof.3",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Расставили на чердаке ёмкости, собираем воду, чтобы в квартиры не шло.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.roof.4",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Работаем. Наверху ветер, держимся за ограждение, идёт медленно.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.roof.1",
+      "slot": "update",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Диспетчер, опять дождь пошёл, заплатку размывает. Течёт сильнее.",
+      "facts": []
+    },
+    {
+      "id": "GKH.update.roof.2",
+      "slot": "update",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Диспетчер, воронку пробили — вода с крыши ушла, в квартирах капать перестало.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.roof.1",
+      "slot": "completed",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Воронку прочистили, вода с кровли ушла. Закрыли временно, капитальный ремонт пусть управляющая решает.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.roof.2",
+      "slot": "completed",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Закончили. Дыру в кровле закрыли, на чердаке сухо.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.roof.3",
+      "slot": "completed",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Готово. Течь остановили. Жильцам сказали: если опять потечёт — пусть звонят.",
+      "facts": []
+    },
+    {
+      "id": "GKH.refused.roof.1",
+      "slot": "refused",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Диспетчер, кровлю подрядчик ремонтирует, они сами вскрыли, сами и закрывают. Не наше.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.refused.roof.2",
+      "slot": "refused",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Течи нет, дождь кончился, на чердаке сухо. Вызов не подтвердился.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.intro.any.1",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, аварийная служба на связи.",
+      "facts": []
+    },
+    {
+      "id": "GKH.intro.any.2",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это аварийка, слесарь. Докладываю.",
+      "facts": []
+    },
+    {
+      "id": "GKH.intro.any.3",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Слесарь аварийной бригады, по вашей заявке.",
+      "facts": []
+    },
+    {
+      "id": "GKH.intro.any.4",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, аварийная бригада. Записывайте.",
+      "facts": []
+    },
+    {
+      "id": "GKH.no_reply.any.1",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "GKH.no_reply.any.2",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло? Есть кто на связи?",
+      "facts": []
+    },
+    {
+      "id": "GKH.no_reply.any.3",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, алло! Не слышу вас, ответьте.",
+      "facts": []
+    },
+    {
+      "id": "GKH.no_reply.any.4",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ну что там? Мне доложить надо, а вы молчите!",
+      "facts": []
+    },
+    {
+      "id": "GKH.confirm_request.any.1",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как приняли?",
+      "facts": []
+    },
+    {
+      "id": "GKH.confirm_request.any.2",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записали? Подтвердите.",
+      "facts": []
+    },
+    {
+      "id": "GKH.confirm_request.any.3",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, у меня всё. Как поняли?",
+      "facts": []
+    },
+    {
+      "id": "GKH.repeat_report.any.1",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю.",
+      "facts": []
+    },
+    {
+      "id": "GKH.repeat_report.any.2",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, записывайте.",
+      "facts": []
+    },
+    {
+      "id": "GKH.repeat_report.any.3",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, повторяю для записи.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.5",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Прибыли. Горячей ребёнка ошпарило, мама скорую уже вызвала. Ищем, где перекрыть.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.6",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Мы в квартире. Вода по щиколотку, хозяева на табуретках стоят. Пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.arrived.pipe_flat.7",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "На месте. Бабушка открыть не может, замок изнутри заело, а вода у неё уже в коридоре.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "GKH.working.pipe_flat.5",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "В квартиру так и не попали, стояк перекрыли из подвала. Соседей больше не заливает.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.working.pipe_flat.6",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Подводку меняем. Хозяйка руку о трубу порезала, перевязали, к врачам не хочет.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "GKH.working.pipe_flat.7",
+      "slot": "working",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Перекрыли. Теперь у соседей снизу смотрим: вода в люстру натекла, свет у них выключили.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.pipe_flat.4",
+      "slot": "completed",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Закончили. Хозяев так и нет, стояк держим перекрытым, жильцов по стояку предупредили.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.completed.pipe_flat.5",
+      "slot": "completed",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Готово, течь устранили. Пострадавших нет, только мебель намокла.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.completed.pipe_flat.6",
+      "slot": "completed",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Закончили. Ребёнка скорая увезла, а горячую мы перекрыли и трубу поменяли.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "GKH.refused.pipe_flat.3",
+      "slot": "refused",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Квартира закрыта, хозяев нет, под дверью сухо, снизу не течёт. Работать не с чем, уезжаем.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.update.pipe_flat.3",
+      "slot": "update",
+      "incidents": [
+        "pipe_flat"
+      ],
+      "text": "Хозяева вернулись, открыли. Теперь хоть видно, откуда течёт.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.5",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Прибыли. Кусок штукатурки отвалился, хозяина по плечу задело. Говорит, ерунда, врача не надо.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.6",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Течёт по стене в детской. Маму с ребёнком к соседям увели, идём наверх.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.arrived.leak_ceiling.7",
+      "slot": "arrived",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Бригада тут. Наверху старушка одна, открыть не может: ключ в замке сломался.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "GKH.working.leak_ceiling.5",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Наверху ванна через край, хозяин уснул. Разбудили, воду закрыли, вычерпываем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.leak_ceiling.6",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Сверху тоже течёт, не оттуда начало. Идём по этажам выше, ищем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.leak_ceiling.7",
+      "slot": "working",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Наверх так никто и не открыл. Работаем из подвала, перекрыли отвод на их квартиру.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.completed.leak_ceiling.4",
+      "slot": "completed",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Закончили. Пострадавших нет. Проводку в квартире пусть электрик смотрит, когда просохнет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.completed.leak_ceiling.5",
+      "slot": "completed",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Всё сделали. Мужчину, которого штукатуркой задело, ещё раз спросили — от скорой отказался.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "GKH.completed.leak_ceiling.6",
+      "slot": "completed",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Готово. Старушке сверху дверь открыли, кран у неё закрыли, течи больше нет.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "GKH.refused.leak_ceiling.3",
+      "slot": "refused",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Топит из офиса сверху, у них своя охрана и свой сантехник. Не наше хозяйство, пусть сами.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "GKH.update.leak_ceiling.3",
+      "slot": "update",
+      "incidents": [
+        "leak_ceiling"
+      ],
+      "text": "Вода в проводку пошла, у заявителя замкнуло. Квартиру обесточили, работаем дальше.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.sewer.5",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Прибыли. Жилец сам в колодец полез пробивать, надышался, сидит бледный. От скорой отмахивается.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "GKH.arrived.sewer.6",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Бригада на месте. У первого этажа по полу течёт, людей к соседям вывели.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.arrived.sewer.7",
+      "slot": "arrived",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "На месте. Залило только приямок у входа в подвал, пострадавших нет. Смотрим колодец.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.working.sewer.5",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Лежак засором разорвало, чугун лопнул. Режем, ставим пластик.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.sewer.6",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Подвал так и не открыли. Качаем через продух, шланг в окошко кинули.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.working.sewer.7",
+      "slot": "working",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Внизу дышать нечем, работаем в масках, по очереди. Медленно, но идёт.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.sewer.4",
+      "slot": "completed",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Закончили, пострадавших нет. Первый этаж к себе вернулся, у них уже сухо.",
+      "facts": [
+        "no_victims",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.completed.sewer.5",
+      "slot": "completed",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Засор пробили, сток идёт. Дальнюю секцию подвала не открыли, там замок, пусть управляющая смотрит.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.completed.sewer.6",
+      "slot": "completed",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Всё, пошло. Мужчину, что в колодце надышался, скорая увезла. По нашей части закончено.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "GKH.refused.sewer.3",
+      "slot": "refused",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "В подвале сухо. Это после мойки подъезда вода у входа стояла. Вызов ложный.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.update.sewer.3",
+      "slot": "update",
+      "incidents": [
+        "sewer"
+      ],
+      "text": "Не успеваем: вода в подвале прибывает быстрее, чем качаем. Похоже, ещё и труба где-то лопнула.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.heating.5",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Прибыли. Пенсионерка одна живёт, ноги кипятком обожгла. Скорую ей уже вызвали.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "GKH.arrived.heating.6",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Бригада на месте. Хозяев нет, из-под двери пар, а снизу соседи кричат — у них капает.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.heating.7",
+      "slot": "arrived",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Подъезд в пару, ничего не видно. Людей с лестницы на улицу вывели, пострадавших нет.",
+      "facts": [
+        "evacuated",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.working.heating.5",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Стояк перекрыть не можем, подвал закрыт. Пока вёдрами собираем, ждём ключи.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.working.heating.6",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Свищ в подвале варим. Отопление по дому пока держим выключенным.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.heating.7",
+      "slot": "working",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Работаем. Детей и бабушку соседи к себе забрали, в квартире холодно и сыро.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.completed.heating.4",
+      "slot": "completed",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Закончили. Пенсионерку скорая увезла, а батарею мы поменяли, стояк греет.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "GKH.completed.heating.5",
+      "slot": "completed",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Закончили, сколько смогли. В квартиру не попали, их стояк перекрыт, остальным тепло дали.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.completed.heating.6",
+      "slot": "completed",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Всё сделали. Пострадавших нет, пар ушёл, люди в подъезд вернулись.",
+      "facts": [
+        "no_victims",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.refused.heating.3",
+      "slot": "refused",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Батарея целая. Это хозяин мокрое бельё на ней сушил, с него и капало. Вызов ложный.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.update.heating.3",
+      "slot": "update",
+      "incidents": [
+        "heating"
+      ],
+      "text": "Задвижку в узле не раскрутить, её только менять. Дом без отопления останется надолго.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.no_water.5",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Прибыли. В подвал не попасть: замок новый, а у дворника ключа нет.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.arrived.no_water.6",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Бригада тут. Воды нет только у заявителя, у соседей течёт. Значит, что-то у него в квартире.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.no_water.7",
+      "slot": "arrived",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "На месте. На вводе в подвале фонтан, вода во двор уходит. Людей там нет, никого не задело.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.working.no_water.5",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Меняем задвижку на вводе. Старая развалилась, как только тронули.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.no_water.6",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Фильтр на вводе ржавчиной забит. Разбираем, чистим.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.no_water.7",
+      "slot": "working",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Подвал закрыт, работаем через колодец во дворе, там своя задвижка.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.completed.no_water.4",
+      "slot": "completed",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Закончили. Задвижку поменяли, вода есть, пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.completed.no_water.5",
+      "slot": "completed",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Вода пошла. Фильтр прочистили, напор как надо.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.no_water.6",
+      "slot": "completed",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Сделали через колодец во дворе, в подвал так и не попали. Ключ пусть управляющая ищет.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.refused.no_water.3",
+      "slot": "refused",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Обошли стояки — вода везде есть. У заявителя свой кран под мойкой закрыт был, открыли — течёт. Ложный.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.update.no_water.3",
+      "slot": "update",
+      "incidents": [
+        "no_water"
+      ],
+      "text": "Диспетчер, у соседей тоже воды не стало, теперь весь дом сухой. Похоже, ввод.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.electric.5",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Прибыли. Лифт встал между этажами, в кабине люди. Щиток на площадке чёрный.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "GKH.arrived.electric.6",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Так, мы на месте. Жильца током ударило, сам полез автомат поднимать. В сознании, скорую вызвали.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "GKH.arrived.electric.7",
+      "slot": "arrived",
+      "incidents": [
+        "electric"
+      ],
+      "text": "На месте. Щиток только дымил, огня нет. Пострадавших нет, подъезд обесточиваем.",
+      "facts": [
+        "no_fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.working.electric.5",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Щитовую так и не открыли. Делаем с этажного щитка, что можем.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.working.electric.6",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Электрик прозванивает, где замыкание. Жильцы пока с фонариками ходят.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.electric.7",
+      "slot": "working",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Лифт обесточен, людей механик достаёт, мы ему на площадке светим.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "GKH.completed.electric.4",
+      "slot": "completed",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Закончили. Людей из лифта вывели, свет дали, лифт пошёл.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "GKH.completed.electric.5",
+      "slot": "completed",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Готово. Жильца, которого ударило, скорая забрала. Щиток починили, закрыли на замок.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "GKH.completed.electric.6",
+      "slot": "completed",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Закончили. Огня не было, пострадавших нет, автоматы стоят новые.",
+      "facts": [
+        "no_fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.refused.electric.3",
+      "slot": "refused",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Свет в подъезде горит, щиток целый. Заявитель перегоревшую лампочку за аварию принял. Ложный.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "GKH.update.electric.3",
+      "slot": "update",
+      "incidents": [
+        "electric"
+      ],
+      "text": "Плохо дело: включили — щиток опять заискрил. Снова обесточили, ищем дальше.",
+      "facts": []
+    },
+    {
+      "id": "GKH.arrived.roof.5",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Прибыли. На последнем этаже потолок пузырём, вот-вот прорвёт. Жильцов из комнаты вывели.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.arrived.roof.6",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "На месте. С крыши лёд сорвался, кровлю пробил, через дыру и течёт. Внизу никого не задело.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.arrived.roof.7",
+      "slot": "arrived",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Бригада на месте. У бабушки наверху штукатурка упала, руку посекло. От скорой отказалась.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "GKH.working.roof.5",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Пузырь на потолке прокололи, воду в вёдра спускаем, чтобы не рухнул.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.roof.6",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Сбиваем наледь у воронки, за ней вся вода и стоит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.working.roof.7",
+      "slot": "working",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Ключа от выхода на крышу так и нет. Пока по квартирам воду собираем.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.completed.roof.4",
+      "slot": "completed",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Закончили. Дыру залатали, жильцы в комнату вернулись, потолок держится.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "GKH.completed.roof.5",
+      "slot": "completed",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Готово. Пострадавших нет, наледь сбили, течь остановили.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "GKH.completed.roof.6",
+      "slot": "completed",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Закончили, как смогли: на крышу не попали, на чердаке всё ёмкостями заставили. Ключ пусть управляющая найдёт.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.refused.roof.3",
+      "slot": "refused",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Жильцы с последнего этажа сами слазили, воронку от листьев прочистили. Вода ушла, нам делать нечего.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.update.roof.3",
+      "slot": "update",
+      "incidents": [
+        "roof"
+      ],
+      "text": "Ещё одну дыру нашли, над соседним подъездом. Там тоже скоро потечёт.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.7",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть. Сварку берём с собой, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.8",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, понял. Чай не допили, уже в машине.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.9",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, едем. Пусть заявитель нас у подъезда встретит.",
+      "facts": []
+    },
+    {
+      "id": "GKH.responding.any.10",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Выезжаю. Напарник на другом вызове, буду один, но еду.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.6",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.7",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Угу, ясно.",
+      "facts": []
+    },
+    {
+      "id": "GKH.ack.any.8",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, сделаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.6",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Возимся. Тут всё старое, что ни тронь — сыплется.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.7",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем. Жильцы над душой стоят, но дело идёт.",
+      "facts": []
+    },
+    {
+      "id": "GKH.status_working.any.8",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сложнее, чем казалось, задержимся. Позвоню, как станет ясно.",
+      "facts": []
+    },
+    {
+      "id": "GKH.enroute.any.5",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезжаем, уже на вашей улице.",
+      "facts": []
+    },
+    {
+      "id": "GKH.enroute.any.6",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, но далеко, через весь район. Минут двадцать.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.6",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Встали: машина заглохла, напарник под капотом. Минут пятнадцать.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.7",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "По дороге жильцы соседнего дома остановили, у них тоже течёт. Глянем и сразу туда.",
+      "facts": []
+    },
+    {
+      "id": "GKH.delay.any.8",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Держат на складе: без нужной трубы ехать смысла нет. Получим и выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "GKH.clarify.any.8",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "В квартире кто-то остался? Дети, лежачие есть?",
+      "facts": [],
+      "asks": "people_inside"
+    },
+    {
+      "id": "GKH.clarify.any.9",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявитель сам воду перекрыл или так и хлещет?",
+      "facts": [],
+      "asks": "caller_shutoff"
+    },
+    {
+      "id": "GKH.clarify.any.10",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вход в подвал откуда — со двора или из подъезда?",
+      "facts": [],
+      "asks": "basement_entrance"
+    },
+    {
+      "id": "GKH.clarify.any.11",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Кто нас встретит? К кому подходить?",
+      "facts": [],
+      "asks": "contact_person"
+    },
+    {
+      "id": "GKH.completed.any.5",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сделали временно, до утра продержится. Утром плановые доделают.",
+      "facts": []
+    },
+    {
+      "id": "GKH.completed.any.6",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Закончили. Человека скорая забрала, а по нашей части всё сделано.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "GKH.refused.any.5",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявитель не дождался, уехал, телефон выключен. Квартира закрыта, снаружи ничего не видно.",
+      "facts": [
+        "gone",
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.refused.any.6",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Жильцы говорят, вчера ещё всё починили, управляющая своих присылала. Сухо, нам тут делать нечего.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.arrived.animal.1",
+      "slot": "arrived",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Бригада на месте. Мяуканье слышно в вентиляционной шахте, где-то между этажами."
+    },
+    {
+      "id": "GKH.arrived.animal.2",
+      "slot": "arrived",
+      "incidents": [
+        "animal"
+      ],
+      "text": "На месте. Собака провалилась в приямок у подвала, скулит, сама не вылезет."
+    },
+    {
+      "id": "GKH.working.animal.1",
+      "slot": "working",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Вскрываем вентиляционный короб на кухне, котёнка уже видно, достаём."
+    },
+    {
+      "id": "GKH.working.animal.2",
+      "slot": "working",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Хозяйка не открыла. Вскрываем шахту с чердака, это надолго.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "GKH.working.animal.3",
+      "slot": "working",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Спустили лестницу в приямок, собака боится, подманиваем."
+    },
+    {
+      "id": "GKH.completed.animal.1",
+      "slot": "completed",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Котёнка достали, живой, передали хозяйке. Короб закрыли, работы завершены."
+    },
+    {
+      "id": "GKH.completed.animal.2",
+      "slot": "completed",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Собаку вытащили, лапа цела, хозяин забрал. Приямок закрыли решёткой."
+    },
+    {
+      "id": "GKH.refused.animal.1",
+      "slot": "refused",
+      "incidents": [
+        "animal"
+      ],
+      "text": "Животного не нашли: в шахте тихо, соседи говорят, кот вылез сам.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "GKH.briefing_ask.any.1",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял. Куда ехать и что там случилось?",
+      "asks": "both"
+    },
+    {
+      "id": "GKH.briefing_ask.any.2",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес не расслышал. Улица, дом какой?",
+      "asks": "address"
+    },
+    {
+      "id": "GKH.briefing_ask.any.3",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес записал. А что случилось-то?",
+      "asks": "what"
+    },
+    {
+      "id": "GKH.refusal_busy.any.1",
+      "slot": "refusal_busy",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мы на другой аварии, тут потоп. Ищите другую бригаду."
+    },
+    {
+      "id": "GKH.refusal_not_assigned.any.1",
+      "slot": "refusal_not_assigned",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нам эту заявку не давали. Уточните, кого направляли."
+    },
+    {
+      "id": "GKH.service_coming.any.1",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, скорую ждём.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.service_coming.any.2",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, скорая едет — ждём.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.service_coming.any.3",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, врачей встретим.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.service_coming.any.4",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, пожарных ждём, сами не лезем.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.service_coming.any.5",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, пожарные едут — ждём у подъезда.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.service_coming.any.6",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, наряд ждём.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.service_coming.any.7",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, полицию дождёмся.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.service_coming.any.8",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, газовую службу ждём.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "GKH.service_coming.any.9",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, Мосгаз едет — ждём, ничего не трогаем.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "GKH.service_surprise.any.1",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая подъехала. Хорошо, конечно, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.service_surprise.any.2",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая уже здесь. А сказать, что вызвали, нельзя было?",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.service_surprise.any.3",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут врачи приехали. Нас бы предупредили.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "GKH.service_surprise.any.4",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарные подъехали. Хорошо, но предупредили бы, что вызвали.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.service_surprise.any.5",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пожарные уже тут. Мы-то их и не ждали.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "GKH.service_surprise.any.6",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Наряд подъехал. Могли бы и сказать.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.service_surprise.any.7",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Полиция на месте. Предупреждать надо, что вызвали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "GKH.service_surprise.any.8",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Газовики приехали. Хорошо, но сказали бы, что вызвали.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "GKH.service_surprise.any.9",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мосгаз на месте. Нам бы хоть передали.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "GKH.update.wrong_briefing.1",
+      "slot": "update",
+      "requires": [
+        "wrong_briefing"
+      ],
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "facts": [],
+      "when": "Только после выезда по полной вводной с неверным поводом; не случайная обстановка сценария."
+    }
+  ]
+}

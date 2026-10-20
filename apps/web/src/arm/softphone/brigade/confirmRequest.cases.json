@@ -1,0 +1,40 @@
+{
+  "note": "Когда бригада после реплики спрашивает «Как приняли?» — общая таблица примеров клиента (incoming.ts asksConfirmation) и сервера (app.api.training.turns.asks_confirmation): по ней бригада ждёт ответа, прежде чем говорить дальше. Правило: только доклад во входящем вызове; вопрос бригады (варианты ответа) и её ответ на действие диспетчера подтверждения не ждут.",
+  "cases": [
+    {
+      "what": "доклад во входящем вызове",
+      "inbound": true,
+      "question": false,
+      "answer": false,
+      "asks": true
+    },
+    {
+      "what": "доклад в разговоре, где звонил диспетчер",
+      "inbound": false,
+      "question": false,
+      "answer": false,
+      "asks": false
+    },
+    {
+      "what": "вопрос бригады во входящем вызове",
+      "inbound": true,
+      "question": true,
+      "answer": false,
+      "asks": false
+    },
+    {
+      "what": "ответ бригады на действие диспетчера",
+      "inbound": true,
+      "question": false,
+      "answer": true,
+      "asks": false
+    },
+    {
+      "what": "вопрос в исходящем разговоре",
+      "inbound": false,
+      "question": true,
+      "answer": false,
+      "asks": false
+    }
+  ]
+}

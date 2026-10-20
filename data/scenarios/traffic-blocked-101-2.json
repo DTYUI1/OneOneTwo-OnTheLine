@@ -1,0 +1,340 @@
+{
+  "format": 2,
+  "code": "traffic-blocked-101-2",
+  "version": 7,
+  "replaces": [
+    "cde6f764-bd77-5882-be51-ecdd497a5b41"
+  ],
+  "title": "ДТП, водитель зажат в машине",
+  "service_id": "101",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "2021700",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: авария, водитель зажат в машине, Каширское шоссе, 26. Расчёт повторяет адрес с ошибкой (Каширский проезд) и просит скорую пассажирке — в карточке скорой нет, звонок в 103 или 112 за диспетчером. Осложнение: водитель выбрался сам — «Отказ от выполнения работ». Не вызвали скорую — пассажирку оставляют полиции без врачей.",
+  "outcome": {
+    "people": "Зажатый водитель выбрался из машины сам до приезда расчёта, деблокирование не понадобилось. У пассажирки второй машины болела шея — по просьбе расчёта вызвали скорую.",
+    "late": "Карточку приняли позже норматива. Заранее не известно, что водитель выберется сам: по карточке он был зажат, у пассажирки болела шея, а из-под капота шёл пар.",
+    "status": "Работ у расчёта на месте не было: такую карточку закрывают «Отказом от выполнения работ» с причиной, а не статусом «Работы завершены»."
+  },
+  "card": {
+    "caller_name": "Тимофеев Олег Викторович",
+    "phone_aon": "+79000000713",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "ДТП с заблокированными",
+    "service_ids": [
+      "101",
+      "102"
+    ],
+    "number": "70005302",
+    "incident_type_code": "2021700"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "refused"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар. Водитель выбрался из машины сам до нашего прибытия, деблокирование не нужно, работы не проводили."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, расчёт со спасательным инструментом выехал.",
+        "audio": "bank-v2/101/101.responding.traffic.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Расчёт на месте, осматриваем машины.",
+        "audio": "bank-v2/101/101.arrived.traffic.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Водитель выбрался из машины сам, деблокировать никого не пришлось. Пассажирку забрала скорая, наши работы не потребовались.",
+        "audio": "bank-v9/101/101.refused.traffic.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "refused"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Каширский проезд, двадцать шесть, выезжаем!",
+        "audio": "bank-v4/101/101.readback_trap.0b3106c2.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Каширское шоссе, 26"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял поправку, перестраиваем маршрут.",
+            "audio": "bank-v1/101/101.readback_fixed.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/101/101.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/101/101.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт повторил адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, скорую на аварию! Пассажирка жалуется на шею, двигаться ей нельзя.",
+        "audio": "bank-v3/101/101.request_service.traffic.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял.",
+            "audio": "bank-v1/101/101.ack.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Работаем на месте, обстановка под контролем.",
+            "audio": "bank-v1/101/101.status_working.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 15
+            }
+          ]
+        },
+        "missed": {
+          "line": {
+            "text": "Скорая будет? Женщина так и сидит в машине, держим ей голову.",
+            "audio": "bank-v3/101/101.request_service.traffic.3.ogg"
+          },
+          "effects": [
+            {
+              "replace": "outcome",
+              "with": {
+                "text": "Деблокировать некого, водитель вышел сам. Скорую не дождались, пассажирку оставили с полицией.",
+                "audio": "bank-v3/101/101.refused.traffic.5.ogg"
+              }
+            },
+            {
+              "delay": "outcome",
+              "by_s": 20
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт попросил скорую пассажирке — в карточке её нет",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 101",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Каширское шоссе, 26",
+        "correct": true
+      },
+      {
+        "text": "Каширский проезд, 26",
+        "correct": false
+      },
+      {
+        "text": "Каширское шоссе, 62",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Авария, водитель зажат в машине",
+        "correct": true
+      },
+      {
+        "text": "Горит автомобиль",
+        "correct": false
+      },
+      {
+        "text": "Авария без пострадавших",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Водитель зажат, у пассажирки болит шея",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Пострадавших нет",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю расчёт",
+        "correct": true
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      }
+    ]
+  }
+}

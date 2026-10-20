@@ -1,0 +1,43 @@
+{
+  "documents": [
+    {
+      "file": "01_technical_description.pdf",
+      "pages": 15,
+      "content_lines_checked": true,
+      "no_repository_references": true,
+      "docx_xml_checked": true,
+      "pdf_metadata_checked": true,
+      "body_font_pt": 14
+    },
+    {
+      "file": "02_administrator_guide.pdf",
+      "pages": 15,
+      "content_lines_checked": true,
+      "no_repository_references": true,
+      "docx_xml_checked": true,
+      "pdf_metadata_checked": true,
+      "body_font_pt": 14
+    },
+    {
+      "file": "03_teacher_guide.pdf",
+      "pages": 20,
+      "content_lines_checked": true,
+      "no_repository_references": true,
+      "docx_xml_checked": true,
+      "pdf_metadata_checked": true,
+      "body_font_pt": 14
+    },
+    {
+      "file": "04_trainee_guide.pdf",
+      "pages": 23,
+      "content_lines_checked": true,
+      "no_repository_references": true,
+      "docx_xml_checked": true,
+      "pdf_metadata_checked": true,
+      "body_font_pt": 14
+    }
+  ],
+  "forbidden_reference_scan": "passed",
+  "content_preservation": "passed",
+  "runtime_application_test": false
+}

@@ -12,6 +12,9 @@ class Settings(BaseSettings):
 
     api_mode: Literal["mock", "skeleton", "database"] = "mock"
     demo_password: str = "demo-local"
+    # Показ логинов и пароля стенда на экране входа (рекомендации организаторов 16.10, п. 2).
+    # Включает только демо-сборка scripts/stand/up.sh.
+    demo_accounts_shown: bool = False
     cookie_secure: bool = False
     ai_provider: Literal["off", "mock", "local"] = "off"
     embeddings_provider: Literal["off", "null"] = "off"
@@ -19,6 +22,9 @@ class Settings(BaseSettings):
     stt_provider: Literal["off", "null", "local"] = "off"
     stt_base_url: str = "http://stt:9000"
     stt_timeout_seconds: float = Field(default=30, gt=0, le=300)
+    # Ниже этой уверенности доклад голосом «не расслышан» и повторяется (DT-05). 0,45 —
+    # чуть строже порога, по которому faster-whisper сам отбрасывает сегменты (≈0,37).
+    stt_min_confidence: float = Field(default=0.45, ge=0, le=1)
     database_url: str = "postgresql+asyncpg://arm112:local-dev-only@localhost:5432/arm112"
     jwt_secret: SecretStr = SecretStr("")
     session_ttl_seconds: int = Field(default=28800, ge=1)
@@ -37,9 +43,21 @@ class Settings(BaseSettings):
     worker_batch_size: int = Field(default=23, ge=1, le=100)
     llm_base_url: str = "http://llm:8080/v1"
     llm_model: str = "qwen3-4b-2507-q4km"
+    # Модели ИИ (HQ-016): папка файлов GGUF и что скрипт запуска нашёл на хосте (JSON
+    # scripts/ai/detect_gpu.sh: state, name, vram_mb, llm_gpu). Пусто — не проверяли.
+    llm_models_dir: Path = ROOT / "models"
+    ai_hardware: str = ""
     llm_timeout_seconds: float = Field(default=30, gt=0, le=300)
     llm_temperature: float = Field(default=0.2, ge=0, le=2)
     llm_max_tokens: int = Field(default=300, ge=1, le=4096)
+    # Полный сценарий длиннее вердикта; лимиты судьи остаются прежними.
+    generation_timeout_seconds: float = Field(default=180, gt=0, le=600)
+    generation_max_tokens: int = Field(default=1536, ge=1, le=2048)
+    # Проход связности сгенерированного сценария (check_scenario, HQ-027): нарушения — модели
+    # во вторую попытку. Нужна база с правом CREATE DATABASE; нет — генерация идёт без прохода.
+    generation_coherence: bool = True
+    generation_coherence_jobs: int = Field(default=2, ge=1, le=8)
+    generation_coherence_timeout_seconds: float = Field(default=300, gt=0, le=900)
     # Судья на CPU отвечает дольше генератора: отдельный таймаут, по его истечении — partial.
     judge_timeout_seconds: float = Field(default=120, gt=0, le=600)
 

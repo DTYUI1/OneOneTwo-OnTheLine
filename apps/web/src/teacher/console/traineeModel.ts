@@ -28,3 +28,23 @@ export function freeTrainees<T extends Pick<User, "id" | "full_name">>(
     .filter((user) => !used.has(user.id))
     .sort((a, b) => a.full_name.localeCompare(b.full_name, "ru"));
 }
+
+/** Текущий выбор остаётся в подсказках; занятые в других строках скрыты. */
+export function traineeOptions<
+  T extends Pick<User, "id" | "full_name" | "login">,
+>(
+  trainees: readonly T[],
+  usedIds: readonly string[],
+  selectedId: string,
+  text: string,
+): T[] {
+  const query = text.trim().toLocaleLowerCase("ru");
+  return freeTrainees(
+    trainees,
+    usedIds.filter((id) => id !== selectedId),
+  )
+    .filter((user) =>
+      traineeLabel(user).toLocaleLowerCase("ru").includes(query),
+    )
+    .slice(0, 20);
+}

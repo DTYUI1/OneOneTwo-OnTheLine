@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
 from . import test_c03_sessions as c03
+from .briefing_helpers import briefing_payload
 from .test_c04_completion import seed_training
 from .test_lifecycle import event, login, run_db
 
@@ -171,7 +172,22 @@ def test_practice_reports_follow_dispatcher_decisions(database_config, database_
         call_id = call_brigade()
         assert refusal(database_url, call_id) is None
         later = datetime.now(UTC) + timedelta(seconds=60)
-        assert worker_tick(database_url, later) == 1
+        # Направлена и на линии, но без вводной не выезжает (GP-05): доклада о выезде нет,
+        # «Начало реагирования» сервер не принимает и говорит почему.
+        assert worker_tick(database_url, later) == 0
+        unbriefed = send(
+            client,
+            headers,
+            card_id,
+            "status_change",
+            {"state": "responding", "comment": "Бригада выехала"},
+            409,
+        )
+        assert "бригада не выехала" in unbriefed.json()["message"]
+        assert "дайте вводную" in unbriefed.json()["message"]
+        # Вводная — бригада сразу докладывает о выезде в этом разговоре.
+        send(client, headers, card_id, "brigade_briefing", briefing_payload(card, call_id))
+        assert deliveries(database_url, UUID(card_id)) == 1
         assert worker_tick(database_url, later + timedelta(seconds=60)) == 0
         training = client.get(f"/api/cards/{card_id}/training").json()
         assert len(training["messages"]) == 1

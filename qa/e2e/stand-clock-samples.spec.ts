@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { passWelcome } from "./captain-fixture";
+import { TRAINEE_BEGIN } from "./operator-module";
 
 // L-04: только trainee подтверждает образцы часов v2 (contracts/openapi.draft.yaml,
 // registerClockSample x-roles: [trainee]). У teacher/admin такого права нет — клиент
@@ -13,9 +14,9 @@ async function login(page: Page, name: string) {
     .fill(process.env.DEMO_PASSWORD ?? "demo-local");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
   await expect(page).not.toHaveURL(/\/login$/);
-  const begin = page.getByRole("button", { name: "Диспетчер служб" });
-  if (await begin.isVisible().catch(() => false)) await begin.click();
-  if (!name.startsWith("trainee")) await passWelcome(page);
+  if (name.startsWith("trainee"))
+    await page.getByRole("button", { name: TRAINEE_BEGIN }).click();
+  else await passWelcome(page);
 }
 
 test("преподаватель на пульте занятия не шлёт POST /api/clock/samples", async ({

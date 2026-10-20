@@ -1,0 +1,335 @@
+{
+  "format": 2,
+  "code": "pipe-flat-gkh-2",
+  "version": 1,
+  "title": "Прорыв стояка холодной воды в квартире",
+  "service_id": "GKH",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "14020300",
+  "complications": [],
+  "teacher_comment": "ЖКХ, уровень 2: прорыв стояка холодной воды в квартире. Бригада ошибочно повторяет «Киловоградская улица, 22» — исправить на Кировоградскую. По пути уточняет, горячая или холодная вода течёт: ответ есть в карточке. Не исправили адрес — бригада теряет время на переезд; не ответили на уточнение — прибытие задерживается. Статусы ставятся после соответствующих докладов; звонок другой службе не требуется.",
+  "outcome": {
+    "people": "Бригада приехала на Кировоградскую улицу, 22, в квартиру 42: из стояка в ванной хлестала вода, хозяин пытался заткнуть трубу тряпками. Стояк перекрыли, повреждённый участок заменили. Воду подали, течи нет, работы закончены.",
+    "late": "Карточку приняли позже норматива. До приезда бригады вода продолжала заливать пол квартиры: заявитель не смог перекрыть стояк."
+  },
+  "card": {
+    "caller_name": "Белов Артём Валерьевич",
+    "phone_aon": "+79000000862",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "42"
+    },
+    "description": "В ванной квартиры 42 на третьем этаже прорвало стояк холодной воды, вода хлещет на пол. Перекрыть хозяин не смог, затыкает трубу тряпками, дома, дверь откроет. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Течь (прорыв трубы) в квартире (подъезде подвале)",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008502",
+    "incident_type_code": "14020300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "42"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "GKH",
+      "phone_ext": "105",
+      "before_s": 180
+    },
+    "expected_comment": "В ванной квартиры 42 на третьем этаже прорвало стояк холодной воды, вода хлещет на пол. Перекрыть хозяин не смог, затыкает трубу тряпками, дома, дверь откроет. Пострадавших нет. Бригада прибыла, стояк перекрыли, повреждённый участок трубы заменили. Подачу воды восстановили, течи нет, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. В ванной хлещет из стояка, хозяин тряпками затыкает, пол весь в воде.",
+        "audio": "bank-v1/GKH/GKH.arrived.pipe_flat.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Стояк перекрыли, сбрасываем воду, меняем кусок трубы.",
+        "audio": "bank-v1/GKH/GKH.working.pipe_flat.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Трубу заменили, воду дали, течи нет. Работы закончены.",
+        "audio": "bank-v1/GKH/GKH.completed.pipe_flat.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Киловоградская улица, 22.",
+        "audio": "bank-v6/GKH/GKH.readback.c0600990.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, исправил. Едем по верному адресу.",
+            "audio": "bank-v1/GKH/GKH.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/GKH/GKH.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/GKH/GKH.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила название улицы с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "water",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 8
+      },
+      "line": {
+        "text": "Диспетчер, не говорили, горячая течёт или холодная?",
+        "audio": "bank-v1/GKH/GKH.clarify.pipe_flat.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "cold",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "cold",
+          "label": "Холодная вода, прорвало стояк в ванной"
+        },
+        {
+          "key": "hot",
+          "label": "Горячая вода"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, разберитесь на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, будем искать сами, это займёт время.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада уточнила, какая вода течёт — ответ в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер ЖКХ, заявка для аварийной бригады",
+        "correct": true
+      },
+      {
+        "text": "Диспетчер Мослифта",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Кировоградская улица, 22, квартира 42",
+        "correct": true
+      },
+      {
+        "text": "Киловоградская улица, 22, квартира 42",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Прорвало стояк холодной воды в ванной",
+        "correct": true
+      },
+      {
+        "text": "Нет электричества в квартире",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Пострадавших нет, заявитель дома",
+        "correct": true
+      },
+      {
+        "text": "Есть пострадавший, квартира закрыта",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Принять и направить аварийную бригаду ЖКХ",
+        "correct": true
+      },
+      {
+        "text": "Отказать и передать Мослифту",
+        "correct": false
+      }
+    ]
+  }
+}

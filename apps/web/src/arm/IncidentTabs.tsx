@@ -3,35 +3,38 @@
 // (arm_dds/04, 07): диспетчер видит новое происшествие, не закрывая текущее.
 // Здесь те же вкладки внутри приложения: реестр, затем происшествия в работе.
 // Появление вкладки — момент показа карточки обучаемому: отсюда уходит deliver,
-// и с него идут 30 с реакции (I-TIME, «Направление»).
+// и с него идут 30 с реакции (I-TIME, «Направление»). Вкладки — как вкладки браузера
+// на скриншотах: «ГБУ Система 112» и «Происшествие N» со значком 112. Учебный таймер
+// на вкладке один — сколько идёт отработка карточки (капитан, 19.10): в самой карточке
+// ДДС таймера нет, а вкладки — замена вкладок браузера, не экран АРМ.
 import { useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, type Card } from "../shared/api";
 import { useSession } from "../shared/session";
-import { formatDuration } from "./cardModel";
-import { newCardSignal, brigadeCallSignal } from "./signals";
+import { newCardSignal } from "./signals";
 import { trainingQuery } from "./softphone/brigade/data";
-import { tabClock, workingCards } from "./tabsModel";
+import { tabClock, workBadge, workingCards } from "./tabsModel";
 import { useCardActions } from "./useCardActions";
-import { useNow } from "./useNow";
 import { useParticipant } from "./useParticipant";
 import { useWaitingS } from "./useTiming";
 import styles from "./IncidentTabs.module.css";
 
 export function IncidentTabs({
   cards,
+  now,
   openedId,
   listActive,
   onList,
   onOpen,
 }: {
   cards: readonly Card[];
+  /** Часы АРМ — тикает таймер отработки на вкладках. */
+  now: number;
   openedId: string | null;
   listActive: boolean;
   onList: () => void;
   onOpen: (id: string) => void;
 }) {
-  const now = useNow();
   const sessions = useQuery({
     queryKey: ["sessions"],
     queryFn: async () => {
@@ -45,7 +48,7 @@ export function IncidentTabs({
       .map((session) => session.id),
   );
   const working = workingCards(cards, running);
-  // Нормативы — из снимка занятия карточки (по умолчанию 30 с / 180 с, Q&A Q11).
+  // Нормативы — из снимка занятия карточки (по умолчанию 30 с / 3:00, Q&A Q11).
   const normatives = new Map(
     (sessions.data ?? []).map((session) => [
       session.id,
@@ -55,7 +58,13 @@ export function IncidentTabs({
       },
     ]),
   );
-  const fresh = working.filter((card) => card.opened_at === null).length;
+  // Финальная смена (HQ-033): вызов бригады подписан только бригадой — вкладка карточки
+  // не подсказывает, по какой карточке звонят (звонок слышен, вкладка не мигает).
+  const brigadeOnly = new Set(
+    (sessions.data ?? [])
+      .filter((session) => session.settings_snapshot.final_shift === true)
+      .map((session) => session.id),
+  );
 
   return (
     <nav
@@ -69,18 +78,21 @@ export function IncidentTabs({
         aria-current={listActive ? "page" : undefined}
         onClick={onList}
       >
-        <span className={styles.title}>Список происшествий</span>
-        {fresh > 0 && <span className={styles.fresh}>новых: {fresh}</span>}
+        <span className={styles.logo} aria-hidden="true">
+          112
+        </span>
+        <span className={styles.title}>ГБУ Система 112</span>
       </button>
       {working.map((card) => (
         <IncidentTab
           key={card.id}
           card={card}
-          current={card.id === openedId}
           now={now}
           normatives={
             normatives.get(card.session_id) ?? { reaction: 30, handling: 180 }
           }
+          current={card.id === openedId}
+          hideCaller={brigadeOnly.has(card.session_id)}
           onOpen={() => onOpen(card.id)}
         />
       ))}
@@ -90,15 +102,18 @@ export function IncidentTabs({
 
 function IncidentTab({
   card,
-  current,
   now,
   normatives,
+  current,
+  hideCaller = false,
   onOpen,
 }: {
   card: Card;
-  current: boolean;
   now: number;
   normatives: { reaction: number; handling: number };
+  current: boolean;
+  /** Финальная смена: входящий бригады не отмечается на вкладке карточки (HQ-033). */
+  hideCaller?: boolean;
   onOpen: () => void;
 }) {
   const { user, realtime } = useSession();
@@ -115,14 +130,17 @@ function IncidentTab({
     void actions.deliver();
   }, [actions, card.delivered_at, context.canAct]);
 
-  // Ожидание бригады — только когда идёт обработка: до первичного статуса его нет.
+  // Отработка идёт с первичного статуса; ожидание доклада бригады — с сервера, как в оценке.
   const handling =
     card.opened_at !== null &&
     card.state !== "added" &&
     card.state !== "received" &&
     card.state !== "rejected";
   const waitingS = useWaitingS(card.id, handling);
-  const clock = tabClock(card, now, waitingS, normatives);
+  const work = workBadge(
+    tabClock(card, now, waitingS, normatives),
+    normatives.handling,
+  );
 
   // Бригада звонит сама (CardTraining.incoming): вкладка мигает, пока не ответили.
   const training = useQuery({
@@ -145,26 +163,12 @@ function IncidentTab({
     [realtime, client, card.id],
   );
   const incoming = training.data?.incoming ?? [];
-  const calls = incoming.map((call) => call.call_id).join(",");
-  const heard = useRef(new Set<string>());
-  useEffect(() => {
-    let rang = false;
-    for (const id of calls ? calls.split(",") : []) {
-      if (heard.current.has(id)) continue;
-      heard.current.add(id);
-      rang = true;
-    }
-    if (rang) brigadeCallSignal();
-  }, [calls]);
+  // Тревога бригады (DT-10) — свой сигнал и своя подпись вкладки.
+  const alarm = incoming.some((call) => call.priority === "alarm");
 
+  const shown = hideCaller ? [] : incoming;
   const tone =
-    incoming.length > 0
-      ? styles.calling
-      : current
-        ? styles.current
-        : card.opened_at === null
-          ? styles.new
-          : styles.tab;
+    shown.length > 0 ? styles.calling : current ? styles.current : styles.tab;
   return (
     <button
       type="button"
@@ -172,16 +176,27 @@ function IncidentTab({
       aria-current={current ? "page" : undefined}
       onClick={onOpen}
     >
+      <span className={styles.logo} aria-hidden="true">
+        112
+      </span>
       <span className={styles.title}>Происшествие {card.source.number}</span>
-      <span className={styles.kind}>{card.source.incident_class}</span>
-      {incoming.length > 0 ? (
-        <span className={styles.callNote}>Бригада вызывает</span>
-      ) : (
-        clock && (
-          <span className={clock.overdue ? styles.late : styles.clock}>
-            {clock.label} {formatDuration(clock.seconds)}
-          </span>
-        )
+      {/* Время меняется каждую секунду — не в доступном имени вкладки: по нему её находят. */}
+      {work && (
+        <span
+          className={styles.work}
+          data-urgency={work.stage}
+          title={work.title}
+          aria-hidden="true"
+        >
+          {work.text}
+        </span>
+      )}
+      {/* Входящий вызов бригады — сигнал связи службы (зона 2), пока её колонка
+          не показывает звонки других карточек; в АРМ-112 этого нет. */}
+      {shown.length > 0 && (
+        <span className={styles.callNote}>
+          {alarm ? "Тревога: бригада вызывает" : "Бригада вызывает"}
+        </span>
       )}
     </button>
   );

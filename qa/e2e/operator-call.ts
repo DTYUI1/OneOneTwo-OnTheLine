@@ -225,7 +225,19 @@ export async function askOwn(page: Page, text: string) {
 export async function fillAddress(
   page: Page,
   fields: Partial<
-    Record<"Улица:" | "Дом/Вл:" | "Корпус:" | "Квартира/офис:", string>
+    Record<
+      | "Улица:"
+      | "Дом/Вл:"
+      | "Корпус:"
+      | "Квартира/офис:"
+      | "Подъезд:"
+      | "Этаж:"
+      | "Код:"
+      | "Объект:"
+      | "Стр/соор:"
+      | "Описательный адрес:",
+      string
+    >
   >,
 ) {
   for (const [label, value] of Object.entries(fields))

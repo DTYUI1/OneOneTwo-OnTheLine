@@ -1,0 +1,188 @@
+{
+  "about": "Кандидаты кастинга: по три на роль из библиотеки ElevenLabs (русский, отбор по out/candidates.json). Голоса между ролями не повторяются — диспетчер различает службы на слух. Имя — наше, для разговора; voice_id — для сборки.",
+  "model": "eleven_v4",
+  "roles": {
+    "101": [
+      {
+        "name": "Нестор",
+        "note": "хриплый, командирский",
+        "voice_id": "pM78bgjPVk0JXtaEnFoj",
+        "public_owner_id": "64fab69cf451fccfdb114f268c0886bce94218d590e46d728f8e389f0b2a746c",
+        "gender": "male",
+        "library": "Nester Surovy - Gravely yet Refined"
+      },
+      {
+        "name": "Феликс",
+        "note": "спокойный, с хрипотцой",
+        "voice_id": "sRk0zCqhS2Cmv0bzx5wA",
+        "public_owner_id": "2ec1f8a4c186801c0a81d88a146f2f9703995890aec6ab8126e46be04f166ff1",
+        "gender": "male",
+        "library": "Felix - Calm, Clear and Friendly"
+      },
+      {
+        "name": "Егор",
+        "note": "собранный, напряжённый",
+        "voice_id": "6A9D8WSMm4rFsg2DWFeE",
+        "public_owner_id": "2fb50f4347e5fd0bee59b9bbad9fe354fa369257ec370b253ac73ed13546ec8b",
+        "gender": "male",
+        "library": "Egor Gadzhiyev - Clear and Commanding"
+      }
+    ],
+    "102": [
+      {
+        "name": "Максим",
+        "note": "ровный, сдержанный",
+        "voice_id": "HcaxAsrhw4ByUo4CBCBN",
+        "public_owner_id": "e560cff6983838369e6b8ae549c8b7d1dddab867b53105ec7e407389c133edaf",
+        "gender": "male",
+        "library": "Maxim - Calm & Neutral"
+      },
+      {
+        "name": "Николай",
+        "note": "уверенный, отчётливый",
+        "voice_id": "3EuKHIEZbSzrHGNmdYsx",
+        "public_owner_id": "3ab20ab8564639791969cc67bb092b3f7492e9f622463792af92d2b35ae2c1aa",
+        "gender": "male",
+        "library": "Nikolay - Confident, Clear and Engaging"
+      },
+      {
+        "name": "Артём",
+        "note": "разговорный, твёрдый",
+        "voice_id": "rQOBu7YxCDxGiFdTm28w",
+        "public_owner_id": "74f589f9cfb9090408e0218fa1fe0bcb30e746f76c9fe6b100d4b694973075ac",
+        "gender": "male",
+        "library": "Artem Lebedev - Captivating and Engaging"
+      }
+    ],
+    "103": [
+      {
+        "name": "Ольга",
+        "note": "серьёзная, чёткая",
+        "voice_id": "d60rsXo2p0OwikDR5bS7",
+        "public_owner_id": "d2d1b3ab89fc43d09bf09f55e2a5c78e5997b77953c5157c1e3414754bf532d6",
+        "gender": "female",
+        "library": "Olga Orlova - Clear and Engaging"
+      },
+      {
+        "name": "Елена",
+        "note": "живая, разговорная",
+        "voice_id": "0ArNnoIAWKlT4WweaVMY",
+        "public_owner_id": "18bb7017de812f7caa40ebbe9059def999a627a113e50e82fb819f0ea77a497d",
+        "gender": "female",
+        "library": "Elena Gromova — Podcasts & Conversation"
+      },
+      {
+        "name": "Лиза",
+        "note": "мягкая, участливая",
+        "voice_id": "KzqxCy7zSSePwgb1Cz0Q",
+        "public_owner_id": "9d2620760fccf090dcbee2343d60858c79e6e02cb198a040d079e4ddcc7d10c1",
+        "gender": "female",
+        "library": "Liza"
+      }
+    ],
+    "104": [
+      {
+        "name": "Алексей",
+        "note": "за пятьдесят, спокойный",
+        "voice_id": "9AjtU6o19uipv7QL8dLL",
+        "public_owner_id": "ace88408e1699e0c7fa8acacb1bba7be4e62b44d37f2e7e2e7689c0dd89b2395",
+        "gender": "male",
+        "library": "Alex - Calm Russian Analyst"
+      },
+      {
+        "name": "Александр",
+        "note": "постарше, будничный",
+        "voice_id": "LTkx8oHrUXaND7aaxdTA",
+        "public_owner_id": "460dabc9f96dd6cec09c54db9d5a484409dd3713222f3d0bdb12854bd8c837dd",
+        "gender": "male",
+        "library": "Alexrady"
+      },
+      {
+        "name": "Марат",
+        "note": "грудной, неторопливый",
+        "voice_id": "vQxSi2EuaRWwBw3nn6dK",
+        "public_owner_id": "77358e36d967efc4b39d5ecf0e5d338649bf0f5570411caf64734e950f51e9dd",
+        "gender": "male",
+        "library": "Marat - Warm, Calm and Friendly"
+      }
+    ],
+    "GKH": [
+      {
+        "name": "Михаил",
+        "note": "усталый, будничный",
+        "voice_id": "RvcToHi9ENVDatbeYNJe",
+        "public_owner_id": "21203b0bee30f1c98ec8010e47bf437d8e6b34d8506ffc08760f8b6fb30d1916",
+        "gender": "male",
+        "library": "Mikhail"
+      },
+      {
+        "name": "Кирилл",
+        "note": "не диктор, живой",
+        "voice_id": "srULqtwUV9XZPg1ZCO5w",
+        "public_owner_id": "294ef98d586a7ed8dcd5d63d2b25bc3e9dc3ae6400ca81bba458987e23ba40b9",
+        "gender": "male",
+        "library": "Kyrylo - Clear and Natural"
+      },
+      {
+        "name": "Пётр",
+        "note": "ровный, простой",
+        "voice_id": "BHMDqCKgYeHHupc0I8VD",
+        "public_owner_id": "8e1bb11b6982f6951ab079aebed8ab5fde128d1e12483775d507347b039cc330",
+        "gender": "male",
+        "library": "Pepper - Natural, Pleasant and Engaging"
+      }
+    ],
+    "MOSLIFT": [
+      {
+        "name": "Павел",
+        "note": "молодой, для телефона",
+        "voice_id": "O9f5Hqzk8FPymrA0cAZq",
+        "public_owner_id": "d18d28fb0ce328daf2098f8979b6f5e66a3560fd0d5cd90af5b95f4a2634b1fe",
+        "gender": "male",
+        "library": "Paul - Phone call"
+      },
+      {
+        "name": "Олег",
+        "note": "молодой, обычный",
+        "voice_id": "m2gtxNsYBaIRqPBA5vU5",
+        "public_owner_id": "eb45aba95b59d12bfdd42877c2d0076bba0c2c7919e9072aa580806bd1cf1cd3",
+        "gender": "male",
+        "library": "Oleg Krugliak - Engaging and Reflective"
+      },
+      {
+        "name": "Никита",
+        "note": "молодой, разговорный",
+        "voice_id": "6KFibqPgTIYbhbJyJ4eD",
+        "public_owner_id": "588054f3bfbb683fdd9af039748d4c11a6d13475cf5681c7a5227b347ec13ac1",
+        "gender": "male",
+        "library": "Nik"
+      }
+    ],
+    "OFFICIAL": [
+      {
+        "name": "Маруся",
+        "note": "вежливая, деловая",
+        "voice_id": "sNQyZH8Wfcnv7zh3rHxR",
+        "public_owner_id": "7398804d9eaf2f463899a907587c33a390591775784f87857b6d0e1e4e3e66f6",
+        "gender": "female",
+        "library": "Marusya G – Trusted Customer Care"
+      },
+      {
+        "name": "Василий",
+        "note": "нейтральный, деловой",
+        "voice_id": "1REYVgkHGlaFX4Rz9cPZ",
+        "public_owner_id": "e18b9331f4c2a851a27c93d30a9ca9a1c642836022fa84663e057e62160ace70",
+        "gender": "male",
+        "library": "Vasiliy - Calm, Engaging and Warm"
+      },
+      {
+        "name": "Алан",
+        "note": "баритон, внушает доверие",
+        "voice_id": "zWSsRd3J6WyZFl12aGMB",
+        "public_owner_id": "d792c230feff3ba49e95ba1aac15edd75580e2d43a9d7130eabfd2a64e754e0b",
+        "gender": "male",
+        "library": "Alan - Soft, Hasty and Warm"
+      }
+    ]
+  }
+}

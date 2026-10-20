@@ -7,13 +7,19 @@ from app.core.models import Assignment, Scenario
 
 
 async def list_scenarios(db: AsyncSession) -> list[Scenario]:
-    return list((await db.scalars(select(Scenario).order_by(Scenario.id))).all())
+    return list(
+        (
+            await db.scalars(
+                select(Scenario).where(Scenario.deleted_at.is_(None)).order_by(Scenario.id)
+            )
+        ).all()
+    )
 
 
 async def get_scenario(
     db: AsyncSession, scenario_id: UUID, *, lock: bool = False
 ) -> Scenario | None:
-    query = select(Scenario).where(Scenario.id == scenario_id)
+    query = select(Scenario).where(Scenario.id == scenario_id, Scenario.deleted_at.is_(None))
     if lock:
         # FOR UPDATE конфликтует и с FK-проверкой нового назначения.
         query = query.with_for_update()

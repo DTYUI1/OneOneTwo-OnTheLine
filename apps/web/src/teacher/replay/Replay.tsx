@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { STATE_LABELS } from "../../arm/cardModel";
+import { criterionScoreLabel } from "../../arm/results/debrief";
 import { criterionLabel, readable } from "../console/model";
 import styles from "./Replay.module.css";
 import {
@@ -176,17 +177,26 @@ export function Stage({
               <ul className={styles.criteria}>
                 {evaluation.criteria.map((criterion) => (
                   <li key={criterion.key} className={styles.criterion}>
-                    <span className={criterion.score < 1 ? styles.lost : ""}>
+                    <span
+                      className={
+                        criterion.weight !== 0 && criterion.score < 1
+                          ? styles.lost
+                          : ""
+                      }
+                    >
                       {criterionLabel(criterion.key)}
                     </span>
                     <span className={styles.score}>
-                      {Math.round(criterion.score * 100)}
+                      {criterion.weight === 0
+                        ? criterionScoreLabel(criterion)
+                        : Math.round(criterion.score * 100)}
                     </span>
-                    {criterion.score < 1 && criterion.explanation && (
-                      <span className={styles.why}>
-                        {readable(criterion.explanation)}
-                      </span>
-                    )}
+                    {(criterion.weight === 0 || criterion.score < 1) &&
+                      criterion.explanation && (
+                        <span className={styles.why}>
+                          {readable(criterion.explanation)}
+                        </span>
+                      )}
                   </li>
                 ))}
               </ul>

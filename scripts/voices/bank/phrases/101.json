@@ -1,0 +1,4848 @@
+{
+  "service": "101",
+  "speaker": "brigade",
+  "gender": "male",
+  "incidents": {
+    "smoke": "Задымление в квартире",
+    "fire_flat": "Пожар в квартире, открытое горение",
+    "fire_street": "Горит мусор, контейнер, трава",
+    "car_fire": "Горит автомобиль",
+    "gas_smell": "Запах газа в подъезде или квартире",
+    "lift": "Застревание в лифте",
+    "traffic": "Авария, водитель зажат в машине",
+    "door": "Открыть дверь: человек не открывает, ребёнок заперт",
+    "tree": "Упало дерево",
+    "collapse": "Угроза обрушения: балкон, козырёк, фасад",
+    "flood": "Прорыв воды, подтопление"
+  },
+  "phrases": [
+    {
+      "id": "101.answer.any.1",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Расчёт на связи.",
+      "facts": []
+    },
+    {
+      "id": "101.answer.any.2",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Старший расчёта, слушаю.",
+      "facts": []
+    },
+    {
+      "id": "101.answer.any.3",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, слушаю, диспетчер.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.1",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.2",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял вас, расчёт выехал.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.3",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть, выезжаем. Если что уточнить, перезвоню.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.4",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Звено уже в машине, выходим из части.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.5",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, понял. Выезжаем, доложу по прибытии.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.6",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, выдвигаемся двумя машинами.",
+      "facts": []
+    },
+    {
+      "id": "101.enroute.any.1",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, уже на подъезде, минуты две.",
+      "facts": []
+    },
+    {
+      "id": "101.enroute.any.2",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "В пути. Идём с сиреной, на светофоре пробка, но проходим.",
+      "facts": []
+    },
+    {
+      "id": "101.enroute.any.3",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем. По прибытии доложу.",
+      "facts": []
+    },
+    {
+      "id": "101.enroute.any.4",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сворачиваем во двор, сейчас будем на месте.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.1",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Во двор не заехать, машины стоят в два ряда. Дальше идём пешком с инструментом.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.2",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Встали в пробке на мосту, объезда нет. Задерживаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.3",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, шлагбаум закрыт, охраны нет. Ищем, как проехать.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.4",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дорогу перекопали, едем в объезд. Задержимся минут на пять.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.5",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Навигатор завёл в тупик, разворачиваемся, будем позже.",
+      "facts": []
+    },
+    {
+      "id": "101.wrong_place.any.1",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, мы на месте, а тут тихо. Никто не вызывал. Проверьте адрес!",
+      "facts": []
+    },
+    {
+      "id": "101.wrong_place.any.2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "По этому адресу вызова нет, жильцы ничего не знают. Уточните адрес.",
+      "facts": []
+    },
+    {
+      "id": "101.wrong_place.any.3",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут другой дом, и никакого происшествия. Где нас ждут?",
+      "facts": []
+    },
+    {
+      "id": "101.readback_fixed.any.1",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ошибся. Едем по верному адресу.",
+      "facts": []
+    },
+    {
+      "id": "101.readback_fixed.any.2",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял поправку, перестраиваем маршрут.",
+      "facts": []
+    },
+    {
+      "id": "101.readback_fixed.any.3",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, не тот адрес записал. Исправил, едем.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.1",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.2",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.3",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял вас.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.4",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.5",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, принял, записал.",
+      "facts": []
+    },
+    {
+      "id": "101.not_understood.any.1",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял, повторите.",
+      "facts": []
+    },
+    {
+      "id": "101.not_understood.any.2",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вас плохо слышно, повторите!",
+      "facts": []
+    },
+    {
+      "id": "101.not_understood.any.3",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сирена, не расслышал. Ещё раз?",
+      "facts": []
+    },
+    {
+      "id": "101.end_call.any.1",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "101.end_call.any.2",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, до связи.",
+      "facts": []
+    },
+    {
+      "id": "101.end_call.any.3",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, отбой.",
+      "facts": []
+    },
+    {
+      "id": "101.end_call.any.4",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Работаем, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.1",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем. Доложу, как закончим.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.2",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы идут, пока без изменений.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.3",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем на месте, обстановка под контролем.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.4",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, работаем, ещё минут десять.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.5",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока работаем, отвлекаться некогда. Перезвоню.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify.any.1",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, на каком этаже квартира?",
+      "facts": [],
+      "asks": "floor"
+    },
+    {
+      "id": "101.clarify.any.2",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Какой подъезд? Их тут много, табличек нет.",
+      "facts": [],
+      "asks": "entrance"
+    },
+    {
+      "id": "101.clarify.any.3",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, код домофона есть? Никто не открывает.",
+      "facts": [],
+      "asks": "intercom"
+    },
+    {
+      "id": "101.clarify.any.4",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дайте телефон заявителя, не можем найти, кто вызывал.",
+      "facts": [],
+      "asks": "caller_phone"
+    },
+    {
+      "id": "101.clarify.any.5",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как заехать во двор? Кругом заборы, ворота на замке.",
+      "facts": [],
+      "asks": "access"
+    },
+    {
+      "id": "101.clarify.any.6",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, какой ориентир? Тут все корпуса одинаковые.",
+      "facts": [],
+      "asks": "landmark"
+    },
+    {
+      "id": "101.clarify.any.7",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Внутри люди остались? Заявитель что-нибудь говорил?",
+      "facts": [],
+      "asks": "people"
+    },
+    {
+      "id": "101.clarify.any.8",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ключи от квартиры у кого-нибудь есть? Родственники, соседи?",
+      "facts": [],
+      "asks": "keys"
+    },
+    {
+      "id": "101.clarify_ok.any.1",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, поднимаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_ok.any.2",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, спасибо, идём туда.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_ok.any.3",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть, нашли, заходим.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_ok.any.4",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, теперь ясно.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_unknown.any.1",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно. Ищем сами, это займёт время.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_unknown.any.2",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял. Будем стучать по квартирам.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_unknown.any.3",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Плохо. Ладно, разберёмся на месте.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_late.any.1",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже нашли сами.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_late.any.2",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поздно, диспетчер, мы уже внутри.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify_late.any.3",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, но мы уже разобрались, спасибо.",
+      "facts": []
+    },
+    {
+      "id": "101.request_service.any.1",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, срочно скорую! Мужчина без сознания, дышит плохо.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "103",
+      "tone": "[urgent]"
+    },
+    {
+      "id": "101.request_service.any.2",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нужна скорая. Пожилая женщина, плохо с сердцем, давление.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.request_service.any.3",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вызывайте скорую, у нас ребёнок, плачет, нога, похоже, сломана.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.request_service.any.4",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, нужна полиция. Хозяин пьяный, кидается на бойцов.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "101.request_service.any.5",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пришлите наряд полиции, зеваки лезут за ограждение, работать не дают.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "101.request_service.door.1",
+      "slot": "request_service",
+      "incidents": [
+        "door"
+      ],
+      "text": "Без полиции дверь вскрывать не можем, нужен участковый.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "101.request_service.any.6",
+      "slot": "request_service",
+      "incidents": [
+        "gas_smell",
+        "smoke",
+        "fire_flat"
+      ],
+      "text": "Диспетчер, нужна газовая служба! В подъезде сильный запах газа.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "104"
+    },
+    {
+      "id": "101.request_service.any.7",
+      "slot": "request_service",
+      "incidents": [
+        "fire_flat",
+        "gas_smell",
+        "collapse"
+      ],
+      "text": "Вызывайте Мосгаз, надо перекрыть газ на стояке, сами не можем.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "101.request_service.any.8",
+      "slot": "request_service",
+      "incidents": [
+        "gas_smell",
+        "smoke"
+      ],
+      "text": "Нужна аварийная газовая: у плиты сорвало шланг, газ шипит.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "104"
+    },
+    {
+      "id": "101.request_service.any.9",
+      "slot": "request_service",
+      "incidents": [
+        "flood",
+        "collapse",
+        "tree"
+      ],
+      "text": "Нужен дежурный сантехник, стояк перекрыть, топит соседей снизу.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.request_service.any.10",
+      "slot": "request_service",
+      "incidents": [
+        "flood",
+        "smoke",
+        "fire_flat"
+      ],
+      "text": "Нужна аварийка управляющей компании: вода в щитке, надо обесточить подъезд.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.request_service.any.11",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пусть пришлют слесаря с ключами от подвала, иначе ломаем дверь.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.request_service.lift.1",
+      "slot": "request_service",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Нужен механик Мослифта, кабину надо обесточить, без него не откроем.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "101.request_service.any.12",
+      "slot": "request_service",
+      "incidents": [
+        "lift",
+        "smoke",
+        "fire_flat"
+      ],
+      "text": "Вызовите Мослифт: двери раскрыли, но кабина между этажами, нужен механик.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "101.alarm.any.1",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Тревога! Боец упал с лестницы, травма ноги, сам идти не может. Скорую!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "101.alarm.any.2",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Бойца придавило, вытаскиваем! Срочно скорую!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "101.alarm.any.3",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тревога! Боец порезался инструментом, кровь не останавливается!",
+      "facts": [],
+      "tone": "[urgent]"
+    },
+    {
+      "id": "101.alarm.any.4",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! У бойца плохо с сердцем, потерял сознание. Скорую сюда!",
+      "facts": [],
+      "tone": "[out of breath]"
+    },
+    {
+      "id": "101.alarm_ack.any.1",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ждём скорую. Работы продолжаем.",
+      "facts": []
+    },
+    {
+      "id": "101.alarm_ack.any.2",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Бойца вынесли на улицу, встречаем врачей.",
+      "facts": []
+    },
+    {
+      "id": "101.alarm_ack.any.3",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, спасибо. Перевязали, держим до скорой.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.any.1",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы закончены, расчёт возвращается в часть.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.any.2",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, закончили. Сворачиваемся, едем в часть.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.any.3",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, работы завершены. Место передали полиции, возвращаемся.",
+      "facts": [
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.completed.any.4",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Закончили. Опасности нет, возвращаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.any.1",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ложный вызов. Ничего нет, расчёт возвращается.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.refused.any.2",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "На месте всё спокойно, заявитель на звонки не отвечает. Возвращаемся.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.refused.any.3",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Устранили сами до нас, наши работы не нужны. Возвращаемся.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.refused.any.4",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это не наш вызов, тут работа для управляющей компании. Передали им, уезжаем.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.arrived.smoke.1",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли. Дым из окна кухни, на площадке пахнет гарью, звоним в квартиру.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.smoke.2",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "На месте. Подъезд задымлён до самого верха, жильцы выходят сами, звено в аппаратах пошло на разведку.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.arrived.smoke.3",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, на месте. Дым из-под двери, никто не открывает, будем вскрывать.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.smoke.1",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дверь вскрыли. Тлеет матрас в спальне, подали ствол, в квартире никого.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.smoke.2",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Нашли очаг: горит проводка за шкафом. Обесточили, разбираем.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.smoke.3",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Выводим верхние этажи в спасательных капюшонах, пожилую соседку несём на руках.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.smoke.1",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, в квартире нашли мужчину, надышался дымом. Вынесли на площадку, в сознании.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.smoke.2",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прояснилось: горела кастрюля на плите, хозяйка уснула. Огня нет, проветриваем.",
+      "facts": [
+        "no_fire"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.1",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Очаг потушен, квартиру проветрили, дым ушёл. Расчёт возвращается.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.2",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Закончили. Задымление сняли, жильцов вернули в квартиры, пострадавших нет.",
+      "facts": [
+        "no_victims",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.3",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Работы завершены, помещение проветрено. Хозяйку, которая надышалась, забрала скорая.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.smoke.1",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяин открыл сам: сжёг еду на плите, огня нет. Наши работы не потребовались.",
+      "facts": [
+        "no_fire",
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.refused.smoke.2",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дым был от мангала во дворе, в квартире всё чисто. Ложный, возвращаемся.",
+      "facts": [
+        "false_call",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_flat.1",
+      "slot": "arrived",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Прибыли. Открытое горение, пламя из окна, огонь лижет балкон сверху.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_flat.2",
+      "slot": "arrived",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "На месте. Квартира горит, соседи сверху на балконе, отрезаны дымом. Ставим лестницу.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_flat.3",
+      "slot": "arrived",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Диспетчер, квартира горит, дверь заперта, соседи говорят, внутри бабушка.",
+      "facts": [
+        "fire",
+        "no_access",
+        "victims",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.working.fire_flat.1",
+      "slot": "working",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Проложили рукавную линию, подали два ствола, за пределы квартиры огонь не выпускаем.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_flat.2",
+      "slot": "working",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Звено в аппаратах прошло все комнаты, людей не нашли.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.fire_flat.3",
+      "slot": "working",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Эвакуируем подъезд по лестнице, верхних выводим через крышу в соседний.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.fire_flat.1",
+      "slot": "update",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Диспетчер, усложняется: огонь пошёл по балконам вверх, прошу повысить номер вызова.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.update.fire_flat.2",
+      "slot": "update",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Из квартиры вынесли женщину, обожжена рука, в сознании.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.fire_flat.1",
+      "slot": "completed",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Пожар ликвидирован. Квартира выгорела полностью, пострадавших нет. Расчёт возвращается.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.completed.fire_flat.2",
+      "slot": "completed",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Огонь потушен, проливаем остатки, соседей вернули по квартирам. Сворачиваемся.",
+      "facts": [
+        "fire",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.fire_flat.3",
+      "slot": "completed",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Ликвидировали. Хозяина с ожогами передали скорой, госпитализируют.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.fire_flat.1",
+      "slot": "refused",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Открытого горения нет: жгли свечи, дым от духовки. Возвращаемся.",
+      "facts": [
+        "no_fire",
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.refused.fire_flat.2",
+      "slot": "refused",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Хозяева потушили сами огнетушителем до нас, всё проверили, возвращаемся.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_street.1",
+      "slot": "arrived",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Прибыли. Горит мусорный контейнер у подъезда, огонь подбирается к машинам.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_street.2",
+      "slot": "arrived",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "На месте. Горит сухая трава на пустыре, ветром несёт к гаражам.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_street.3",
+      "slot": "arrived",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "На месте, тлеет куча мусора за магазином, дым густой, едкий.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_street.1",
+      "slot": "working",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Подали ствол, контейнер проливаем, машины рядом целы.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_street.2",
+      "slot": "working",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Раскатали две линии, идём по кромке, фронт широкий.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_street.3",
+      "slot": "working",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Разбираем кучу баграми, внутри тлеет, проливаем слоями.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.update.fire_street.1",
+      "slot": "update",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Диспетчер, огонь перекинулся на гаражи, прошу дополнительное отделение.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.update.fire_street.2",
+      "slot": "update",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Ветер стих, огонь остановили у дороги, дальше не пойдёт.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.completed.fire_street.1",
+      "slot": "completed",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Горение ликвидировано, контейнер пролит, угрозы нет. Возвращаемся.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.completed.fire_street.2",
+      "slot": "completed",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Траву потушили, кромку окопали. Расчёт возвращается.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.refused.fire_street.1",
+      "slot": "refused",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Горения нет, это пар из люка теплосети. Не наше, передайте в управляющую компанию.",
+      "facts": [
+        "no_fire",
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.refused.fire_street.2",
+      "slot": "refused",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Пока ехали, прохожие залили контейнер водой. Проверили, ничего не тлеет.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.car_fire.1",
+      "slot": "arrived",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Прибыли. Горит легковая во дворе, моторный отсек, в салоне никого.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.arrived.car_fire.2",
+      "slot": "arrived",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "На месте. Машина в огне целиком, рядом ещё две, сейчас перекинется.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.arrived.car_fire.3",
+      "slot": "arrived",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "На месте, из-под капота валит дым, водитель стоит рядом, цел.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.car_fire.1",
+      "slot": "working",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Сбиваем пламя пеной, бензобак пока держится.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.car_fire.2",
+      "slot": "working",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Отключили аккумулятор, проливаем моторный отсек.",
+      "facts": []
+    },
+    {
+      "id": "101.working.car_fire.3",
+      "slot": "working",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Охлаждаем соседние машины, огонь к ним не пускаем.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.update.car_fire.1",
+      "slot": "update",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Диспетчер, хлопнул газовый баллон в багажнике. Бойцы целы, тушим дальше.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.completed.car_fire.1",
+      "slot": "completed",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Пожар ликвидирован, машина выгорела, соседние не пострадали. Возвращаемся.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.completed.car_fire.2",
+      "slot": "completed",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Потушили, отсек пролили. Владельцу сказали вызывать эвакуатор. Расчёт возвращается.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.refused.car_fire.1",
+      "slot": "refused",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Машины нет. Водитель сам потушил огнетушителем и уехал.",
+      "facts": [
+        "self_resolved",
+        "gone"
+      ]
+    },
+    {
+      "id": "101.refused.car_fire.2",
+      "slot": "refused",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Не горит: перегрелся мотор, пар из радиатора. Возвращаемся.",
+      "facts": [
+        "no_fire",
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.arrived.gas_smell.1",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Прибыли. В подъезде запах газа, сильнее всего наверху.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "101.arrived.gas_smell.2",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "На месте. Пахнет из квартиры, дверь не открывают, соседи говорят, хозяин дома.",
+      "facts": [
+        "gas",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.gas_smell.3",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "На месте, запах еле слышный, проверяем этажи по очереди.",
+      "facts": []
+    },
+    {
+      "id": "101.working.gas_smell.1",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Обесточили подъезд, проветриваем, стучим по квартирам.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "101.working.gas_smell.2",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Выводим жильцов на улицу, лифт заблокировали.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.gas_smell.3",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Дверь вскрыли: на кухне открыта конфорка, перекрыли кран, открыли окна.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "101.update.gas_smell.1",
+      "slot": "update",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Диспетчер, в квартире мужчина без сознания. Вынесли на воздух, нужна будет скорая.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.gas_smell.2",
+      "slot": "update",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Газовая служба прибыла, прибор показывает загазованность, работаем вместе.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "101.completed.gas_smell.1",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Утечку устранила газовая служба, подъезд проветрили, жильцов вернули. Возвращаемся.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.gas_smell.2",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Работы закончены. Кран перекрыт, квартира проветрена, хозяина забрала скорая.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.gas_smell.1",
+      "slot": "refused",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Газа нет, пахнет из мусоропровода. Наши работы не нужны, возвращаемся.",
+      "facts": [
+        "no_gas",
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.refused.gas_smell.2",
+      "slot": "refused",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Газовая служба была до нас, всё перекрыла. Нам тут делать нечего.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.arrived.lift.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Прибыли. Кабина встала между этажами, внутри мужчина, отвечает, чувствует себя нормально.",
+      "facts": [
+        "blocked",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.lift.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "На месте. Двери заклинило, в кабине женщина с ребёнком, ребёнок плачет.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.arrived.lift.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "На месте. В машинное помещение не попасть, ключей ни у кого нет.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.lift.1",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Обесточили лифт, раздвигаем двери шахты.",
+      "facts": []
+    },
+    {
+      "id": "101.working.lift.2",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Опускаем кабину вручную до площадки, внутри спокойно.",
+      "facts": []
+    },
+    {
+      "id": "101.working.lift.3",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Двери раскрыли, подставили лестницу, выводим на площадку.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.lift.1",
+      "slot": "update",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Диспетчер, человеку в кабине плохо, жалуется на сердце. Торопимся.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "101.completed.lift.1",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Вывели из кабины, от скорой отказался. Лифт обесточен, ждёт механика.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male",
+        "evacuated",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.lift.2",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Женщину с ребёнком вывели, всё в порядке. Расчёт возвращается.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.lift.3",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Человека вывели, лифт передали механику Мослифта. Возвращаемся.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.refused.lift.1",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механик Мослифта всех вывел до нас. Наши работы не потребовались.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.refused.lift.2",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Кабина пустая, лифт поехал, люди вышли сами. Возвращаемся.",
+      "facts": [
+        "self_resolved",
+        "gone"
+      ]
+    },
+    {
+      "id": "101.arrived.traffic.1",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Прибыли. Лобовое, водителя зажало рулём, в сознании, стонет.",
+      "facts": [
+        "victims",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.traffic.2",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "На месте. Машина на крыше в кювете, внутри женщина, двери заклинило.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.traffic.3",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "На месте, врезался в столб, из-под машины течёт бензин, водитель внутри.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "101.working.traffic.1",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Начали деблокирование, режем стойки, аккумулятор отключили.",
+      "facts": []
+    },
+    {
+      "id": "101.working.traffic.2",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Отжимаем дверь гидравликой, пострадавший в сознании, разговаривает с нами.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "101.working.traffic.3",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Засыпали пролитое топливо песком, скорая работает рядом.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "101.update.traffic.1",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Диспетчер, водитель потерял сознание, ускоряемся. Скорая на подходе?",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "101.update.traffic.2",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "На заднем сиденье ещё ребёнок, в детском кресле, плачет, но цел.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.completed.traffic.1",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителя извлекли, передали скорой. Аккумуляторы отключены, возвращаемся.",
+      "facts": [
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "101.completed.traffic.2",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Деблокирование закончено, женщину увезла скорая. Пролив засыпали, место сдали полиции.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "handed_103",
+        "hospitalized",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.refused.traffic.1",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель выбрался сам до нас, зажатых нет. Наши работы не нужны.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.refused.traffic.2",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Машин уже нет, участники уехали. Работ не было, возвращаемся.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "101.arrived.door.1",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Прибыли. Дверь металлическая, на стук не отвечают, за дверью работает телевизор.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.door.2",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "На месте. Ребёнок за дверью плачет, мама на площадке, ключи остались внутри.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.door.3",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "На месте. Соседи говорят, дедушка живёт один и третий день не выходит.",
+      "facts": [
+        "blocked",
+        "victim_elderly",
+        "victim_male",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.door.1",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Вскрываем замок, участковый здесь, понятые есть.",
+      "facts": []
+    },
+    {
+      "id": "101.working.door.2",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Заходим через балкон соседей сверху, спускаем бойца на верёвке.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.door.3",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Сверлим личинку, замок крепкий, работаем дальше.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.update.door.1",
+      "slot": "update",
+      "incidents": [
+        "door"
+      ],
+      "text": "Диспетчер, дверь открыли. Мужчина на полу, живой, в сознании, встать не может.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.completed.door.1",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Дверь открыли, ребёнок у мамы на руках, всё хорошо. Возвращаемся.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.completed.door.2",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Вскрыли, хозяина передали скорой, квартиру сдали полиции.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.refused.door.1",
+      "slot": "refused",
+      "incidents": [
+        "door"
+      ],
+      "text": "Хозяйка открыла сама, спала, звонка не слышала. Работы не потребовались.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.refused.door.2",
+      "slot": "refused",
+      "incidents": [
+        "door"
+      ],
+      "text": "Сын привёз ключи, открыли без нас. Возвращаемся.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.tree.1",
+      "slot": "arrived",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Прибыли. Дерево легло поперёк проезда, придавило машину, в ней никого.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.arrived.tree.2",
+      "slot": "arrived",
+      "incidents": [
+        "tree"
+      ],
+      "text": "На месте. Тополь упал на провода, искрит, близко не подойти.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.tree.3",
+      "slot": "arrived",
+      "incidents": [
+        "tree"
+      ],
+      "text": "На месте, ствол навис над детской площадкой, корни вывернуло, может рухнуть в любой момент.",
+      "facts": []
+    },
+    {
+      "id": "101.working.tree.1",
+      "slot": "working",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Пилим ствол, растаскиваем по частям.",
+      "facts": []
+    },
+    {
+      "id": "101.working.tree.2",
+      "slot": "working",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Огородили площадку лентой, людей отвели, ждём энергетиков.",
+      "facts": []
+    },
+    {
+      "id": "101.working.tree.3",
+      "slot": "working",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Освобождаем машину от веток, проезд откроем минут через двадцать.",
+      "facts": []
+    },
+    {
+      "id": "101.update.tree.1",
+      "slot": "update",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Диспетчер, под ветками мужчина, ударило по голове, в сознании.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.completed.tree.1",
+      "slot": "completed",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Дерево распилили, проезд свободен, ветки сложили к бордюру. Возвращаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.tree.2",
+      "slot": "completed",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Опасный ствол спилили, площадку открыли. Пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.tree.1",
+      "slot": "refused",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Дерево лежит на газоне, никому не мешает. Это работа управляющей компании, передали им.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.arrived.collapse.1",
+      "slot": "arrived",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Прибыли. Балкон висит на арматуре, плита треснула, под ним никого.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.arrived.collapse.2",
+      "slot": "arrived",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "На месте. С фасада сыплется облицовка, тротуар под домом засыпан.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.collapse.3",
+      "slot": "arrived",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "На месте, козырёк над подъездом просел, жильцы ходят прямо под ним.",
+      "facts": []
+    },
+    {
+      "id": "101.working.collapse.1",
+      "slot": "working",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Огородили опасную зону, подъезд закрыли, жильцов выпускаем через соседний.",
+      "facts": []
+    },
+    {
+      "id": "101.working.collapse.2",
+      "slot": "working",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Сбиваем с автолестницы отслоившиеся куски облицовки.",
+      "facts": []
+    },
+    {
+      "id": "101.working.collapse.3",
+      "slot": "working",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Из квартиры над балконом людей вывели, сам балкон не трогаем до специалистов.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.collapse.1",
+      "slot": "update",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Диспетчер, балкон рухнул. Внизу никого, людей отвели заранее.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.update.collapse.2",
+      "slot": "update",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Под обломками козырька женщина, ногу придавило, вытаскиваем.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "101.completed.collapse.1",
+      "slot": "completed",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Опасные куски сбили, зону огородили, дом передали управляющей компании. Возвращаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.collapse.2",
+      "slot": "completed",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Работы закончены, балкон разобрали, пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.collapse.1",
+      "slot": "refused",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Трещина старая, ничего не сыплется, угрозы нет. Сообщили в управляющую компанию, это их.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.arrived.flood.1",
+      "slot": "arrived",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Прибыли. Из квартиры сверху льёт по стенам, в подъезде вода по щиколотку.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.flood.2",
+      "slot": "arrived",
+      "incidents": [
+        "flood"
+      ],
+      "text": "На месте. Подвал затоплен, вода подходит к электрощитовой.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.flood.3",
+      "slot": "arrived",
+      "incidents": [
+        "flood"
+      ],
+      "text": "На месте, прорвало горячую трубу, на лестнице пар, ничего не видно.",
+      "facts": []
+    },
+    {
+      "id": "101.working.flood.1",
+      "slot": "working",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Обесточили подъезд, откачиваем воду мотопомпой.",
+      "facts": []
+    },
+    {
+      "id": "101.working.flood.2",
+      "slot": "working",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Вскрыли квартиру сверху, хозяев нет, перекрыли кран под раковиной.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.flood.3",
+      "slot": "working",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Выводим жильцов с нижнего этажа, вода заходит в квартиры.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.flood.1",
+      "slot": "update",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Диспетчер, в квартире сверху пожилая женщина, упала в ванной, встать не может.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.completed.flood.1",
+      "slot": "completed",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Воду перекрыли, откачали, подъезд обесточен до приезда электриков. Возвращаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.flood.2",
+      "slot": "completed",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Стояк перекрыт, течь остановили, дальше работает управляющая компания.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.flood.1",
+      "slot": "refused",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Сантехник перекрыл стояк до нас, воды больше нет. Работы не нужны.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.intro.any.1",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Старший расчёта, на связи.",
+      "facts": []
+    },
+    {
+      "id": "101.intro.any.2",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Командир отделения, докладываю.",
+      "facts": []
+    },
+    {
+      "id": "101.intro.any.3",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Звено газодымозащиты на связи, приём.",
+      "facts": []
+    },
+    {
+      "id": "101.intro.any.4",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Начальник караула. Примите доклад.",
+      "facts": []
+    },
+    {
+      "id": "101.no_reply.any.1",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "101.no_reply.any.2",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло? Приём, ответьте.",
+      "facts": []
+    },
+    {
+      "id": "101.no_reply.any.3",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло! Есть кто на линии?",
+      "facts": []
+    },
+    {
+      "id": "101.no_reply.any.4",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер! Да ответьте же, пожарные на связи!",
+      "facts": []
+    },
+    {
+      "id": "101.confirm_request.any.1",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как приняли?",
+      "facts": []
+    },
+    {
+      "id": "101.confirm_request.any.2",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как поняли меня?",
+      "facts": []
+    },
+    {
+      "id": "101.confirm_request.any.3",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё записали?",
+      "facts": []
+    },
+    {
+      "id": "101.confirm_request.any.4",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Доклад приняли? Подтвердите.",
+      "facts": []
+    },
+    {
+      "id": "101.repeat_report.any.1",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю.",
+      "facts": []
+    },
+    {
+      "id": "101.repeat_report.any.2",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, слушайте.",
+      "facts": []
+    },
+    {
+      "id": "101.repeat_report.any.3",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, по новой.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.smoke.4",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли. На балконе в дыму ребёнок, один дома, дверь заперта. Ставим лестницу.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.smoke.5",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Так, на месте. Дымит из подвала, по подъезду тянет, жильцы все на улице, людей внутри нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.arrived.smoke.6",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "На лестнице дым. Пожилая соседка кашляет за дверью, открывать боится.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.working.smoke.4",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ребёнка с балкона сняли, отдали соседям. Звено идёт по этажам дальше.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.smoke.5",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Очаг в подвале: тлеет хлам в кладовке. Подали ствол, ставим дымосос.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.smoke.6",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Огня в квартире нет, дым тянет по вентиляции. Ищем источник у соседей.",
+      "facts": []
+    },
+    {
+      "id": "101.update.smoke.3",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Усложняется: дым пошёл по стояку наверх, там дети в квартире, выйти не могут.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.4",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Подвал пролили, дым вытянули. Пожилую соседку осмотрела скорая, от больницы отказалась.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.5",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ребёнок цел, передали матери. Квартиру проветрили, возвращаемся.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.6",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Задымление сняли: замкнуло щиток на площадке. Людей не выводили, пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.smoke.3",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Сосед коптил рыбу на балконе, вот и дым. Объяснили, уезжаем.",
+      "facts": [
+        "false_call",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_flat.4",
+      "slot": "arrived",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Прибыли. Горит комната, хозяин выбежал сам, руки обожжены, сидит у подъезда.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_flat.5",
+      "slot": "arrived",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "На месте. Пламя из окна, соседняя квартира отрезана: на подоконнике мать с детьми, дым прямо на них.",
+      "facts": [
+        "fire",
+        "blocked",
+        "victim_female",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_flat.6",
+      "slot": "arrived",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Огонь в квартире, дверь нараспашку. Жильцы на улице, соседи говорят, внутри никого.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.fire_flat.4",
+      "slot": "working",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Снимаем людей автолестницей: женщину и детей спустили, все целы.",
+      "facts": [
+        "fire",
+        "blocked",
+        "victim_female",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.fire_flat.5",
+      "slot": "working",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Ствол внутри, горит мебель в двух комнатах, перекрытие пока держится.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_flat.6",
+      "slot": "working",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Звено нашло в ванной пожилого мужчину без сознания, выносим на воздух.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.fire_flat.3",
+      "slot": "update",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Пожар локализован в пределах квартиры. Перекрытие цело, верхним ничего не грозит.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.completed.fire_flat.4",
+      "slot": "completed",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Пожар ликвидирован. Мужчину с ожогами осмотрела скорая, ехать в больницу отказался.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.fire_flat.5",
+      "slot": "completed",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Всё, потушили. Женщину и детей сняли без травм, их приютили соседи.",
+      "facts": [
+        "fire",
+        "blocked",
+        "victim_female",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.fire_flat.6",
+      "slot": "completed",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Горение ликвидировали. Пожилого мужчину увезла скорая, состояние тяжёлое.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.fire_flat.3",
+      "slot": "refused",
+      "incidents": [
+        "fire_flat"
+      ],
+      "text": "Горела занавеска, хозяйка сорвала её и залила водой. Проводку проверили, чисто, уезжаем.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_street.4",
+      "slot": "arrived",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Прибыли. Горит контейнерная площадка, рядом бездомный, куртка обгорела, сам живой.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_street.5",
+      "slot": "arrived",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "На месте. Горят покрышки за гаражами, чёрный дым на весь квартал, людей рядом нет.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.arrived.fire_street.6",
+      "slot": "arrived",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Горит бурьян вдоль железной дороги, огонь уже у дачных заборов.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_street.4",
+      "slot": "working",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Покрышки заливаем пеной, водой не берёт.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_street.5",
+      "slot": "working",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Отсекаем огонь от заборов. Дачники бегают с вёдрами, держим их подальше.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.fire_street.6",
+      "slot": "working",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Бездомного отвели к машине, ожог обработали, ждёт скорую. Площадку проливаем.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.update.fire_street.3",
+      "slot": "update",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Прояснилось: горит не мусор, а старый сарай. Внутри пусто, хозяин подтвердил.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.completed.fire_street.3",
+      "slot": "completed",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Покрышки потушили, дым расходится. Пострадавших нет, возвращаемся.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.completed.fire_street.4",
+      "slot": "completed",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Огонь сбили. Бездомного передали скорой, от больницы отказался.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.fire_street.5",
+      "slot": "completed",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Горение ликвидировано, дачи отстояли. Выгорела только трава вдоль путей.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.refused.fire_street.3",
+      "slot": "refused",
+      "incidents": [
+        "fire_street"
+      ],
+      "text": "Это костёр на участке, хозяин жжёт листья и смотрит за ним. Предупредили, возвращаемся.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.arrived.car_fire.4",
+      "slot": "arrived",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Прибыли. Горит машина на парковке, водитель пытался тушить сам, обжёг руки.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.car_fire.5",
+      "slot": "arrived",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "На месте. Горит машина на обочине, водительница выбралась, сидит на бордюре, вся трясётся.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "101.arrived.car_fire.6",
+      "slot": "arrived",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Горит фургон, в кузове газовые баллоны. Людей рядом нет, отгоняем зевак.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.car_fire.4",
+      "slot": "working",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Водителю обработали ожоги, ждём скорую. Машину почти потушили.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.working.car_fire.5",
+      "slot": "working",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Баллоны охлаждаем из-за укрытия, близко не подходим.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.working.car_fire.6",
+      "slot": "working",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Салон пролили, вскрываем капот ломом, внутри ещё тлеет.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "101.update.car_fire.2",
+      "slot": "update",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Перекинулось на соседнюю машину, тушим обе. Людей рядом нет.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.completed.car_fire.3",
+      "slot": "completed",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Потушили. Водителю ожоги обработала скорая, в больницу не поехал.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.car_fire.4",
+      "slot": "completed",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Машину пролили, водительницу забрала скорая с давлением. Место сдали полиции.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_female",
+        "handed_103",
+        "hospitalized",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.completed.car_fire.5",
+      "slot": "completed",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Фургон потушили, баллоны оттащили в сторону. Людей не задело.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.car_fire.3",
+      "slot": "refused",
+      "incidents": [
+        "car_fire"
+      ],
+      "text": "Горела трава под днищем, водитель отогнал машину и затоптал. Всё цело.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.gas_smell.4",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Прибыли. Газом пахнет на всю площадку, бабушка в квартире жалуется на голову.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.arrived.gas_smell.5",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "На месте. Тянет газом из подвала, жильцов выводим на улицу, мамы с детьми уже вышли.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.arrived.gas_smell.6",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Наш прибор молчит, загазованности нет. Но жильцы настаивают, обходим квартиры.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "101.working.gas_smell.4",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Бабушку вывели на воздух, окна открыли, ждём газовую службу.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.gas_smell.5",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Подвал проветриваем, свет не включаем, никаких искр.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "101.working.gas_smell.6",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Нашли откуда: в квартире ребёнок один, заперт, плита открыта. Вскрываем дверь.",
+      "facts": [
+        "gas",
+        "blocked",
+        "victim_child",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.update.gas_smell.3",
+      "slot": "update",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Прояснилось: это не газ, пахнет краской, в подъезде ремонт. Доходим верхние этажи.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "101.completed.gas_smell.3",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Утечку в подвале устранили газовики, проветрили. Пострадавших нет, возвращаемся.",
+      "facts": [
+        "gas",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.completed.gas_smell.4",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Ребёнка вынесли, скорая осмотрела, всё обошлось. Плиту перекрыли, мальчика забрал отец.",
+      "facts": [
+        "gas",
+        "blocked",
+        "victim_child",
+        "evacuated",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "101.completed.gas_smell.5",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Работы закончены. Бабушку с отравлением увезла скорая, квартиру передали газовикам.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.gas_smell.3",
+      "slot": "refused",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Пахло от машины во дворе, дизель прогревают. В подъезде чисто.",
+      "facts": [
+        "no_gas",
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.arrived.lift.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Прибыли. В кабине пожилая женщина, одна, плохо слышит, но на голос отзывается.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.arrived.lift.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "На месте. Застряли подростки, весёлые, говорят, прыгали в кабине.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.arrived.lift.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Кабина встала, свет внутри погас, на стук никто не отвечает.",
+      "facts": []
+    },
+    {
+      "id": "101.working.lift.4",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бабушке передали воду через щель, разговариваем, держится спокойно.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.working.lift.5",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механика ждать долго, вскрываем двери шахты сами.",
+      "facts": []
+    },
+    {
+      "id": "101.working.lift.6",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Подростков по одному поднимаем через верхний люк.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.lift.2",
+      "slot": "update",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Прояснилось: в кабине беременная, жалуется на живот. Ускоряемся.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "101.completed.lift.4",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бабушку вывели, посидит у соседей, всё в порядке. Возвращаемся.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_elderly",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.lift.5",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Беременную вывели, передали скорой, повезли в роддом.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "evacuated",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.completed.lift.6",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Подростков вывели, целы, родителям позвонили. Лифт обесточили.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.refused.lift.3",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Кабину запустили из лифтовой диспетчерской удалённо, все вышли. Нам работы нет.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.arrived.traffic.4",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Прибыли. Маршрутка на боку в кювете, пассажиры выбрались, водителя зажало педалями.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.traffic.5",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "На месте. Легковая под фурой, внутри пожилая пара, оба в сознании, двери не открыть.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_female",
+        "victim_elderly",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.traffic.6",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Авария на перекрёстке, машину смяло, но зажатых нет, все вышли и ходят.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.traffic.4",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Снимаем крышу. Стариков будем доставать на щите, по одному.",
+      "facts": [
+        "victims",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.working.traffic.5",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пассажиров отвели на обочину, кого порезало, перевязываем. Водителя режем.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "101.working.traffic.6",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Ограждаем место, засыпаем масло, ждём эвакуатор.",
+      "facts": []
+    },
+    {
+      "id": "101.update.traffic.3",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Под фурой заискрила проводка, сбили огнетушителем. Достаём людей быстрее.",
+      "facts": [
+        "fire",
+        "victims"
+      ]
+    },
+    {
+      "id": "101.completed.traffic.3",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пару извлекли, скорая увезла обоих. Место передали полиции, возвращаемся.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_female",
+        "victim_elderly",
+        "handed_103",
+        "hospitalized",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.completed.traffic.4",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителя маршрутки достали. Скорая осмотрела, от госпитализации отказался.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.traffic.5",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пролив засыпали, обломки убрали с дороги. Пострадавших нет, движение открыли.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.traffic.3",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Мелкая авария, ни зажатых, ни пролива. Работает полиция, мы тут не нужны.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.arrived.door.4",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Прибыли. Бабушка упала в коридоре, через дверь отвечает, встать не может, ключ изнутри в замке.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.door.5",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "На месте. Женщина с утра не открывает, родственники волнуются, в квартире тишина.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.door.6",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Мальчик заперся в ванной, мама в панике. Дверь межкомнатная, хлипкая.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.working.door.4",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Говорим с бабушкой через дверь, просим отползти. Режем петли.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.door.5",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Ставим лестницу к окну, форточка открыта, боец полезет через неё.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.working.door.6",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Ванную сняли с петель, мальчик в порядке, мама его держит.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.update.door.2",
+      "slot": "update",
+      "incidents": [
+        "door"
+      ],
+      "text": "Дверь открыли, а в квартире никого. Хозяйка, оказывается, в больнице, соседи не знали.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.completed.door.3",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Вскрыли. Бабушку скорая осмотрела, ехать отказалась, дочь уже едет к ней.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.door.4",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Мальчика достали, цел и невредим. Возвращаемся.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.completed.door.5",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Дверь открыли, женщина лежала с давлением. Передали скорой, госпитализируют.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.door.3",
+      "slot": "refused",
+      "incidents": [
+        "door"
+      ],
+      "text": "Квартира пустая. Хозяйка дозвонилась соседке: она на даче, всё хорошо. Ложная тревога.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.arrived.tree.4",
+      "slot": "arrived",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Прибыли. Ветка пробила стекло остановки, женщину порезало, сидит на лавке.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "101.arrived.tree.5",
+      "slot": "arrived",
+      "incidents": [
+        "tree"
+      ],
+      "text": "На месте. Дерево легло на детскую площадку, ребёнку придавило ногу, плачет.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "no_access"
+      ]
+    },
+    {
+      "id": "101.arrived.tree.6",
+      "slot": "arrived",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Берёза перегородила выезд со двора. Под ней ни людей, ни машин.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.working.tree.4",
+      "slot": "working",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Поднимаем ствол домкратом, ребёнка вытаскиваем.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.working.tree.5",
+      "slot": "working",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Женщину перевязали, ждёт скорую. Остановку расчищаем.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "101.working.tree.6",
+      "slot": "working",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Режем берёзу на чурки, оттаскиваем к забору.",
+      "facts": []
+    },
+    {
+      "id": "101.update.tree.2",
+      "slot": "update",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Энергетики приехали, провода обесточены. Теперь можно пилить.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.tree.3",
+      "slot": "completed",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Ствол убрали, мальчика с переломом увезла скорая.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.completed.tree.4",
+      "slot": "completed",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Женщине скорая обработала порезы, в больницу не поехала. Остановку расчистили.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.tree.5",
+      "slot": "completed",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Работы закончены. Энергетики сняли провода, остатки ствола оставили управляющей компании.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.tree.2",
+      "slot": "refused",
+      "incidents": [
+        "tree"
+      ],
+      "text": "Ветка небольшая, дворник уже убрал её с дороги. Делать нечего, возвращаемся.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.collapse.4",
+      "slot": "arrived",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Прибыли. Кусок штукатурки упал на прохожего, голова разбита, в сознании.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.collapse.5",
+      "slot": "arrived",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "На месте. Балкон частично обрушился, на остатке плиты стоит дедушка, дверь в квартиру захлопнулась.",
+      "facts": [
+        "blocked",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "101.arrived.collapse.6",
+      "slot": "arrived",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Карниз над школой треснул. Детей уже увели, двор пустой.",
+      "facts": [
+        "no_victims",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.collapse.4",
+      "slot": "working",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Деда снимаем автолестницей, плиту не трогаем.",
+      "facts": [
+        "blocked",
+        "victim_male",
+        "victim_elderly",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.collapse.5",
+      "slot": "working",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Прохожего перевязали, голову держим, скорая в пути. Тротуар перекрыли.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.working.collapse.6",
+      "slot": "working",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Простукиваем карниз, отбиваем всё, что держится плохо. Внизу никого.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.update.collapse.3",
+      "slot": "update",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Трещина растёт, фасад может пойти целиком. Выводим весь подъезд, нужна подмога.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.collapse.3",
+      "slot": "completed",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Дедушку сняли, цел, напуган. Балкон огородили до специалистов.",
+      "facts": [
+        "blocked",
+        "victim_male",
+        "victim_elderly",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.completed.collapse.4",
+      "slot": "completed",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Прохожего с травмой головы забрала скорая. Опасный участок сбили.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.completed.collapse.5",
+      "slot": "completed",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Карниз отбили, школьный двор открыли. Пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.collapse.2",
+      "slot": "refused",
+      "incidents": [
+        "collapse"
+      ],
+      "text": "Козырёк уже подпёрли рабочие, угрозы нет. Возвращаемся.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "101.arrived.flood.4",
+      "slot": "arrived",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Прибыли. Кипяток хлещет из трубы, мужчину обварило, сидит на лестнице.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.flood.5",
+      "slot": "arrived",
+      "incidents": [
+        "flood"
+      ],
+      "text": "На месте. В затопленном подвале застрял мужчина, держится за трубу, вода по грудь.",
+      "facts": [
+        "blocked",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.arrived.flood.6",
+      "slot": "arrived",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Вода льёт с потолка, в коридоре искрит розетка. Хозяйка с малышом заперлись в комнате.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "101.working.flood.4",
+      "slot": "working",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Ожог обработали, поливаем холодной водой, ждём скорую.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.working.flood.5",
+      "slot": "working",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Подвал обесточили, мужчину вытягиваем на верёвке.",
+      "facts": [
+        "blocked",
+        "victim_male",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.working.flood.6",
+      "slot": "working",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Маму с ребёнком вывели к соседям, щиток отключили. Ищем, откуда льёт.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.update.flood.2",
+      "slot": "update",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Потекло и по соседнему стояку, вода уходит в щитовую. Нужны электрики.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.flood.3",
+      "slot": "completed",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Обваренного мужчину увезла скорая. Трубу перекрыли, пар ушёл. Возвращаемся.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.completed.flood.4",
+      "slot": "completed",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Мужчину из подвала достали, скорая осмотрела, ехать отказался. Откачку ведёт управляющая компания.",
+      "facts": [
+        "blocked",
+        "victim_male",
+        "evacuated",
+        "handed_103",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "101.completed.flood.5",
+      "slot": "completed",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Течь остановили, квартиру обесточили. Мама с малышом пока у соседей, пострадавших нет.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_child",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.flood.2",
+      "slot": "refused",
+      "incidents": [
+        "flood"
+      ],
+      "text": "Это ливнёвка во дворе переполнилась, в дом вода не идёт. Вопрос коммунальщиков, передали.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.responding.any.7",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Выезд принял. Берём с собой автолестницу.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.8",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно. Отделение на выезде, будем быстро.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.9",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записал. Караул поднят, выходим.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.any.10",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Добро, выезжаем. Заявителю скажите, пусть встретит у подъезда.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.6",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.7",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Добро.",
+      "facts": []
+    },
+    {
+      "id": "101.ack.any.8",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понятно, учтём.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.6",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тяжело идёт, людей ещё ищем. Подробности позже.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.7",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Без изменений. Сменили звено, работы продолжаются.",
+      "facts": []
+    },
+    {
+      "id": "101.status_working.any.8",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заканчиваем, осталось всё проверить и свернуться.",
+      "facts": []
+    },
+    {
+      "id": "101.enroute.any.5",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вышли на проспект, идём по выделенке, минут пять.",
+      "facts": []
+    },
+    {
+      "id": "101.enroute.any.6",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё далеко. Пробки, но пропускают.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.6",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пробили колесо на яме, меняем. Вторая машина идёт дальше без нас.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.7",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Автолестница не проходит под аркой, ищем другой заезд.",
+      "facts": []
+    },
+    {
+      "id": "101.delay.any.8",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Улицу перекрыли под забег, полиция не пускает. Договариваемся.",
+      "facts": []
+    },
+    {
+      "id": "101.clarify.any.9",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сколько в доме этажей? Решаем, ставить ли автолестницу.",
+      "facts": [],
+      "asks": "storeys"
+    },
+    {
+      "id": "101.clarify.any.10",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дом газифицирован или плиты электрические?",
+      "facts": [],
+      "asks": "gas_supply"
+    },
+    {
+      "id": "101.clarify.any.11",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "В квартире баллоны есть? Газ, кислород? Заявитель не говорил?",
+      "facts": [],
+      "asks": "hazards"
+    },
+    {
+      "id": "101.clarify.any.12",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявитель нас встретит? Пусть выйдет к дороге и машет.",
+      "facts": [],
+      "asks": "caller"
+    },
+    {
+      "id": "101.completed.any.5",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Справились. Место сдали хозяевам, расчёт свободен.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.any.6",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Отработали. Пострадавших нет, едем в часть.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "101.refused.any.5",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявитель ушёл, на месте никого и ничего. Возвращаемся.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "101.refused.any.6",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Соседи говорят, звонил ребёнок, баловался. Ложный, едем назад.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "101.request_service.smoke.1",
+      "slot": "request_service",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, скорая будет? Мужчина так и лежит без сознания, дышит плохо.",
+      "needs": "103",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "101.completed.smoke.7",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Очаг потушили. Скорую не дождались, вызвали через своих, мужчину забрали в больницу.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.briefing_ask.any.1",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял. Назовите адрес и что случилось.",
+      "asks": "both"
+    },
+    {
+      "id": "101.briefing_ask.any.2",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес не разобрал. Улицу и номер дома повторите.",
+      "asks": "address"
+    },
+    {
+      "id": "101.briefing_ask.any.3",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес принял. Что горит, что случилось?",
+      "asks": "what"
+    },
+    {
+      "id": "101.refusal_busy.any.1",
+      "slot": "refusal_busy",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мы на другом пожаре, освободимся не скоро. Направляйте другой расчёт."
+    },
+    {
+      "id": "101.refusal_not_assigned.any.1",
+      "slot": "refusal_not_assigned",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нам этот вызов не назначен. Проверьте, какой расчёт направляли."
+    },
+    {
+      "id": "101.responding.gas_smell.1",
+      "slot": "responding",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Вызов принят, отделение выехало.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.gas_smell.7",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Расчёт на месте, в квартире сильный запах газа, выводим жильцов.",
+      "facts": []
+    },
+    {
+      "id": "101.working.gas_smell.7",
+      "slot": "working",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Жильцы выведены, проветриваем квартиру, ждём газовую службу.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.gas_smell.6",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Газовая служба устранила утечку, газа в квартире нет, расчёт возвращается.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.gas_smell.8",
+      "slot": "arrived",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Расчёт на месте, поднимаемся на третий этаж.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.gas_smell.4",
+      "slot": "refused",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Запах слабый, жильцы на улице, утечкой занимается газовая служба, наши работы не потребовались.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.lift.1",
+      "slot": "responding",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Вызов принят, расчёт выехал.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.lift.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Расчёт на месте, кабина между седьмым и восьмым этажами, раздвигаем двери.",
+      "facts": []
+    },
+    {
+      "id": "101.working.lift.7",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Двери кабины раскрыты, выводим женщину на площадку.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.lift.7",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Женщина выведена и передана скорой помощи, расчёт возвращается.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.lift.8",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Расчёт на месте, поднимаемся к кабине.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.lift.4",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механик Мослифта уже вывел женщину, наши работы не потребовались, расчёт возвращается.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.smoke.1",
+      "slot": "responding",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Вызов принят, два отделения выехали.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.smoke.7",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Расчёт на месте, поднимаемся на девятый этаж.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.smoke.4",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяин открыл дверь сам, подгорела еда на плите, огня нет, наши работы не потребовались, возвращаемся.",
+      "facts": []
+    },
+    {
+      "id": "101.responding.traffic.1",
+      "slot": "responding",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Вызов принят, расчёт со спасательным инструментом выехал.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.traffic.7",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Расчёт на месте, водитель зажат в салоне, начинаем деблокирование.",
+      "facts": []
+    },
+    {
+      "id": "101.working.traffic.7",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Вскрываем дверь инструментом, водитель в сознании, скорая рядом.",
+      "facts": []
+    },
+    {
+      "id": "101.completed.traffic.6",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель извлечён и передан скорой, аккумуляторы отключены, расчёт возвращается.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.traffic.8",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Расчёт на месте, осматриваем машины.",
+      "facts": []
+    },
+    {
+      "id": "101.refused.traffic.4",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель выбрался из машины сам до нашего прибытия, деблокирование не нужно, работы не проводили.",
+      "facts": []
+    },
+    {
+      "id": "101.arrived.lift.9",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Прибыли, стоим у дома. Сейчас найдём кабину и доложу.",
+      "facts": []
+    },
+    {
+      "id": "101.request_service.gas_smell.1",
+      "slot": "request_service",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Диспетчер, Мосгаз вызвали? Запах держится, а перекрыть стояк нам нечем.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "104"
+    },
+    {
+      "id": "101.completed.gas_smell.7",
+      "slot": "completed",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Газовую службу так и не дождались. Подъезд обесточен, жильцы на улице, у квартиры оставили пост.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "101.refused.gas_smell.5",
+      "slot": "refused",
+      "incidents": [
+        "gas_smell"
+      ],
+      "text": "Газовой службы так и нет. Работы для нас тут нет, хозяев предупредили плиту не трогать, уезжаем.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "101.request_service.lift.2",
+      "slot": "request_service",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Диспетчер, скорая едет? Женщине хуже, за сердце держится.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.completed.lift.8",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Женщину вывели. Скорую не дождались, вызывали через своих, увезли с приступом. Возвращаемся.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "evacuated",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "101.refused.lift.5",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механик вывел женщину до нас, работы для нас нет. Скорую не дождались, соседи повезли её в больницу сами.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "other_org"
+      ]
+    },
+    {
+      "id": "101.request_service.traffic.1",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Диспетчер, скорую на аварию! Пассажирка жалуется на шею, двигаться ей нельзя.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.request_service.traffic.2",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Диспетчер, где скорая? Водителя почти достали, ему сразу врачи нужны.",
+      "facts": [
+        "victims"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.request_service.traffic.3",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Скорая будет? Женщина так и сидит в машине, держим ей голову.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.completed.traffic.7",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителя извлекли. Скорой так и не было, пострадавших сдали полиции на обочине. Возвращаемся.",
+      "facts": [
+        "victims",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.refused.traffic.5",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Деблокировать некого, водитель вышел сам. Скорую не дождались, пассажирку оставили с полицией.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "self_resolved",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "101.service_coming.any.1",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, скорую ждём, встретим.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "101.service_coming.any.2",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, раз скорая едет — готовим носилки, вынесем к машине.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "101.service_coming.any.3",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Добро, врачей ждём.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "101.service_coming.any.4",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, газовую службу ждём, стояк до них не трогаем.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "101.service_coming.any.5",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Мосгаз дождёмся, сами к трубе не лезем.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "101.service_coming.any.6",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, наряд ждём.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "101.service_coming.any.7",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, полицию ждём, пока держимся в стороне.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "101.service_coming.any.8",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, аварийную службу ждём.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.service_coming.any.9",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, коммунальщиков дождёмся.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.service_coming.any.10",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ждём механика.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "101.service_coming.any.11",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, лифтёры едут — без них кабину не трогаем.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "101.service_surprise.any.1",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая подъехала. Хорошо, конечно, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "101.service_surprise.any.2",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут скорая уже на месте. Спасибо, только нас бы предупредили — мы бы встретили.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "101.service_surprise.any.3",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Врачи приехали. А мы и не знали, что их вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "101.service_surprise.any.4",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Газовая служба подъехала. Хорошо, но сказали бы, что вызвали, мы бы их встретили.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "101.service_surprise.any.5",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, Мосгаз на месте. Нас-то почему не предупредили?",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "101.service_surprise.any.6",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Наряд подъехал. Хорошо, конечно, но предупреждать надо, что вызвали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "101.service_surprise.any.7",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Полиция на месте. Могли бы и сказать — мы бы их не высматривали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "101.service_surprise.any.8",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Аварийка подъехала. Спасибо, но сказали бы хоть, что вызвали.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.service_surprise.any.9",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, коммунальщики уже тут. Нам бы передали, что едут.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "101.service_surprise.any.10",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Механик подъехал. Хорошо, но могли бы и предупредить.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "101.service_surprise.any.11",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Лифтёры на месте. В другой раз говорите, что вызвали, мы ж ждём.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "101.refused.lift.6",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механик вывел женщину до нас, её забрала скорая. Наши работы не потребовались, расчёт возвращается.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "handed_103"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.completed.smoke.8",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Очаг потушили, квартиру проветрили. Мужчину передали скорой, расчёт возвращается.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_male",
+        "handed_103"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.refused.traffic.6",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель выбрался из машины сам, деблокировать никого не пришлось. Пассажирку забрала скорая, наши работы не потребовались.",
+      "facts": [
+        "victims",
+        "handed_103"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "101.update.wrong_briefing.1",
+      "slot": "update",
+      "requires": [
+        "wrong_briefing"
+      ],
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "facts": [],
+      "when": "Только после выезда по полной вводной с неверным поводом; не случайная обстановка сценария."
+    }
+  ]
+}

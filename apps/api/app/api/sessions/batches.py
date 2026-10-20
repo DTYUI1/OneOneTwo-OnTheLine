@@ -7,12 +7,13 @@ from uuid import UUID, uuid4
 
 from fastapi import HTTPException, Request
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.c01 import C01Input
 from app.api.scenarios.service import ensure_evaluable
 from app.api.sessions import repo
-from app.api.sessions.service import ensure_owner
-from app.core.models import Assignment, AssignmentBatch, Scenario
+from app.api.sessions.service import ensure_owner, uses_ai_preparation
+from app.core.models import Assignment, AssignmentBatch, Scenario, Session
 
 
 class AssignmentBatchInput(C01Input):
@@ -31,11 +32,37 @@ async def create_batch(
     if lesson is None:
         raise HTTPException(404, "Занятие не найдено.")
     ensure_owner(lesson, request.state.user)
+    if uses_ai_preparation(lesson):
+        raise HTTPException(409, "В ИИ-режиме назначения создаются автоматически.")
+    result = await store_batch(db, lesson, request.state.user.id, body)
+    saved = await db.scalar(
+        select(AssignmentBatch).where(
+            AssignmentBatch.session_id == session_id,
+            AssignmentBatch.request_id == UUID(body.root["request_id"]),
+            AssignmentBatch.teacher_id == request.state.user.id,
+        )
+    )
+    request.state.entity = "assignment_batch"
+    request.state.entity_id = str(saved.id)
+    request.state.audit_after = result.root
+    return result
+
+
+async def store_batch(
+    db: AsyncSession,
+    lesson: Session,
+    actor_id: UUID,
+    body: AssignmentBatchInput,
+) -> BatchReceipt:
+    """Общий атомарный механизм ручной и автоматической раздачи под блокировкой Session."""
+    if actor_id != lesson.teacher_id:
+        raise HTTPException(404, "Занятие не найдено.")
+    session_id = lesson.id
     request_id = UUID(body.root["request_id"])
     canonical = json.dumps(body.root, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     saved = await db.scalar(
         select(AssignmentBatch).where(
-            AssignmentBatch.teacher_id == request.state.user.id,
+            AssignmentBatch.teacher_id == actor_id,
             AssignmentBatch.session_id == session_id,
             AssignmentBatch.request_id == request_id,
         )
@@ -123,7 +150,7 @@ async def create_batch(
     db.add(
         AssignmentBatch(
             id=batch_id,
-            teacher_id=request.state.user.id,
+            teacher_id=actor_id,
             session_id=session_id,
             request_id=request_id,
             canonical_request=canonical,
@@ -133,9 +160,6 @@ async def create_batch(
     await db.flush()
     db.add_all(rows)
     await db.flush()
-    request.state.entity = "assignment_batch"
-    request.state.entity_id = str(batch_id)
-    request.state.audit_after = result.root
     return result
 
 

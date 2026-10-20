@@ -3,12 +3,13 @@ import { teacherQueryKeys } from "./useTeacherUpdates";
 
 describe("обновления пульта по WS", () => {
   it.each(["evaluation.partial", "evaluation.complete"])(
-    "%s обновляет вердикт, отчёт, аналитику и реплей",
+    "%s обновляет вердикт, отчёт, аналитику, разбор и реплей",
     (type) => {
       expect(teacherQueryKeys(type)).toEqual([
         "evaluations",
         "report",
         "analytics",
+        "analysis",
         "replay",
       ]);
     },
@@ -22,6 +23,7 @@ describe("обновления пульта по WS", () => {
       "evaluations",
       "report",
       "analytics",
+      "analysis",
       "replay",
     ]);
   });

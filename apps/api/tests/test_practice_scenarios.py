@@ -8,18 +8,19 @@ from uuid import UUID
 
 from app.api.database import create_database_app
 from app.api.sessions.practice import step_pool
+from app.api.training.autogen import GENERATED_PACK_ID
 from app.core.config import ROOT
 from app.core.contracts import validate_json
-from app.core.models import Assignment, Scenario, ScenarioTrainingPlan
+from app.core.models import Assignment, Scenario, ScenarioPackItem, ScenarioTrainingPlan
 from app.seed.practice import (
     audio_path,
     expected_flow,
     load_incidents,
-    scenario_id,
     scenario_payload,
     stages,
     variants,
 )
+from app.seed.scenarios import load_catalog, scenario_uuid
 from app.seed.training import STAGE_JUSTIFIES
 from evalcore.progress import STEPS, StepAttempt
 from fastapi.testclient import TestClient
@@ -125,11 +126,9 @@ def test_every_report_is_voiced_with_matching_text():
 
 
 def practice_ids() -> set[UUID]:
-    return {
-        scenario_id(item["key"], service, level)
-        for item in INCIDENTS
-        for service, level in variants(item)
-    }
+    """Сценарии тренировки — файлы data/scenarios (GP-03), с GP-04 — версия 2."""
+    services = {item["id"] for item in PHONEBOOK.values()}
+    return {scenario_uuid(data) for data in load_catalog(services).scenarios}
 
 
 def test_practice_pool_has_only_scenarios_with_brigade_reports(database_url):
@@ -154,7 +153,15 @@ def test_practice_pool_has_only_scenarios_with_brigade_reports(database_url):
                 # Сценарий без плана (бригада молчит) в тренировку не идёт.
                 assert silent is None or silent not in pool
                 assert len(pool & ours) >= MIN_PER_STEP, (service, step.number)
-                assert pool <= ours, (service, step.number)
+                # Сверх файлов каталога — только сгенерированные для тренировок (GP-14).
+                generated = set(
+                    await db.scalars(
+                        select(ScenarioPackItem.scenario_id).where(
+                            ScenarioPackItem.pack_id == GENERATED_PACK_ID
+                        )
+                    )
+                )
+                assert pool <= ours | generated, (service, step.number)
 
     run_db(database_url, check)
     # Повторная загрузка ничего не дублирует.
@@ -188,8 +195,18 @@ def test_step_two_and_three_issue_practice_scenarios(database_config, database_u
                     select(Assignment.scenario_id).where(Assignment.session_id == UUID(session_id))
                 )
 
+            async def generated(db):
+                return set(
+                    await db.scalars(
+                        select(ScenarioPackItem.scenario_id).where(
+                            ScenarioPackItem.pack_id == GENERATED_PACK_ID
+                        )
+                    )
+                )
+
             issued_id = run_db(database_url, scenario)
-            assert issued_id in ours
+            # Пройденные готовые сменяет сгенерированный (GP-14): общая БД тестов.
+            assert issued_id in ours | run_db(database_url, generated)
             # Подряд та же карточка не выпадает: прошлый сценарий уступает свежим.
             assert issued_id != previous
             previous = issued_id

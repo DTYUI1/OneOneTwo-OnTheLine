@@ -22,6 +22,53 @@ import {
 export type ReportRow = Report["trainees"][number];
 export type Prediction = Report["predictions"][number];
 
+/** Ключ данных отчёта: решение преподавателя меняет total без смены version. */
+export function reportRevision(
+  sessionId: string,
+  cards: Pick<Card, "id" | "session_id" | "state" | "closed_at">[],
+  evaluations: Pick<
+    Evaluation,
+    "id" | "card_id" | "version" | "status" | "total" | "teacher_comment"
+  >[],
+): string {
+  const own = cards.filter((card) => card.session_id === sessionId);
+  const ids = new Set(own.map((card) => card.id));
+  return JSON.stringify([
+    own
+      .map((card) => [card.id, card.state, card.closed_at])
+      .sort(([left], [right]) => String(left).localeCompare(String(right))),
+    evaluations
+      .filter((item) => ids.has(item.card_id))
+      .map((item) => [
+        item.id,
+        item.version,
+        item.status,
+        item.total,
+        item.teacher_comment,
+      ])
+      .sort(([left], [right]) => String(left).localeCompare(String(right))),
+  ]);
+}
+
+/** К зачёту в сводке допускаем только ту же версию оценки, что разобрал сервер.
+ * Частичный разбор учитываем лишь после явного решения преподавателя. */
+export function readyForVerdict(
+  evaluations: Evaluation[],
+  attempts: SessionAnalytics["attempts"],
+): Evaluation[] {
+  const byCard = new Map(
+    attempts.map((item) => [item.card_id, item.evaluation]),
+  );
+  return evaluations.filter((item) => {
+    const analysis = byCard.get(item.card_id);
+    return (
+      analysis?.evaluation_id === item.id &&
+      analysis.evaluation_version === item.version &&
+      (analysis.status === "complete" || analysis.effective_override != null)
+    );
+  });
+}
+
 /** Попытки занятия по стадиям — с одним знаменателем у каждой цифры. */
 export interface AttemptCounts {
   assigned: number;
@@ -138,7 +185,11 @@ export function weakPoints(
   for (const evaluation of evaluations)
     if (evaluation.trainee_id === userId && hasScore(evaluation))
       for (const criterion of evaluation.criteria)
-        if (criterion.score < 1 && !weak.has(criterion.key))
+        if (
+          criterion.weight !== 0 &&
+          criterion.score < 1 &&
+          !weak.has(criterion.key)
+        )
           weak.set(criterion.key, {
             key: criterion.key,
             label: criterionLabel(criterion.key),
@@ -167,7 +218,7 @@ export function typicalErrors(evaluations: Evaluation[]): TypicalError[] {
   const byKey = new Map<string, TypicalError>();
   for (const evaluation of scored)
     for (const criterion of evaluation.criteria) {
-      if (criterion.score >= 1) continue;
+      if (criterion.weight === 0 || criterion.score >= 1) continue;
       const entry = byKey.get(criterion.key) ?? {
         key: criterion.key,
         label: criterionLabel(criterion.key),
@@ -207,7 +258,8 @@ export function recommend(
     };
   const critical = scored.filter((item) =>
     item.criteria.some(
-      (criterion) => criterion.critical && criterion.score < 1,
+      (criterion) =>
+        criterion.weight !== 0 && criterion.critical && criterion.score < 1,
     ),
   ).length;
   const low = scored.filter((item) => item.total < 0.5).length;
@@ -332,27 +384,42 @@ export interface NormShares {
 
 /**
  * Нормы как доля карточек (так их формулируют NFPA 1225 / NENA: «90 % вызовов за 60 с»):
- * сколько оценённых карточек уложились в норматив реакции и отработки и сколько
- * зачтено (без критической ошибки и от 70 %). Карточка без критерия в знаменатель не идёт.
+ * сколько оценённых карточек с достоверным временем уложились в норматив,
+ * и сколько зачтено. Оценочное время не считается выполнением норматива.
  */
 export function normShares(
   evaluations: readonly Evaluation[],
   /** Новый балл преподавателя по карточке («не согласен»): он главнее флага ошибки. */
   teacherTotals: ReadonlyMap<string, number> = new Map(),
+  attempts: SessionAnalytics["attempts"] = [],
 ): NormShares {
   const scored = evaluations.filter((item) => hasScore(item));
-  const share = (key: string): Share => {
-    const measured = scored
-      .map((item) => item.criteria.find((criterion) => criterion.key === key))
-      .filter((criterion) => criterion !== undefined);
+  const scoredByCard = new Map(scored.map((item) => [item.card_id, item]));
+  const share = (key: "reaction_overdue" | "handling_overdue"): Share => {
+    const criterionKey =
+      key === "reaction_overdue" ? "reaction_time" : "handling_time";
+    const measured = attempts
+      .filter((item) => {
+        const evaluation = scoredByCard.get(item.card_id);
+        // Время остаётся в разборе, но неприменимый критерий не входит в долю.
+        return (
+          evaluation &&
+          !evaluation.criteria.some(
+            (criterion) =>
+              criterion.key === criterionKey && criterion.weight === 0,
+          )
+        );
+      })
+      .map((item) => item.timing[key])
+      .filter((value): value is boolean => value !== null);
     return {
-      ok: measured.filter((criterion) => criterion.score >= 1).length,
+      ok: measured.filter((overdue) => !overdue).length,
       total: measured.length,
     };
   };
   return {
-    reaction: share("reaction_time"),
-    handling: share("handling_time"),
+    reaction: share("reaction_overdue"),
+    handling: share("handling_overdue"),
     passed: {
       ok: scored.filter(
         (item) =>

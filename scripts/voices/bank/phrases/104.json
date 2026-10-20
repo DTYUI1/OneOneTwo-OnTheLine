@@ -1,0 +1,3735 @@
+{
+  "service": "104",
+  "speaker": "brigade",
+  "gender": "male",
+  "incidents": {
+    "gas_flat": "Запах газа в квартире",
+    "gas_street": "Запах газа на улице, у подъезда",
+    "gas_equipment": "Неисправна плита или колонка",
+    "pipe_basement": "Прорыв трубы в подвале газифицированного дома",
+    "smoke": "Проверка газа при пожаре или задымлении",
+    "pipe_damage": "Повреждён газопровод при раскопках",
+    "co": "Угарный газ, колонка, люди надышались"
+  },
+  "phrases": [
+    {
+      "id": "104.answer.any.1",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Аварийная, слушаю.",
+      "facts": []
+    },
+    {
+      "id": "104.answer.any.2",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мастер на связи.",
+      "facts": []
+    },
+    {
+      "id": "104.answer.any.3",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, диспетчер, слушаю вас.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.1",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.2",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, бригада выехала.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.3",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял заявку, выезжаем, прибор с собой.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.4",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, газ. Выдвигаемся.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.5",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Только с прошлой заявки освободились, едем.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.6",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял вас, выезжаем. Пусть там ничего не включают и не курят.",
+      "facts": []
+    },
+    {
+      "id": "104.enroute.any.1",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, минут через пять будем.",
+      "facts": []
+    },
+    {
+      "id": "104.enroute.any.2",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "В пути, стоим на светофоре, скоро будем.",
+      "facts": []
+    },
+    {
+      "id": "104.enroute.any.3",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезжаем, уже во дворе разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "104.enroute.any.4",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, доложу с места.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.1",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, стоим в пробке намертво, задерживаемся минут на десять.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.2",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Двор заставлен, машина не проходит, несём инструмент на руках.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.3",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Шлагбаум во дворе закрыт, ищем, кто откроет.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.4",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пробили колесо. Меняем, задержимся.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.5",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ворота во двор на замке, объезжаем с другой улицы.",
+      "facts": []
+    },
+    {
+      "id": "104.wrong_place.any.1",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, мы на месте, а газом тут не пахнет и никто не вызывал. Проверьте адрес!",
+      "facts": []
+    },
+    {
+      "id": "104.wrong_place.any.2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "По этому адресу заявки нет, жильцы ничего не знают. Какой адрес правильный?",
+      "facts": []
+    },
+    {
+      "id": "104.wrong_place.any.3",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут такого дома нет. Мы куда приехали? Уточните адрес!",
+      "facts": []
+    },
+    {
+      "id": "104.readback_fixed.any.1",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял поправку, разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "104.readback_fixed.any.2",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, записал правильно. Едем.",
+      "facts": []
+    },
+    {
+      "id": "104.readback_fixed.any.3",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял поправку, спасибо, чуть не уехали не туда.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.1",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.2",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.3",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял вас.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.4",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно, принял.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.5",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Добро.",
+      "facts": []
+    },
+    {
+      "id": "104.not_understood.any.1",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял, повторите.",
+      "facts": []
+    },
+    {
+      "id": "104.not_understood.any.2",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, плохо слышно, повторите ещё раз.",
+      "facts": []
+    },
+    {
+      "id": "104.not_understood.any.3",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Что? Шумно тут, не расслышал. Повторите.",
+      "facts": []
+    },
+    {
+      "id": "104.end_call.any.1",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "104.end_call.any.2",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, понял, отбой.",
+      "facts": []
+    },
+    {
+      "id": "104.end_call.any.3",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, работаем. Конец связи.",
+      "facts": []
+    },
+    {
+      "id": "104.end_call.any.4",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Добро, на связи.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.1",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем, доложу по окончании.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.2",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё на месте. Замеры делаем, пока рано говорить.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.3",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем, диспетчер. Как будет ясно, сам позвоню.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.4",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем, пока без изменений.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.5",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "На месте, заканчиваем. Минут десять ещё.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify.any.1",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, этаж какой? В заявке не указан.",
+      "facts": [],
+      "asks": "floor"
+    },
+    {
+      "id": "104.clarify.any.2",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезд какой? Дом длинный, не угадаем.",
+      "facts": [],
+      "asks": "entrance"
+    },
+    {
+      "id": "104.clarify.any.3",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, код домофона есть? Не можем в подъезд попасть.",
+      "facts": [
+        "no_access"
+      ],
+      "asks": "intercom"
+    },
+    {
+      "id": "104.clarify.any.4",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дайте телефон заявителя, звоним в дверь, не открывают.",
+      "facts": [
+        "no_access"
+      ],
+      "asks": "caller_phone"
+    },
+    {
+      "id": "104.clarify.any.5",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, в квартире кто-то есть? Стучим, тишина.",
+      "facts": [
+        "no_access"
+      ],
+      "asks": "access"
+    },
+    {
+      "id": "104.clarify.any.6",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, у кого ключи от квартиры? Хозяина нет, а у двери пахнет.",
+      "facts": [
+        "no_access",
+        "gas"
+      ],
+      "asks": "keys"
+    },
+    {
+      "id": "104.clarify.any.7",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, стояк будем перекрывать. Жильцов предупредить успеете?",
+      "facts": [
+        "gas"
+      ],
+      "asks": "riser"
+    },
+    {
+      "id": "104.clarify.any.8",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ключи от подвала у кого? Дверь на замке.",
+      "facts": [
+        "no_access"
+      ],
+      "asks": "basement_keys"
+    },
+    {
+      "id": "104.clarify.any.9",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, люди в квартире были? Надышался кто-нибудь?",
+      "facts": [],
+      "asks": "victims"
+    },
+    {
+      "id": "104.clarify_ok.any.1",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, поднимаемся.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_ok.any.2",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть, спасибо, заходим.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_ok.any.3",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, так быстрее.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_ok.any.4",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, теперь найдём.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_unknown.any.1",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, будем искать сами, это займёт время.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_unknown.any.2",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно. Тогда опросим соседей.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_unknown.any.3",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял. Будем вызывать управляющую, ждать придётся.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_late.any.1",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже нашли сами.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_late.any.2",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поздно, диспетчер, соседи подсказали.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify_late.any.3",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да мы уже внутри, спасибо.",
+      "facts": []
+    },
+    {
+      "id": "104.request_service.any.1",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, нужна скорая! Женщина надышалась, ей плохо.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "104.request_service.any.2",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорую срочно, мужчина без сознания на кухне!",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "103",
+      "tone": "[shouting]"
+    },
+    {
+      "id": "104.request_service.any.3",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вызовите скорую жильцу. Голова кружится, тошнит его.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "104.request_service.any.4",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вызывайте пожарных! Загазованность высокая, может рвануть.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "101",
+      "tone": "[urgent]"
+    },
+    {
+      "id": "104.request_service.any.5",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нужны пожарные: дверь не открывают, а у двери прибор зашкаливает.",
+      "facts": [
+        "gas",
+        "no_access"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "104.request_service.any.6",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарных сюда, в квартире дымит, к плите не пройти.",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "104.request_service.any.7",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, нужна полиция, вскрывать дверь. Хозяев нет, газом тянет.",
+      "facts": [
+        "gas",
+        "no_access"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "104.request_service.any.8",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пришлите полицию, жилец пьяный, в квартиру не пускает.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "104.request_service.any.9",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нужен наряд, оцепить двор. Люди лезут прямо к утечке.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "104.request_service.any.10",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, нужна аварийка управляющей, подвал заливает, к трубе не подойти.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.request_service.any.11",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вызовите слесаря управляющей, ключей от подвала ни у кого нет.",
+      "facts": [
+        "no_access"
+      ],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.request_service.any.12",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, передайте в управляющую: подъезд отключаем от газа, пусть людей предупредят.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.alarm.any.1",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Хлопок в квартире, нашего слесаря обожгло!",
+      "facts": [
+        "gas"
+      ],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "104.alarm.any.2",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тревога! Напарник надышался, теряет сознание, выносим на воздух!",
+      "facts": [
+        "gas"
+      ],
+      "tone": "[out of breath]"
+    },
+    {
+      "id": "104.alarm.any.3",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Слесарь в подвале упал, нога, похоже, сломана. Скорую!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "104.alarm.any.4",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер! Вспышка в подвале, ребят задело! Скорую и пожарных, срочно!",
+      "facts": [
+        "gas",
+        "fire"
+      ],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "104.alarm_ack.any.1",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ждём скорую.",
+      "facts": []
+    },
+    {
+      "id": "104.alarm_ack.any.2",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Вытащили его, дышит, ждём врачей.",
+      "facts": []
+    },
+    {
+      "id": "104.alarm_ack.any.3",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, пожарных встречаем, людей отвели.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.any.1",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы завершены, бригада освободилась.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.any.2",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Закончили. Подачу восстановили, повторный замер чистый.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.any.3",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, диспетчер, работы окончены. Акт оставили жильцам.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.any.4",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Устранили, проверили, едем на базу.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.any.1",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, работ не было: газом не пахнет, прибор показывает ноль. Уезжаем.",
+      "facts": [
+        "no_gas",
+        "false_call"
+      ]
+    },
+    {
+      "id": "104.refused.any.2",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявитель ушёл, дверь никто не открыл. Работ не проводили.",
+      "facts": [
+        "gone",
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.refused.any.3",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Жильцы сами перекрыли кран и проветрили, прибор чистый. Работ не было.",
+      "facts": [
+        "self_resolved",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.any.4",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это не наше, диспетчер: пахнет из мусоропровода, газ ни при чём. Пусть управляющая разбирается.",
+      "facts": [
+        "other_org",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_flat.1",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Прибыли. В подъезде пахнет уже снизу, поднимаемся с прибором.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_flat.2",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "На месте. Хозяйка встретила у подъезда, говорит, пахнет с утра. Идём смотреть.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_flat.3",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Бригада на месте. У двери квартиры прибор сразу пищит. Звоним, не открывают.",
+      "facts": [
+        "gas",
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_flat.4",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Прибыли, диспетчер. Соседи на площадке, окна в подъезде сами открыли. Заходим.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_flat.1",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Нашли: шланг у плиты треснул. Кран перекрыли, меняем шланг.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_flat.2",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Травит на резьбе у счётчика. Перекрыли кран на опуске, подтягиваем.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_flat.3",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Загазованность в квартире высокая. Людей вывели, проветриваем, электричество не трогаем.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.working.gas_flat.4",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Конфорка была открыта, огня нет. Закрыли, проветриваем, ждём, пока прибор успокоится.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.update.gas_flat.1",
+      "slot": "update",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Диспетчер, в квартире чисто, а тянет от соседей снизу. Идём к ним.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.update.gas_flat.2",
+      "slot": "update",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Диспетчер, в квартиру не попасть, а у двери прибор растёт. Будем перекрывать стояк на весь подъезд.",
+      "facts": [
+        "gas",
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.1",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Шланг поменяли, проверили мыльным раствором, газ подали. Работы завершены.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.2",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Утечку на счётчике устранили, замер чистый, газ жильцам вернули. Закончили.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.3",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Плиту отключили и опломбировали до ремонта, квартира без газа. Работы завершены.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.refused.gas_flat.1",
+      "slot": "refused",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Диспетчер, в квартире газа нет, прибор на нуле. Пахло краской, у соседей ремонт. Уезжаем.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.gas_flat.2",
+      "slot": "refused",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Хозяин открыл, говорит, никого не вызывал. Проверили, чисто. Работ не было.",
+      "facts": [
+        "no_gas",
+        "false_call"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_street.1",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Прибыли. У подъезда пахнет, сильнее всего возле ввода на фасаде.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_street.2",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "На месте. Во дворе запах слабый, ходим с прибором, ищем, откуда.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_street.3",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Прибыли, диспетчер. Пахнет у колодца на газоне, прибор показывает.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_street.4",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Бригада на месте. У подъезда толпа, кто-то курит прямо тут. Отгоняем, начинаем замер.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_street.1",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Травит кран на вводе в дом. Перекрыли, подъезд без газа, меняем прокладку.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_street.2",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Утечка в колодце. Огородили, людей отвели, вскрываем крышку.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_street.3",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Проверяем подвал и подъезды, на улице прибор держит.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_street.4",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Травит газопровод по фасаду, на сварном шве. Перекрываем вход на дом.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.update.gas_street.1",
+      "slot": "update",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Диспетчер, загазован подвал под подъездом. Выводим жильцов.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.update.gas_street.2",
+      "slot": "update",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Диспетчер, в дом не идёт: травит только вентиль на улице, подъезды чистые.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_street.1",
+      "slot": "completed",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Кран на вводе заменили, газ в дом подали, по квартирам проверили. Работы завершены.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_street.2",
+      "slot": "completed",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Колодец загерметизировали, замер вокруг чистый. Закончили, уезжаем.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_street.3",
+      "slot": "completed",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Шов на фасаде временно заделали, дом без газа до утра, утром ремонтники. Работы завершены.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.refused.gas_street.1",
+      "slot": "refused",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Диспетчер, газа нет. Пахнет из канализации, это водоканал. Работ не проводили.",
+      "facts": [
+        "no_gas",
+        "other_org"
+      ]
+    },
+    {
+      "id": "104.refused.gas_street.2",
+      "slot": "refused",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Обошли двор с прибором, везде ноль. Запаха уже нет, работ не было.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_equipment.1",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Прибыли. Колонка не зажигается, хозяин её уже разбирал сам.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_equipment.2",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "На месте. Плита старая, конфорка горит жёлтым, коптит.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_equipment.3",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Прибыли, диспетчер. Колонка хлопает при включении, газом в ванной не пахнет.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_equipment.4",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "На месте. Кран на плиту прикипел, хозяйка закрыть не может.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_equipment.1",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Колонку отключили, проверяем тягу. Тяги нет, вентканал забит.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_equipment.2",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Чистим горелку, жиклёр забился. Газ на плиту перекрыт.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_equipment.3",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Меняем кран на опуске, старый не держит. Квартира пока без газа.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_equipment.4",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Плита своё отслужила, ремонту не подлежит. Отключаем, ставим заглушку.",
+      "facts": []
+    },
+    {
+      "id": "104.update.gas_equipment.1",
+      "slot": "update",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Диспетчер, колонку не запустить, тяги нет совсем. Вентканал за управляющей, без них никак.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "104.update.gas_equipment.2",
+      "slot": "update",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Диспетчер, при разборке нашли утечку на соединении. Перекрыли, затягиваем.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_equipment.1",
+      "slot": "completed",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Горелку прочистили, плита горит ровно. Работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.gas_equipment.2",
+      "slot": "completed",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Колонку отключили и опломбировали до прочистки вентканала, хозяину выдали предписание. Закончили.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.gas_equipment.3",
+      "slot": "completed",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Кран заменили, проверили на утечку, газ подали. Работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.gas_equipment.1",
+      "slot": "refused",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Диспетчер, это не авария: колонка новая, на гарантии, пусть вызывают сервис. Работ не было.",
+      "facts": [
+        "other_org",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.gas_equipment.2",
+      "slot": "refused",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Пока ехали, хозяин сам батарейки в колонке поменял, всё горит. Работ не проводили.",
+      "facts": [
+        "self_resolved",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_basement.1",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Прибыли. Подвал залит по колено, пар стоит, газовую трубу не видно.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.pipe_basement.2",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "На месте. В подвале горячая вода, газопровод идёт над ней под потолком.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.pipe_basement.3",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Прибыли, диспетчер. Дверь в подвал на замке, ключей ни у кого.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_basement.4",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Бригада на месте. Спустились в подвал, запах газа есть, слабый.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_basement.1",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Идём по подвалу вдоль газопровода, вода по пояс.",
+      "facts": []
+    },
+    {
+      "id": "104.working.pipe_basement.2",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Перекрыли газ на вводе в дом, пока трубу не осмотрим.",
+      "facts": []
+    },
+    {
+      "id": "104.working.pipe_basement.3",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Газопровод цел, но подвес сорвало, труба провисла. Ставим временную опору.",
+      "facts": []
+    },
+    {
+      "id": "104.working.pipe_basement.4",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Замеряем в подвале и внизу в подъездах, прибор пока на нуле.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.update.pipe_basement.1",
+      "slot": "update",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Диспетчер, вода поднимается, к трубе не подойти. Ждём, пока перекроют воду.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.update.pipe_basement.2",
+      "slot": "update",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Диспетчер, нашли утечку на сгоне. Дом перекрыли, жильцов предупреждаем.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_basement.1",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Воду откачали, газопровод осмотрели, повреждений нет, газа нет. Работы завершены.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_basement.2",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Сгон заменили, подвал проветрили, газ в дом подали. Закончили.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_basement.3",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Опору поставили, трубу закрепили, утечки нет. Работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.pipe_basement.1",
+      "slot": "refused",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Диспетчер, газопровод через этот подвал не идёт, ввод по фасаду. Это вода, пусть водоканал. Работ не было.",
+      "facts": [
+        "other_org",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.pipe_basement.2",
+      "slot": "refused",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Слесари управляющей прорыв уже перекрыли, газопровод сухой, всё чисто. Работ не проводили.",
+      "facts": [
+        "other_org",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.1",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли. Пожарные ещё работают, нас в квартиру не пускают. Ждём допуска.",
+      "facts": [
+        "fire",
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.2",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "На месте. В подъезде дым, пожарные уже потушили, поднимаемся.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.3",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли, диспетчер. Горело на кухне, плита обгорела, кран на опуске весь закопчён.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.4",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Бригада на месте. Подъезд задымлён, первым делом перекрываем газ на стояк.",
+      "facts": []
+    },
+    {
+      "id": "104.working.smoke.1",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Перекрыли газ на стояк, пока пожарные работают.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.working.smoke.2",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Квартиру отключили от газа, проверяем соседей сверху и снизу.",
+      "facts": []
+    },
+    {
+      "id": "104.working.smoke.3",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Замеряем в подъезде и на кухне. Пожарные просят пока не уходить.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.working.smoke.4",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Шланг плиты оплавился, кран перекрыли, ставим заглушку.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.update.smoke.1",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, газ есть: шланг прогорел, травит. Перекрыли, проветриваем.",
+      "facts": [
+        "gas",
+        "fire"
+      ]
+    },
+    {
+      "id": "104.update.smoke.2",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, дым не от газа, горела проводка. Стояк откроем после пожарных.",
+      "facts": [
+        "fire",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.smoke.1",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Газа в подъезде нет, квартира отключена до ремонта плиты, стояк открыли. Работы завершены.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.smoke.2",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Соседям газ вернули, сгоревшую квартиру оставили на заглушке. Закончили.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.completed.smoke.3",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Подъезд после тушения проверили, утечек нет. Работы завершены.",
+      "facts": [
+        "no_gas",
+        "fire"
+      ]
+    },
+    {
+      "id": "104.refused.smoke.1",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, газовое всё исправно, дымила подгоревшая кастрюля. Работ не было.",
+      "facts": [
+        "no_gas",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "104.refused.smoke.2",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дом не газифицирован, на кухне электроплита. Нам тут делать нечего, уезжаем.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_damage.1",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Прибыли. Экскаватор зацепил трубу, свистит на весь двор.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_damage.2",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "На месте. Траншею засыпать успели, но из земли пахнет. Ищем место.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_damage.3",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Прибыли, диспетчер. Ковшом содрали изоляцию, утечки пока не слышно.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.pipe_damage.4",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Бригада на месте. Газ бьёт из траншеи, рабочих отогнали, улицу надо перекрывать.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.1",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Ограждаем, закрываем задвижку на отводе.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.2",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Задвижку закрыли, стравливаем, ставим хомут.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.3",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Проверяем подвалы ближних домов, газ мог уйти по грунту.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.4",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Дом на отводе без газа. Сварщика вызвали, ждём.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.update.pipe_damage.1",
+      "slot": "update",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Диспетчер, газ ушёл в подвал соседнего дома. Выводим жильцов из подъезда.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.update.pipe_damage.2",
+      "slot": "update",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Диспетчер, задвижка не держит, будем отключать квартал. Много домов останется без газа.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_damage.1",
+      "slot": "completed",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Трубу заварили, изоляцию восстановили, газ подали. Работы завершены.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_damage.2",
+      "slot": "completed",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Хомут поставили, утечки нет, подвалы чистые. Закончили, на подрядчика акт составили.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_damage.3",
+      "slot": "completed",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Повреждена только изоляция, трубу заизолировали, газа не было. Работы завершены.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.pipe_damage.1",
+      "slot": "refused",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Диспетчер, порвали не газ, а кабель связи. Наших сетей тут нет. Работ не было.",
+      "facts": [
+        "no_gas",
+        "other_org"
+      ]
+    },
+    {
+      "id": "104.refused.pipe_damage.2",
+      "slot": "refused",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Труба старая, отключённая, газа в ней давно нет. Работ не проводили.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.co.1",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "Прибыли. Жильцов уже вывели на улицу, у всех голова болит.",
+      "facts": [
+        "victims",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.arrived.co.2",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "На месте. Колонка в ванной, дверь закрыта, датчик угарного газа зашкаливает.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.co.3",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "Прибыли, диспетчер. Скорая уже здесь, женщину выносят.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "104.arrived.co.4",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "Бригада на месте. Окна настежь, а прибор угарный газ всё равно показывает.",
+      "facts": []
+    },
+    {
+      "id": "104.working.co.1",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Колонку отключили, проверяем тягу. Тяги нет совсем.",
+      "facts": []
+    },
+    {
+      "id": "104.working.co.2",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Проветриваем, из квартиры всех вывели, замеряем по комнатам.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.working.co.3",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Вентканал забит, похоже, птичье гнездо. Колонку не включать.",
+      "facts": []
+    },
+    {
+      "id": "104.working.co.4",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Проверяем соседей по стояку, угарный газ мог пойти к ним.",
+      "facts": []
+    },
+    {
+      "id": "104.update.co.1",
+      "slot": "update",
+      "incidents": [
+        "co"
+      ],
+      "text": "Диспетчер, у соседей сверху тоже угарный газ. Выводим их на улицу.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.update.co.2",
+      "slot": "update",
+      "incidents": [
+        "co"
+      ],
+      "text": "Диспетчер, в квартире уже чисто, прибор на нуле. Причина в колонке, тяги нет.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.co.1",
+      "slot": "completed",
+      "incidents": [
+        "co"
+      ],
+      "text": "Колонку отключили и опломбировали, хозяевам предписание на прочистку. Работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.co.2",
+      "slot": "completed",
+      "incidents": [
+        "co"
+      ],
+      "text": "Квартиру проветрили, угарного газа нет, людей скорая забрала. Закончили.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.completed.co.3",
+      "slot": "completed",
+      "incidents": [
+        "co"
+      ],
+      "text": "Тягу восстановили, колонку проверили, горит ровно. Работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.co.1",
+      "slot": "refused",
+      "incidents": [
+        "co"
+      ],
+      "text": "Диспетчер, датчик пищал от севшей батарейки, угарного газа нет. Работ не проводили.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "104.refused.co.2",
+      "slot": "refused",
+      "incidents": [
+        "co"
+      ],
+      "text": "Жильцы сами всё проветрили и колонку выключили, прибор чистый. Работ не было.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "104.intro.any.1",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Аварийная газовая, мастер бригады на связи.",
+      "facts": []
+    },
+    {
+      "id": "104.intro.any.2",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Говорит мастер аварийной бригады, газовая служба.",
+      "facts": []
+    },
+    {
+      "id": "104.intro.any.3",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мосгаз, аварийная бригада. Мастер, докладываю.",
+      "facts": []
+    },
+    {
+      "id": "104.intro.any.4",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это мастер с газовой аварийки, по вашей заявке звоню.",
+      "facts": []
+    },
+    {
+      "id": "104.no_reply.any.1",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "104.no_reply.any.2",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло? Аварийная газовая на линии, ответьте.",
+      "facts": []
+    },
+    {
+      "id": "104.no_reply.any.3",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, вы там? Связь пропала, что ли?",
+      "facts": []
+    },
+    {
+      "id": "104.no_reply.any.4",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да ответьте же кто-нибудь! Мне доложить надо, люди ждут!",
+      "facts": []
+    },
+    {
+      "id": "104.confirm_request.any.1",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как приняли?",
+      "facts": []
+    },
+    {
+      "id": "104.confirm_request.any.2",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как поняли меня?",
+      "facts": []
+    },
+    {
+      "id": "104.confirm_request.any.3",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записали? Подтвердите.",
+      "facts": []
+    },
+    {
+      "id": "104.confirm_request.any.4",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приём подтвердите, диспетчер.",
+      "facts": []
+    },
+    {
+      "id": "104.repeat_report.any.1",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю.",
+      "facts": []
+    },
+    {
+      "id": "104.repeat_report.any.2",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, записывайте.",
+      "facts": []
+    },
+    {
+      "id": "104.repeat_report.any.3",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, повторяю для вас.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.7",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, уже садимся в машину.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.8",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявку вижу, выехали. Пусть заявитель откроет окна и выйдет из квартиры.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.9",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Пусть кто-нибудь встретит нас у подъезда.",
+      "facts": []
+    },
+    {
+      "id": "104.responding.any.10",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принято, выехали. Мы с другого конца района, ехать прилично.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.6",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так точно.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.7",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть.",
+      "facts": []
+    },
+    {
+      "id": "104.ack.any.8",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, записал.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.6",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ищем утечку, пока не нашли. Прибор водим по всем соединениям.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.7",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Газ перекрыт, ремонтируем. Людям уже ничего не грозит.",
+      "facts": []
+    },
+    {
+      "id": "104.status_working.any.8",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да тут возни много. Ещё час, не меньше.",
+      "facts": []
+    },
+    {
+      "id": "104.enroute.any.5",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже на соседней улице, сейчас будем.",
+      "facts": []
+    },
+    {
+      "id": "104.enroute.any.6",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Идём по выделенке с маячком, скоро будем.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.6",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мост перекрыли, едем в объезд. Минут на пятнадцать дольше.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.7",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Машина заглохла, пересаживаемся на вторую. Задержимся.",
+      "facts": []
+    },
+    {
+      "id": "104.delay.any.8",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаемся: по дороге остановили люди, во дворе пахнет газом. Проверим и сразу к вам.",
+      "facts": []
+    },
+    {
+      "id": "104.clarify.any.10",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Давно пахнет, не говорили? С утра или только что?",
+      "facts": [],
+      "asks": "smell_since"
+    },
+    {
+      "id": "104.clarify.any.11",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как к дому подъехать? Навигатор в стройку упирается.",
+      "facts": [],
+      "asks": "landmark"
+    },
+    {
+      "id": "104.clarify.any.12",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Кто вызывал, жилец или прохожий? Тут никого, спросить не у кого.",
+      "facts": [],
+      "asks": "caller"
+    },
+    {
+      "id": "104.clarify.any.13",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Что у них стоит, плита или колонка? Инструмент под что брать?",
+      "facts": [],
+      "asks": "equipment"
+    },
+    {
+      "id": "104.completed.any.5",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Порядок. Утечку устранили, жильцов проинструктировали, уезжаем.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.any.6",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сделали. Подъезд проверили сверху донизу, чисто. Бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.any.5",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Отбой, работ не было: заявитель перезвонил, говорит, показалось.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "104.refused.any.6",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хозяев нет, соседи говорят, уехали на дачу. У двери газом не пахнет, уезжаем.",
+      "facts": [
+        "gone",
+        "no_access",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_flat.5",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Зашли. Хозяин пожилой, газ на плите открыт без огня, жалуется на голову.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_flat.6",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "На месте. Прибор в квартире молчит, запаха почти нет. Смотрим плиту и счётчик.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_flat.7",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Прибыли. Дверь заперта, за ней ребёнок плачет, взрослых не слышно. На площадке пахнет.",
+      "facts": [
+        "gas",
+        "no_access",
+        "blocked"
+      ]
+    },
+    {
+      "id": "104.working.gas_flat.5",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Дверь вскрыли с полицией, внутри никого. Кран перекрыли, проветриваем.",
+      "facts": [
+        "gas",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "104.working.gas_flat.6",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Утечки в квартире нет, прибор чистый. Проверяем соседей по стояку, на всякий случай.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_flat.7",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Бабушке плохо, вывели на лестницу к открытому окну. Квартиру перекрыли, проветриваем.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.4",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Кран заменили, квартиру проветрили. Хозяина скорая увезла, ключи оставили соседям.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.5",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Ни в квартире, ни по стояку утечки не нашли. Газ не перекрывали, работы завершены.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.6",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Дверь вскрыли, ребёнок в порядке, передали матери. Плиту закрыли, проветрили. Закончили.",
+      "facts": [
+        "gas",
+        "blocked",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "104.refused.gas_flat.3",
+      "slot": "refused",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Не наша зона: дом на ведомственной газовой сети, у них своя аварийка. Передали им, уезжаем.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "104.update.gas_flat.3",
+      "slot": "update",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Хозяйке хуже, путается, не понимает, где она. Выносим на площадку, нужна скорая.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_street.5",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Прибыли. На улице прибор на нуле, запах выветрился. Пройдём по подъездам.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_street.6",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "На месте. Пахнет у детской площадки, там мамы с колясками. Уводим всех.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_street.7",
+      "slot": "arrived",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Приехали. Тянет из-под асфальта вдоль дома, по тротуару трещина.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_street.5",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Шурфуем у трещины, ищем трубу. Подъезды проверили, внутри чисто.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_street.6",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Ходим по двору с прибором, нигде не показывает. Похоже, ветром нанесло с промзоны.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_street.7",
+      "slot": "working",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Обходим квартиры внизу, в одной не открывают, а под дверью пахнет.",
+      "facts": [
+        "gas",
+        "no_access"
+      ]
+    },
+    {
+      "id": "104.completed.gas_street.4",
+      "slot": "completed",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Трещину на трубе нашли, поставили муфту, засыпали. Газ в дом подали.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_street.5",
+      "slot": "completed",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Источник не нашли, запах ушёл, повторный обход чистый. Заявку закрываем.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_street.6",
+      "slot": "completed",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Люк загерметизировали, площадку открыли, люди вернулись. Работы завершены.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.refused.gas_street.3",
+      "slot": "refused",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Звонил прохожий, и тот ушёл. Где пахло, никто не знает, везде ноль. Работ не было.",
+      "facts": [
+        "gone",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.update.gas_street.3",
+      "slot": "update",
+      "incidents": [
+        "gas_street"
+      ],
+      "text": "Газ под асфальтом уходит к соседнему дому, там подвал загазован. Нужна вторая бригада.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_equipment.5",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Прибыли. У духовки сломалась ручка, хозяйка испугалась и закрыла кран сама. Запаха нет.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_equipment.6",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Прибыли. Колонка течёт, в ванной пахнет газом. Хозяин детей уже вывел на лестницу.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.arrived.gas_equipment.7",
+      "slot": "arrived",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "На месте. Бабушка одна, плиту зажигать боится: говорит, розжиг искрит.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_equipment.5",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Розжиг коротит, отключили. Утечки нет, конфорки горят от спички.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_equipment.6",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Теплообменник в колонке прогорел, вода бежит, газом тянет. Колонку отключаем.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.gas_equipment.7",
+      "slot": "working",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Меняем прокладку на кране, соединения проверяем мыльным раствором.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.gas_equipment.4",
+      "slot": "completed",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Колонку отключили, стоит заглушка, хозяину предписание на замену. Дети в квартире.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.completed.gas_equipment.5",
+      "slot": "completed",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Розжиг отключили, плитой пользоваться можно, бабушке показали как. Закончили.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_equipment.6",
+      "slot": "completed",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Ручку духовки заменили, плита в порядке. Работы завершены.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.gas_equipment.3",
+      "slot": "refused",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Это не авария: плита просто плохо разжигается. Пусть подают плановую заявку в обслуживающую. Уезжаем.",
+      "facts": [
+        "other_org",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.update.gas_equipment.3",
+      "slot": "update",
+      "incidents": [
+        "gas_equipment"
+      ],
+      "text": "Хозяин не даёт отключить колонку, а она травит. Уйти так не можем, нужна полиция.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_basement.5",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "На месте. Вода уже ушла, слесари управляющей перекрыли. Проверяем газ.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.pipe_basement.6",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Прибыли. Из подвала валит пар, в подъезде туман. Выводим людей на улицу.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_basement.7",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Спустились. В подвале мужчина, обварился паром. Выводим наверх.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "104.working.pipe_basement.5",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Проветриваем подвал, у ввода прибор показывает. Ищем, где травит.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_basement.6",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Вода ушла, идём вдоль газопровода. Изоляцию размыло, утечки нет.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_basement.7",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Обваренного передали скорой. Трубу осматриваем дальше, газа пока нет.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "handed_103",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_basement.4",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Подвал откачали, газопровод осмотрели. Мужчину с ожогами скорая увезла. Работы завершены.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_basement.5",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Утечку на вводе устранили, подвал проветрили, жильцов вернули. Газ подан.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_basement.6",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Газопровод в порядке, подвал сухой. Акт оставили управляющей, закончили.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.refused.pipe_basement.3",
+      "slot": "refused",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Ключей от подвала так и не нашли, управляющая трубку не берёт. Снаружи газа нет, работ не проводили.",
+      "facts": [
+        "no_access",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.update.pipe_basement.3",
+      "slot": "update",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Под потолком нашли старый отвод, подгнил и травит. Перекрываем весь дом.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.5",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли. Пожар потушен, жильцов вывели во двор. Пожарные ждут нас на кухне.",
+      "facts": [
+        "fire",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.6",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "На месте. Пожилую женщину пожарные вынесли, скорая её уже забрала. Идём к плите.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.arrived.smoke.7",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Приехали. Дыма уже нет, горел мусор на лестнице. Трубы целы, но замер сделаем.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.working.smoke.5",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Стояк в подъезде прогрелся, проверяем каждое соединение по всем площадкам.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.working.smoke.6",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Замеряем по стояку снизу доверху. Везде ноль, газ не пострадал.",
+      "facts": [
+        "fire",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.working.smoke.7",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Огонь дошёл до счётчика, его повело. Снимаем, ставим заглушку.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "104.completed.smoke.4",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Мусор на лестнице газовое не задел, всё проверили. Закончили.",
+      "facts": [
+        "fire",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.smoke.5",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Стояк проверили, соседям газ вернули, жильцы зашли домой. Работы завершены.",
+      "facts": [
+        "fire",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.completed.smoke.6",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Счётчик сняли, квартира на заглушке, хозяйку скорая увезла. Работы завершены.",
+      "facts": [
+        "fire",
+        "victims",
+        "victim_female",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.refused.smoke.3",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Горел нежилой сарай во дворе, газа там нет. Пожарные справились, уезжаем.",
+      "facts": [
+        "fire",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.update.smoke.3",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарные нашли ещё жильца, мужчина надышался дымом. А на кухне газ был открыт, перекрыли.",
+      "facts": [
+        "fire",
+        "gas",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_damage.5",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "На месте. Строители заткнули дыру тряпкой и уехали, никого нет. Пахнет сильно.",
+      "facts": [
+        "gas",
+        "gone"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_damage.6",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Прибыли. Труба цела, ковш прошёл рядом. Прибор ноль, копать дальше запретили.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.arrived.pipe_damage.7",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Прибыли. Рабочего у траншеи оглушило, сидит на земле, газ бьёт. Оттаскиваем.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.5",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Выводим людей из ближнего дома, газ тянет к окнам.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.6",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Траншею огородили, технику остановили. Ищем, кто копал, вызываем подрядчика.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.working.pipe_damage.7",
+      "slot": "working",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Рабочего передали скорой, улицу перекрыли с полицией. Пережимаем трубу.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_damage.4",
+      "slot": "completed",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Участок вырезали и заменили, жильцов вернули в дом. Работы завершены.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_damage.5",
+      "slot": "completed",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Трубу осмотрели, повреждений нет. У подрядчика разрешения на раскопки нет, составили акт.",
+      "facts": [
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.completed.pipe_damage.6",
+      "slot": "completed",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Утечку закрыли. Рабочего увезли в больницу, на подрядчика акт. Закончили.",
+      "facts": [
+        "gas",
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.refused.pipe_damage.3",
+      "slot": "refused",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Пока ехали, строители траншею засыпали и уехали. Прибор чистый, работ не было.",
+      "facts": [
+        "gone",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.update.pipe_damage.3",
+      "slot": "update",
+      "incidents": [
+        "pipe_damage"
+      ],
+      "text": "Газ тянет к школе через дорогу. Детей выводят, улицу надо перекрывать.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.arrived.co.5",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "Прибыли. Мальчика соседи вынесли на площадку, его тошнит. Скорая едет.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "104.arrived.co.6",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "На месте. Хозяин один, пожилой, сонный, еле дверь открыл.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "104.arrived.co.7",
+      "slot": "arrived",
+      "incidents": [
+        "co"
+      ],
+      "text": "Прибыли. В квартире никого, жильцы на работе, датчик пищит за дверью.",
+      "facts": [
+        "no_access",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "104.working.co.5",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Деда вывели на лестницу, дышит, но заговаривается. Колонку перекрыли.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "104.working.co.6",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Ребёнка передали скорой, мать с ним. Проверяем дымоход.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "104.working.co.7",
+      "slot": "working",
+      "incidents": [
+        "co"
+      ],
+      "text": "Дверь вскрыли с полицией, внутри пусто. Колонка горела без тяги, выключили.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "104.completed.co.4",
+      "slot": "completed",
+      "incidents": [
+        "co"
+      ],
+      "text": "Колонку отключили, дымоход прочистят днём. Ребёнка увезли в больницу. Закончили.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "104.completed.co.5",
+      "slot": "completed",
+      "incidents": [
+        "co"
+      ],
+      "text": "Хозяин от больницы отказался, врачи посмотрели на месте. Колонку опломбировали, работы завершены.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "104.completed.co.6",
+      "slot": "completed",
+      "incidents": [
+        "co"
+      ],
+      "text": "Пустую квартиру проветрили, колонку отключили, жильцам оставили записку. Работы завершены.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "104.refused.co.3",
+      "slot": "refused",
+      "incidents": [
+        "co"
+      ],
+      "text": "Угарного газа нет, дымил камин на дровах. Это к печникам, не к нам.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "104.update.co.3",
+      "slot": "update",
+      "incidents": [
+        "co"
+      ],
+      "text": "Соседке снизу тоже плохо, пожилая, жалуется на голову. Выводим и её.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.request_service.gas_flat.1",
+      "slot": "request_service",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Пожарных так и нет. Жильцов выводим сами, работы затягиваются.",
+      "needs": "101",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.completed.gas_flat.7",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Утечку устранили. Пожарных не дождались, жильцов выводили сами, поэтому и затянулось.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "104.refused.any.7",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дом не газифицирован, газа тут нет. Течь воды — не наш профиль, передайте в ЖКХ.",
+      "facts": [
+        "other_org",
+        "no_gas"
+      ]
+    },
+    {
+      "id": "104.briefing_ask.any.1",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял. Адрес и что там с газом?",
+      "asks": "both"
+    },
+    {
+      "id": "104.briefing_ask.any.2",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не разобрал адрес. Назовите улицу и номер дома.",
+      "asks": "address"
+    },
+    {
+      "id": "104.briefing_ask.any.3",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес принял. Что случилось, где пахнет?",
+      "asks": "what"
+    },
+    {
+      "id": "104.refusal_busy.any.1",
+      "slot": "refusal_busy",
+      "incidents": [
+        "*"
+      ],
+      "text": "Бригада на другой аварии, раньше чем через час не освободимся."
+    },
+    {
+      "id": "104.refusal_not_assigned.any.1",
+      "slot": "refusal_not_assigned",
+      "incidents": [
+        "*"
+      ],
+      "text": "Эта заявка не на нас. Посмотрите, какую бригаду назначали."
+    },
+    {
+      "id": "104.responding.gas_flat.1",
+      "slot": "responding",
+      "incidents": [
+        "gas_flat",
+        "pipe_basement",
+        "smoke"
+      ],
+      "text": "Заявка принята, аварийная бригада выехала.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_flat.8",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Бригада на месте, замеряем газ в квартире прибором.",
+      "facts": []
+    },
+    {
+      "id": "104.working.gas_flat.8",
+      "slot": "working",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Утечка на шланге плиты, газ перекрыт, меняем шланг.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.gas_flat.8",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Шланг заменён, утечка устранена, подача газа восстановлена, работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.gas_flat.9",
+      "slot": "arrived",
+      "incidents": [
+        "gas_flat",
+        "smoke"
+      ],
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.gas_flat.4",
+      "slot": "refused",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Дверь заперта, никто не открывает, в квартиру не попасть, работы не проводили, для вскрытия двери нужна полиция.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.pipe_basement.8",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Бригада на месте, подвал залит, газопровод в зоне пара.",
+      "facts": []
+    },
+    {
+      "id": "104.working.pipe_basement.8",
+      "slot": "working",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Газопровод осмотрен, повреждений нет, замеряем газ в подвале, ждём отключения воды.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.pipe_basement.7",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Воду отключили, газопровод исправен, газа в подвале нет, работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.pipe_basement.9",
+      "slot": "arrived",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Бригада на месте, спускаемся в подвал.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.pipe_basement.4",
+      "slot": "refused",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Газопровод проходит в другой части подвала, вода его не касается, работы не проводили, нужна аварийная служба водоканала.",
+      "facts": []
+    },
+    {
+      "id": "104.arrived.smoke.8",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Бригада на месте, ждём допуска от пожарных.",
+      "facts": []
+    },
+    {
+      "id": "104.working.smoke.8",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Газ на квартиру перекрыт, замеряем газ в подъезде прибором.",
+      "facts": []
+    },
+    {
+      "id": "104.completed.smoke.7",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Газа в подъезде нет, квартира отключена от газа до ремонта плиты, работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "104.refused.smoke.4",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Газовое оборудование исправно, дым от подгоревшей еды, работы не проводили, бригада уезжает.",
+      "facts": []
+    },
+    {
+      "id": "104.request_service.pipe_basement.1",
+      "slot": "request_service",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Диспетчер, полиции так и нет. Люди толпятся у подвала, отгоняем сами.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "104.completed.pipe_basement.8",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Утечку на вводе устранили, газ в дом подали. Двор держали сами, без полиции, поэтому затянулось.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "104.service_coming.any.1",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, пожарных ждём, без них к утечке не лезем.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "104.service_coming.any.2",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, пожарные едут, жильцов держим подальше.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "104.service_coming.any.3",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, наряд ждём.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "104.service_coming.any.4",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, полицию дождёмся.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "104.service_coming.any.5",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, скорую ждём.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "104.service_coming.any.6",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть, скорая едет — ждём.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "104.service_coming.any.7",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, врачей встретим у подъезда.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "104.service_coming.any.8",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, аварийку ждём.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.service_coming.any.9",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, сантехников дождёмся.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.service_surprise.any.1",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарные подъехали. Хорошо, конечно, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "104.service_surprise.any.2",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пожарный расчёт уже здесь. Предупреждать же надо.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "104.service_surprise.any.3",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Наряд подъехал. Хорошо, но сказали бы, что вызвали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "104.service_surprise.any.4",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Полиция на месте. Нас-то почему не предупредили?",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "104.service_surprise.any.5",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая подъехала. Спасибо, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "104.service_surprise.any.6",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая на месте. В другой раз сообщайте, что вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "104.service_surprise.any.7",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, врачи уже тут. Мы и не знали, что едут.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "104.service_surprise.any.8",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Аварийка подъехала. Хорошо, но предупредили бы.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.service_surprise.any.9",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сантехники уже здесь. А нам сказать забыли?",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "104.completed.gas_flat.9",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Пожарные вывели жильцов из подъезда. Утечку мы устранили, замер чистый, газ вернули.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "104.completed.pipe_basement.9",
+      "slot": "completed",
+      "incidents": [
+        "pipe_basement"
+      ],
+      "text": "Наряд оцепил двор, людей к подвалу не пускают. Утечку на вводе устранили, газ в дом подали. Закончили.",
+      "facts": [
+        "gas"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "104.completed.gas_flat.10",
+      "slot": "completed",
+      "incidents": [
+        "gas_flat"
+      ],
+      "text": "Шланг заменили, газ подали, работы завершены. Напарника забрала скорая.",
+      "facts": [
+        "gas",
+        "handed_103"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "104.update.wrong_briefing.1",
+      "slot": "update",
+      "requires": [
+        "wrong_briefing"
+      ],
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "facts": [],
+      "when": "Только после выезда по полной вводной с неверным поводом; не случайная обстановка сценария."
+    }
+  ]
+}

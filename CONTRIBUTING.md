@@ -46,7 +46,8 @@
 | входящий вызов бригады | `inbound` (`Call.direction`), `callbacks` | вкладки происшествий | `IncidentTabs` |
 | отказ ненаправленной бригады | `refusal` (`Call.refusal`: `busy`, `not_assigned`) | сообщение об ошибке | `problem_report` |
 | табло сил (бригады и их состояние) | `forcesBoard`, `BoardRow` | занятость бригад на карточках | `brigade_roster`, `busy_brigades` |
-| бригада плана как роль, исполнитель роли | `crew` (`assign_crew`, `card_crew`) | | |
+| бригада плана как роль, исполнитель роли | `crew` (`assign_crew`, `card_crew`) | связь службы (зона 2 макета B) | `LinkColumn`, `ServiceLink` |
+| тренажёр (подсказка у элемента, 17.10) | `TrainerCoach`, `trainer/` | этапы «Смотрю», «Вместе», «Сам»; показ опытного | `watch`, `together`, `solo`; `expert` |
 
 Новый термин — добавить сюда в том же PR.
 
@@ -149,7 +150,7 @@
 **Чек-лист PR (DoD любой задачи):**
 - [ ] линтеры и типы зелёные; тесты зелёные; CI зелёный
 - [ ] в описании PR — вывод локальных проверок своей зоны (команды и итоговые строки):
-      Python — `uv run pytest -q`, `uv run ruff check .`, `uv run mypy`; web — `pnpm lint`,
+      Python — `uv run pytest -q -n auto` (параллельно, pytest-xdist; у каждого теста своя БД), `uv run ruff check .`, `uv run mypy`; web — `pnpm lint`,
       `pnpm typecheck`, `pnpm test`, `pnpm build`; изменение пути в браузере — прогон
       `pnpm exec playwright test -c qa/playwright.config.ts` на поднятом стенде
       (`E2E_DATABASE=1`). С 25.09 GitHub Actions не запускаются (лимит минут), поэтому
@@ -160,6 +161,18 @@
 - [ ] заглушки помечены `# MVP-STUB <owner>`; `TODO` — только с владельцем и задачей
 - [ ] README пакета/зоны обновлён, если изменился запуск, конфиг или публичный интерфейс
 - [ ] сложные места — с комментарием «почему»
+
+**Когда что гонять (HQ-054).** Агент и человек не ждут прогонов по полчаса:
+
+| Когда | Команда | Сколько |
+|---|---|---|
+| Перед каждым коммитом | `uv run python scripts/quick_check.py` — по изменённым файлам: ruff, ruff format, mypy (с кешем), тесты, которые импортируют изменённое (сами или через модуль), контракты, web lint/typecheck/`vitest related`, прогон связности (движок — эталон по всем сценариям, сценарий — все его ветки). `--base origin/<ветка>` — вместе с незапушенными коммитами, `--dry-run` — только список | 1–2 мин |
+| Один раз перед review / PR | `uv run pytest -q -n auto`, полный прогон связности (`docs/coherence_night.md`), web `pnpm lint && pnpm typecheck && pnpm test && pnpm build`; e2e — спеки, которые назвал `quick_check.py`, на стенде | ~10 мин без e2e |
+| Ночью | полный прогон связности, весь e2e на стенде — с `E2E_NIGHT=1`: без него долгие спеки с тегом `@night` (`{ tag: "@night" }`, минуты на тест) пропускаются | |
+
+Тесты API берут копию засеянной БД-шаблона (`arm112_tpl_<хеш>` в `DATABASE_URL_TEST`):
+миграции и seed выполняются один раз на содержимое `apps/api/app`, миграций и `data/`, а не в
+каждом процессе и запуске (`apps/api/tests/conftest.py`).
 
 ## 7. Комментарии и документация
 

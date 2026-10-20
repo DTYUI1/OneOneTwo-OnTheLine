@@ -1,0 +1,208 @@
+{
+  "format": 2,
+  "code": "stroke-man-103-2",
+  "version": 1,
+  "title": "У мужчины перекосилось лицо и ослабла рука",
+  "service_id": "103",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "22350000",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «проспект Нира, 264» на проспект Мира, 26. Жена сообщает наблюдаемые симптомы до приезда; подозрение на инсульт появляется в докладе бригады. Исход — госпитализация в сосудистый центр.",
+  "outcome": {
+    "people": "В квартире 29 мужчина шестидесяти восьми лет внезапно стал невнятно говорить, лицо перекосилось, левая рука не слушается. В сознании, сидит в кресле. Симптомы начались около сорока минут назад. Жена рядом, она вызвала скорую и откроет дверь. Бригада заподозрила инсульт, выявила очень высокое давление и подготовила мужчину к перевозке. Пациента госпитализируют в сосудистый центр, принимающую сторону предупредили.",
+    "late": "Карточку приняли позже норматива. В квартире 29 мужчина шестидесяти восьми лет внезапно стал невнятно говорить, лицо перекосилось, левая рука не слушается. В сознании, сидит в кресле. Симптомы начались около сорока минут назад. Жена рядом, она вызвала скорую и откроет дверь."
+  },
+  "card": {
+    "caller_name": "Гущина Тамара Леонидовна",
+    "phone_aon": "+79000000883",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЦАО",
+      "district": "Мещанский",
+      "street": "проспект Мира",
+      "house": "26",
+      "building": "",
+      "apartment": "29"
+    },
+    "description": "В квартире 29 мужчина шестидесяти восьми лет внезапно стал невнятно говорить, лицо перекосилось, левая рука не слушается. В сознании, сидит в кресле. Симптомы начались около сорока минут назад. Жена рядом, она вызвала скорую и откроет дверь.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Парализовало",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70008523",
+    "incident_type_code": "22350000"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЦАО",
+      "district": "Мещанский",
+      "street": "проспект Мира",
+      "house": "26",
+      "building": "",
+      "apartment": "29"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "В квартире 29 мужчина шестидесяти восьми лет внезапно стал невнятно говорить, лицо перекосилось, левая рука не слушается. В сознании, сидит в кресле. Симптомы начались около сорока минут назад. Жена рядом, она вызвала скорую и откроет дверь. Бригада заподозрила инсульт, выявила очень высокое давление и подготовила мужчину к перевозке. Пациента госпитализируют в сосудистый центр, принимающую сторону предупредили."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла. Едем с сиреной.",
+        "audio": "bank-v1/103/103.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Мужчина, лицо перекошено, рука не слушается, речь смазанная.",
+        "audio": "bank-v1/103/103.arrived.stroke.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Похоже на инсульт. Давление очень высокое, готовим к перевозке.",
+        "audio": "bank-v1/103/103.working.stroke.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Госпитализируем в сосудистый центр. Предупредили, нас ждут.",
+        "audio": "bank-v1/103/103.completed.stroke.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: проспект Нира, 264.",
+        "audio": "bank-v6/103/103.readback.fd44ee6b.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Приняла поправку. Хорошо, что сказали, мы уже туда сворачивали.",
+            "audio": "bank-v1/103/103.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/103/103.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/103/103.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

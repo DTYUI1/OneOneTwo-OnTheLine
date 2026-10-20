@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { expect, test as base, type Page } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
+import { introSeenForAnyUser } from "./trainer";
 type Card = components["schemas"]["Card"];
 type Session = components["schemas"]["Session"];
 type Scenario = components["schemas"]["Scenario"];
@@ -11,7 +12,9 @@ type Scenario = components["schemas"]["Scenario"];
  * уже не показывает, поэтому ждём либо приветствие, либо шапку приложения.
  */
 export async function passWelcome(page: Page) {
-  const start = page.getByRole("button", { name: "Начать работу" });
+  const start = page.getByRole("button", {
+    name: /^(Начать работу|Диспетчер служб|Перейти в тренажёр)$/,
+  });
   await expect(
     start.or(page.getByRole("button", { name: "Выйти", exact: true })),
   ).toBeVisible();
@@ -19,6 +22,16 @@ export async function passWelcome(page: Page) {
 }
 
 export async function login(page: Page, name: string) {
+  // Окно «Как устроено обучение» (DT-18) — перед первой тренировкой; здесь о другом.
+  await page.addInitScript(introSeenForAnyUser);
+  await page.addInitScript(() => {
+    try {
+      // Узкие окна проверок не должны упираться в «Рабочее место — для большого экрана».
+      sessionStorage.setItem("narrow:open", "1");
+    } catch {
+      // Без хранилища окно покажется — проверки ниже его не ждут.
+    }
+  });
   await page.goto("/app/login");
   await page.getByLabel("Логин", { exact: true }).fill(name);
   await page
@@ -26,14 +39,19 @@ export async function login(page: Page, name: string) {
     .fill(process.env.DEMO_PASSWORD ?? "demo-local");
   await page.getByRole("button", { name: "Войти", exact: true }).click();
   await expect(page).not.toHaveURL(/\/login$/);
-  if (name.startsWith("trainee"))
-    await page.getByRole("button", { name: "Диспетчер служб" }).click();
-  else await passWelcome(page);
+  await passWelcome(page);
 }
+
+type PhoneContact = components["schemas"]["PhoneContact"];
 
 export const test = base.extend<{
   hintsLevel: number;
   secondCard: boolean;
+  /**
+   * Абоненты телефона ДДС на занятии по службе (GP-09); null — список по умолчанию.
+   * Объект, а не массив: массив Playwright принял бы за пару «значение, опции».
+   */
+  phoneContacts: Record<string, PhoneContact[]> | null;
   lesson: {
     session: Session;
     card: Card;
@@ -43,6 +61,7 @@ export const test = base.extend<{
 }>({
   hintsLevel: [1, { option: true }],
   secondCard: [false, { option: true }],
+  phoneContacts: [null, { option: true }],
   // Занятие фикстуры — параллельное (parallel_cards 3, уровень 4), и АРМ один раз
   // предупреждает об этом окном (ParallelNotice). Эти проверки не о нём: окно
   // закрывается «Понятно», как только появляется. Само окно — parallel-shift.spec.ts.
@@ -55,7 +74,10 @@ export const test = base.extend<{
     );
     await use(page);
   },
-  lesson: async ({ request, page, hintsLevel, secondCard }, use) => {
+  lesson: async (
+    { request, page, hintsLevel, secondCard, phoneContacts },
+    use,
+  ) => {
     expect(
       (
         await request.post("/api/auth/login", {
@@ -127,10 +149,11 @@ export const test = base.extend<{
             ...settings,
             hints_level: hintsLevel,
             parallel_cards: 3,
+            ...(phoneContacts ? { phone_contacts: phoneContacts } : {}),
           },
         },
       });
-      expect(created.status()).toBe(201);
+      expect(created.status(), await created.text()).toBe(201);
       session = await created.json();
       let order = 0;
       const assign = async (delay = 0) => {

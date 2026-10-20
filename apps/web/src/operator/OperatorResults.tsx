@@ -2,6 +2,7 @@
 // Слева — сводка и попытки (новые сверху), справа — разбор выбранной попытки, как в окне
 // «Результат попытки»: баллы с пояснениями, эталонный порядок, время шагов и лента звонка.
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSession } from "../shared/session";
 import { OPERATOR_DATA as data } from "./data";
@@ -14,12 +15,26 @@ export function OperatorResults() {
   const { user } = useSession();
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
+  const groupView = user.role === "teacher" || user.role === "admin";
+  const [trainee, setTrainee] = useState("");
   const attempts = useQuery({
     queryKey: ["operator-attempts", user.id],
     queryFn: fetchAttempts,
   });
-  const list = attempts.data ?? [];
-  const selectedId = params.get("attempt") ?? list[0]?.id ?? null;
+  const all = attempts.data ?? [];
+  const list = trainee
+    ? all.filter((attempt) => attempt.actor_id === trainee)
+    : all;
+  const chosenId = params.get("attempt");
+  const selectedId =
+    list.find((attempt) => attempt.id === chosenId)?.id ?? list[0]?.id ?? null;
+  const people = [
+    ...new Map(
+      all
+        .filter((attempt) => attempt.actor_id)
+        .map((attempt) => [attempt.actor_id!, attempt]),
+    ).values(),
+  ];
   const detail = useQuery({
     queryKey: ["operator-attempt", selectedId],
     queryFn: () => fetchAttempt(selectedId!),
@@ -57,6 +72,26 @@ export function OperatorResults() {
           ×
         </button>
       </header>
+
+      {groupView && (
+        <label className={styles.traineeFilter}>
+          Обучаемый
+          <select
+            value={trainee}
+            onChange={(event) => {
+              setTrainee(event.target.value);
+              setParams({}, { replace: true });
+            }}
+          >
+            <option value="">Все обучаемые</option>
+            {people.map((person) => (
+              <option key={person.actor_id} value={person.actor_id}>
+                {person.actor_name || person.actor_login}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
 
       {attempts.isPending && (
         <p className={styles.state} role="status">
@@ -132,6 +167,9 @@ export function OperatorResults() {
                     }
                   >
                     <span>{attempt.scenario_title}</span>
+                    {groupView && (
+                      <span>{attempt.actor_name || attempt.actor_login}</span>
+                    )}
                     <time dateTime={attempt.created_at}>
                       {formatDate(attempt.created_at)}
                     </time>
@@ -149,6 +187,11 @@ export function OperatorResults() {
             tabIndex={0}
             aria-label="Баллы попытки"
           >
+            {groupView && detail.data && (
+              <p>
+                Обучаемый: {detail.data.actor_name || detail.data.actor_login}
+              </p>
+            )}
             {detail.isPending && <p role="status">Загружаем попытку…</p>}
             {detail.isError && (
               <p role="alert">Не удалось загрузить попытку.</p>

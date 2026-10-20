@@ -101,6 +101,7 @@ async def finish(
     now = lesson.finished_at or datetime.now(UTC)
     await stop_attempts(db, session_id, now)
     lesson.status, lesson.finished_at = "finished", now
+    lesson.start_request = None
     result = serialize(lesson)
     db.add(
         SessionFinish(
@@ -178,12 +179,12 @@ async def get_lifecycle(request: Request, session_id: UUID) -> SessionLifecycle:
     for card in cards:
         card_calls = [call for call in calls if call.card_id == card.id]
         active = next((call for call in card_calls if call.ended_at is None), None)
+        # АРМ не пишет разговор целиком: доклад голосом распознаётся по фразам и не
+        # хранится (DT-05). Звонок без файла — «записи нет», и идущий, и завершённый; не
+        # «идёт запись» и не вечное «выгружается». Файл, если пришёл (старый клиент), —
+        # «сохранена».
         recording = "none"
-        if active:
-            recording = "recording"
-        elif any(call.audio_path is None for call in card_calls):
-            recording = "upload_pending"
-        elif card_calls:
+        if any(call.audio_path is not None for call in card_calls):
             recording = "saved"
         attempts.append(
             {

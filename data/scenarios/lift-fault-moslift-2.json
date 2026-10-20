@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "lift-fault-moslift-2",
+  "version": 1,
+  "title": "Пустой лифт стоит с открытыми дверями",
+  "service_id": "MOSLIFT",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "14100700",
+  "complications": [],
+  "teacher_comment": "Мослифт, уровень 2. Исправить повтор «Брофсоюзная улица, 984» на Профсоюзную улицу, 98. Уточнить второй подъезд. В кабине никого нет: ремонт дверного ролика, без освобождения пассажиров и вызова другой службы.",
+  "outcome": {
+    "people": "В пассажирском лифте второго подъезда на первом этаже не закрываются двери кабины, лифт не движется. Людей в кабине нет, пострадавших нет. Заявительница из квартиры 45 ждёт механика у лифта. Механик отключил лифт, заменил отвалившийся дверной ролик и отрегулировал двери. После проверки по этажам лифт запущен, работает нормально.",
+    "late": "Карточку приняли позже норматива. В пассажирском лифте второго подъезда на первом этаже не закрываются двери кабины, лифт не движется. Людей в кабине нет, пострадавших нет. Заявительница из квартиры 45 ждёт механика у лифта."
+  },
+  "card": {
+    "caller_name": "Гордеева Алла Фоминична",
+    "phone_aon": "+79000000871",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": "45"
+    },
+    "description": "В пассажирском лифте второго подъезда на первом этаже не закрываются двери кабины, лифт не движется. Людей в кабине нет, пострадавших нет. Заявительница из квартиры 45 ждёт механика у лифта.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Не закрываются двери лифта",
+    "service_ids": [
+      "MOSLIFT"
+    ],
+    "number": "70008511",
+    "incident_type_code": "14100700"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "MOSLIFT"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": "45"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "MOSLIFT",
+      "phone_ext": "106",
+      "before_s": 180
+    },
+    "expected_comment": "В пассажирском лифте второго подъезда на первом этаже не закрываются двери кабины, лифт не движется. Людей в кабине нет, пострадавших нет. Заявительница из квартиры 45 ждёт механика у лифта. Механик отключил лифт, заменил отвалившийся дверной ролик и отрегулировал двери. После проверки по этажам лифт запущен, работает нормально."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, еду.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Двери кабины не закрываются, лифт стоит. Людей внутри нет.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.arrived.lift_fault.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Лифт отключил. Дверной ролик отвалился, ставлю новый.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.working.lift_fault.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Двери отрегулировал, лифт запустил, прогнал по этажам — ходит нормально.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.completed.lift_fault.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Брофсоюзная улица, 984.",
+        "audio": "bank-v6/MOSLIFT/MOSLIFT.readback.a81a4f46.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, хорошо, что поправили. Еду туда.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/MOSLIFT/MOSLIFT.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/MOSLIFT/MOSLIFT.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, подъезд какой? Дом длинный, подъездов много.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Второй подъезд"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у соседей"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, понял, этого хватит.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, спрошу у жильцов.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашёл сам.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, подъезд какой? Дом длинный, подъездов много.",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

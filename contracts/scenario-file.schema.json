@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/scenario-file.schema.json",
+  "title": "Файл сценария ДДС, формат 2 (data/scenarios/<code>.json)",
+  "description": "Один файл — один сценарий: карточка, эталон, бригады и их план докладов до завершающего статуса, события и ветки (contracts/scenario-events.md), варианты частей для ввода без микрофона и ловушки. Ссылки внутри файла — ключами, не UUID: seed (app/seed/scenarios.py) выводит стабильные UUID сам. Сверх схемы seed проверяет связность: ключи существуют, план закрывает эталонный ход, пауза между докладами не больше 40 с, служба есть в справочнике. Порядок добавления — data/scenarios/README.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$comment": { "type": "string" },
+    "format": { "const": 2 },
+    "code": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Код сценария = имя файла без .json. Не меняется между версиями."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Версия содержания. Выданный сценарий и его план неизменяемы: любое изменение файла — новая версия (новый UUID сценария), прежняя версия снимается с выдачи (status = retired), её журналы остаются."
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Только для версии 1 сценария, выданного до формата 2 (тренировка data/practice): прежний UUID, чтобы на развёрнутых стендах сценарий не задвоился. Без поля UUID = uuid5(URL, «arm112:scenario:<code>:<version>»)."
+    },
+    "replaces": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "format": "uuid" },
+      "description": "UUID сценариев, которые эта версия заменяет сверх своих прежних версий (например, прежний id): seed снимает их с выдачи."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "service_id": { "type": "string", "minLength": 1, "description": "Служба обучаемого (справочник data/phonebook.json)." },
+    "level": { "type": "integer", "minimum": 1, "maximum": 4 },
+    "weight": { "type": "integer", "minimum": 1, "maximum": 10 },
+    "incident_type_code": { "type": "string", "minLength": 1 },
+    "complications": { "$ref": "scenario.schema.json#/properties/complications" },
+    "teacher_comment": { "type": "string" },
+    "card": { "$ref": "card.schema.json" },
+    "reference": { "$ref": "scenario.schema.json#/properties/reference" },
+    "brigades": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "description": "Учебные бригады службы, занятые в сценарии: ordinal — номер учебной бригады службы в справочнике (0–3, app/seed/training.py, seed_catalog).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": { "$ref": "#/$defs/Key" },
+          "ordinal": { "type": "integer", "minimum": 0, "maximum": 3 }
+        },
+        "required": ["key", "ordinal"]
+      }
+    },
+    "plan": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Доклады бригад по порядку (PlannedMessage, c01.schema.json). Доклад готов через after_s после статуса requires_state и обосновывает статус justifies_state.",
+      "items": { "$ref": "#/$defs/Report" }
+    },
+    "events": {
+      "type": "array",
+      "description": "События и ветки (ScenarioEvent, contracts/scenario-events.md) с ключами вместо UUID.",
+      "items": { "$ref": "#/$defs/Event" }
+    },
+    "outcome": {
+      "$ref": "c01.schema.json#/$defs/ScenarioOutcome",
+      "description": "Исход сценария — блок «Что было дальше» в разборе (GP-27): people — полный ход, late — чем обернулась поздняя «Принята», why — почему важно (только с источником), status — что значит ход статусов не по эталону в этом сценарии. Попадает в план (TrainingPlan.outcome) и отдаётся с CardTraining после закрытия карточки. Необязательно: у сценария без блока разбор берёт исход data/practice по номеру карточки."
+    },
+    "caller": {
+      "$ref": "c01.schema.json#/$defs/ScenarioCaller",
+      "description": "Живой заявитель (HQ-019, docs/dds_caller.md): plot — сюжет в книгах заявителя scripts/voices/bank/callers (incidents), character — характер по умолчанию (calm, confused). Звонок на номер роли «Заявитель» телефона ДДС идёт разговором с заявителем, а не докладом службе. Нужен сценарию со звонком заявителю (reference.expected_call.contact_role = caller). Попадает в план (TrainingPlan.caller) и в CardTraining.caller."
+    },
+    "control_call": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Звонок отдела контроля (ControlCallPlan, c01.schema.json; TC-07): карточка без статуса реагирования дольше after_s — отдел контроля звонит и просит пояснить. reply_options — варианты пояснения без микрофона, до трёх коротких (короче 60 символов); пояснение не оценивается. В label — те же поля карточки, что у вариантов ответа событию ({caller_phone}, {caller_name}, {address}).",
+      "properties": {
+        "after_s": { "type": "integer", "minimum": 30, "maximum": 1800 },
+        "reply_options": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "allOf": [
+              { "$ref": "c01.schema.json#/$defs/ReplyOption" },
+              { "properties": { "label": { "maxLength": 59 } } }
+            ]
+          }
+        }
+      },
+      "required": ["after_s", "reply_options"]
+    },
+    "input_parts": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Варианты частей для ввода без микрофона (docs/dds_gameplay.md, раздел 6): на шаг до трёх коротких вариантов (короче 60 символов), ровно один верный.",
+      "properties": {
+        "who": { "$ref": "#/$defs/PartOptions" },
+        "address": { "$ref": "#/$defs/PartOptions" },
+        "what": { "$ref": "#/$defs/PartOptions" },
+        "people": { "$ref": "#/$defs/PartOptions" },
+        "decision": { "$ref": "#/$defs/PartOptions" }
+      }
+    },
+    "traps": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "Ключи событий-ловушек сценария (например, повтор адреса с ошибкой — kind readback_error).",
+      "items": { "$ref": "#/$defs/Key" }
+    }
+  },
+  "required": [
+    "format",
+    "code",
+    "version",
+    "title",
+    "service_id",
+    "level",
+    "weight",
+    "incident_type_code",
+    "complications",
+    "teacher_comment",
+    "card",
+    "reference",
+    "brigades",
+    "plan"
+  ],
+  "$defs": {
+    "Key": { "type": "string", "pattern": "^[a-z0-9_]+(-[a-z0-9_]+)*$" },
+    "State": { "type": "string", "enum": ["accepted", "responding", "arrived", "working"] },
+    "Line": {
+      "description": "Реплика: текст или текст с озвучкой (путь относительно data/voices, запись манифеста <первая папка>/manifest.json). Нет озвучки или текст в манифесте другой — реплика уходит текстом. Реплика бригады — дословно текст фразы банка озвучки своей службы (scripts/voices/bank; место в разговоре — по шагу сценария, правила — contracts/scenario-events.md, «Реплики — из банка озвученных фраз»), озвучка — bank-v<N>/<служба>/<id>.ogg; исключение — повтор адреса с ошибкой (реплика события readback_error).",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "text": { "type": "string", "minLength": 1 },
+            "audio": { "type": "string", "pattern": "^[A-Za-z0-9_./-]+\\.(ogg|wav|mp3)$" }
+          },
+          "required": ["text"]
+        }
+      ]
+    },
+    "Report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/Key" },
+        "brigade": { "$ref": "#/$defs/Key" },
+        "line": { "$ref": "#/$defs/Line" },
+        "after_s": { "type": "integer", "minimum": 0, "maximum": 40 },
+        "requires_state": { "$ref": "#/$defs/State" },
+        "justifies_state": {
+          "type": "string",
+          "enum": ["responding", "arrived", "working", "completed", "refused"]
+        },
+        "expected_comment": { "type": "string", "description": "Что диспетчер пишет в комментарий по докладу; по умолчанию — текст доклада." },
+        "task_change": {
+          "$ref": "c01.schema.json#/$defs/TaskChange",
+          "description": "Доклад с места меняет задачу (TC-05): после его предъявления эталон оценки карточки другой — contracts/scenario-events.md, «Доклад меняет задачу»."
+        }
+      },
+      "required": ["key", "brigade", "line", "after_s", "requires_state", "justifies_state"]
+    },
+    "Trigger": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": { "const": "state" },
+            "state": { "$ref": "#/$defs/State" },
+            "after_s": { "type": "integer", "minimum": 0, "maximum": 3600 }
+          },
+          "required": ["on", "state", "after_s"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": { "const": "message" },
+            "report": { "$ref": "#/$defs/Key" },
+            "after_s": { "type": "integer", "minimum": 0, "maximum": 3600 }
+          },
+          "required": ["on", "report", "after_s"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": { "const": "no_contact" },
+            "state": { "$ref": "#/$defs/State" },
+            "silent_s": { "type": "integer", "minimum": 1, "maximum": 3600 }
+          },
+          "required": ["on", "state", "silent_s"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": { "const": "event" },
+            "event": { "$ref": "#/$defs/Key" },
+            "branch": { "type": "string", "enum": ["met", "wrong", "missed"] },
+            "after_s": { "type": "integer", "minimum": 0, "maximum": 3600 }
+          },
+          "required": ["on", "event", "branch", "after_s"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": { "const": "inject" },
+            "requires_state": { "$ref": "#/$defs/State" }
+          },
+          "required": ["on"]
+        }
+      ]
+    },
+    "Branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "line": { "anyOf": [{ "$ref": "#/$defs/Line" }, { "type": "null" }] },
+        "effects": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "delay": { "$ref": "#/$defs/Key" },
+                  "by_s": { "type": "integer", "minimum": 1, "maximum": 3600 }
+                },
+                "required": ["delay", "by_s"]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "replace": { "$ref": "#/$defs/Key" },
+                  "with": { "$ref": "#/$defs/Line" }
+                },
+                "required": ["replace", "with"]
+              }
+            ]
+          }
+        },
+        "awaits_call": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Ветка ждёт звонка диспетчера абоненту телефона ДДС (HQ-019): доклад плана, который держит событие, не приходит, пока диспетчер не позвонил этому абоненту, но не дольше within_s от исхода ветки. Позвонил (звонок отвечен) — последствия ветки (effects); не позвонил к сроку — вместо них otherwise. Номера абонентов задаёт занятие (settings.phone_contacts); абонента нет в списке — ветка действует без ожидания.",
+          "properties": {
+            "relay_event": {"$ref": "#/$defs/Key"},
+            "required_facts": {"type": "array", "minItems": 1, "maxItems": 12, "uniqueItems": true, "items": {"type": "string", "minLength": 1}, "description": "Полные сведения заявителя, полученные после срабатывания события; ответ на звонок и on:first недостаточны."},
+            "contact_role": {
+              "type": "string",
+              "enum": ["head", "response_chief", "crew_chief", "crew_specialist", "caller"]
+            },
+            "within_s": { "type": "integer", "minimum": 5, "maximum": 600 },
+            "otherwise": { "$ref": "#/$defs/Branch/properties/effects" }
+          },
+          "required": ["contact_role", "within_s", "otherwise"]
+        }
+      },
+      "required": ["line", "effects"]
+    },
+    "Event": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/Key" },
+        "kind": { "$ref": "c01.schema.json#/$defs/ScenarioEvent/properties/kind" },
+        "brigade": { "$ref": "#/$defs/Key", "description": "Бригада события; по умолчанию первая из brigades." },
+        "priority": { "type": "string", "enum": ["normal", "alarm"] },
+        "trigger": { "$ref": "#/$defs/Trigger" },
+        "line": { "anyOf": [{ "$ref": "#/$defs/Line" }, { "type": "null" }] },
+        "expect": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": { "$ref": "c01.schema.json#/$defs/ScenarioEventExpectation" }
+        },
+        "reply_options": {
+          "type": "array",
+          "maxItems": 3,
+          "description": "Варианты ответа на реплику без микрофона (docs/dds_gameplay.md, разделы 4 и 6): до трёх коротких, каждый короче 60 символов (и после подстановки). В label можно сослаться на поле карточки сценария: {caller_phone} — телефон заявителя (phone_provided, иначе phone_aon, иначе phone_scene; мобильный — группами «+7 900 000-07-14»), {caller_name} — «Фамилия Имя» (первые два слова caller_name), {address} — адрес «улица, дом, корп., кв.»; загрузчик подставляет значения из card, в плане (c01) — готовый текст. Другое имя в фигурных скобках, пустое поле карточки или плейсхолдер в реплике (line, with) — ошибка линтера сценария.",
+          "items": {
+            "allOf": [
+              { "$ref": "c01.schema.json#/$defs/ReplyOption" },
+              { "properties": { "label": { "maxLength": 59 } } }
+            ]
+          }
+        },
+        "branches": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "met": { "$ref": "#/$defs/Branch" },
+            "wrong": { "$ref": "#/$defs/Branch" },
+            "late": { "$ref": "#/$defs/Branch" },
+            "missed": { "$ref": "#/$defs/Branch" },
+            "already": {
+              "$ref": "#/$defs/Branch",
+              "description": "GP-28, только request_service: служба вызвана заранее, бригаде сказали «уже едут» после её просьбы. Нет в файле — загрузчик берёт фразу банка (место service_coming) и последствия ветки met."
+            },
+            "surprise": {
+              "$ref": "#/$defs/Branch",
+              "description": "GP-28, только request_service: служба вызвана заранее, бригаде не сказали — служба приехала сама. Нет в файле — загрузчик берёт фразу банка (место service_surprise) и последствия ветки met."
+            }
+          }
+        },
+        "review": { "$ref": "c01.schema.json#/$defs/ScenarioEvent/properties/review" },
+        "injectable": { "type": "boolean" }
+      },
+      "required": ["key", "kind", "trigger", "line", "expect", "branches", "review"]
+    },
+    "PartOptions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string", "minLength": 1, "maxLength": 59 },
+          "correct": { "type": "boolean" }
+        },
+        "required": ["text", "correct"]
+      }
+    }
+  }
+}

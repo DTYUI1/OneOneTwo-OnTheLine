@@ -1,0 +1,31 @@
+{
+  "service": "OFFICIAL",
+  "speaker": "official",
+  "gender": "male",
+  "incidents": {
+    "s112": "Оператор системы 112"
+  },
+  "about": "Новые редакции разговорных фраз дежурного (HQ-037, «скорая — больше формальности»): служба, должность, «Информация принята», «Уточните…», «Повторите, пожалуйста…». `replaces` — старая фраза книги phrases/, её запись остаётся; окно телефона (scripts/voices/bank/web.py) берёт новую вместо старой, когда у новой есть запись в наборах data/voices/bank-v*.",
+  "phrases": [
+    {"id": "OFFICIAL.accepted.any.7", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, направляем бригаду.", "replaces": "OFFICIAL.accepted.any.2"},
+    {"id": "OFFICIAL.accepted.any.8", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, бригада направлена.", "replaces": "OFFICIAL.accepted.any.3"},
+    {"id": "OFFICIAL.accepted.any.9", "slot": "accepted", "incidents": ["*"], "text": "Заявка зарегистрирована, бригада выезжает.", "replaces": "OFFICIAL.accepted.any.4"},
+    {"id": "OFFICIAL.accepted.any.10", "slot": "accepted", "incidents": ["*"], "text": "Принято. Бригада выезжает, об изменениях сообщите.", "replaces": "OFFICIAL.accepted.any.5"},
+    {"id": "OFFICIAL.accepted.s112.3", "slot": "accepted", "incidents": ["s112"], "text": "Принято, изменения в карточку внесены.", "replaces": "OFFICIAL.accepted.s112.1"},
+    {"id": "OFFICIAL.ask_who.any.4", "slot": "ask_who", "incidents": ["*"], "text": "Уточните, какая служба передаёт.", "replaces": "OFFICIAL.ask_who.any.2"},
+    {"id": "OFFICIAL.ask_who.any.5", "slot": "ask_who", "incidents": ["*"], "text": "Назовите, пожалуйста, вашу фамилию.", "replaces": "OFFICIAL.ask_who.any.3"},
+    {"id": "OFFICIAL.ask_address.any.4", "slot": "ask_address", "incidents": ["*"], "text": "Уточните адрес: улица, дом, корпус.", "replaces": "OFFICIAL.ask_address.any.2"},
+    {"id": "OFFICIAL.ask_address.any.5", "slot": "ask_address", "incidents": ["*"], "text": "Повторите, пожалуйста, название улицы.", "replaces": "OFFICIAL.ask_address.any.3"},
+    {"id": "OFFICIAL.ask_what.any.4", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, что требуется от нашей службы.", "replaces": "OFFICIAL.ask_what.any.2"},
+    {"id": "OFFICIAL.ask_card.any.3", "slot": "ask_card", "incidents": ["*"], "text": "Назовите номер карточки.", "replaces": "OFFICIAL.ask_card.any.1"},
+    {"id": "OFFICIAL.ask_victims.any.3", "slot": "ask_victims", "incidents": ["*"], "text": "Есть ли пострадавшие? В каком они состоянии?", "replaces": "OFFICIAL.ask_victims.any.2"},
+    {"id": "OFFICIAL.not_understood.any.4", "slot": "not_understood", "incidents": ["*"], "text": "Плохо слышно. Повторите, пожалуйста, медленнее.", "replaces": "OFFICIAL.not_understood.any.2"},
+    {"id": "OFFICIAL.not_understood.any.5", "slot": "not_understood", "incidents": ["*"], "text": "Вас не слышно, повторите, пожалуйста.", "replaces": "OFFICIAL.not_understood.any.3"},
+    {"id": "OFFICIAL.end_call.any.4", "slot": "end_call", "incidents": ["*"], "text": "Информация принята. До связи.", "replaces": "OFFICIAL.end_call.any.1"},
+    {"id": "OFFICIAL.end_call.any.5", "slot": "end_call", "incidents": ["*"], "text": "Принято, всего доброго.", "replaces": "OFFICIAL.end_call.any.2"},
+    {"id": "OFFICIAL.ask_what.any.5", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, что именно произошло.", "replaces": "OFFICIAL.ask_what.any.1"},
+    {"id": "OFFICIAL.ask_what.any.6", "slot": "ask_what", "incidents": ["*"], "text": "Кратко доложите обстановку на месте.", "replaces": "OFFICIAL.ask_what.any.3"},
+    {"id": "OFFICIAL.ask_card.any.4", "slot": "ask_card", "incidents": ["*"], "text": "Продиктуйте номер карточки.", "replaces": "OFFICIAL.ask_card.any.2"},
+    {"id": "OFFICIAL.ask_victims.any.4", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните, есть ли пострадавшие.", "replaces": "OFFICIAL.ask_victims.any.1"}
+  ]
+}

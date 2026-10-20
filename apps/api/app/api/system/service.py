@@ -18,6 +18,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.c01 import C01Input
 from app.api.foundation import repo
+from app.api.system.job_errors import unread_condition
 from app.core.config import Settings
 from app.core.models import SCHEMA_REVISION, Job, Session, WorkerHeartbeat
 
@@ -120,8 +121,9 @@ def alerts(status: dict[str, Any]) -> list[dict[str, str]]:
     space = status["disk"]
     if space is not None and space["free_bytes"] < space["total_bytes"] * DISK_WARNING:
         add("warning", "На диске сервера осталось меньше 10 % места.")
-    if status["queue"]["failed"] > 0:
-        add("warning", f"Заданий с ошибкой в очереди: {status['queue']['failed']}.")
+    if status["queue"].get("failed_unread", status["queue"]["failed"]) > 0:
+        count = status["queue"].get("failed_unread", status["queue"]["failed"])
+        add("warning", f"Непрочитанных ошибок очереди: {count}. Откройте журнал ошибок.")
     load = status["machine"]["load_1m"]
     if load is not None and load > status["machine"]["cores"] * 2:
         add("warning", "Сервер перегружен: загрузка процессора выше двойного числа ядер.")
@@ -154,6 +156,14 @@ async def system_status(request: Request) -> SystemStatusView:
             ).all():
                 if status_name in queue:
                     queue[status_name] = int(count)
+            queue["failed_unread"] = int(
+                await db.scalar(
+                    select(func.count())
+                    .select_from(Job)
+                    .where(Job.status == "failed", unread_condition())
+                )
+                or 0
+            )
             running_sessions = int(
                 await db.scalar(
                     select(func.count()).select_from(Session).where(Session.status == "running")

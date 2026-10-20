@@ -1,0 +1,217 @@
+[
+  {
+    "format": 2,
+    "code": "generator-gkh-linear-1",
+    "version": 1,
+    "title": "Прорыв трубы в квартире",
+    "service_id": "GKH",
+    "level": 1,
+    "weight": 1,
+    "incident_type_code": "14020300",
+    "complications": [],
+    "teacher_comment": "????????? ?????? ??????????: ??????? ???????? ???????? ??? ?? 1c11ece. ?? ??????????? ? ??????? seed.",
+    "card": {
+      "caller_name": "Соколова Ирина Петровна",
+      "phone_aon": "+79000000731",
+      "phone_provided": "",
+      "phone_scene": "",
+      "address": {
+        "city": "Москва",
+        "okrug": "ЮВАО",
+        "district": "Люблино",
+        "street": "Люблинская улица",
+        "house": "100",
+        "building": "",
+        "apartment": "12"
+      },
+      "description": "В квартире 12 на третьем этаже прорвало трубу холодной воды, вода течёт по стене к соседям снизу. Перекрыть воду жильцы не могут.",
+      "tags": [],
+      "victims": false,
+      "ambulance_refused": false,
+      "blocked_people": false,
+      "emergency": false,
+      "incident_class": "Течь (прорыв трубы) в квартире (подъезде подвале)",
+      "service_ids": [
+        "GKH"
+      ],
+      "number": "70005801",
+      "incident_type_code": "14020300"
+    },
+    "reference": {
+      "expected_flow": [
+        "received",
+        "accepted",
+        "responding",
+        "arrived",
+        "working",
+        "completed"
+      ],
+      "required_fields": [
+        "service_number",
+        "comment"
+      ],
+      "expected_service_ids": [
+        "GKH"
+      ],
+      "expected_address": {
+        "city": "Москва",
+        "okrug": "ЮВАО",
+        "district": "Люблино",
+        "street": "Люблинская улица",
+        "house": "100",
+        "building": "",
+        "apartment": "12"
+      },
+      "expected_call": {
+        "required": false,
+        "service_id": "GKH",
+        "phone_ext": "105",
+        "before_s": 180
+      },
+      "expected_comment": "В квартире 12 на третьем этаже прорвало трубу холодной воды, вода течёт по стене к соседям снизу. Перекрыть воду жильцы не могут. Трубу заменили, воду дали, работы завершены."
+    },
+    "brigades": [
+      {
+        "key": "b1",
+        "ordinal": 0
+      }
+    ],
+    "plan": [
+      {
+        "key": "departure",
+        "brigade": "b1",
+        "line": "Заявка принята, аварийная бригада выехала.",
+        "after_s": 3,
+        "requires_state": "accepted",
+        "justifies_state": "responding"
+      },
+      {
+        "key": "arrival",
+        "brigade": "b1",
+        "line": "Бригада на месте, поднимаемся в квартиру двенадцать.",
+        "after_s": 6,
+        "requires_state": "responding",
+        "justifies_state": "arrived"
+      },
+      {
+        "key": "works",
+        "brigade": "b1",
+        "line": "Стояк перекрыли, меняем участок трубы.",
+        "after_s": 6,
+        "requires_state": "arrived",
+        "justifies_state": "working"
+      },
+      {
+        "key": "completion",
+        "brigade": "b1",
+        "line": "Трубу заменили, воду дали, работы завершены.",
+        "after_s": 6,
+        "requires_state": "working",
+        "justifies_state": "completed"
+      }
+    ]
+  },
+  {
+    "format": 2,
+    "code": "generator-gkh-linear-2",
+    "version": 1,
+    "title": "Течь с потолка в подъезде",
+    "service_id": "GKH",
+    "level": 2,
+    "weight": 2,
+    "incident_type_code": "14020300",
+    "complications": [],
+    "teacher_comment": "????????? ?????? ??????????: ??????? ???????? ???????? ??? ?? 1c11ece. ?? ??????????? ? ??????? seed.",
+    "card": {
+      "caller_name": "Фролов Андрей Ильич",
+      "phone_aon": "+79000000732",
+      "phone_provided": "",
+      "phone_scene": "",
+      "address": {
+        "city": "Москва",
+        "okrug": "ЮВАО",
+        "district": "Люблино",
+        "street": "Люблинская улица",
+        "house": "100",
+        "building": "",
+        "apartment": ""
+      },
+      "description": "В подъезде на пятом этаже с потолка капает вода, на полу лужа. Откуда течёт, заявитель не знает.",
+      "tags": [],
+      "victims": false,
+      "ambulance_refused": false,
+      "blocked_people": false,
+      "emergency": false,
+      "incident_class": "Течь (прорыв трубы) в квартире (подъезде подвале)",
+      "service_ids": [
+        "GKH"
+      ],
+      "number": "70005802",
+      "incident_type_code": "14020300"
+    },
+    "reference": {
+      "expected_flow": [
+        "received",
+        "accepted",
+        "responding",
+        "arrived",
+        "refused"
+      ],
+      "required_fields": [
+        "service_number",
+        "comment"
+      ],
+      "expected_service_ids": [
+        "GKH"
+      ],
+      "expected_address": {
+        "city": "Москва",
+        "okrug": "ЮВАО",
+        "district": "Люблино",
+        "street": "Люблинская улица",
+        "house": "100",
+        "building": "",
+        "apartment": ""
+      },
+      "expected_call": {
+        "required": false,
+        "service_id": "GKH",
+        "phone_ext": "105",
+        "before_s": 180
+      },
+      "expected_comment": "В подъезде на пятом этаже с потолка капает вода, на полу лужа. Откуда течёт, заявитель не знает. Течь из квартиры сверху: жильцы сами закрыли кран, протечки нет, наши работы не потребовались."
+    },
+    "brigades": [
+      {
+        "key": "b1",
+        "ordinal": 0
+      }
+    ],
+    "plan": [
+      {
+        "key": "departure",
+        "brigade": "b1",
+        "line": "Заявка принята, аварийная бригада выехала.",
+        "after_s": 3,
+        "requires_state": "accepted",
+        "justifies_state": "responding"
+      },
+      {
+        "key": "arrival",
+        "brigade": "b1",
+        "line": "Бригада на месте, осматриваем пятый этаж.",
+        "after_s": 6,
+        "requires_state": "responding",
+        "justifies_state": "arrived"
+      },
+      {
+        "key": "outcome",
+        "brigade": "b1",
+        "line": "Течь из квартиры сверху: жильцы сами закрыли кран, протечки нет, наши работы не потребовались.",
+        "after_s": 6,
+        "requires_state": "arrived",
+        "justifies_state": "refused"
+      }
+    ]
+  }
+]

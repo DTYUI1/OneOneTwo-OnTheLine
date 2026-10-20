@@ -4,12 +4,24 @@ import hashlib
 import json
 import logging
 import re
+import time
 from os.path import commonprefix
 from pathlib import Path
 from typing import Any
 
 import httpx
 from jsonschema import Draft202012Validator
+
+from app.core.config import ROOT
+from app.worker.generators.validation import (
+    gameplay_schema,
+    response_schema,
+    validate_gameplay,
+    validate_response,
+)
+
+# Генерация на каркасе сценария формата 2 (вход kind=gameplay): свой промпт и своя схема.
+GAMEPLAY_PROMPT = ROOT / "apps/api/app/worker/prompts/scenario_gameplay_system.md"
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +78,8 @@ def _is_grounded(prompt: str, result: dict[str, Any]) -> bool:
 
 
 class LocalLlamaCpp:
+    is_generative = True
+
     def __init__(
         self,
         *,
@@ -89,20 +103,33 @@ class LocalLlamaCpp:
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.transport = transport
+        self.full_scenario = self.schema.get("title") == "ScenarioGenerationResponse"
+        self.last_diagnostics: dict[str, Any] = {}
 
     async def complete_json(self, prompt: str) -> dict[str, Any] | None:
+        started = time.monotonic()
+        self.last_diagnostics = {}
         seed = int.from_bytes(hashlib.sha256(prompt.encode("utf-8")).digest()[:4], "big")
+        # Полный сценарий: схема под вход — закреплённые факты и номера фраз банка.
+        facts = json.loads(prompt) if self.full_scenario else {}
+        gameplay = facts.get("kind") == "gameplay"
+        if gameplay:
+            schema = gameplay_schema(facts)
+            system = GAMEPLAY_PROMPT.read_text(encoding="utf-8").strip()
+        else:
+            schema = response_schema(facts) if self.full_scenario else self.schema
+            system = self.system_prompt
         request = {
             "model": self.model,
             "messages": [
-                {"role": "system", "content": self.system_prompt},
+                {"role": "system", "content": system},
                 {"role": "user", "content": prompt},
             ],
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
             "seed": seed,
             "cache_prompt": True,
-            "response_format": {"type": "json_schema", "schema": self.schema},
+            "json_schema": schema,
         }
         try:
             async with httpx.AsyncClient(
@@ -110,21 +137,51 @@ class LocalLlamaCpp:
             ) as client:
                 response = await client.post(f"{self.base_url}/chat/completions", json=request)
             response.raise_for_status()
-            content = response.json()["choices"][0]["message"]["content"]
+            raw = response.json()
+            content = raw["choices"][0]["message"]["content"]
+            self.last_diagnostics.update(
+                usage=raw.get("usage"),
+                raw_content=content,
+                finish_reason=raw["choices"][0].get("finish_reason"),
+            )
             if not isinstance(content, str):
                 raise TypeError("choices[0].message.content должен быть строкой")
             result = json.loads(content)
             if not isinstance(result, dict):
                 raise TypeError("Ответ модели должен быть JSON-объектом")
-            errors = sorted(self.validator.iter_errors(result), key=lambda error: error.json_path)
+            # Схему каркаса проверяет validate_gameplay ниже: у неё своя форма ответа.
+            errors = (
+                []
+                if gameplay
+                else sorted(self.validator.iter_errors(result), key=lambda error: error.json_path)
+            )
             if errors:
                 raise ValueError("Ответ модели не соответствует JSON Schema")
-            if not _is_grounded(prompt, result):
+            if gameplay:
+                validate_gameplay(facts, result)
+            elif self.full_scenario:
+                validate_response(facts, result)
+                prompt_tokens = (raw.get("usage") or {}).get("prompt_tokens")
+                if isinstance(prompt_tokens, int) and prompt_tokens + self.max_tokens > 4096:
+                    raise ValueError("Вход и резерв вывода превышают контекст 4096")
+            elif not _is_grounded(prompt, result):
                 raise ValueError("Ответ модели не прошёл проверку входных фактов")
+            self.last_diagnostics["accepted"] = True
             return result
         except (httpx.HTTPError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            self.last_diagnostics.update(
+                accepted=False,
+                error=str(exc),
+                retryable=isinstance(exc, httpx.TransportError)
+                or (
+                    isinstance(exc, httpx.HTTPStatusError)
+                    and (exc.response.status_code in {408, 429} or exc.response.status_code >= 500)
+                ),
+            )
             logger.warning(
                 "Локальная LLM недоступна или вернула небезопасный ответ; применён fallback.",
                 extra={"error_type": type(exc).__name__, "model": self.model},
             )
             return None
+        finally:
+            self.last_diagnostics["duration_seconds"] = round(time.monotonic() - started, 3)

@@ -13,10 +13,6 @@ const hangup = (id: string): TutorEvent => ({
   type: "call_hangup",
   payload: { call_id: id },
 });
-const address: TutorEvent = {
-  type: "field_change",
-  payload: { field: "address", value: "ул. Тверская, 1" },
-};
 const brigades: TutorEvent = {
   type: "brigades_select",
   payload: { brigade_ids: ["b"] },
@@ -27,68 +23,42 @@ describe("tutorProgress", () => {
     const result = tutorProgress({
       state: "received",
       events: [],
-      servicePhone: "102",
     });
     expect(result.current).toBe("decide");
     expect(result.done.has("open")).toBe(true);
   });
 
-  it("после «Принята» ведёт к бригаде, затем к докладу службе", () => {
-    const base = { state: "accepted" as const, servicePhone: "102" };
+  it("после «Принята» ведёт к бригаде, затем к выезду — без звонка своей службе", () => {
+    const base = { state: "accepted" as const };
     expect(tutorProgress({ ...base, events: [] }).current).toBe("brigade");
     expect(tutorProgress({ ...base, events: [brigades] }).current).toBe(
-      "report",
-    );
-  });
-
-  it("доклад службе засчитывается только за законченный разговор с её номером", () => {
-    const base = { state: "accepted" as const, servicePhone: "102" };
-    const unanswered = [brigades, dial("c1", "102")];
-    expect(tutorProgress({ ...base, events: unanswered }).current).toBe(
-      "report",
-    );
-    const brigadeCall = [
-      brigades,
-      dial("c2", "205"),
-      answer("c2"),
-      hangup("c2"),
-    ];
-    expect(tutorProgress({ ...base, events: brigadeCall }).current).toBe(
-      "report",
-    );
-    // Служба ответила, обучаемый ещё докладывает — шаг не убегает вперёд.
-    const talking = [...unanswered, answer("c1")];
-    const during = tutorProgress({ ...base, events: talking });
-    expect(during.current).toBe("report");
-    expect(during.done.has("report")).toBe(false);
-    const reported = [...talking, hangup("c1")];
-    const after = tutorProgress({ ...base, events: reported });
-    expect(after.current).toBe("responding");
-    expect(after.done.has("report")).toBe(true);
-    // Отбой без ответа (вызов сброшен) докладом не считается.
-    const dropped = [brigades, dial("c3", "102"), hangup("c3")];
-    expect(tutorProgress({ ...base, events: dropped }).current).toBe("report");
-    // Сервер закрыл звонок сам (call_end) — тоже конец разговора.
-    const closed = [
-      ...talking,
-      { type: "call_end", payload: { call_id: "c1" } },
-    ];
-    expect(tutorProgress({ ...base, events: closed }).current).toBe(
       "responding",
     );
+    // GP-05: бригаду направляет вводная в разговоре с ней.
+    const briefing: TutorEvent = {
+      type: "brigade_briefing",
+      payload: { call_id: "c0", mode: "parts", text: "Адрес. Повод" },
+    };
+    expect(tutorProgress({ ...base, events: [briefing] }).current).toBe(
+      "responding",
+    );
+    // Звонок своей службе шага не добавляет и не нужен (GP-04).
+    const ownCall = [brigades, dial("c1", "102"), answer("c1"), hangup("c1")];
+    const progress = tutorProgress({ ...base, events: ownCall });
+    expect(progress.current).toBe("responding");
+    expect(progress.missed).toEqual([]);
   });
 
   it("идёт по статусам хода дела до завершения", () => {
     const events = [brigades, dial("c1", "102"), answer("c1"), hangup("c1")];
     const at = (state: "responding" | "arrived" | "working") =>
-      tutorProgress({ state, events, servicePhone: "102" }).current;
+      tutorProgress({ state, events }).current;
     expect(at("responding")).toBe("arrived");
     expect(at("arrived")).toBe("working");
     expect(at("working")).toBe("completed");
     const end = tutorProgress({
       state: "completed",
       events,
-      servicePhone: "102",
     });
     expect(end).toMatchObject({ current: null, finished: true });
   });
@@ -97,10 +67,11 @@ describe("tutorProgress", () => {
     const result = tutorProgress({
       state: "arrived",
       events: [brigades],
-      servicePhone: "102",
     });
     expect(result.current).toBe("working");
-    expect(result.missed).toEqual(["report"]);
+    expect(result.missed).toEqual([]);
+    const skipped = tutorProgress({ state: "arrived", events: [] });
+    expect(skipped.missed).toEqual(["brigade"]);
   });
 
   it("без пропусков напоминаний нет", () => {
@@ -108,32 +79,23 @@ describe("tutorProgress", () => {
     const result = tutorProgress({
       state: "responding",
       events,
-      servicePhone: "102",
     });
     expect(result.missed).toEqual([]);
   });
 
   it("отмечает «Не принята» и отказ бригады", () => {
-    expect(
-      tutorProgress({ state: "rejected", events: [], servicePhone: null })
-        .rejected,
-    ).toBe(true);
-    expect(
-      tutorProgress({ state: "refused", events: [], servicePhone: null })
-        .finished,
-    ).toBe(true);
+    expect(tutorProgress({ state: "rejected", events: [] }).rejected).toBe(
+      true,
+    );
+    expect(tutorProgress({ state: "refused", events: [] }).finished).toBe(true);
   });
 
-  it("напоминает про адрес после «Принята», пока он не вписан", () => {
-    const at = (state: "received" | "accepted", events: TutorEvent[]) =>
-      tutorProgress({ state, events, servicePhone: "102" }).addressMissing;
-    expect(at("received", [])).toBe(false);
-    expect(at("accepted", [])).toBe(true);
-    expect(at("accepted", [address])).toBe(false);
-    const other: TutorEvent = {
-      type: "field_change",
-      payload: { field: "comment", value: "x" },
-    };
-    expect(at("accepted", [other])).toBe(true);
+  it("не требует ввода адреса: у ДДС адрес только для чтения (DT-14)", () => {
+    const progress = tutorProgress({
+      state: "accepted",
+      events: [brigades],
+    });
+    expect(progress.missed).toEqual([]);
+    expect(progress).not.toHaveProperty("addressMissing");
   });
 });

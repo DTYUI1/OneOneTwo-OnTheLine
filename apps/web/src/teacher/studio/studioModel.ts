@@ -1,5 +1,6 @@
 // Студия сценариев (D-01): форма вместо JSON. Чистая логика без React и сети —
 // перевод формы в Scenario и обратно, проверки у своих полей, эталон словами.
+import { validationMessage } from "../../shared/validationErrors";
 import type { components } from "../../api-client/schema";
 
 export type Scenario = components["schemas"]["Scenario"];
@@ -85,6 +86,9 @@ export const REQUIRED_FIELD_LABELS: Record<RequiredField, string> = {
 
 /** Плоская модель формы: у каждого поля своё место для ошибки. */
 export interface ScenarioForm {
+  coherenceUnchecked?: boolean;
+  variantLabel?: string;
+  originalReference?: Reference;
   id: string;
   version: number;
   status: Scenario["status"];
@@ -203,6 +207,9 @@ export function formFromScenario(scenario: Scenario): ScenarioForm {
     version: scenario.version,
     status: scenario.status,
     origin: scenario.origin,
+    coherenceUnchecked: scenario.coherence_unchecked,
+    variantLabel: scenario.variant_label,
+    originalReference: structuredClone(reference),
     level: scenario.level,
     weight: scenario.weight,
     incidentTypeCode: scenario.incident_type_code,
@@ -261,18 +268,48 @@ export function scenarioFromForm(
   const phoneExt =
     services.find((service) => service.id === form.callServiceId)?.phone_ext ??
     "";
+  const sameCallService =
+    form.callServiceId === form.originalReference?.expected_call?.service_id;
+  const savedCall = sameCallService
+    ? form.originalReference?.expected_call
+    : undefined;
   const reference: Reference = {
-    expected_flow: OUTCOME_FLOWS[form.outcome],
+    expected_flow:
+      form.originalReference?.expected_flow &&
+      outcomeOf(form.originalReference.expected_flow) === form.outcome
+        ? form.originalReference.expected_flow
+        : OUTCOME_FLOWS[form.outcome],
     required_fields: form.requiredFields,
     expected_service_ids: form.expectedServiceIds,
     expected_call: form.callRequired
       ? {
-          required: true,
-          service_id: form.callServiceId,
-          phone_ext: phoneExt,
+          ...savedCall,
+          required: form.callRequired,
+          service_id: form.callServiceId || form.targetServiceId,
+          phone_ext:
+            savedCall?.phone_ext ||
+            phoneExt ||
+            services.find((service) => service.id === form.targetServiceId)
+              ?.phone_ext ||
+            "112",
           before_s: form.callBeforeS,
         }
-      : { required: false },
+      : {
+          ...savedCall,
+          required: false,
+          service_id: form.callServiceId || form.targetServiceId,
+          phone_ext:
+            savedCall?.phone_ext && /^\d{3}$/.test(savedCall.phone_ext)
+              ? savedCall.phone_ext
+              : phoneExt ||
+                services.find((service) => service.id === form.targetServiceId)
+                  ?.phone_ext ||
+                "112",
+          before_s:
+            Number.isInteger(form.callBeforeS) && form.callBeforeS > 0
+              ? form.callBeforeS
+              : 180,
+        },
     expected_address: form.addressAsCard ? form.address : form.expectedAddress,
     expected_comment: form.expectedComment.trim(),
     // Пустой список не пишем: эталоны без своих слов остаются прежними.
@@ -282,6 +319,8 @@ export function scenarioFromForm(
   };
   return {
     id: form.id,
+    coherence_unchecked: Boolean(form.coherenceUnchecked),
+    is_manual: false, // Сервер вычисляет происхождение и игнорирует это поле при записи.
     version: form.version,
     level: form.level,
     weight: form.weight,
@@ -506,9 +545,17 @@ export function formFromPreview(
   return {
     ...built,
     id: form.id,
+    coherenceUnchecked: form.coherenceUnchecked,
     version: form.version,
     status: form.status,
     number: form.number,
     teacherComment: form.teacherComment,
   };
+}
+
+export function scenarioError(
+  error: { message?: string; details?: unknown } | undefined,
+  status: number,
+): string {
+  return validationMessage(error) ?? error?.message ?? `Ошибка ${status}.`;
 }

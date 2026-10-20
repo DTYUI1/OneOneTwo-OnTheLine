@@ -1,0 +1,360 @@
+{
+  "format": 2,
+  "code": "pipe-basement-104-1",
+  "version": 7,
+  "replaces": [
+    "71a76524-c270-5d06-b1a8-a8bcefc03d49"
+  ],
+  "title": "Прорыв трубы в подвале газифицированного дома",
+  "service_id": "104",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "14020300",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: прорыв трубы в подвале газифицированного дома, улица Пришвина, 17. Дверь в подвал заперта — бригада спрашивает, у кого ключи (в карточке: у дворника, у первого подъезда). У ввода газ, во дворе толпятся жильцы — бригада просит полицию для оцепления: позвонить в 102 или 112. Не вызвали — бригада перезванивает и держит двор сама, работы затягиваются. На работах бригада замолкает — позвонить ей. Вводная преподавателя — тревога: слесарь упал в подвале, нужна скорая. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Бригада Мосгаза спустилась в подвал дома на улице Пришвина, 17 — ключи были у дворника. У ввода прибор показал газ: травило на сгоне. Жильцы толпились во дворе у подвала, для оцепления вызвали полицию. Сгон заменили, подвал проветрили и подали газ в дом.",
+    "late": "Карточку приняли позже норматива. Кипяток и пар заливали подвал, где проходит газовая труба, а у ввода уже травил газ: чем позже приехала бригада, тем дольше он копился в подвале."
+  },
+  "card": {
+    "caller_name": "Кузнецов Павел Николаевич",
+    "phone_aon": "+79000000715",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "В подвале жилого дома прорвало трубу горячей воды, подвал заливает, идёт пар. В подвале проходит газовая труба. Дом газифицирован. Ключи от подвала у дворника, он ждёт у первого подъезда.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Течь (прорыв трубы) в квартире (подъезде подвале)",
+    "service_ids": [
+      "104"
+    ],
+    "number": "70005501",
+    "incident_type_code": "14020300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "В подвале жилого дома прорвало трубу горячей воды, подвал заливает, идёт пар. В подвале проходит газовая труба. Дом газифицирован. Ключи от подвала у дворника, он ждёт у первого подъезда. Проветриваем подвал, у ввода прибор показывает. Ищем, где травит. Жильцы у подвала — вызвана полиция для оцепления. Сгон заменили, подвал проветрили, газ в дом подали. Закончили."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял заявку, выезжаем, прибор с собой.",
+        "audio": "bank-v1/104/104.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, спускаемся в подвал.",
+        "audio": "bank-v2/104/104.arrived.pipe_basement.9.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Проветриваем подвал, у ввода прибор показывает. Ищем, где травит.",
+        "audio": "bank-v1/104/104.working.pipe_basement.5.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Наряд оцепил двор, людей к подвалу не пускают. Утечку на вводе устранили, газ в дом подали. Закончили.",
+        "audio": "bank-v9/104/104.completed.pipe_basement.9.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "keys",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Ключи от подвала у кого? Дверь на замке.",
+        "audio": "bank-v1/104/104.clarify.any.8.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "janitor",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "janitor",
+          "label": "У дворника, ждёт у первого подъезда"
+        },
+        {
+          "key": "force",
+          "label": "Ключей нет — вскрывайте"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, спросите управляющую"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, теперь найдём.",
+            "audio": "bank-v1/104/104.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял. Будем вызывать управляющую, ждать придётся.",
+            "audio": "bank-v1/104/104.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Да мы уже внутри, спасибо.",
+            "audio": "bank-v1/104/104.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада спросила ключи от подвала — в карточке сказано, у кого они",
+        "critical": false
+      }
+    },
+    {
+      "key": "police",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Нужен наряд, оцепить двор. Люди лезут прямо к утечке.",
+        "audio": "bank-v1/104/104.request_service.any.9.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "102",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял вас.",
+            "audio": "bank-v1/104/104.ack.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Принял.",
+            "audio": "bank-v1/104/104.ack.any.2.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, полиции так и нет. Люди толпятся у подвала, отгоняем сами.",
+            "audio": "bank-v3/104/104.request_service.pipe_basement.1.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Утечку на вводе устранили, газ в дом подали. Двор держали сами, без полиции, поэтому затянулось.",
+                "audio": "bank-v3/104/104.completed.pipe_basement.8.ogg"
+              }
+            },
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада попросила полицию — оцепить двор у утечки",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ищем утечку, пока не нашли. Прибор водим по всем соединениям.",
+            "audio": "bank-v1/104/104.status_working.any.6.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Газ перекрыт, ремонтируем. Людям уже ничего не грозит.",
+            "audio": "bank-v1/104/104.status_working.any.7.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    },
+    {
+      "key": "alarm",
+      "kind": "alarm",
+      "priority": "alarm",
+      "trigger": {
+        "on": "inject",
+        "requires_state": "arrived"
+      },
+      "line": {
+        "text": "Тревога! Слесарь в подвале упал, нога, похоже, сломана. Скорую!",
+        "audio": "bank-v1/104/104.alarm.any.3.ogg"
+      },
+      "expect": [
+        {
+          "action": "answer_call",
+          "within_s": 15,
+          "weight": 0.1
+        },
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 60,
+          "weight": 0.9,
+          "critical": true
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, ждём скорую.",
+            "audio": "bank-v1/104/104.alarm_ack.any.1.ogg"
+          },
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Тревога: слесарь упал в подвале",
+        "critical": false
+      },
+      "injectable": true
+    }
+  ],
+  "traps": []
+}

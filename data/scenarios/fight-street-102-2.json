@@ -1,0 +1,276 @@
+{
+  "format": 2,
+  "code": "fight-street-102-2",
+  "version": 4,
+  "replaces": [
+    "c33b8731-48e8-5234-90ac-8d32e8676cec"
+  ],
+  "title": "Драка на улице с пострадавшим",
+  "service_id": "102",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "15250501",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: драка у торгового центра, Люблинская улица, 100. Наряд повторяет адрес с ошибкой (дом десять вместо ста) — диспетчер поправляет; на месте наряд просит телефон заявителя — он в карточке. Участники разошлись до прибытия: работ не было, карточку закрывает «Отказ от выполнения работ» с причиной, а не «Работы завершены».",
+  "outcome": {
+    "people": "Наряд прибыл к торговому центру на Люблинской улице и осмотрел площадь у входа: драки уже не было, участники разошлись, свидетелей не нашли. Работ не было — наряд доложил об этом, и карточку закрыли отказом от выполнения работ с причиной.",
+    "late": "Карточку приняли позже норматива. Заранее не известно, что участники разошлись: пока наряд не доложил, у входа мог лежать мужчина с разбитой головой.",
+    "status": "Работ на месте не было: такую карточку закрывают «Отказом от выполнения работ» с причиной, а не статусом «Работы завершены». Ход статусов в вашей карточке отличается от доклада наряда."
+  },
+  "card": {
+    "caller_name": "Никитин Сергей Павлович",
+    "phone_aon": "+79000000717",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "У входа в торговый центр дерутся четверо мужчин. У одного разбита голова, лежит на асфальте.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Беспорядки - драка на улице",
+    "service_ids": [
+      "102",
+      "103"
+    ],
+    "number": "70005702",
+    "incident_type_code": "15250501"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "refused"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "У входа в торговый центр дерутся четверо мужчин. У одного разбита голова, лежит на асфальте. Драки нет, участники разошлись, свидетелей не нашли, работы не проводили."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, наряд направлен.",
+        "audio": "bank-v2/102/102.responding.fight.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Наряд на месте, осматриваем площадь у входа.",
+        "audio": "bank-v2/102/102.arrived.fight.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Драки нет, участники разошлись, свидетелей не нашли, работы не проводили.",
+        "audio": "bank-v2/102/102.refused.fight.4.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "refused"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Люблинская улица, десять, выезжаем!",
+        "audio": "bank-v4/102/102.readback_trap.d56c8206.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Люблинская улица, 100"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, ошибся. Едем по правильному адресу.",
+            "audio": "bank-v1/102/102.readback_fixed.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/102/102.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/102/102.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд повторил адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "caller-phone",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, дайте телефон заявителя, не можем его найти.",
+        "audio": "bank-v1/102/102.clarify.any.4.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "phone",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "phone",
+          "label": "Телефон заявителя: {caller_phone}"
+        },
+        {
+          "key": "none",
+          "label": "Телефона заявителя в карточке нет"
+        },
+        {
+          "key": "redirect",
+          "label": "Звоните в 112, там подскажут"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, будем искать сами, это займёт время.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 25
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/102/102.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 25
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд попросил телефон заявителя — он был в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

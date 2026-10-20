@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { components } from "../../api-client/schema";
-import { pickPracticeCard, practiceRunning } from "./practiceModel";
+import {
+  pickPracticeCard,
+  practiceQuery,
+  practiceRunning,
+  takeOverSession,
+} from "./practiceModel";
 
 type Card = components["schemas"]["Card"];
 
@@ -40,5 +45,31 @@ describe("запуск тренировки", () => {
     ];
     expect(pickPracticeCard(cards, "practice-1")?.id).toBe("new");
     expect(pickPracticeCard(cards, "practice-2")).toBeUndefined();
+  });
+
+  it("показ курсором уходит на сервер с demo, своя работа — без него", () => {
+    expect(practiceQuery({ mode: "watch" })).toEqual({ demo: "watch" });
+    expect(practiceQuery({ mode: "expert" })).toEqual({ demo: "expert" });
+    expect(practiceQuery({ mode: "together" })).toEqual({});
+    expect(practiceQuery({ step: 2, mode: "solo" })).toEqual({ step: 2 });
+    expect(practiceQuery({ scenario: "sc", step: 2 })).toEqual({
+      step: 2,
+      scenario_id: "sc",
+    });
+    expect(practiceQuery({ scenario: "sc", step: 2, again: "c1" })).toEqual({
+      scenario: "sc",
+    });
+    expect(practiceQuery({ step: 3, again: "c1" })).toEqual({
+      step: 3,
+      again: "c1",
+    });
+  });
+
+  it("перехват «Смотрю» снимает показ у своей тренировки, опытного — нет", () => {
+    const shown = { sessionId: "practice-1" };
+    expect(takeOverSession({ expert: false }, shown)).toBe("practice-1");
+    expect(takeOverSession({ expert: true }, shown)).toBeNull();
+    expect(takeOverSession(null, shown)).toBeNull();
+    expect(takeOverSession({ expert: false }, null)).toBeNull();
   });
 });

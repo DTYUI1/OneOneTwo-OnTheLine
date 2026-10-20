@@ -12,21 +12,27 @@ PROJECT=arm112-stand
 HTTP_PORT=8080
 HTTPS_PORT=8443
 AI_MODE=off
+GPU_MODE=auto
 STT_MODE=off
 LAN=0
 IP_OVERRIDE=""
 NO_BUILD=0
 RANDOM_PASSWORD=0
+DEMO_ACCOUNTS=1
 
 usage() {
   cat <<'EOF'
 Использование: scripts/stand/up.sh [--project ИМЯ] [--ports HTTP:HTTPS] [--ai off|local]
-                                    [--stt off|local] [--lan] [--ip АДРЕС]
+                                    [--gpu auto|off|force] [--stt off|local] [--lan] [--ip АДРЕС]
                                     [--no-build] [--random-password]
+                                    [--no-demo-accounts]
 
   --project ИМЯ        имя проекта Docker Compose (по умолчанию arm112-stand)
   --ports HTTP:HTTPS   порты хоста для web (по умолчанию 8080:8443)
   --ai off|local       off — без ИИ (по умолчанию); local — локальная модель
+  --gpu auto|off|force видеокарта для ИИ (с --ai local): auto — если llama.cpp в контейнере
+                       её видит (по умолчанию); off — только процессор; force — дать серверу
+                       модели доступ к карте, даже если проверка её не подтвердила
   --stt off|local      off — без распознавания речи (по умолчанию); local — faster-whisper
   --lan                открыть стенд для других компьютеров сети (WEB_BIND=0.0.0.0),
                        IP машины определяется сам
@@ -36,6 +42,8 @@ usage() {
                        перенести docker save | docker load)
   --random-password    при первом создании секретов — случайный пароль учётных записей
                        вместо demo-local (для стенда, открытого в интернет)
+  --no-demo-accounts   не показывать на экране входа логины и пароль (DEMO_ACCOUNTS_SHOWN=false);
+                       по умолчанию демо-стенд их показывает
   --help               эта справка
 
 Секреты проекта хранятся в scripts/stand/.local/<проект>/stand.env и создаются один раз.
@@ -72,6 +80,14 @@ while [ "$#" -gt 0 ]; do
       esac
       shift 2
       ;;
+    --gpu)
+      GPU_MODE="${2:-}"
+      case "$GPU_MODE" in
+        auto | off | force) ;;
+        *) fail "--gpu принимает только auto, off или force" ;;
+      esac
+      shift 2
+      ;;
     --stt)
       STT_MODE="${2:-}"
       case "$STT_MODE" in
@@ -96,6 +112,10 @@ while [ "$#" -gt 0 ]; do
       ;;
     --random-password)
       RANDOM_PASSWORD=1
+      shift
+      ;;
+    --no-demo-accounts)
+      DEMO_ACCOUNTS=0
       shift
       ;;
     --help | -h)
@@ -192,7 +212,9 @@ fi
 . "$ENV_FILE"
 WEB_BIND="$DESIRED_WEB_BIND"
 CERT_HOSTNAMES="$DESIRED_CERT_HOSTNAMES"
-export WEB_BIND CERT_HOSTNAMES
+DEMO_ACCOUNTS_SHOWN=false
+[ "$DEMO_ACCOUNTS" -eq 1 ] && DEMO_ACCOUNTS_SHOWN=true
+export WEB_BIND CERT_HOSTNAMES DEMO_ACCOUNTS_SHOWN
 
 PROFILE_ARGS=""
 UP_SERVICES="api worker web"
@@ -205,6 +227,37 @@ if [ "$AI_MODE" = local ]; then
   PROFILE_ARGS="$PROFILE_ARGS --profile llm"
   UP_SERVICES="$UP_SERVICES llm"
   export AI_PROVIDER=local
+  # Видеокарта (HQ-016): по умолчанию ИИ на процессоре; режим «видеокарта» включает
+  # администратор в «Модели ИИ». Скрипт только даёт серверу модели доступ к карте, если её
+  # видит llama.cpp (scripts/ai/detect_gpu.sh) или если попросили --gpu force.
+  GPU_JSON='{"state": "unknown", "backend": null, "device": null, "name": null, "vram_mb": null}'
+  [ "$GPU_MODE" = off ] || GPU_JSON=$("$ROOT/scripts/ai/detect_gpu.sh")
+  GPU_BACKEND=$(printf '%s' "$GPU_JSON" | sed -n 's/.*"backend": "\([a-z]*\)".*/\1/p')
+  LLM_GPU_DEVICE=$(printf '%s' "$GPU_JSON" | sed -n 's/.*"device": "\([A-Za-z0-9]*\)".*/\1/p')
+  LLM_GPU=false
+  FORCED=false
+  if [ "$GPU_MODE" = force ] && [ -z "$GPU_BACKEND" ]; then
+    # Проверка карту не нашла: берём доступ, какой есть, — CUDA при драйвере NVIDIA,
+    # иначе Vulkan через /dev/dri. Не загрузится — ИИ сам вернётся на процессор.
+    if command -v nvidia-smi >/dev/null 2>&1 &&
+      docker image inspect "${LLM_GPU_IMAGE:-arm112-llm-cuda:0.1.0}" >/dev/null 2>&1; then
+      GPU_BACKEND=cuda
+    elif [ -d /dev/dri ] && docker image inspect "${LLM_VULKAN_IMAGE:-arm112-llm-vulkan:0.1.0}" >/dev/null 2>&1; then
+      GPU_BACKEND=vulkan
+    else
+      fail "--gpu force: нет образа llama.cpp для видеокарты (arm112-llm-cuda:0.1.0 или arm112-llm-vulkan:0.1.0), см. deploy/README.md"
+    fi
+    FORCED=true
+  fi
+  if [ -n "$GPU_BACKEND" ]; then
+    LLM_GPU=true
+    COMPOSE_GPU="-f deploy/docker-compose.gpu-$GPU_BACKEND.yml"
+    [ -z "$LLM_GPU_DEVICE" ] || export LLM_GPU_DEVICE
+    echo "→ видеокарта: $GPU_BACKEND${LLM_GPU_DEVICE:+ ($LLM_GPU_DEVICE)}$([ "$FORCED" = true ] && echo ', включена принудительно') — режим выбирает администратор в «Модели ИИ»"
+  else
+    echo "→ видеокарта: не используется ($(printf '%s' "$GPU_JSON" | sed -n 's/.*"state": "\([a-z_]*\)".*/\1/p')) — ИИ на процессоре"
+  fi
+  export AI_HARDWARE="${GPU_JSON%\}}, \"llm_gpu\": $LLM_GPU, \"forced\": $FORCED}"
 else
   export AI_PROVIDER=off
 fi
@@ -236,7 +289,8 @@ services:
 EOF
 
 compose() {
-  docker compose -p "$PROJECT" -f deploy/docker-compose.yml -f "$OVERRIDE_FILE" --env-file "$ENV_FILE" "$@"
+  # shellcheck disable=SC2086 # COMPOSE_GPU — пусто или «-f файл».
+  docker compose -p "$PROJECT" -f deploy/docker-compose.yml ${COMPOSE_GPU:-} -f "$OVERRIDE_FILE" --env-file "$ENV_FILE" "$@"
 }
 
 step() { # $1 подпись для человека, дальше — команда
@@ -250,6 +304,19 @@ step() { # $1 подпись для человека, дальше — кома�
     exit 1
   fi
   rm -f "/tmp/stand-up-$$.log"
+}
+
+# Сборка с повтором: разовый обрыв скачивания (сеть, зеркало) не должен ронять запуск.
+# Готовые слои берутся из кэша, поэтому повтор продолжает с места обрыва.
+build_with_retry() {
+  attempt=1
+  while [ "$attempt" -le "${BUILD_ATTEMPTS:-3}" ]; do
+    "$@" && return 0
+    echo "  сборка не удалась (попытка $attempt из ${BUILD_ATTEMPTS:-3}), повторяю через 5 с" >&2
+    attempt=$((attempt + 1))
+    sleep 5
+  done
+  return 1
 }
 
 cert_has_ip() { # $1 том с сертификатом, $2 IP — 0, если IP уже в SAN сертификата
@@ -287,7 +354,7 @@ if [ "$NO_BUILD" -eq 1 ]; then
   done
   echo "ok  образы готовые, сборку пропускаю"
 else
-  step "сборка образов" compose $PROFILE_ARGS build $BUILD_SERVICES
+  step "сборка образов" build_with_retry compose $PROFILE_ARGS build $BUILD_SERVICES
 fi
 
 if [ "$LAN" -eq 1 ]; then

@@ -10,7 +10,8 @@
   "questionnaire_id": "medical",
   "caller": {
     "name": "Королёва Наталья Павловна",
-    "phone": "+79031234471"
+    "phone": "+79031234471",
+    "status": "родственник"
   },
   "persona": {
     "kind": "elderly",
@@ -26,10 +27,15 @@
     "street": "Профсоюзная улица",
     "house": "43",
     "building": "1",
-    "apartment": "58"
+    "apartment": "58",
+    "entrance": "3",
+    "floor": "7",
+    "code": "58",
+    "descriptive": "Аптека на первом этаже, остановка напротив"
   },
-  "named_address_fields": [],
+  "named_address_fields": ["entrance", "floor", "code", "descriptive"],
   "opening": "Алло... скорая? Мужу плохо, за сердце держится, весь бледный...",
+  "landmark_synonyms": ["аптека", "остановка напротив"],
   "description_reference": "В квартире 58 дома 43 корпус 1 по Профсоюзной улице мужчине 74 лет плохо с сердцем: давящая боль в груди около двадцати минут, отдаёт в левую руку, бледный; в сознании, дышит часто; третий подъезд, код домофона 58, дверь откроют.",
   "description_facts": [
     {

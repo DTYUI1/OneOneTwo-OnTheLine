@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "door-child-101-2",
+  "version": 1,
+  "title": "Ребёнок за запертой входной дверью",
+  "service_id": "101",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "17080400",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Поправить «улица Преханова, 11». Сообщить четвёртый этаж из карточки. Вскрытие входного замка, ребёнок без травм. При отсутствии сведений расчёт уточняет всё на месте.",
+  "outcome": {
+    "people": "В квартире 46 на четвёртом этаже ребёнок трёх лет остался один за захлопнувшейся входной дверью. Мать на площадке, ключи остались внутри. Ребёнок плачет и отвечает через дверь, о травмах не сообщает. Другого ключа нет. Расчёт высверлил личинку замка и открыл дверь. Ребёнок передан матери, всё хорошо; расчёт возвращается.",
+    "late": "Карточку приняли позже норматива. В квартире 46 на четвёртом этаже ребёнок трёх лет остался один за захлопнувшейся входной дверью. Мать на площадке, ключи остались внутри. Ребёнок плачет и отвечает через дверь, о травмах не сообщает. Другого ключа нет."
+  },
+  "card": {
+    "caller_name": "Субботина Зоя Платоновна",
+    "phone_aon": "+79000000874",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ВАО",
+      "district": "Перово",
+      "street": "улица Плеханова",
+      "house": "11",
+      "building": "",
+      "apartment": "46"
+    },
+    "description": "В квартире 46 на четвёртом этаже ребёнок трёх лет остался один за захлопнувшейся входной дверью. Мать на площадке, ключи остались внутри. Ребёнок плачет и отвечает через дверь, о травмах не сообщает. Другого ключа нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Открыть дверь (ребенок)",
+    "service_ids": [
+      "101"
+    ],
+    "number": "70008514",
+    "incident_type_code": "17080400"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ВАО",
+      "district": "Перово",
+      "street": "улица Плеханова",
+      "house": "11",
+      "building": "",
+      "apartment": "46"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "В квартире 46 на четвёртом этаже ребёнок трёх лет остался один за захлопнувшейся входной дверью. Мать на площадке, ключи остались внутри. Ребёнок плачет и отвечает через дверь, о травмах не сообщает. Другого ключа нет. Расчёт высверлил личинку замка и открыл дверь. Ребёнок передан матери, всё хорошо; расчёт возвращается."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Есть, выезжаем. Если что уточнить, перезвоню.",
+        "audio": "bank-v1/101/101.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Ребёнок за дверью плачет, мама на площадке, ключи остались внутри.",
+        "audio": "bank-v1/101/101.arrived.door.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Сверлим личинку, замок крепкий, работаем дальше.",
+        "audio": "bank-v1/101/101.working.door.3.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Дверь открыли, ребёнок у мамы на руках, всё хорошо. Возвращаемся.",
+        "audio": "bank-v1/101/101.completed.door.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: улица Преханова, 11.",
+        "audio": "bank-v6/101/101.readback.1cfbd0b9.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, не тот адрес записал. Исправил, едем.",
+            "audio": "bank-v1/101/101.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/101/101.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/101/101.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, на каком этаже квартира?",
+        "audio": "bank-v1/101/101.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Четвёртый этаж, квартира 46"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните на месте"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, теперь ясно.",
+            "audio": "bank-v1/101/101.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Плохо. Ладно, разберёмся на месте.",
+            "audio": "bank-v1/101/101.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Понял, но мы уже разобрались, спасибо.",
+            "audio": "bank-v1/101/101.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, на каком этаже квартира?",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

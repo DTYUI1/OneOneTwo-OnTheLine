@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-20",
+  "font_size_pt": 14,
+  "documents": [
+    {
+      "file": "pdf/01_technical_description.pdf",
+      "pages": 15,
+      "bytes": 146551,
+      "sha256": "29af215a64183c384b21ef43a170312a8b1f6d758c0b83cf9f08ab788a606f07",
+      "fonts": [
+        "/BAAAAA+Arial-BoldMT",
+        "/CAAAAA+Carlito-Bold",
+        "/DAAAAA+ArialMT"
+      ],
+      "all_fonts_embedded": true,
+      "links": 22
+    },
+    {
+      "file": "pdf/02_administrator_guide.pdf",
+      "pages": 15,
+      "bytes": 156094,
+      "sha256": "ebc84fc7b0c95193281aa551f930818e640f6c2f726d04be0946bc8aa5ebf883",
+      "fonts": [
+        "/BAAAAA+Arial-BoldMT",
+        "/CAAAAA+Carlito-Bold",
+        "/DAAAAA+ArialMT",
+        "/EAAAAA+Symbol"
+      ],
+      "all_fonts_embedded": true,
+      "links": 18
+    },
+    {
+      "file": "pdf/03_teacher_guide.pdf",
+      "pages": 20,
+      "bytes": 210293,
+      "sha256": "735c5f77ecfdcb8e20d6cdfae8f9bdca383c79611510d1e6883df7baf170670a",
+      "fonts": [
+        "/BAAAAA+Arial-BoldMT",
+        "/CAAAAA+Carlito-Bold",
+        "/DAAAAA+ArialMT",
+        "/EAAAAA+LucidaGrande-Bold"
+      ],
+      "all_fonts_embedded": true,
+      "links": 24
+    },
+    {
+      "file": "pdf/04_trainee_guide.pdf",
+      "pages": 23,
+      "bytes": 219020,
+      "sha256": "639366d87652c1f6b51f8ce68c67c7de2e3de5691646468699d2775818a32867",
+      "fonts": [
+        "/BAAAAA+Arial-BoldMT",
+        "/CAAAAA+Carlito-Bold",
+        "/DAAAAA+ArialMT",
+        "/EAAAAA+Symbol"
+      ],
+      "all_fonts_embedded": true,
+      "links": 18
+    }
+  ],
+  "verification_boundary": "Content review and document rendering; no new application runtime acceptance"
+}

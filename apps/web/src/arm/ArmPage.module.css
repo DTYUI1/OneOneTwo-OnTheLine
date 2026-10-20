@@ -1,73 +1,293 @@
+/* Список происшествий АРМ-112 — зона 1 макета B. Значения — со скриншотов
+   arm_dds/02–05 и из prototype-b/proto.css («зона 1: поиск и часы», «список»). */
 .arm {
+  --arm-dark: #2f353a;
+  --arm-bar: #49555d;
+  --arm-list: #838f97;
+  --arm-op: #7d3a50;
+  --arm-ink: #1f2326;
   padding: 0;
-  background: var(--color-list);
-  color: var(--color-on-dark);
+  color: #fff;
+  background: var(--arm-list);
   min-height: calc(100vh - 70px);
 }
+
+.top {
+  display: flex;
+  color: var(--arm-ink);
+}
+
 .search {
-  color: var(--color-text);
-  background: var(--color-panel);
-  padding: var(--space-3);
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px 10px;
+  background: #ebecec;
 }
-/* Крупный тонкий заголовок с чертой во всю ширину — arm_dds/02. */
-.search h1 {
-  margin: 0 0 var(--space-3);
-  padding-bottom: var(--space-1);
-  font-size: 32px;
-  font-weight: normal;
-  border-bottom: 1px solid var(--color-text);
-}
-.list {
-  padding: var(--space-4);
-}
-.list table {
-  border-collapse: collapse;
-  width: 100%;
-  text-align: left;
-}
-.list td,
-.list th {
-  padding: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+
+/* «Поиск происшествий» — крупная строка с чертой во всю ширину и лупой (02). */
+.searchTitle {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 1px solid #333;
 }
 
 .searchInput {
-  width: 60%;
-  margin-right: var(--space-2);
-  border: 1px solid var(--color-border);
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--arm-ink);
+  background: transparent;
+  border: 0;
 }
 
-/* От этой подписи зависит, по какой плитке ставить статус: обычный кегль и
-   светлый цвет вместо мелкой серой строки. */
-.counter {
+.searchInput::placeholder {
+  color: var(--arm-ink);
+  opacity: 1;
+}
+
+.searchInput:focus::placeholder {
+  color: #8a9196;
+}
+
+.lens {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 4px;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.reset {
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #555;
+  background: transparent;
+  border: 1px solid #999;
+}
+
+/* Дата и часы справа от поиска — тёмный блок (02–05). */
+.clock {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  width: 300px;
+  padding: 8px 14px;
+  color: #fff;
+  background: var(--arm-dark);
+}
+
+.clockDate {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 13px;
+}
+
+.clockDate b {
+  flex-basis: 100%;
+  font-size: 14px;
+}
+
+.clockDate span > * {
+  margin-left: 4px;
+}
+
+.clockTime {
+  font-size: 46px;
+  font-weight: bold;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.clockTime sup {
+  font-size: 16px;
   font-weight: normal;
-  font-size: var(--font-size);
-  color: var(--color-on-dark);
+  vertical-align: top;
+}
+
+.list {
+  padding: 12px 16px;
+}
+
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 0 14px;
+}
+
+.listHead h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+  font-size: 13px;
+  color: #e9edef;
+}
+
+.fakeSelect {
+  min-width: 190px;
+  padding: 4px 8px;
+  border: 1px solid #c3cacf;
+}
+
+.fakeSelect small {
+  float: right;
+}
+
+.table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+
+.table th {
+  padding: 4px 6px;
+  font-weight: normal;
+  color: #f1f3f4;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 4px 6px;
+  border-right: 1px solid #4a5258;
 }
 
 .row {
   cursor: pointer;
 }
 
-/* Основная строка и строка «Описание:» — одна запись реестра (arm_dds/03):
-   черта только под описанием. */
-.list .mainRow > td {
-  border-bottom: none;
+.mainRow {
+  background: var(--arm-dark);
 }
 
-/* Описание — в одну строку с многоточием, таблицу не расширяет. */
-.description {
+.icon {
+  width: 26px;
+  color: #c8ced2;
+  text-align: center;
+}
+
+.shield {
+  color: #e2552f;
+}
+
+.table td.shield {
+  border-right: 0;
+}
+
+/* «Опер.» — красная ячейка (03). */
+.operator {
+  width: 46px;
+  text-align: center;
+  background: var(--arm-op);
+}
+
+.time {
+  white-space: nowrap;
+}
+
+.time b {
+  font-size: 16px;
+}
+
+.time sup {
+  font-size: 10px;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.state {
+  color: #d5dadd;
+}
+
+/* Вторая строка записи — «Описание:» на полосе, между записями — просвет (03). */
+.descriptionRow {
+  background: var(--arm-bar);
+}
+
+/* Предпросмотр строки (памятка ДДС, с. 13): строки «Службы», «Заявитель», «Информация»
+   под описанием, тем же фоном; отступ между записями — у последней строки. */
+.previewRow {
+  background: var(--arm-bar);
+}
+
+.table .descriptionRow:has(+ .previewRow) .description,
+.table .previewRow:has(+ .previewRow) .description {
+  border-bottom-width: 1px;
+}
+
+.previewToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.previewToggle:focus-visible {
+  outline: 2px solid var(--color-active);
+}
+
+.table .description {
   max-width: 0;
   overflow: hidden;
+  padding: 5px 8px;
   white-space: nowrap;
   text-overflow: ellipsis;
+  border-right: 0;
+  border-bottom: 8px solid var(--arm-list);
 }
 
-/* Строка в фокусе клавиатуры — видна так же ясно, как под мышью. */
+.descriptionLabel {
+  display: inline-block;
+  min-width: 86px;
+  font-size: 12px;
+}
+
+.descriptionMeta {
+  margin-right: 4px;
+  font-size: 12px;
+  color: #c9d0d4;
+}
+
+/* Строка в фокусе клавиатуры и под мышью — светлее, запись целиком (обе строки). */
 .row:focus-visible {
   outline: 3px solid var(--color-active);
   outline-offset: -3px;
-  background: #6f7b82;
+}
+
+.row:hover,
+.row:focus-visible,
+.mainRow:hover + tr,
+.mainRow:focus-visible + tr,
+.mainRow:has(+ tr:hover) {
+  background: #3d454b;
 }
 
 /* Таблица шире экрана прокручивается сама, страница вбок не уезжает. */
@@ -75,32 +295,102 @@
   overflow-x: auto;
 }
 
-.row:hover,
-.rowOverdue:hover {
-  background: #6f7b82;
+/* Пагинация — arm_dds/02, 03: подписи и значения светло-серые, «1-1 из 1» и стрелки
+   белые; на узком экране группы переносятся, страница вбок не уезжает. */
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px 22px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #dde2e5;
 }
 
-/* Запись — пара строк: подсветка под мышью и в фокусе охватывает обе. */
-.mainRow:hover + tr,
-.mainRow:focus-visible + tr,
-.mainRow:has(+ tr:hover) {
-  background: #6f7b82;
+.pagerField {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
-/* Норматив реакции 30 с превышен, карточка ещё не открыта — красная строка. */
-.rowOverdue {
-  composes: row;
-  background: #9c4a43;
+.pagerSelect {
+  position: relative;
+  display: inline-flex;
 }
 
-.timer {
-  font-variant-numeric: tabular-nums;
+/* Треугольник ▾ после значения — как у выпадающих списков АРМ. */
+.pagerSelect::after {
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  margin-top: -2px;
+  content: "";
+  border-top: 5px solid currentColor;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  pointer-events: none;
 }
 
-.timerOverdue {
-  composes: timer;
-  color: var(--color-on-dark);
-  background: var(--color-danger);
+.pagerSelect select {
+  min-width: 2.2em;
+  padding: 2px 16px 2px 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  appearance: none;
+}
+
+.pagerSelect select:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+/* Список вариантов открывается светлым: без этого Firefox красит пункты в цвет подписи. */
+.pagerSelect option {
+  color: var(--arm-ink);
+  background: #fff;
+}
+
+.pagerCount {
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.pagerArrows {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.pagerArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #fff;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+}
+
+.pagerArrow:hover:not([aria-disabled="true"]) {
+  background: rgb(255 255 255 / 15%);
+}
+
+.pagerArrow[aria-disabled="true"] {
+  cursor: default;
+}
+
+.pagerSelect select:focus-visible,
+.pagerArrow:focus-visible {
+  outline: 2px solid var(--color-active);
 }
 
 .cardPage {
@@ -145,14 +435,6 @@
   padding: var(--space-3);
 }
 
-/* Заголовок списка и сразу за ним — кнопки учебных функций (T-031). */
-.listHead {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-3);
-  align-items: center;
-}
-
 /* Кнопки списка — одна группа в порядке пути, а не россыпь по ширине экрана. */
 .actions {
   display: flex;
@@ -169,14 +451,36 @@
   border: 1px solid var(--color-active);
 }
 
-.resultsButton:hover {
+.resultsButton:hover:not(:disabled) {
   background: #146a9c;
+}
+.resultsButton:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 /* Сообщение о запуске тренировки — отдельной строкой под кнопками списка. */
 .practiceNote {
   flex-basis: 100%;
   margin: 0;
+}
+
+/* Обратная связь запуска вне кнопки (TrainerContext): поверх страницы, а не строкой над
+   ней — пропадая с приходом карточки, строка сдвигала всю карточку на 16 px (CLS 0,051,
+   layout-stability 1920×1080, ревью 20.10). */
+.practiceToast {
+  position: fixed;
+  top: calc(var(--shell-height, 68px) + 8px);
+  left: 50%;
+  z-index: 40;
+  max-width: min(640px, calc(100vw - 32px));
+  margin: 0;
+  padding: 6px 12px;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid #aeb1b3;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%);
 }
 
 /* Узкий экран (телефон, узкое окно): без второстепенных колонок и полей по краям. */
@@ -187,11 +491,26 @@
   .list {
     padding: var(--space-2);
   }
-  .searchInput {
+  .top {
+    flex-wrap: wrap;
+  }
+  .clock {
     width: 100%;
-    margin: 0 0 var(--space-2);
   }
   .cardPage {
     height: auto;
   }
+}
+
+/* Рабочее поле — одной колонкой: колонку «Тренажёр» справа убрали по проверке 17.10;
+   в обучении тренажёр — подсказка у элемента (trainer/TrainerCoach.module.css). */
+.work {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.link {
+  flex: 1 1 auto;
+  min-height: 0;
 }

@@ -21,6 +21,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.c01 import C01Input
 from app.api.packs.service import serialize as serialize_job
 from app.api.scenarios.service import ensure_evaluable
+from app.api.training.content import store_plan
+from app.core.ai_resource import generation_state
 from app.core.config import ROOT
 from app.core.models import (
     Job,
@@ -99,10 +101,27 @@ async def pack_scenarios(db: AsyncSession, pack_id: UUID) -> list[Scenario]:
             await db.scalars(
                 select(Scenario)
                 .join(ScenarioPackItem, ScenarioPackItem.scenario_id == Scenario.id)
-                .where(ScenarioPackItem.pack_id == pack_id)
+                .where(ScenarioPackItem.pack_id == pack_id, Scenario.deleted_at.is_(None))
                 .order_by(ScenarioPackItem.order)
             )
         ).all()
+    )
+
+
+async def generation_estimate(db: AsyncSession) -> float | None:
+    from app.api.ai_models.service import active_choice, catalog, local_generation
+
+    measured = (await local_generation(db))["mean_seconds"]
+    if measured is not None and measured > 0:
+        return measured
+    choice = await active_choice(db)
+    return next(
+        (
+            b["generate_seconds"]
+            for b in catalog()["benchmarks"]
+            if b["model"] == choice["model"] and b["mode"] == choice["mode"]
+        ),
+        None,
     )
 
 
@@ -114,18 +133,43 @@ async def job_progress(request: Request, job_id: UUID) -> JobProgressView:
         raise HTTPException(404, "Задание генерации не найдено.")
     await own_pack(db, UUID(pack_id), request.state.user.id)
     scenarios = await pack_scenarios(db, UUID(pack_id))
+    if job.payload.get("replacement_id"):
+        scenarios = [s for s in scenarios if str(s.id) == job.payload["replacement_id"]]
     total = max(int(job.payload.get("count", len(scenarios)) or 1), 1)
-    warnings = []
-    if scenarios and all(item.origin == "template" for item in scenarios):
-        warnings.append("ИИ выключен: сценарии собраны детерминированно из шаблона.")
+    from app.worker.generators.themes import warnings as theme_warnings
+
+    warnings = theme_warnings(job.payload)
+    if not job.payload.get("session_id"):
+        from app.worker.generators import pairwise, variant_paths
+
+        available = variant_paths.options(
+            job.payload["service_id"], job.payload["level"], job.payload.get("categories", [])
+        )
+        possible = pairwise.universe(available)
+        covered = pairwise.covered(scenarios) & possible
+        warnings.append(f"Покрыто пар: {len(covered)} из {len(possible)}.")
+    if job.payload.get("trainee_login") and scenarios:
+        from app.worker.generators.personalization import summary
+
+        warnings.append(summary(job.payload["trainee_login"], scenarios))
+    fallback_count = sum(item.origin == "template" for item in scenarios)
+    if fallback_count:
+        warnings.append(
+            f"Шаблонный путь: {fallback_count} из {len(scenarios)}. "
+            "ИИ выключен, недоступен или ответ не прошёл проверку; это не ИИ-генерация."
+        )
     return JobProgressView(
         {
+            "estimated_item_seconds": await generation_estimate(db),
             "job": serialize_job(job).model_dump(mode="json"),
             "completed": min(len(scenarios), total),
             "total": total,
             "scenario_ids": [str(item.id) for item in scenarios],
             "pack_id": pack_id,
             "warnings": warnings,
+            "generation_state": await generation_state(
+                db, job, local_ai=request.app.state.config.ai_provider == "local"
+            ),
         }
     )
 
@@ -152,7 +196,7 @@ async def approve_pack(
     approved = []
     for item in value["scenarios"]:
         row = members.get(UUID(item["scenario_id"]))
-        if row is None:
+        if row is None or row.deleted_at is not None:
             raise HTTPException(404, "Сценарий не входит в пакет.")
         await db.refresh(row, with_for_update=True)
         if row.version != item["version"]:
@@ -160,8 +204,12 @@ async def approve_pack(
         if row.status != "draft":
             raise HTTPException(409, "Утверждается только черновик.")
         ensure_evaluable("approved", row.reference)
+        plan = await db.get(ScenarioTrainingPlan, (row.id, row.version))
         row.status = "approved"
         row.version += 1
+        if plan is not None:
+            await db.flush()
+            await store_plan(db, row.id, row.version, plan.author_id, plan.plan)
         approved.append({"scenario_id": str(row.id), "version": row.version})
     await db.flush()
     remaining = [str(item.id) for item in members.values() if item.status == "draft"]
@@ -180,6 +228,17 @@ async def approve_pack(
 
 
 def provenance(row: Scenario) -> dict[str, Any]:
+    if row.generation_metadata is not None:
+        metadata = row.generation_metadata
+        return {
+            "author_kind": "system",
+            "author_id": None,
+            "source_kind": "template" if metadata["fallback_used"] else "llm",
+            "source_id": f"{metadata['model']}:{metadata['scene']}",
+            "source_version": f"{metadata['prompt_version']}:{metadata['source_version']}",
+            "sha256": metadata["prompt_sha256"],
+            "synthetic": True,
+        }
     ticket = ticket_manifest().get(str(row.id))
     if ticket is not None:
         return {
@@ -212,12 +271,23 @@ def provenance(row: Scenario) -> dict[str, Any]:
 async def scenario_content(request: Request, scenario_id: UUID) -> ScenarioContentView:
     db: AsyncSession = request.state.db
     row = await db.get(Scenario, scenario_id)
-    if row is None:
+    if row is None or row.deleted_at is not None:
         raise HTTPException(404, "Сценарий не найден.")
-    plan = await db.get(ScenarioTrainingPlan, (row.id, row.version))
+    plan = await db.scalar(
+        select(ScenarioTrainingPlan)
+        .where(
+            ScenarioTrainingPlan.scenario_id == row.id,
+            ScenarioTrainingPlan.scenario_version <= row.version,
+        )
+        .order_by(ScenarioTrainingPlan.scenario_version.desc())
+        .limit(1)
+    )
+    from app.api.content.correction import allowed
+
     return ScenarioContentView(
         {
             "scenario_id": str(row.id),
+            "can_regenerate": allowed(row, request.state.user.id, request.app.state.config),
             "version": row.version,
             "provenance": provenance(row),
             "training_plan": plan.plan if plan is not None else None,

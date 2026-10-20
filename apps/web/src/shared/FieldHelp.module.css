@@ -1,0 +1,48 @@
+.caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  margin-left: 4px;
+  border: 1px solid #718198;
+  border-radius: 50%;
+  background: #f5f8fc;
+  color: #304c70;
+  font:
+    600 14px/1 Arial,
+    sans-serif;
+  cursor: help;
+  vertical-align: middle;
+}
+.trigger:hover {
+  background: #e0ebf8;
+}
+.trigger:focus-visible {
+  outline: 2px solid #276bc1;
+  outline-offset: 2px;
+}
+.bubble {
+  position: fixed;
+  z-index: 10000;
+  box-sizing: border-box;
+  width: 320px;
+  max-width: calc(100vw - 16px);
+  padding: 12px;
+  border: 1px solid #718198;
+  border-radius: 4px;
+  background: #fff;
+  color: #182d46;
+  box-shadow: 0 3px 12px #0003;
+  font:
+    14px/1.5 Arial,
+    sans-serif;
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/scenario-generation-metadata.schema.json",
+  "title": "ScenarioGenerationMetadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["model", "prompt_version", "prompt_sha256", "source_version", "scene", "constructor", "input", "attempts", "fallback_used", "validation", "auto_admitted"],
+  "properties": {
+    "model": {"type": "string"},
+    "prompt_version": {"type": "string"},
+    "prompt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_version": {"type": "string"},
+    "scene": {"type": "string"},
+    "constructor": {"type": "object", "description": "Сохранённый ScenarioConstructor, проверен evalcore.scenario.build."},
+    "correction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["teacher_note", "previous_scenario_id"],
+      "properties": {
+        "teacher_note": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "previous_scenario_id": {"type": "string", "format": "uuid"}
+      }
+    },
+    "input": {"type": "object", "description": "Снимок фактов, проверенный validate_facts до модели."},
+    "phrases": {
+      "type": "object", "additionalProperties": false, "required": ["reports", "events"],
+      "description": "id фраз банка scripts/voices/bank по докладам и репликам событий; null — реплика текстом, фразы в банке нет.",
+      "properties": {
+        "reports": {"type": "object", "additionalProperties": {"type": ["string", "null"]}},
+        "events": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "attempts": {
+      "type": "array", "maxItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["number", "accepted", "error", "duration_seconds", "diagnostics"],
+        "properties": {
+          "number": {"type": "integer", "minimum": 1, "maximum": 2},
+          "accepted": {"type": "boolean"},
+          "error": {"type": ["string", "null"]},
+          "duration_seconds": {"type": "number", "minimum": 0},
+          "diagnostics": {"type": "object", "description": "Исходный текст модели, usage и finish_reason, когда провайдер их получил."}
+        }
+      }
+    },
+    "fallback_used": {"type": "boolean"},
+    "auto_admitted": {"type": "boolean"},
+    "coherence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reason", "stand_unavailable"],
+      "properties": {
+        "status": {"enum": ["passed", "unchecked", "catalog"]},
+        "reason": {"type": "string"},
+        "stand_unavailable": {"type": "boolean"}
+      }
+    },
+    "validation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "facts", "links", "reachability"],
+      "properties": {
+        "schema": {"const": true}, "facts": {"const": true},
+        "links": {"const": true}, "reachability": {"const": true}
+      }
+    }
+  }
+}

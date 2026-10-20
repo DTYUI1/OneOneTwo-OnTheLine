@@ -6,7 +6,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 
-from app.api.foundation import repo, schemas, service, trash
+from app.api.foundation import demo_accounts, repo, schemas, service, trash
 from app.api.foundation import users as users_service
 from app.core.security import csrf_digest, read_token
 
@@ -40,6 +40,10 @@ def require_roles(*roles: str, public: bool = False) -> Callable[[Request], Awai
 
 async def login(request: Request, body: schemas.Login, response: Response) -> schemas.User:
     return await service.login(request, body, response)
+
+
+async def demo_accounts_view(request: Request) -> schemas.DemoAccounts:
+    return demo_accounts.demo_accounts(request.app.state.config)
 
 
 async def logout(request: Request, response: Response) -> schemas.User:
@@ -99,6 +103,7 @@ ENDPOINTS: dict[str, tuple[Callable[..., Any], Any]] = {
     "listTrash": (list_trash, schemas.TrashList),
     "getSettings": (service.get_settings, schemas.Settings),
     "updateSettings": (update_settings, schemas.Settings),
+    "demoAccounts": (demo_accounts_view, schemas.DemoAccounts),
     "health": (service.health, schemas.Health),
     "adminHealth": (service.health, schemas.Health),
 }

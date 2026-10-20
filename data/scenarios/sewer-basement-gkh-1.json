@@ -1,0 +1,206 @@
+{
+  "format": 2,
+  "code": "sewer-basement-gkh-1",
+  "version": 1,
+  "title": "Канализация затопила подвал первого подъезда",
+  "service_id": "GKH",
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "14041500",
+  "complications": [],
+  "teacher_comment": "ЖКХ, уровень 1. После прибытия назвать держателя ключа от подвала по карточке. При отсутствии сведений бригада спрашивает соседей, начало работ задерживается. Засор внутренней канализации, без вызова другой службы.",
+  "outcome": {
+    "people": "В первом подъезде из подвального люка поднимается грязная вода с запахом канализации. Подвал заперт. Заявитель, житель квартиры 11, хранит ключ от подвала и ждёт бригаду у входа. Пострадавших нет. Бригада получила доступ в подвал, прочистила забитый лежак тросом и откачала воду. Засор устранён, работы завершены.",
+    "late": "Карточку приняли позже норматива. В первом подъезде из подвального люка поднимается грязная вода с запахом канализации. Подвал заперт. Заявитель, житель квартиры 11, хранит ключ от подвала и ждёт бригаду у входа. Пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Беляев Артём Саввич",
+    "phone_aon": "+79000000868",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "11"
+    },
+    "description": "В первом подъезде из подвального люка поднимается грязная вода с запахом канализации. Подвал заперт. Заявитель, житель квартиры 11, хранит ключ от подвала и ждёт бригаду у входа. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Засор внутренней канализации",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008508",
+    "incident_type_code": "14041500"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "11"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "GKH",
+      "phone_ext": "105",
+      "before_s": 180
+    },
+    "expected_comment": "В первом подъезде из подвального люка поднимается грязная вода с запахом канализации. Подвал заперт. Заявитель, житель квартиры 11, хранит ключ от подвала и ждёт бригаду у входа. Пострадавших нет. Бригада получила доступ в подвал, прочистила забитый лежак тросом и откачала воду. Засор устранён, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. Подвал заперт, а вода уже в подъезд из люка лезет. Ищем, кто откроет.",
+        "audio": "bank-v1/GKH/GKH.arrived.sewer.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Пробиваем лежак тросом. Засор плотный, тряпки какие-то.",
+        "audio": "bank-v1/GKH/GKH.working.sewer.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Засор пробили, подвал откачали. Работы завершены.",
+        "audio": "bank-v1/GKH/GKH.completed.sewer.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "basement_keys",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "arrival",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, ключи от подвала у кого? Там замок висит.",
+        "audio": "bank-v1/GKH/GKH.clarify.any.5.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Ключ у заявителя {caller_name}"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у соседей"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, поспрашиваю у соседей.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, ключи от подвала у кого? Там замок висит.",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

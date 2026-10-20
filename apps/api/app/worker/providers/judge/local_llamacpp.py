@@ -8,6 +8,7 @@
 import json
 import logging
 import re
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -41,14 +42,26 @@ def prompt(request: JudgeRequest) -> str:
 
 
 def _stems(value: str) -> set[str]:
+    """Основы слов: длинные — по пяти буквам, короткие — без окончания («вода»/«воды» → «вод»)."""
     words = re.findall(r"[а-яa-z]+", value.casefold().replace("ё", "е"))
-    return {word[:5] for word in words if len(word) >= 4}
+    return {word[:5] if len(word) >= 6 else word[:-1] for word in words if len(word) >= 4}
+
+
+# Решение пересказывают своими словами: «наряд направлен», «приняла», «отправила бригаду».
+# «Выехали» решение не подтверждает (промпт судьи): это действие бригады, а не диспетчера.
+# Фильтр только отсекает факт без опоры в тексте, найти его может лишь модель.
+DECISION_STEMS = ("приня", "напра", "отпра")
+# Слова места есть почти в любом комментарии: «улица» не подтверждает «драку на улице».
+PLACE_STEMS = frozenset({"улиц", "улица", "дом", "кварт", "подъе", "двор", "этаж"})
 
 
 def grounded(fact: str, comment: str) -> bool:
     """Факт подтверждён текстом: есть общая основа слова, для адреса — и номер дома."""
     content = fact.split(":", 1)[-1]
-    if not _stems(content) & _stems(comment):
+    said = _stems(comment)
+    decision = fact.startswith("Решение:") and any(stem.startswith(DECISION_STEMS) for stem in said)
+    meaning = _stems(content) if fact.startswith("Адрес:") else _stems(content) - PLACE_STEMS
+    if not (meaning & said or decision):
         return False
     numbers = re.findall(r"\d+", content)
     return all(number in re.findall(r"\d+", comment) for number in numbers)
@@ -91,6 +104,15 @@ class LocalLlamaJudge:
         self.max_tokens = max_tokens
         self.transport = transport
 
+    def _request_schema(self, request: JudgeRequest) -> dict[str, Any]:
+        """Закрепить ярлыки фактов, сохранив общую схему валидатора."""
+        schema: dict[str, Any] = deepcopy(self.schema)
+        if not request.key_facts:  # пустой enum — недопустимая схема
+            return schema
+        for field in ("facts_found", "facts_missing"):
+            schema["properties"][field]["items"] = {"enum": list(request.key_facts)}
+        return schema
+
     async def assess(self, request: JudgeRequest) -> JudgeVerdict | None:
         body = {
             "model": self.model,
@@ -103,7 +125,7 @@ class LocalLlamaJudge:
             "seed": 112,
             "max_tokens": self.max_tokens,
             "cache_prompt": True,
-            "response_format": {"type": "json_schema", "schema": self.schema},
+            "json_schema": self._request_schema(request),
         }
         try:
             async with httpx.AsyncClient(

@@ -1,0 +1,756 @@
+{
+  "service": "CALLER_CALM",
+  "speaker": "caller",
+  "gender": "female",
+  "character": "заявитель — спокойная; личность и сведения определяет сюжет",
+  "about": "Живой заявитель бытового сценария ЖКХ (HQ-019, требования — docs/dds_caller.md): диспетчер ДДС звонит хозяйке квартиры, бригада стоит у закрытой двери. Характер «спокойная»: на вопрос отвечает сразу и целиком, «не знаю» — только о том, чего она правда не знает. Те же сведения, что у CALLER_CONFUSED. Реплики одного места без on взаимозаменяемы (repeat, unknown и др. — любая). Адрес, прочитанный диспетчером вслух: верный — confirm_address, с ошибкой — correct_address (wrong: house — неверен дом, flat — неверна квартира; неверно и то и другое — house). tells — какое сведение сюжета звучит в реплике (plot_facts), say — текст для синтеза, если в text цифры адреса. Исторический flat plot_facts относится только к animal_shaft и сохранён. Значения новых сюжетов — plot_facts_by_plot; ключи tell_* общие, фразы отобраны строго по incidents. Нейтральные реплики новых сюжетов переиспользуют готовые записи; недостающие реплики озвучены прежним голосом ElevenLabs и собраны в набор bank-v13.",
+  "incidents": {
+    "animal_shaft": "Котёнок в вентиляционной шахте: сценарий animal-shaft-gkh-1",
+    "pipe_access": "Вода из подвала: найти ключи — pipe-access-gkh-2",
+    "lift_location": "Уточнить подъезд и кабину — lift-location-moslift-2"
+  },
+  "plot_facts": {
+    "who": "говорит хозяйка квартиры 58, она и звонила в 112",
+    "address": "Кировоградская улица, 22, квартира 58, восьмой этаж",
+    "what": "котёнок упал в вентиляционную шахту, мяукает за решёткой на кухне — она слышала, пока была дома",
+    "since": "второй день, со вчерашнего дня",
+    "owner": "чей котёнок — не знает, не её",
+    "people": "никто не пострадал, живёт одна, дома никого",
+    "danger": "газом не пахнет, дыма нет",
+    "where": "вышла в магазин у дома, ключи у неё",
+    "eta": "будет минут через пять",
+    "box": "решётка на кухне над холодильником, вскрыть короб разрешает"
+  },
+  "plot_facts_by_plot": {
+    "animal_shaft": {
+      "who": "говорит хозяйка квартиры 58, она и звонила в 112",
+      "address": "Кировоградская улица, 22, квартира 58, восьмой этаж",
+      "what": "котёнок упал в вентиляционную шахту, мяукает за решёткой на кухне — она слышала, пока была дома",
+      "since": "второй день, со вчерашнего дня",
+      "owner": "чей котёнок — не знает, не её",
+      "people": "никто не пострадал, живёт одна, дома никого",
+      "danger": "газом не пахнет, дыма нет",
+      "where": "вышла в магазин у дома, ключи у неё",
+      "eta": "будет минут через пять",
+      "box": "решётка на кухне над холодильником, вскрыть короб разрешает"
+    },
+    "pipe_access": {
+      "who": "Да, это я, Смирнова Анна Сергеевна, оставляла заявку о воде из подвала.",
+      "address": "улица Пришвина, 17. Квартира к заявке не относится, вода из общего подвала.",
+      "what": "Из люка у входа в подвал идёт вода, уже течёт в подъезд. Что сломалось внутри, не знаю.",
+      "since": "Заметила минут двадцать назад, с тех пор вода продолжает идти.",
+      "owner": "Ключи от общего подвала у меня, я старшая по дому.",
+      "people": "Пострадавших нет. В подвал из жильцов никто не спускался.",
+      "danger": "Дыма и запаха газа нет. Что внутри подвала, я не проверяла.",
+      "where": "Я у второго подъезда, рядом с синей скамейкой. Ключи от подвала при мне.",
+      "eta": "Могу встретить бригаду сейчас, дверь открою через две минуты после встречи.",
+      "box": "Отдельный вход в подвал со двора, справа от второго подъезда, серая металлическая дверь."
+    },
+    "lift_location": {
+      "who": "Да, это я, Соколова Елена Павловна, звонила насчёт застрявшего лифта.",
+      "address": "Профсоюзная улица, 98. Это общий лифт, номера квартиры в заявке нет.",
+      "what": "В лифте застряли двое взрослых соседей. Они позвонили мне, я вышла встречать механика.",
+      "since": "Лифт остановился примерно десять минут назад.",
+      "owner": "Я соседка, не пассажир. Пассажиры мне позвонили, мой телефон указан в заявке.",
+      "people": "В кабине двое взрослых. По телефону сказали, что не пострадали и жалоб нет.",
+      "danger": "Со слов пассажиров, дыма и запаха гари нет, свет в кабине есть.",
+      "where": "Третий подъезд, вход со двора. Я жду механика снаружи у этого подъезда.",
+      "eta": "Я уже у третьего подъезда, могу встретить механика сейчас.",
+      "box": "Левый пассажирский лифт, не правый грузовой. Кабина между четвёртым и пятым этажами."
+    }
+  },
+  "phrases": [
+    {
+      "id": "CALLER_CALM.answer.animal_shaft.1",
+      "slot": "answer",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Алло, слушаю.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.answer.animal_shaft.2",
+      "slot": "answer",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Да, алло.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.answer_again.animal_shaft.1",
+      "slot": "answer_again",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Алло, это опять вы? Связь оборвалась.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.ask_who.animal_shaft.1",
+      "slot": "ask_who",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "А кто это звонит?",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.tell_who.animal_shaft.1",
+      "slot": "tell_who",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Да, это я, хозяйка квартиры. Это я про котёнка звонила.",
+      "facts": [],
+      "tells": [
+        "who"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_address.animal_shaft.1",
+      "slot": "tell_address",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Кировоградская улица, дом 22, квартира 58. Восьмой этаж.",
+      "say": "Кировоградская улица, дом двадцать два, квартира пятьдесят восемь. Восьмой этаж.",
+      "facts": [],
+      "tells": [
+        "address"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.confirm_address.animal_shaft.1",
+      "slot": "confirm_address",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Да, всё верно: двадцать второй дом, пятьдесят восьмая квартира.",
+      "facts": [],
+      "tells": [
+        "address"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.correct_address.animal_shaft.1",
+      "slot": "correct_address",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Нет, квартира 58, не 85. Пять, восемь.",
+      "say": "Нет, квартира пятьдесят восемь, не восемьдесят пять. Пять, восемь.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "wrong": "flat"
+    },
+    {
+      "id": "CALLER_CALM.correct_address.animal_shaft.2",
+      "slot": "correct_address",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Нет, дом 22, не 2. Дом 22, квартира 58.",
+      "say": "Нет, дом двадцать два, не два. Дом двадцать два, квартира пятьдесят восемь.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "wrong": "house"
+    },
+    {
+      "id": "CALLER_CALM.tell_what.animal_shaft.1",
+      "slot": "tell_what",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Котёнок упал в вентиляционную шахту. Мяукал у меня на кухне, за решёткой, — я слышала, пока была дома.",
+      "facts": [],
+      "tells": [
+        "what"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_since.animal_shaft.1",
+      "slot": "tell_since",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Со вчерашнего дня. Второй день уже слышу.",
+      "facts": [],
+      "tells": [
+        "since"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_owner.animal_shaft.1",
+      "slot": "tell_owner",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Не знаю, чей. Не мой — у меня кошки нет. Может, соседский.",
+      "facts": [],
+      "tells": [
+        "owner"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_people.animal_shaft.1",
+      "slot": "tell_people",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Нет, никто не пострадал. Я живу одна, дома сейчас никого.",
+      "facts": [
+        "no_victims"
+      ],
+      "tells": [
+        "people"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_danger.animal_shaft.1",
+      "slot": "tell_danger",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Нет, ничего такого. Газом не пахнет, дыма нет.",
+      "facts": [
+        "no_gas",
+        "no_fire"
+      ],
+      "tells": [
+        "danger"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_where.animal_shaft.1",
+      "slot": "tell_where",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Я вышла в магазин, он у самого дома. Ключи у меня.",
+      "facts": [],
+      "tells": [
+        "where"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_eta.animal_shaft.1",
+      "slot": "tell_eta",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Минут через пять буду. Пусть подождут у двери.",
+      "facts": [],
+      "tells": [
+        "eta"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_box.animal_shaft.1",
+      "slot": "tell_box",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Решётка на кухне, над холодильником. Если надо вскрыть короб — вскрывайте, я разрешаю.",
+      "facts": [],
+      "tells": [
+        "box"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.unknown.animal_shaft.1",
+      "slot": "unknown",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Этого я не знаю, честно.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.unknown.animal_shaft.2",
+      "slot": "unknown",
+      "incidents": [
+        "animal_shaft"
+      ],
+      "text": "Не скажу, не знаю. Я только мяуканье слышала.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.repeat.animal_shaft.1",
+      "slot": "repeat",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Повторю ещё раз.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.repeat.animal_shaft.2",
+      "slot": "repeat",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Я уже говорила, но повторю.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.not_understood.animal_shaft.1",
+      "slot": "not_understood",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Простите, не расслышала. Повторите, пожалуйста.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.not_understood.animal_shaft.2",
+      "slot": "not_understood",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Что, простите? Плохо слышно.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.agree.animal_shaft.1",
+      "slot": "agree",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Хорошо, иду. Уже подхожу к подъезду.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.agree.animal_shaft.2",
+      "slot": "agree",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Поняла, бегу.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.no_reply.animal_shaft.1",
+      "slot": "no_reply",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Алло? Вы тут?",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.no_reply.animal_shaft.2",
+      "slot": "no_reply",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Алло! Вас не слышно.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.hangup.animal_shaft.1",
+      "slot": "hangup",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Ничего не слышно. Перезвоните, пожалуйста.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.end_call.animal_shaft.1",
+      "slot": "end_call",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Спасибо вам. До свидания.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.end_call.animal_shaft.2",
+      "slot": "end_call",
+      "incidents": [
+        "animal_shaft",
+        "pipe_access",
+        "lift_location"
+      ],
+      "text": "Хорошо, сейчас подойду. Спасибо.",
+      "facts": [],
+      "tells": []
+    },
+    {
+      "id": "CALLER_CALM.tell_who.pipe_access.1",
+      "slot": "tell_who",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Да, это я, Смирнова Анна Сергеевна, оставляла заявку о воде из подвала.",
+      "facts": [],
+      "tells": [
+        "who"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_address.pipe_access.1",
+      "slot": "tell_address",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "улица Пришвина, 17. Квартира к заявке не относится, вода из общего подвала.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "say": "улица Пришвина, семнадцать. Квартира к заявке не относится, вода из общего подвала."
+    },
+    {
+      "id": "CALLER_CALM.tell_what.pipe_access.1",
+      "slot": "tell_what",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Из люка у входа в подвал идёт вода, уже течёт в подъезд. Что сломалось внутри, не знаю.",
+      "facts": [],
+      "tells": [
+        "what"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_since.pipe_access.1",
+      "slot": "tell_since",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Заметила минут двадцать назад, с тех пор вода продолжает идти.",
+      "facts": [],
+      "tells": [
+        "since"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_owner.pipe_access.1",
+      "slot": "tell_owner",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Ключи от общего подвала у меня, я старшая по дому.",
+      "facts": [],
+      "tells": [
+        "owner"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_people.pipe_access.1",
+      "slot": "tell_people",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Пострадавших нет. В подвал из жильцов никто не спускался.",
+      "facts": [],
+      "tells": [
+        "people"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_danger.pipe_access.1",
+      "slot": "tell_danger",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Дыма и запаха газа нет. Что внутри подвала, я не проверяла.",
+      "facts": [],
+      "tells": [
+        "danger"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_where.pipe_access.1",
+      "slot": "tell_where",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Я у второго подъезда, рядом с синей скамейкой. Ключи от подвала при мне.",
+      "facts": [],
+      "tells": [
+        "where"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_eta.pipe_access.1",
+      "slot": "tell_eta",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Могу встретить бригаду сейчас, дверь открою через две минуты после встречи.",
+      "facts": [],
+      "tells": [
+        "eta"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_box.pipe_access.1",
+      "slot": "tell_box",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Отдельный вход в подвал со двора, справа от второго подъезда, серая металлическая дверь.",
+      "facts": [],
+      "tells": [
+        "box"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.confirm_address.pipe_access.1",
+      "slot": "confirm_address",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Да, адрес верный: улица Пришвина, 17. Квартира к заявке не относится, вода из общего подвала.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "say": "Да, адрес верный: улица Пришвина, семнадцать. Квартира к заявке не относится, вода из общего подвала."
+    },
+    {
+      "id": "CALLER_CALM.correct_address.pipe_access.1",
+      "slot": "correct_address",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Нет, улица Пришвина, 17. Квартира к заявке не относится, вода из общего подвала.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "wrong": "house",
+      "say": "Нет, улица Пришвина, семнадцать. Квартира к заявке не относится, вода из общего подвала."
+    },
+    {
+      "id": "CALLER_CALM.correct_address.pipe_access.2",
+      "slot": "correct_address",
+      "incidents": [
+        "pipe_access"
+      ],
+      "text": "Номер квартиры здесь не нужен: улица Пришвина, 17. Квартира к заявке не относится, вода из общего подвала.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "wrong": "flat",
+      "say": "Номер квартиры здесь не нужен: улица Пришвина, семнадцать. Квартира к заявке не относится, вода из общего подвала."
+    },
+    {
+      "id": "CALLER_CALM.tell_who.lift_location.1",
+      "slot": "tell_who",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Да, это я, Соколова Елена Павловна, звонила насчёт застрявшего лифта.",
+      "facts": [],
+      "tells": [
+        "who"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_address.lift_location.1",
+      "slot": "tell_address",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Профсоюзная улица, 98. Это общий лифт, номера квартиры в заявке нет.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "say": "Профсоюзная улица, девяносто восемь. Это общий лифт, номера квартиры в заявке нет."
+    },
+    {
+      "id": "CALLER_CALM.tell_what.lift_location.1",
+      "slot": "tell_what",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "В лифте застряли двое взрослых соседей. Они позвонили мне, я вышла встречать механика.",
+      "facts": [],
+      "tells": [
+        "what"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_since.lift_location.1",
+      "slot": "tell_since",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Лифт остановился примерно десять минут назад.",
+      "facts": [],
+      "tells": [
+        "since"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_owner.lift_location.1",
+      "slot": "tell_owner",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Я соседка, не пассажир. Пассажиры мне позвонили, мой телефон указан в заявке.",
+      "facts": [],
+      "tells": [
+        "owner"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_people.lift_location.1",
+      "slot": "tell_people",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "В кабине двое взрослых. По телефону сказали, что не пострадали и жалоб нет.",
+      "facts": [],
+      "tells": [
+        "people"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_danger.lift_location.1",
+      "slot": "tell_danger",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Со слов пассажиров, дыма и запаха гари нет, свет в кабине есть.",
+      "facts": [],
+      "tells": [
+        "danger"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_where.lift_location.1",
+      "slot": "tell_where",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Третий подъезд, вход со двора. Я жду механика снаружи у этого подъезда.",
+      "facts": [],
+      "tells": [
+        "where"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_eta.lift_location.1",
+      "slot": "tell_eta",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Я уже у третьего подъезда, могу встретить механика сейчас.",
+      "facts": [],
+      "tells": [
+        "eta"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.tell_box.lift_location.1",
+      "slot": "tell_box",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Левый пассажирский лифт, не правый грузовой. Кабина между четвёртым и пятым этажами.",
+      "facts": [],
+      "tells": [
+        "box"
+      ]
+    },
+    {
+      "id": "CALLER_CALM.confirm_address.lift_location.1",
+      "slot": "confirm_address",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Да, адрес верный: Профсоюзная улица, 98. Это общий лифт, номера квартиры в заявке нет.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "say": "Да, адрес верный: Профсоюзная улица, девяносто восемь. Это общий лифт, номера квартиры в заявке нет."
+    },
+    {
+      "id": "CALLER_CALM.correct_address.lift_location.1",
+      "slot": "correct_address",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Нет, Профсоюзная улица, 98. Это общий лифт, номера квартиры в заявке нет.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "wrong": "house",
+      "say": "Нет, Профсоюзная улица, девяносто восемь. Это общий лифт, номера квартиры в заявке нет."
+    },
+    {
+      "id": "CALLER_CALM.correct_address.lift_location.2",
+      "slot": "correct_address",
+      "incidents": [
+        "lift_location"
+      ],
+      "text": "Номер квартиры здесь не нужен: Профсоюзная улица, 98. Это общий лифт, номера квартиры в заявке нет.",
+      "facts": [],
+      "tells": [
+        "address"
+      ],
+      "wrong": "flat",
+      "say": "Номер квартиры здесь не нужен: Профсоюзная улица, девяносто восемь. Это общий лифт, номера квартиры в заявке нет."
+    }
+  ]
+}

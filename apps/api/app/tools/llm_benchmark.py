@@ -277,7 +277,7 @@ async def _generate_one(
         "max_tokens": max_tokens,
         "seed": seed,
         "cache_prompt": True,
-        "response_format": {"type": "json_schema", "schema": schema},
+        "json_schema": schema,
     }
     # Measure service latency only after the request acquires a concurrency
     # slot.  Tasks are created together, so measuring before the semaphore

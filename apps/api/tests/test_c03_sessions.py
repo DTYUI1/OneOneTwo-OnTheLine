@@ -347,6 +347,12 @@ def test_finish_preserves_attempts_calls_evidence_and_late_audio(
         send(interrupted, event("call_answer", {"call_id": call_id}))
         before_card = trainee.get(f"/api/cards/{interrupted['id']}").json()
         before_events = trainee.get(f"/api/cards/{interrupted['id']}/events").json()
+        # Микрофон не пишется: идущий разговор — не «идёт запись», а «записи нет».
+        talking = next(
+            a for a in lifecycle(lesson)["attempts"] if a["card_id"] == interrupted["id"]
+        )
+        assert talking["active_call_id"] == call_id
+        assert talking["recording_status"] == "none"
         # Закрыта одна карточка из трёх выданных, четвёртое назначение ещё не выдано.
         assert lifecycle(lesson)["remaining_assignments"] == 3
         assert before_card["interrupted_at"] is None
@@ -364,7 +370,7 @@ def test_finish_preserves_attempts_calls_evidence_and_late_audio(
         assert snapshot["cancelled_assignment_ids"] == [receipt["assignments"][2]["id"]]
         assert snapshot["remaining_assignments"] == 0
         attempt = next(a for a in snapshot["attempts"] if a["card_id"] == interrupted["id"])
-        assert attempt["recording_status"] == "upload_pending"
+        assert attempt["recording_status"] == "none"
         assert attempt["active_call_id"] is None
         assert attempt["interrupted_at"] == snapshot["finished_at"]
         # Карточка не меняется, кроме отметки прерывания: по ней АРМ останавливает таймеры.

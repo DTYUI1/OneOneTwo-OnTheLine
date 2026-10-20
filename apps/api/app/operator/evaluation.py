@@ -4,6 +4,7 @@
 вебе (`apps/web/src/operator/model.ts`); своей таблицы настроек для весов пока нет.
 """
 
+import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -68,6 +69,12 @@ ADDRESS_FIELDS: tuple[str, ...] = (
     "house",
     "building",
     "apartment",
+    "object",
+    "structure",
+    "entrance",
+    "floor",
+    "code",
+    "descriptive",
 )
 FIELD_RU: dict[str, str] = {
     "city": "населённый пункт",
@@ -77,7 +84,14 @@ FIELD_RU: dict[str, str] = {
     "house": "дом",
     "building": "корпус",
     "apartment": "квартира",
+    "object": "объект",
+    "structure": "строение/сооружение",
+    "entrance": "подъезд",
+    "floor": "этаж",
+    "code": "код",
+    "descriptive": "описательный адрес",
 }
+NEW_ADDRESS_FIELDS = frozenset({"object", "structure", "entrance", "floor", "code", "descriptive"})
 # Округ и район заявитель называет не всегда (разбор 29.09): поле, которого он не назвал,
 # обязательно только если обучаемый его заполнил — тогда неверное значение остаётся ошибкой.
 OPTIONAL_ADDRESS_FIELDS: frozenset[str] = frozenset({"okrug", "district"})
@@ -215,17 +229,29 @@ def _checked_address_fields(scenario: dict[str, Any], address: Mapping[str, str]
     return [
         field
         for field in ADDRESS_FIELDS
-        if field not in OPTIONAL_ADDRESS_FIELDS or field in named or address.get(field, "").strip()
+        if (field not in NEW_ADDRESS_FIELDS or field in named)
+        and (
+            field not in OPTIONAL_ADDRESS_FIELDS or field in named or address.get(field, "").strip()
+        )
     ]
 
 
 def _address_mismatches(scenario: dict[str, Any], address: Mapping[str, str]) -> list[str]:
     expected = scenario["address"]
-    return [
-        field
-        for field in _checked_address_fields(scenario, address)
-        if not address_field_match(field, expected[field], address.get(field, ""))
-    ]
+    mismatched = []
+    for field in _checked_address_fields(scenario, address):
+        actual, reference = address.get(field, ""), expected.get(field, "")
+        if field == "descriptive":
+            matches = mentions(actual, scenario.get("landmark_synonyms", [reference]))
+        elif field in {"entrance", "floor", "code"}:
+            # «между 4 и 5» засчитывает и «4-5»: достаточно тех же чисел по порядку.
+            digits = " ".join(re.findall(r"\d+", reference))
+            matches = mentions(actual, [reference, digits] if digits else [reference])
+        else:
+            matches = address_field_match(field, reference, actual)
+        if not matches:
+            mismatched.append(field)
+    return mismatched
 
 
 def _eval_address(
@@ -310,7 +336,7 @@ CALLER_SHARES = {"panic": 0.4, "calming": 0.2, "pauses": 0.2, "escalation": 0.2}
 
 
 def _eval_caller(
-    scenario: dict[str, Any], caller: CallerState, weights: Mapping[str, int]
+    scenario: dict[str, Any], caller: CallerState, weights: Mapping[str, int], caller_status: str
 ) -> Criterion:
     """Работа с заявителем: чем кончился разговор и какими приёмами (этап 2, IAED).
 
@@ -350,8 +376,15 @@ def _eval_caller(
             if caller.panic == 0
             else f"Заявитель спокоен ({caller.panic} из {PANIC_MAX}), приёмы применены верно."
         )
-        return _criterion("caller", score, text, weights)
-    return _criterion("caller", score, "Работа с заявителем: " + "; ".join(issues) + ".", weights)
+    else:
+        text = "Работа с заявителем: " + "; ".join(issues) + "."
+    expected_status = scenario["caller"]["status"]
+    status_text = (
+        f"Статус заявителя указан верно: {expected_status}."
+        if caller_status == expected_status
+        else f"Статус заявителя: {caller_status or 'не указан'}; нужно: {expected_status}."
+    )
+    return _criterion("caller", score, text + " " + status_text, weights)
 
 
 # Доли критерия «Порядок опроса» (этап 3, APCO/NENA): адрес первым, повтор адреса, номер для
@@ -417,6 +450,7 @@ def evaluate(
     description: str,
     elapsed_s: int,
     caller: CallerState,
+    caller_status: str = "",
     weights: Mapping[str, int] | None = None,
 ) -> EvaluationResult:
     """Оценить сохранённую попытку по эталону сценария; веса — `DEFAULT_WEIGHTS`."""
@@ -428,7 +462,7 @@ def evaluate(
         _eval_address(scenario, address, weights),
         _eval_description(scenario, description, caller.escalated, weights),
         _eval_order(scenario, caller, weights),
-        _eval_caller(scenario, caller, weights),
+        _eval_caller(scenario, caller, weights, caller_status),
         _eval_timing(elapsed_s, _timing_blocker(scenario, incident_type_code, address), weights),
     )
     return EvaluationResult(criteria, sum(c.points for c in criteria), sum(weights.values()))

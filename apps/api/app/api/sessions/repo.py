@@ -9,7 +9,9 @@ from app.core.models import Assignment, Participant, Session
 
 async def get_session(db: AsyncSession, session_id: UUID, *, lock: bool = False) -> Session | None:
     query = (
-        select(Session).where(Session.id == session_id).options(selectinload(Session.participants))
+        select(Session)
+        .where(Session.id == session_id, Session.deleted_at.is_(None))
+        .options(selectinload(Session.participants))
     )
     if lock:
         query = query.with_for_update()
@@ -17,7 +19,12 @@ async def get_session(db: AsyncSession, session_id: UUID, *, lock: bool = False)
 
 
 async def sessions(db: AsyncSession, user_id: UUID, role: str) -> list[Session]:
-    query = select(Session).options(selectinload(Session.participants)).order_by(Session.id)
+    query = (
+        select(Session)
+        .where(Session.deleted_at.is_(None))
+        .options(selectinload(Session.participants))
+        .order_by(Session.id)
+    )
     if role == "trainee":
         query = query.join(Participant).where(Participant.user_id == user_id)
     else:

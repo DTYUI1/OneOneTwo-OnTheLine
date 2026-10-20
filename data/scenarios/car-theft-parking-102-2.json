@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "car-theft-parking-102-2",
+  "version": 1,
+  "title": "Машина пропала с парковки у дома",
+  "service_id": "102",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "15210101",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Фаршавское шоссе, 874» на Варшавское шоссе, 87. Уточнить марку и цвет машины из карточки. Угон обнаружен менее тридцати минут назад. Итог — заявление и розыск; не приписывать задержание угонщика.",
+  "outcome": {
+    "people": "Заявитель оставил синюю «Ладу» на парковке у дома десять минут назад. Вернувшись, не обнаружил машину, на её месте лежит битое стекло. Владелец ждёт наряд у шлагбаума; пострадавших нет. Наряд опросил владельца и просмотрел камеры у шлагбаума. Заявление принято, машина объявлена в розыск, наряд освободился.",
+    "late": "Карточку приняли позже норматива. Заявитель оставил синюю «Ладу» на парковке у дома десять минут назад. Вернувшись, не обнаружил машину, на её месте лежит битое стекло. Владелец ждёт наряд у шлагбаума; пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Нестеров Вадим Ильич",
+    "phone_aon": "+79000000882",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Северное",
+      "street": "Варшавское шоссе",
+      "house": "87",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Заявитель оставил синюю «Ладу» на парковке у дома десять минут назад. Вернувшись, не обнаружил машину, на её месте лежит битое стекло. Владелец ждёт наряд у шлагбаума; пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Угон автомашины (до 30 минут)",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70008522",
+    "incident_type_code": "15210101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Северное",
+      "street": "Варшавское шоссе",
+      "house": "87",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Заявитель оставил синюю «Ладу» на парковке у дома десять минут назад. Вернувшись, не обнаружил машину, на её месте лежит битое стекло. Владелец ждёт наряд у шлагбаума; пострадавших нет. Наряд опросил владельца и просмотрел камеры у шлагбаума. Заявление принято, машина объявлена в розыск, наряд освободился."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Мы тут рядом, через пару минут будем.",
+        "audio": "bank-v1/102/102.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. Владелец на парковке, машины нет, на асфальте стекло.",
+        "audio": "bank-v1/102/102.arrived.car_theft.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Опрашиваем владельца, смотрим камеры у шлагбаума.",
+        "audio": "bank-v1/102/102.working.car_theft.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Заявление принято, машина в розыске. Освободились.",
+        "audio": "bank-v1/102/102.completed.car_theft.2.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Фаршавское шоссе, 874.",
+        "audio": "bank-v6/102/102.readback.a4469295.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, понял. Перестраиваемся, это рядом.",
+            "audio": "bank-v1/102/102.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/102/102.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/102/102.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "car_details",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, марка и цвет машины в карточке есть?",
+        "audio": "bank-v1/102/102.clarify.any.10.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Синяя «Лада»"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните на месте"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Нет так нет. Разберёмся на месте.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/102/102.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, марка и цвет машины в карточке есть?",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

@@ -35,15 +35,15 @@ Alembic `0001` — `apps/api/migrations/versions/0001_initial.py`;
 |---|---|
 | users | UUID PK, login UNIQUE, password_hash, role enum, full_name, is_active, created_at |
 | auth_sessions | UUID PK (`sid` JWT), user_id FK, csrf_hash, expires_at, created_at; logout удаляет строку |
-| services | text PK (`101`,`102`,`103`,`104`,`GKH`,`MOSLIFT`), code UNIQUE, phone_ext UNIQUE 3 цифры, voice_profile, category, is_active |
+| services | text PK (`101`,`102`,`103`,`104`,`GKH`,`MOSLIFT`; `112` — Система-112, `data_formats.md`), code UNIQUE, phone_ext UNIQUE 3 цифры, voice_profile, category, is_active |
 | incident_types | text code PK (ведущие нули сохраняются), group_no/name, sign1..3, scenario_code, main_service_code, raw |
 | routing_rules | incident_type_code FK, service_id FK, condition JSONB (`data_formats.md`), payload |
 | streets | id, name, name_norm, okrug, district, source |
 | scenarios | UUID PK, version, level CHECK 1..4, weight CHECK 1..10, target_service_id FK, card/reference/complications по scenario.schema.json, origin, status, author_id, teacher_comment |
 | scenario_packs / scenario_pack_items | pack_id FK, scenario_id FK, order; status draft/approved/retired |
-| sessions | UUID PK, teacher_id FK users, title, status draft/running/finished, timestamps, settings_snapshot, timing_policy (jsonb по TimingPolicy; NULL — legacy v1) |
+| sessions | UUID PK, teacher_id FK users, title, status draft/running/finished, timestamps, settings_snapshot, timing_policy (jsonb по TimingPolicy; NULL — legacy v1), paused_at nullable (TC-12, `live-lesson.md`) |
 | workstations | integer PK, number UNIQUE CHECK 1..23 |
-| session_participants | UUID PK, session_id/user_id/workstation_id/dds_service_id FK, level, rating_at_start; UNIQUE(session_id,user_id), UNIQUE(session_id,workstation_id) |
+| session_participants | UUID PK, session_id/user_id/workstation_id/dds_service_id FK, level, rating_at_start, paused_at nullable (TC-12); UNIQUE(session_id,user_id), UNIQUE(session_id,workstation_id) |
 | assignments | UUID PK, session_id, participant_id, scenario_id, order, planned_at, status |
 | cards | UUID PK, assignment_id FK, number, state enum, appeared_at/delivered_at/opened_at/first_status_at/closed_at, current по current.schema.json, redirected_to_service_id FK |
 | card_events | UUID PK, card_id/actor_id FK, client_event_id, client_ts/server_ts, clock_offset_ms, type, payload; UNIQUE(actor_id,client_event_id); append-only |
@@ -56,6 +56,10 @@ Alembic `0001` — `apps/api/migrations/versions/0001_initial.py`;
 | audit_log | UUID PK, ts, actor_id, action, entity, entity_id, before/after, ip; append-only |
 | jobs | UUID PK, kind, payload, status, attempts, locked_by, locked_at, idempotency_key UNIQUE nullable, run_after, result, error |
 | worker_heartbeats | worker_id text PK, updated_at; состояние worker для health |
+| scenario_event_firings | UUID PK, card_id FK, event_id, event_version, source plan/inject, injected_by FK users (только у inject), fired_at; UNIQUE(card_id,event_id); append-only — срабатывания событий бригады (DT-10, миграция 0016) |
+| brigade_briefings | UUID PK, card_id FK, call_id FK, brigade_id FK, briefed_at, mode voice/parts, text, address ok/wrong/missing, heard_address nullable, incident, complete; append-only — вводные бригадам: что поняла бригада (`evalcore.briefing`); первая полная вводная отправляет бригаду (GP-05, миграция 0018) |
+| teacher_messages | UUID PK, session_id/user_id/teacher_id FK, text 1..500, sent_at, read_at nullable — сообщение ученику из хода занятия (TC-12, `live-lesson.md`) |
+| lesson_feedback | UUID PK, session_id/user_id FK, draft, text nullable, released_at nullable; UNIQUE(session_id,user_id) — черновик и выданный отзыв по итогам занятия (TC-13, `lesson-review.md`, миграция 0020) |
 | seed_artifacts | path PK (относительно data/), schema_name, content JSONB; исходные classifier/templates/golden/packs/voice manifest |
 
 **Дополнения T-007 (`contract:`):** у `users` сохраняются nullable
@@ -70,12 +74,29 @@ CSRF хранится как SHA-256; пароль — Argon2id. Пароли, J
 манифест голосов; это не новая публичная HTTP-операция.
 
 JSONB: card/reference/complications → scenario.schema.json; current → current.schema.json;
-card_events.payload → соответствующая ветвь card-event.schema.json; settings и
+card_events.payload → соответствующая ветвь card-event.schema.json (служебная запись
+`status_denied`, которую пишет сервер, — storage.StatusDeniedPayload, GP-26); settings и
 settings_snapshot → OpenAPI Settings; classifier raw/condition и seed assets →
 storage.schema.json; scores/criterion_patches → storage.Scores, critical_flags →
 storage.CriticalFlags, explanation → storage.Explanations, model_info → storage.ModelInfo,
 ratings.history → storage.RatingHistory; audit before/after → storage.AuditSnapshot.
 Jobs payload/result описаны в jobs.md и storage.JobPayload/JobResult.
+
+Миграция 0022: `scenarios.generation_metadata JSONB NULL` — только происхождение новых
+сценариев (`scenario-generation-metadata.schema.json`): модель, версия/хеш промпта,
+исходные параметры, попытки и сырые ответы, результат допуска и признак fallback.
+Старые сценарии, их версии, назначения и результаты не переписываются.
+
+Миграция 0024: `sessions.start_request JSONB NULL` по `lesson-start-request.schema.json` —
+запрос преподавателя дождаться завершения конкретных jobs генерации и затем начать
+занятие. Статус остаётся draft, started_at/due_at не назначаются до реального запуска.
+Worker повторяет все проверки старта; ошибку сохраняет в запросе, отмена очищает его.
+IDs чужих jobs и чужие участники в HTTP не выдаются: только start_pending/start_error.
+
+Миграция 0023: `sessions.ai_preparation JSONB NULL` — снимок режима занятия и прогресс
+по `ai-preparation.schema.json`. Связь с Job задаёт job_id; эталонов/докладов здесь нет.
+Назначения создаются одной существующей AssignmentBatch только после проверки всего
+набора. Самостоятельные practice сохраняют NULL. Новая история не изменяет θ.
 
 С 23.09.2026 `storage.Explanations` допускает для каждого ключа критерия старую
 строку либо объект `{"explanation": "текст", "evidence": ["основание"]}`.
@@ -85,6 +106,9 @@ HTTP/WS возвращают `evidence: []`: потерянные основан
 При развёртывании обновляйте API и worker вместе, до возобновления обработки оценок:
 старый API не понимает объект, а старый worker при пересчёте теряет `evidence`.
 Публичные формы HTTP/WS и интерфейс evalcore не изменены.
+С 16.10.2026 (TC-10) объект может нести и `remarks` — замечания разбора
+(`storage.CriterionRemark`, [evalcore.md](evalcore.md) «Замечания разбора»); без поля —
+оценка записана раньше, HTTP/WS отдают общее замечание по ключу критерия.
 
 `cards.current` и `card_events` изменяются в одной транзакции. `server_ts` ставит сервер;
 `delivered_at` — подтверждение отображения карточки, а не время HTTP-ответа.

@@ -1,9 +1,17 @@
 import { expect, test, type Page } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
+import {
+  answer,
+  freeBrigade,
+  currentStep,
+  openPhone,
+  phoneWindow,
+} from "./phone";
+import { introSeenForAnyUser } from "./trainer";
 
 type Card = components["schemas"]["Card"];
 type Session = components["schemas"]["Session"];
-type Service = components["schemas"]["Service"];
+type CardTraining = components["schemas"]["CardTraining"];
 
 // Сдвиги вёрстки на пути обучаемого: после каждого действия блоки, которые
 // не участвовали в действии, должны остаться на месте. Замер — по рамкам
@@ -79,6 +87,8 @@ const shiftSoFar = (page: Page) =>
   page.evaluate(() => (window as unknown as { __shift: number }).__shift ?? 0);
 
 async function login(page: Page, name: string) {
+  // Окно «Как устроено обучение» (DT-18) — перед первой тренировкой; здесь о другом.
+  await page.addInitScript(introSeenForAnyUser);
   await page.goto("/app/login");
   await page.getByLabel("Логин", { exact: true }).fill(name);
   await page
@@ -101,6 +111,13 @@ for (const viewport of [
     page.setDefaultTimeout(15_000);
     await page.setViewportSize(viewport);
     // Прежняя тренировка ещё идёт — подтверждаем окном «Начать заново».
+    // Каждый запуск тренировки подтверждается (PracticeButton, 20.10).
+    await page.addLocatorHandler(
+      page.getByRole("dialog", { name: "Запустить тренировку?" }),
+      async (dialog) => {
+        await dialog.getByRole("button", { name: "Запустить" }).click();
+      },
+    );
     await page.addLocatorHandler(
       page.getByRole("dialog", { name: "Начать тренировку заново?" }),
       async (dialog) => {
@@ -151,7 +168,9 @@ for (const viewport of [
 
     // Параллельные прогоны на одном стенде — разными обучаемыми.
     await login(page, process.env.E2E_TRAINEE ?? "trainee03");
-    await page.getByRole("button", { name: "Диспетчер служб" }).click();
+    await page
+      .getByRole("button", { name: /^(Диспетчер служб|Перейти в тренажёр)$/ })
+      .click();
     await expect(page).toHaveURL(/\/arm/);
     await page.waitForTimeout(1500);
 
@@ -160,13 +179,13 @@ for (const viewport of [
         .getByRole("button", { name: /^Тренировка/ })
         .first()
         .click();
-      // До автозапуска карточки (main) её открывали строкой реестра.
-      await expect(page)
-        .toHaveURL(/\/arm\/cards\/[^/]+$/, { timeout: 10_000 })
-        .catch(async () => {
-          await page.locator("[data-card-id]").first().click();
-          await expect(page).toHaveURL(/\/arm\/cards\/[^/]+$/);
-        });
+      // Запуск подтверждается (обработчики выше). Карточка открывается сама: прежний
+      // запасной щелчок по первой строке реестра открывал чужую старую карточку, и сдвиг
+      // мерился не на том пути (ревью 20.10).
+      await expect(
+        page.getByRole("region", { name: /^Происшествие \d+$/ }),
+      ).toBeVisible({ timeout: 30_000 });
+      await expect(page).toHaveURL(/\/arm\/cards\/[^/]+$/);
       await page.waitForTimeout(1500);
     });
     const id = decodeURIComponent(page.url().split("/").at(-1)!);
@@ -176,24 +195,11 @@ for (const viewport of [
       await page.request.get("/api/sessions")
     ).json();
     const practice = sessions.find((item) => item.id === card.session_id)!;
-    const serviceId = practice.participants[0].dds_service_id;
-    const services: Service[] = await (
-      await page.request.get("/api/services")
-    ).json();
-    const service = services.find((item) => item.id === serviceId)!;
     const cardView = page.getByRole("region", {
       name: `Происшествие ${card.source.number}`,
       exact: true,
     });
 
-    await step("развернуть свою службу", () =>
-      cardView
-        .getByRole("button", {
-          name: `Развернуть ${service.name}`,
-          exact: true,
-        })
-        .click(),
-    );
     await step("открыть форму статуса", () =>
       cardView
         .getByRole("button", { name: "Изменить статус", exact: true })
@@ -215,39 +221,51 @@ for (const viewport of [
         .getByRole("button", { name: "Подтвердить", exact: true })
         .click(),
     );
-    const phone = page.getByRole("button", {
-      name: /^(Телефон|Звонок завершён)$/,
+    // Связь службы — окно телефона ДДС (GP-09): значок на панели карточки открывает
+    // его поверх карточки, ничего под ним не сдвигается.
+    const win = phoneWindow(page);
+    await step("открыть телефон", async () => {
+      await openPhone(page);
     });
-    await step("открыть телефон", () => phone.click());
-    const panel = page.getByRole("region", { name: "Бригады службы" });
-    await step("отметить бригаду", () =>
-      panel
-        .getByRole("checkbox", {
-          name: `Учебная бригада 1 службы ${serviceId}`,
-        })
-        .check(),
-    );
-    await step("направить бригаду", () =>
-      panel.getByRole("button", { name: "Направить выбранные" }).click(),
-    );
-    const callBrigade = panel
-      .getByRole("list", { name: "Связь с бригадами" })
-      .getByRole("button", { name: "Позвонить" })
-      .first();
-    // До кнопки обучаемый докручивает панель сам — это его движение, не сдвиг.
-    await callBrigade.scrollIntoViewIfNeeded();
+    // GP-05: флажков и «Направить выбранные» нет — бригаду направляет вводная.
     await step("позвонить бригаде", async () => {
-      await callBrigade.click();
+      await freeBrigade(win).click();
       await page.waitForTimeout(4000);
     });
+    await step("направить бригаду", async () => {
+      await answer(win)
+        .getByRole("button", { name: "По частям", exact: true })
+        .click();
+      // Верная часть шага (GP-06: варианты перемешаны, верный — data-correct).
+      const parts = answer(win).locator(
+        'button[data-reply="brief"][data-correct="true"]',
+      );
+      await parts.click();
+      await expect(currentStep(win, "Что случилось")).toBeVisible();
+      await parts.click();
+      await page.waitForTimeout(1000);
+    });
+    // Доклад о выезде звучит в том же разговоре; отбой раньше — и бригада перезвонит.
+    await expect
+      .poll(
+        async () =>
+          (
+            (await (
+              await page.request.get(`/api/cards/${card.id}/training`)
+            ).json()) as CardTraining
+          ).messages.filter((item) => item.state === "presented").length,
+        { timeout: 30_000 },
+      )
+      .toBe(1);
     await step("положить трубку", () =>
-      page.getByRole("button", { name: "Положить трубку" }).click(),
+      win.getByRole("button", { name: "Положить трубку" }).click(),
     );
-    await step("закрыть полосу звонка", () =>
-      page
-        .getByRole("button", { name: "Звонок завершён", exact: true })
-        .click(),
+    await step("к контактам", () =>
+      answer(win).getByRole("button", { name: "К контактам" }).click(),
     );
+    await expect(
+      win.getByRole("region", { name: "Доклады бригад" }).getByRole("listitem"),
+    ).toHaveCount(1);
 
     await testInfo.attach("shifts.json", {
       body: JSON.stringify(shifts, null, 2),
@@ -271,24 +289,14 @@ for (const viewport of [
         "button:Сообщить об ошибке",
         "button:Выйти",
       ],
-      // Ярус своей службы раскрывается в запасе над полосой служб.
-      "развернуть свою службу": [
-        "help:card-phone",
-        "button:Телефон",
-        "help:card-history",
-      ],
-      // Полоса проводника держит высоту под шаг и «Не забудьте…», плитка
-      // службы — постоянную ширину.
+      // Строка статуса и окно истории встают поверх карточки (макет B) и ничего
+      // не сдвигают; полоса проводника держит высоту под шаг и «Не забудьте…».
+      "открыть форму статуса": ["help:card-services"],
       "подтвердить статус": [
         "help:card-address",
         "help:card-description",
-        "help:card-address-input",
         "help:card-incident",
-        "help:card-history",
-        "button:Сохранить адрес",
-        "button:все действия",
-        "button:✎",
-        "button:⌄",
+        "help:card-services",
       ],
     };
     for (const [name, keys] of Object.entries(still))
@@ -301,12 +309,14 @@ for (const viewport of [
         )
         .toEqual([]);
 
-    // Ключевые блоки на всём пути: области карточки, телефон, кнопки шапки не
+    // Ключевые блоки на всём пути: области карточки, окно телефона, кнопки шапки не
     // сдвигаются от действия, CLS шага ниже порога «хорошо» Web Vitals (0,1) с
     // запасом. Законно меняются только раскрываемая форма статуса (card-action
-    // растёт внутрь себя) и всплывающие подсказки «?» — они не в списке.
+    // растёт внутрь себя) и всплывающие подсказки «?». Окно телефона (card-phone,
+    // GP-09) плавает поверх карточки: ни место, ни размер не зависят от состояния
+    // звонка — контакты, вызов, разговор, итог.
     const KEY =
-      /^(help:card-(?!action$|redirect$).+|button:(Телефон|Позвонить|Свернуть телефон|Порядок работы|Сообщить об ошибке|Выйти)|link:.+)$/;
+      /^(help:card-(?!action$|redirect$).+|button:(Порядок работы|Сообщить об ошибке|Выйти)|link:.+)$/;
     for (const shift of shifts) {
       expect
         .soft(
@@ -317,23 +327,18 @@ for (const viewport of [
       expect.soft(shift.cls, `CLS шага «${shift.step}»`).toBeLessThan(0.05);
     }
 
-    // Телефон: то, по чему только что кликнули, и то, что рядом читается,
-    // остаётся на месте — рост панели идёт внутрь неё, вниз.
-    const movedIn = (name: string, pattern: RegExp) =>
-      shifts
-        .find((item) => item.step === name)!
-        .moved.filter((item) => pattern.test(item.name) && item.dy !== 0)
-        .map((item) => item.name);
-    expect(
-      movedIn(
-        "направить бригаду",
-        /^button:(Свернуть телефон|\d|\d{3}.*|Вызов|Направить выбранные|Изменить набор)$/,
-      ),
-    ).toEqual([]);
-    expect(
-      movedIn(
-        "позвонить бригаде",
-        /^button:(Свернуть телефон|Позвонить|Изменить набор)$/,
-      ),
-    ).toEqual([]);
+    // Окно телефона на месте и того же размера во всех состояниях звонка: рамка,
+    // «В центр» и «Закрыть» не прыгают под рукой.
+    for (const name of [
+      "позвонить бригаде",
+      "направить бригаду",
+      "положить трубку",
+      "к контактам",
+    ])
+      expect(
+        shifts
+          .find((item) => item.step === name)!
+          .moved.filter((item) => /^help:card-phone$/.test(item.name)),
+        `окно телефона на шаге «${name}»`,
+      ).toEqual([]);
   });

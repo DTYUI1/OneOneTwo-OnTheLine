@@ -1,0 +1,206 @@
+{
+  "format": 2,
+  "code": "electric-entrance-gkh-1",
+  "version": 1,
+  "title": "Погас свет в подъезде, щитовая заперта",
+  "service_id": "GKH",
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "14050300",
+  "complications": [],
+  "teacher_comment": "ЖКХ, уровень 1. На вопрос о ключе от щитовой назвать заявительницу. Оба неверных ответа не сообщают сведений: бригада спрашивает соседей. Восстановить освещение после замены автомата, статусы по докладам.",
+  "outcome": {
+    "people": "Во втором подъезде погас свет на всех этажах. Дверь щитовой заперта. Заявительница из квартиры 31, старшая по дому, хранит ключ от щитовой и встретит бригаду у подъезда. Дыма и пострадавших нет. Бригада открыла щитовую, обесточила подъезд и заменила сгоревший автомат. Свет восстановлен, щиток закрыт на замок.",
+    "late": "Карточку приняли позже норматива. Во втором подъезде погас свет на всех этажах. Дверь щитовой заперта. Заявительница из квартиры 31, старшая по дому, хранит ключ от щитовой и встретит бригаду у подъезда. Дыма и пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Зимина Лидия Семёновна",
+    "phone_aon": "+79000000869",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "31"
+    },
+    "description": "Во втором подъезде погас свет на всех этажах. Дверь щитовой заперта. Заявительница из квартиры 31, старшая по дому, хранит ключ от щитовой и встретит бригаду у подъезда. Дыма и пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Неисправность электрощитовой",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008509",
+    "incident_type_code": "14050300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "31"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "GKH",
+      "phone_ext": "105",
+      "before_s": 180
+    },
+    "expected_comment": "Во втором подъезде погас свет на всех этажах. Дверь щитовой заперта. Заявительница из квартиры 31, старшая по дому, хранит ключ от щитовой и встретит бригаду у подъезда. Дыма и пострадавших нет. Бригада открыла щитовую, обесточила подъезд и заменила сгоревший автомат. Свет восстановлен, щиток закрыт на замок."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте. Свет погас на весь подъезд, а щитовая закрыта.",
+        "audio": "bank-v1/GKH/GKH.arrived.electric.3.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Обесточили подъезд, меняем сгоревший автомат.",
+        "audio": "bank-v1/GKH/GKH.working.electric.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Автомат заменили, свет в подъезде есть, щиток закрыли на замок.",
+        "audio": "bank-v1/GKH/GKH.completed.electric.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "switchboard_keys",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "arrival",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, у кого ключи от щитовой? Без них не попадём.",
+        "audio": "bank-v1/GKH/GKH.clarify.electric.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Ключ у заявительницы {caller_name}"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у соседей"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, поспрашиваю у соседей.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, у кого ключи от щитовой? Без них не попадём.",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

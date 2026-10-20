@@ -6,19 +6,20 @@ contracts/operator/evaluation.md, contracts/operator/voice.md).
 карточки — свои таблицы модуля появятся вместе с OP-01.
 """
 
+import re
 import tempfile
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Literal
-from uuid import uuid4
+from typing import Any, Literal, TypedDict
+from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
-from pydantic import BaseModel, Field, model_validator
-from sqlalchemy import select
+from pydantic import BaseModel, Field, field_validator, model_validator
+from sqlalchemy import Select, select
 
 from app.api.foundation.router import require_roles
-from app.core.models import AuditLog
+from app.core.models import AuditLog, User
 from app.operator.caller import (
     CALM_KINDS,
     PANIC_MAX,
@@ -33,6 +34,7 @@ from app.operator.caller import (
 from app.operator.evaluation import TAG_RU, evaluate
 from app.operator.review import mark_for
 from app.operator.scenarios import load_classifier, load_questionnaires, load_scenarios
+from app.operator.switch import require_module_enabled
 from app.worker.providers.interfaces import STTProvider
 from app.worker.providers.stt.local import LocalFasterWhisperSTT
 
@@ -126,6 +128,12 @@ class AddressInput(BaseModel):
     house: str = Field(default="", max_length=200)
     building: str = Field(default="", max_length=200)
     apartment: str = Field(default="", max_length=200)
+    object: str = Field(default="", max_length=200)
+    structure: str = Field(default="", max_length=200)
+    entrance: str = Field(default="", max_length=200)
+    floor: str = Field(default="", max_length=200)
+    code: str = Field(default="", max_length=200)
+    descriptive: str = Field(default="", max_length=200)
 
 
 class AskRequest(BaseModel):
@@ -197,9 +205,28 @@ class CardInput(BaseModel):
     address: AddressInput = Field(default_factory=AddressInput)
     description: str = Field(default="", max_length=1999)
     caller_name: str = Field(default="", max_length=200)
+    caller_status: Literal[
+        "", "очевидец", "пострадавший", "родственник", "знакомый", "ребенок", "участник"
+    ] = ""
     phone_provided: str = Field(default="", max_length=20)
     phone_scene: str = Field(default="", max_length=20)
     off_site: bool = False
+    # Признак ЧС карточки 112 (card.schema.json `emergency`); на экране оператора отметки
+    # пока нет — по умолчанию нет ЧС, запись оператора-бота может его поставить (DT-04).
+    emergency: bool = False
+
+    @field_validator("phone_provided", "phone_scene")
+    @classmethod
+    def normalized_phone(cls, value: str) -> str:
+        # Маска АРМ «+7 (___) ___-__-__»: десять цифр, «+7», «7» или «8» перед ними — код страны.
+        if not value.strip():
+            return ""
+        digits = re.sub(r"[^0-9]", "", value)
+        if len(digits) == 11 and digits[0] in "78":
+            digits = digits[1:]
+        if re.search(r"[^0-9+()\s-]", value) or len(digits) != 10:
+            raise ValueError("Укажите телефон: 10 цифр после +7.")
+        return "+7" + digits
 
 
 class JournalEvent(BaseModel):
@@ -207,10 +234,21 @@ class JournalEvent(BaseModel):
     и ответ заявителя, первая реплика или конец разговора."""
 
     t: int = Field(ge=0, le=MAX_CALL_S)
-    action: Literal["opening", "question", "calm", "hold", "silence", "advice", "escalate", "end"]
+    action: Literal[
+        "opening",
+        "question",
+        "calm",
+        "hold",
+        "silence",
+        "advice",
+        "escalate",
+        "senior_called",
+        "end",
+    ]
     key: str | None = Field(default=None, max_length=40)
     said: str | None = Field(default=None, max_length=MAX_LINE)
     reply: str | None = Field(default=None, max_length=MAX_LINE)
+    voice: str | None = Field(default=None, max_length=120)
     note: str | None = Field(default=None, max_length=MAX_LINE)
     outcome: Outcome | None = None
     panic_before: int | None = Field(default=None, ge=PANIC_MIN, le=PANIC_MAX)
@@ -266,10 +304,14 @@ class AttemptSummary(BaseModel):
     created_at: datetime
     total: int
     max_total: int
+    actor_id: str = ""
+    actor_login: str = ""
+    actor_name: str = ""
 
 
 class AttemptResult(AttemptSummary):
     criteria: list[CriterionOut]
+    operator_card: CardInput | None = None
     # Этап 3: журнал звонка для разбора; у попыток до этапа 3 — пустой.
     journal: CallJournal = Field(default_factory=CallJournal)
 
@@ -283,17 +325,25 @@ def _incident_type_name(code: str | None) -> str:
     return code
 
 
-def _card_for_dispatch(
-    scenario: dict[str, Any], card: CardInput, attempt_id: str
+def card_for_dispatch(
+    scenario: dict[str, Any], card: CardInput, source_id: str
 ) -> dict[str, Any] | None:
-    """Карточка в формате contracts/card.schema.json — для будущей выдачи ДДС (OP-09)."""
+    """Карточка 112 для служб в формате contracts/card.schema.json (contracts/link-112-dds.md).
+
+    Всё, кроме АОН, — из ввода оператора: диспетчер работает с карточкой такой, как её
+    заполнил оператор. АОН оператор не вводит — его даёт сценарий. Телефоны уже приведены
+    к `+7XXXXXXXXXX` маской ввода (`CardInput.normalized_phone`). Номер карточки — из id
+    попытки или передачи (`source_id`), один для всех служб. Без типа происшествия карточки нет.
+    """
     if card.incident_type_code is None:
         return None
-    number = str(10_000_000 + int(attempt_id.replace("-", "")[:12], 16) % 90_000_000)
+    number = str(10_000_000 + int(source_id.replace("-", "")[:12], 16) % 90_000_000)
     return {
         "number": number,
         "incident_type_code": card.incident_type_code,
-        "caller_name": card.caller_name or scenario["caller"]["name"],
+        # Пустое имя остаётся пустым: имя из сюжета — правда, которой оператор не записал.
+        "caller_name": card.caller_name,
+        "caller_status": card.caller_status,
         "phone_aon": scenario["caller"]["phone"],
         "phone_provided": card.phone_provided,
         "phone_scene": card.phone_scene,
@@ -303,7 +353,7 @@ def _card_for_dispatch(
         "victims": "victims" in card.tags,
         "ambulance_refused": card.off_site,
         "blocked_people": "no_access" in card.tags,
-        "emergency": False,
+        "emergency": card.emergency,
         "incident_class": _incident_type_name(card.incident_type_code),
         "service_ids": card.services,
     }
@@ -312,7 +362,10 @@ def _card_for_dispatch(
 router = APIRouter(
     prefix="/api/operator",
     include_in_schema=False,
-    dependencies=[Depends(require_roles("trainee", "teacher", "admin"))],
+    dependencies=[
+        Depends(require_roles("trainee", "teacher", "admin")),
+        Depends(require_module_enabled),
+    ],
 )
 
 
@@ -422,6 +475,7 @@ async def save_attempt(request: Request, body: SaveRequest) -> AttemptResult:
         description=body.card.description,
         elapsed_s=body.elapsed_s,
         caller=body.state.to_caller(),
+        caller_status=body.card.caller_status,
     )
     attempt_id = str(uuid4())
     criteria = [CriterionOut(**asdict(criterion)) for criterion in result.criteria]
@@ -432,7 +486,8 @@ async def save_attempt(request: Request, body: SaveRequest) -> AttemptResult:
         "total": result.total,
         "max_total": result.max_total,
         "criteria": [criterion.model_dump() for criterion in criteria],
-        "card": _card_for_dispatch(scenario, body.card, attempt_id),
+        "card": card_for_dispatch(scenario, body.card, attempt_id),
+        "operator_card": body.card.model_dump(),
         "dialog_state": body.state.model_dump(),
         "elapsed_s": body.elapsed_s,
         # Этап 3: журнал звонка — для разбора в окне результата и для преподавателя.
@@ -449,23 +504,40 @@ async def save_attempt(request: Request, body: SaveRequest) -> AttemptResult:
         total=result.total,
         max_total=result.max_total,
         criteria=criteria,
+        operator_card=body.card,
         journal=body.journal,
+        **_attempt_owner(request.state.user),
     )
 
 
+class AttemptOwner(TypedDict):
+    actor_id: str
+    actor_login: str
+    actor_name: str
+
+
+def _attempt_owner(user: User) -> AttemptOwner:
+    return {"actor_id": str(user.id), "actor_login": user.login, "actor_name": user.full_name}
+
+
+def _attempt_query(request: Request) -> Select[tuple[AuditLog, User]]:
+    """Обучаемый видит только себя; преподаватель и администратор проверяют группу."""
+    statement = (
+        select(AuditLog, User)
+        .join(User, AuditLog.actor_id == User.id)
+        .where(AuditLog.action == ATTEMPT_ACTION, AuditLog.entity == ATTEMPT_ENTITY)
+    )
+    if request.state.user.role == "trainee":
+        statement = statement.where(AuditLog.actor_id == request.state.actor_id)
+    return statement
+
+
 @router.get("/attempts", operation_id="operator_attempts")
-async def list_attempts(request: Request) -> list[AttemptSummary]:
-    rows = (
-        await request.state.db.scalars(
-            select(AuditLog)
-            .where(
-                AuditLog.action == ATTEMPT_ACTION,
-                AuditLog.entity == ATTEMPT_ENTITY,
-                AuditLog.actor_id == request.state.actor_id,
-            )
-            .order_by(AuditLog.ts.desc())
-        )
-    ).all()
+async def list_attempts(request: Request, trainee_id: UUID | None = None) -> list[AttemptSummary]:
+    statement = _attempt_query(request)
+    if trainee_id is not None:
+        statement = statement.where(AuditLog.actor_id == trainee_id)
+    rows = (await request.state.db.execute(statement.order_by(AuditLog.ts.desc()))).all()
     return [
         AttemptSummary(
             id=row.entity_id or "",
@@ -474,25 +546,22 @@ async def list_attempts(request: Request) -> list[AttemptSummary]:
             created_at=row.ts,
             total=row.after["total"],
             max_total=row.after["max_total"],
+            **_attempt_owner(user),
         )
-        for row in rows
+        for row, user in rows
     ]
 
 
 @router.get("/attempts/{attempt_id}", operation_id="operator_attempt")
 async def get_attempt(request: Request, attempt_id: str) -> AttemptResult:
-    row = (
-        await request.state.db.scalars(
-            select(AuditLog).where(
-                AuditLog.action == ATTEMPT_ACTION,
-                AuditLog.entity == ATTEMPT_ENTITY,
-                AuditLog.entity_id == attempt_id,
-                AuditLog.actor_id == request.state.actor_id,
-            )
+    found = (
+        await request.state.db.execute(
+            _attempt_query(request).where(AuditLog.entity_id == attempt_id)
         )
     ).first()
-    if row is None:
+    if found is None:
         raise HTTPException(404, "Попытка не найдена.")
+    row, user = found
     after = row.after
     return AttemptResult(
         id=attempt_id,
@@ -502,5 +571,9 @@ async def get_attempt(request: Request, attempt_id: str) -> AttemptResult:
         total=after["total"],
         max_total=after["max_total"],
         criteria=[CriterionOut(**criterion) for criterion in after["criteria"]],
+        operator_card=CardInput.model_validate(after["operator_card"])
+        if after.get("operator_card") is not None
+        else None,
         journal=CallJournal.model_validate(after.get("journal", {})),
+        **_attempt_owner(user),
     )

@@ -14,6 +14,7 @@ export function teacherQueryKeys(type: string): string[] {
         "evaluations",
         "report",
         "analytics",
+        "analysis",
         "replay",
       ];
     case "session.started":
@@ -24,7 +25,7 @@ export function teacherQueryKeys(type: string): string[] {
       return ["cards", "assignments", "report", "analytics", "replay"];
     case "evaluation.partial":
     case "evaluation.complete":
-      return ["evaluations", "report", "analytics", "replay"];
+      return ["evaluations", "report", "analytics", "analysis", "replay"];
     default:
       return [];
   }

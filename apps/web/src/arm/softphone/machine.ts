@@ -6,7 +6,7 @@
 export type CallState = "idle" | "dialing" | "ringing" | "talking" | "ended";
 
 /**
- * Подфаза внутри `talking`. Доклад пишется, затем звучит ответная реплика —
+ * Подфаза внутри `talking`. Диспетчер выбирает доклад, затем звучит ответная реплика —
  * контракт этого различия не знает, а демо-скрипт §1 п.4 требует.
  */
 export type TalkPhase = "reporting" | "closing";
@@ -32,6 +32,13 @@ export interface SoftphoneModel {
   readonly inbound: boolean;
   /** Бригада ответит отказом; `null` — обычный разговор. */
   readonly refusal: Refusal | null;
+  /**
+   * Разговор поставлен на удержание (TC-02): линия здесь свободна, а звонок на сервере идёт
+   * дальше — отбоя не было. Снимают с удержания событием `resume`.
+   */
+  readonly held: boolean;
+  /** Разговор снят с удержания: собеседник снова на связи, без гудков и без ответа. */
+  readonly resumed: boolean;
 }
 
 export type SoftphoneEvent =
@@ -42,9 +49,26 @@ export type SoftphoneEvent =
   | { type: "dial"; callId: string; at: number; refusal?: Refusal | null }
   /** Ответ на входящий вызов бригады: звонок уже создан сервером (Call.direction=inbound). */
   | { type: "pickup"; callId: string; phoneExt: string; at: number }
+  /** На удержание (TC-02, вкладки 17.10): разговор ждёт, отбоя на сервер нет. */
+  | { type: "hold"; at: number }
+  /**
+   * Снять с удержания: звонок уже отвечен на сервере — сразу разговор, без событий. `answer` —
+   * на линии служба или абонент ДДС: дежурный снова отвечает («Да, слушаю»), и доклад
+   * продолжается; старший бригады говорит своё «на связи» сам (лента, `resumed`).
+   */
+  | {
+      type: "resume";
+      callId: string;
+      phoneExt: string;
+      at: number;
+      answer?: boolean;
+      inbound?: boolean;
+    }
   | { type: "ring" }
   | { type: "answer"; at: number }
   | { type: "finish"; at: number }
+  /** Выбран полный доклад службе: она подтверждает приём и кладёт трубку. */
+  | { type: "report"; at: number }
   | { type: "voice_done"; at: number }
   | { type: "server"; state: CallState; at: number }
   /** Завершение занятия останавливает локальную линию без новых серверных событий. */
@@ -53,10 +77,8 @@ export type SoftphoneEvent =
 export type Effect =
   | { type: "send"; event: "call_dial" | "call_answer" | "call_hangup" }
   | { type: "tone"; tone: "ringback" | "click" | "stop" }
-  | { type: "record"; action: "start" | "stop" }
   | { type: "voice"; phrase: "listen" | "accepted" | Refusal }
-  | { type: "wait"; event: "ring" | "answer"; delayMs: number }
-  | { type: "upload" };
+  | { type: "wait"; event: "ring" | "answer"; delayMs: number };
 
 export interface Step {
   readonly model: SoftphoneModel;
@@ -84,6 +106,8 @@ export const initialModel: SoftphoneModel = {
   aborted: false,
   inbound: false,
   refusal: null,
+  held: false,
+  resumed: false,
 };
 
 function step(model: SoftphoneModel, effects: readonly Effect[] = []): Step {
@@ -104,13 +128,10 @@ export function reduce(model: SoftphoneModel, event: SoftphoneEvent): Step {
     (event.type === "server" && event.state === "ended")
   ) {
     if (model.state === "idle" || model.state === "ended") return step(model);
-    const closing: Effect[] = [];
-    if (model.state === "talking")
-      closing.push({ type: "record", action: "stop" });
     return hangUp(
       { ...model, aborted: model.state !== "talking" },
       event.at,
-      closing,
+      [],
     );
   }
 
@@ -133,8 +154,32 @@ export function reduce(model: SoftphoneModel, event: SoftphoneEvent): Step {
       [
         { type: "tone", tone: "click" },
         { type: "send", event: "call_answer" },
-        { type: "record", action: "start" },
       ],
+    );
+
+  // Снятие с удержания: та же линия снова в разговоре. Звонок на сервере отвечен и не
+  // кончался — ни call_answer, ни гудков; только щелчок трубки.
+  if (
+    event.type === "resume" &&
+    (model.state === "idle" || model.state === "ended")
+  )
+    return step(
+      {
+        ...initialModel,
+        state: "talking",
+        callId: event.callId,
+        phoneExt: event.phoneExt,
+        phase: "reporting",
+        talkStartedAt: event.at,
+        resumed: true,
+        inbound: event.inbound ?? false,
+      },
+      event.answer
+        ? [
+            { type: "tone", tone: "click" },
+            { type: "voice", phrase: "listen" },
+          ]
+        : [{ type: "tone", tone: "click" }],
     );
 
   switch (model.state) {
@@ -186,7 +231,7 @@ export function reduce(model: SoftphoneModel, event: SoftphoneEvent): Step {
 
     case "ringing":
       // Ненаправленная бригада отвечает отказом сразу и сама кладёт трубку: доклада
-      // не будет, записывать нечего, и «информация принята» здесь не звучит.
+      // не будет, и «информация принята» здесь не звучит.
       if (event.type === "answer" && model.refusal)
         return step(
           {
@@ -213,7 +258,6 @@ export function reduce(model: SoftphoneModel, event: SoftphoneEvent): Step {
             { type: "tone", tone: "stop" },
             { type: "send", event: "call_answer" },
             { type: "voice", phrase: "listen" },
-            { type: "record", action: "start" },
           ],
         );
       if (event.type === "finish")
@@ -223,28 +267,41 @@ export function reduce(model: SoftphoneModel, event: SoftphoneEvent): Step {
       return step(model);
 
     case "talking":
-      // Входящий кладём сразу: ответную реплику службы («информация принята»)
-      // произносит сторона, которой звонили, — здесь это диспетчер.
-      if (event.type === "finish" && model.inbound)
+      // На удержание — только идущий разговор, не прощание службы: линия освобождается
+      // локально, а отбой на сервер не уходит (звонок продолжается).
+      if (event.type === "hold" && model.phase === "reporting")
+        return step(
+          {
+            ...model,
+            state: "ended",
+            phase: null,
+            endedAt: event.at,
+            held: true,
+          },
+          [{ type: "tone", tone: "stop" }],
+        );
+      // Полный доклад закрывает разговор: служба подтверждает приём и кладёт трубку.
+      // Отдельное «положить трубку» после доклада — лишнее действие.
+      if (
+        event.type === "report" &&
+        model.phase === "reporting" &&
+        !model.inbound &&
+        !model.refusal
+      )
+        return step({ ...model, phase: "closing" }, [
+          { type: "voice", phrase: "accepted" },
+        ]);
+      // «Положить трубку» кладёт сразу: приём подтверждают только на доклад, а не на
+      // отбой без него. Входящий бригады кладёт тоже диспетчер.
+      if (event.type === "finish" && model.phase === "reporting")
         return hangUp(model, event.at, [
-          { type: "record", action: "stop" },
           { type: "tone", tone: "click" },
           { type: "send", event: "call_hangup" },
-          { type: "upload" },
-        ]);
-      // Одна кнопка закрывает доклад: запись стоп, ответная реплика, затем отбой.
-      // Отдельное «завершить доклад» перед «положить трубку» — лишнее действие.
-      if (event.type === "finish" && model.phase === "reporting")
-        return step({ ...model, phase: "closing" }, [
-          { type: "record", action: "stop" },
-          { type: "voice", phrase: "accepted" },
         ]);
       if (event.type === "voice_done" && model.phase === "closing")
         return hangUp({ ...model }, event.at, [
           { type: "tone", tone: "click" },
           { type: "send", event: "call_hangup" },
-          // После отказа записи не было — выгружать нечего.
-          ...(model.refusal ? [] : [{ type: "upload" } as const]),
         ]);
       return step(model);
 

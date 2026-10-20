@@ -123,6 +123,17 @@
             "before_s": {
               "type": "integer",
               "minimum": 1
+            },
+            "contact_role": {
+              "type": "string",
+              "enum": [
+                "head",
+                "response_chief",
+                "crew_chief",
+                "crew_specialist",
+                "caller"
+              ],
+              "description": "Доклад абоненту телефона ДДС (GP-09, рекомендации 16.10, п. 8): роль абонента из settings.phone_contacts занятия. Задана — адресат верен, если набран номер этой роли в списке ДДС; service_id — своя ДДС, phone_ext — номер по умолчанию (contracts/scenario-events.md, «Телефон ДДС»)."
             }
           },
           "required": [
@@ -188,6 +199,33 @@
     },
     "teacher_comment": {
       "type": "string"
+    },
+    "coherence_unchecked": {
+      "type": "boolean",
+      "default": false,
+      "readOnly": true,
+      "description": "Связность сгенерированного сценария не проверена проходом; перед утверждением показать предупреждение."
+    },
+    "variant_label": {
+      "type": "string",
+      "readOnly": true,
+      "description": "События и исход фактически выбранного пути сценария."
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "readOnly": true,
+      "default": null,
+      "description": "Дата создания сценария; назначается сервером."
+    },
+    "is_manual": {
+      "type": "boolean",
+      "readOnly": true,
+      "default": false,
+      "description": "Ручной сценарий: источник template или trainee без метаданных автоматической генерации."
     }
   },
   "required": [

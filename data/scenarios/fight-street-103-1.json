@@ -1,0 +1,316 @@
+{
+  "format": 2,
+  "code": "fight-street-103-1",
+  "version": 7,
+  "replaces": [
+    "576b0291-353b-534e-b11e-48c8d87510a9"
+  ],
+  "title": "Драка на улице с пострадавшим",
+  "service_id": "103",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "15250501",
+  "complications": [],
+  "teacher_comment": "Драка у торгового центра, Люблинская улица, 100: мужчина с разбитой головой, карточка только в 103. Пациент агрессивный — бригада просит полицию (102 или 112); не вызвали — перевязать толком не дают, и мужчина уходит без госпитализации. Дальше бригада молчит на работах — нужно позвонить ей самому. Вводная преподавателя — тревога: на бригаду напали, нужна полиция.",
+  "outcome": {
+    "people": "Бригада скорой нашла у торгового центра на Люблинской улице, 100 выпившего мужчину с рассечённой бровью. Он кидался на медиков — по просьбе бригады вызвали полицию. Рану на голове обработали, с подозрением на сотрясение мужчину госпитализировали в травму.",
+    "late": "Карточку приняли позже норматива. Мужчина с разбитой головой лежал на асфальте у входа в торговый центр, рядом шумели его приятели: пока бригада не выехала, помощь ему не оказывал никто."
+  },
+  "card": {
+    "caller_name": "Никитин Сергей Павлович",
+    "phone_aon": "+79000000717",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "У входа в торговый центр после драки на асфальте лежит мужчина, разбита голова. Рядом его приятели, шумят. Нападавшие убежали.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Беспорядки - драка на улице",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70005711",
+    "incident_type_code": "15250501"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "У входа в торговый центр после драки на асфальте лежит мужчина, разбита голова. Рядом его приятели, шумят. Нападавшие убежали. Пострадавший агрессивный, по просьбе бригады вызвана полиция. С сотрясением госпитализирован в травму, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Приняла. Едем с сиреной.",
+        "audio": "bank-v1/103/103.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Мужчина, рассечена бровь, кровь, в сознании, выпивший.",
+        "audio": "bank-v1/103/103.arrived.injury.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Обрабатываем рану на голове, бинтуем. Подозрение на сотрясение.",
+        "audio": "bank-v1/103/103.working.injury.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Полиция приехала, помогли погрузить его в машину. С сотрясением госпитализируем, везём в травму.",
+        "audio": "bank-v9/103/103.completed.injury.12.ogg"
+      },
+      "after_s": 35,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "police",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Нужен наряд, пациент агрессивный, кидается на нас.",
+        "audio": "bank-v1/103/103.request_service.any.3.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "102",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла.",
+            "audio": "bank-v1/103/103.ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Хорошо, приняла.",
+            "audio": "bank-v1/103/103.ack.any.4.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, полиции до сих пор нет. Он вырывается, перевязать не даёт.",
+            "audio": "bank-v3/103/103.request_service.any.12.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Кое-как перевязали, всё время вырывался. Голову толком не осмотрели.",
+                "audio": "bank-v3/103/103.working.injury.8.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 20
+            },
+            {
+              "replace": "completion",
+              "with": {
+                "text": "В больницу ехать не дал: вырвался и ушёл с приятелями. Бригада свободна.",
+                "audio": "bank-v3/103/103.completed.injury.9.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада попросила полицию: пациент агрессивный",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Работаем, оказываем помощь. Закончим — доложу.",
+            "audio": "bank-v1/103/103.status_working.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Состояние без изменений, наблюдаем. Решаем, везти или нет.",
+            "audio": "bank-v1/103/103.status_working.any.5.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    },
+    {
+      "key": "alarm",
+      "kind": "alarm",
+      "priority": "alarm",
+      "trigger": {
+        "on": "inject",
+        "requires_state": "arrived"
+      },
+      "line": {
+        "text": "Тревога! На бригаду напали, водителя ударили! Нужна полиция!",
+        "audio": "bank-v1/103/103.alarm.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "answer_call",
+          "within_s": 15,
+          "weight": 0.1
+        },
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "102",
+            "112"
+          ],
+          "within_s": 60,
+          "weight": 0.9,
+          "critical": true
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла, ждём полицию. Из машины не выходим.",
+            "audio": "bank-v1/103/103.alarm_ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Приняла, держимся. Больного не бросаем.",
+            "audio": "bank-v1/103/103.alarm_ack.any.2.ogg"
+          },
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Тревога: на бригаду напали",
+        "critical": false
+      },
+      "injectable": true
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": []
+}

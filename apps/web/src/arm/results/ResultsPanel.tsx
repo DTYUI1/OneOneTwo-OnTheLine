@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../shared/api";
 import { useSession } from "../../shared/session";
-import { formatScore } from "../../teacher/console/model";
 import { formatDuration, type Service } from "../cardModel";
 import { CardReview } from "./CardReview";
-import { useAttemptAnalyses } from "../useAnalysis";
+import { analysisRevision, useAttemptAnalyses } from "../useAnalysis";
+import { checksPending } from "../../shared/aiProgress";
 import {
   groupResults,
   isEmptyState,
-  rowScore,
+  rowLabel,
   rowVerdict,
   summarize,
   type ResultRow,
@@ -46,14 +46,17 @@ export function ResultsPanel({
       if (!data) throw new Error(error?.message ?? "Оценки недоступны.");
       return data;
     },
-    // Запасной путь, если WS-событие о вердикте потерялось.
-    refetchInterval: 20_000,
+    // Запасной путь, если WS-событие о вердикте потерялось; ИИ-проверка начинается без
+    // события — пока она идёт или ждёт, опрашиваем чаще.
+    refetchInterval: (query) =>
+      checksPending(query.state.data) ? 5_000 : 20_000,
   });
   const sessions = useQuery({
     queryKey: ["sessions"],
     queryFn: async () => {
-      const { data } = await api.GET("/sessions");
-      return data ?? [];
+      const { data, error } = await api.GET("/sessions");
+      if (!data) throw new Error(error?.message ?? "Занятия недоступны.");
+      return data;
     },
   });
 
@@ -91,15 +94,32 @@ export function ResultsPanel({
       .filter((session) => session.status === "finished")
       .map((session) => session.id),
   );
+  const demo = new Set(
+    (sessions.data ?? [])
+      .filter((session) => session.settings_snapshot.demo === true)
+      .map((session) => session.id),
+  );
   const groups = groupResults(
     cards.data ?? [],
     evaluations.data ?? [],
     finished,
+    demo,
   );
   const rows = groups.flatMap((group) => group.rows);
   // Время попыток — из серверного разбора по методике и снимку своего занятия.
-  const analyses = useAttemptAnalyses(rows.map((row) => row.card.id));
+  const analysisResults = useAttemptAnalyses(
+    rows.map((row) => ({
+      cardId: row.card.id,
+      evaluationId: row.evaluation?.id ?? null,
+      evaluationVersion: row.evaluation?.version ?? null,
+      evaluationRevision: analysisRevision(row.evaluation),
+      effectiveTotal: row.evaluation?.total ?? null,
+    })),
+  );
+  const analyses = analysisResults.byCard;
   const summary = summarize(groups, analyses);
+  const listReady =
+    cards.isSuccess && evaluations.isSuccess && sessions.isSuccess;
   const selected: ResultRow | null =
     rows.find((row) => row.card.id === selectedId) ?? rows[0] ?? null;
   const title = (id: string) =>
@@ -109,15 +129,21 @@ export function ResultsPanel({
     <section className={styles.panel} aria-labelledby="results-title">
       <header className={styles.head} data-help="results-summary">
         <h2 id="results-title">Мои результаты</h2>
-        <p className={styles.counters}>
-          закрыто карточек: {summary.closed} · оценено: {summary.scored} ·
-          зачтено: {summary.passed} · реакция в нормативе:{" "}
-          {summary.reactionInNorm} из {summary.closed}
-          {summary.interrupted > 0 &&
-            ` · прервано завершением занятия: ${summary.interrupted}`}
-          {summary.withComment > 0 &&
-            ` · с комментарием преподавателя: ${summary.withComment}`}
-        </p>
+        {listReady ? (
+          <p className={styles.counters}>
+            закрыто карточек: {summary.closed} · оценено: {summary.scored} ·
+            зачтено по текущим разборам: {summary.passed} из{" "}
+            {summary.verdictsReady} · реакция в нормативе:{" "}
+            {summary.reactionInNorm} из {summary.reactionKnown} с проверенным
+            временем
+            {summary.interrupted > 0 &&
+              ` · прервано завершением занятия: ${summary.interrupted}`}
+            {summary.withComment > 0 &&
+              ` · с комментарием преподавателя: ${summary.withComment}`}
+          </p>
+        ) : (
+          <p className={styles.counters}>Сводка загружается…</p>
+        )}
         <button
           type="button"
           className={styles.close}
@@ -128,10 +154,10 @@ export function ResultsPanel({
         </button>
       </header>
 
-      {(cards.isPending || evaluations.isPending) && (
+      {(cards.isPending || evaluations.isPending || sessions.isPending) && (
         <p className={styles.empty}>Загружаем результаты…</p>
       )}
-      {(cards.isError || evaluations.isError) && (
+      {(cards.isError || evaluations.isError || sessions.isError) && (
         <div role="alert" className={styles.empty}>
           <p className={styles.muted}>
             Не удалось загрузить результаты. Проверьте связь.
@@ -141,20 +167,35 @@ export function ResultsPanel({
             onClick={() => {
               void cards.refetch();
               void evaluations.refetch();
+              void sessions.refetch();
             }}
           >
             Повторить
           </button>
         </div>
       )}
-      {isEmptyState(cards.isSuccess, evaluations.isSuccess, rows.length) && (
-        <p className={styles.empty}>
-          Закрытых карточек пока нет. Разбор появится, когда вы доведёте
-          карточку до «Работы завершены» или «Отказ от выполнения работ».
+      {listReady &&
+        isEmptyState(cards.isSuccess, evaluations.isSuccess, rows.length) && (
+          <p className={styles.empty}>
+            Закрытых карточек пока нет. Разбор появится, когда вы доведёте
+            карточку до «Работы завершены» или «Отказ от выполнения работ».
+          </p>
+        )}
+
+      {listReady && analysisResults.failed.size > 0 && (
+        <p role="alert" className={styles.empty}>
+          Не удалось загрузить разбор карточек: {analysisResults.failed.size}.
+          Баллы этих карточек не показаны.{" "}
+          <button
+            type="button"
+            onClick={() => void analysisResults.retryFailed()}
+          >
+            Повторить загрузку разбора
+          </button>
         </p>
       )}
 
-      {rows.length > 0 && (
+      {listReady && rows.length > 0 && (
         <div className={styles.body}>
           <nav
             className={styles.list}
@@ -173,10 +214,7 @@ export function ResultsPanel({
                       timing?.reaction_s == null
                         ? null
                         : Math.round(timing.reaction_s);
-                    const late =
-                      reaction !== null &&
-                      timing !== undefined &&
-                      reaction > timing.reaction_normative_s;
+                    const late = timing?.reaction_overdue === true;
                     return (
                       <li key={row.card.id}>
                         <button
@@ -201,19 +239,18 @@ export function ResultsPanel({
                                   : undefined
                               }
                             >
-                              {verdict
-                                ? `${verdict.label} · ${formatScore(rowScore(row, analysis) ?? 0)}`
-                                : row.evaluation
-                                  ? "без оценки"
-                                  : row.interrupted
-                                    ? "прервана"
-                                    : "разбор готовится"}
+                              {analysisResults.failed.has(row.card.id)
+                                ? "Разбор не загрузился — повторите загрузку"
+                                : rowLabel(row, analysis)}
                             </span>
                             <span className={late ? styles.bad : undefined}>
                               реакция{" "}
                               {reaction === null
                                 ? "—"
                                 : formatDuration(reaction)}
+                              {reaction !== null &&
+                                timing?.reaction_overdue === null &&
+                                " (норматив не проверен)"}
                             </span>
                             {row.evaluation?.teacher_comment.trim() && (
                               <span className={styles.hasComment}>

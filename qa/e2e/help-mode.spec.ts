@@ -2,6 +2,8 @@ import { expect, type Page, type Locator } from "@playwright/test";
 import { appendFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { test, login } from "./captain-fixture";
 import { visitAdmin, visitTeacher } from "./captain-screens";
+import { closePhone, openPhone, phoneButton } from "./phone";
+import { confirmAgain } from "./trainer";
 
 async function readable(locator: Locator) {
   const measured = await locator.evaluate((el) => {
@@ -39,6 +41,8 @@ async function readable(locator: Locator) {
   expect(measured.size).toBeGreaterThanOrEqual(14);
   expect(measured.line).toBeGreaterThanOrEqual(1.4);
   expect(measured.contrast).toBeGreaterThanOrEqual(4.5);
+  // Папка журнала — не в git: первый тест файла не должен зависеть от порядка запуска.
+  mkdirSync("scripts/ralph/artwox/logs", { recursive: true });
   appendFileSync(
     "scripts/ralph/artwox/logs/readability.jsonl",
     JSON.stringify(measured) + "\n",
@@ -73,13 +77,20 @@ test.describe("Справка всех ролей", () => {
   }) => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    await page.getByRole("button", { name: /Служба 102.*Получена/ }).click();
+    await page
+      .getByRole("button", { name: "Изменить статус", exact: true })
+      .click();
     await page
       .getByRole("combobox", { name: "Статус", exact: true })
       .selectOption("rejected");
     await page
       .getByRole("textbox", { name: "Комментарий", exact: true })
       .fill("Карточка адресована другой службе, сведения переданы дежурному.");
+    await page
+      .getByRole("button", { name: "Подтвердить", exact: true })
+      .click();
+    // «Не принята» — вторым ✓: первое только взводит, у ✓ подпись (17.10).
+    await expect(confirmAgain(page)).toBeVisible();
     await page
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
@@ -96,7 +107,8 @@ test.describe("Справка всех ролей", () => {
     await page
       .getByRole("button", { name: "Объяснение экрана", exact: true })
       .click();
-    await action.hover();
+    // Поля и кнопки строки — отдельные части (GP-23); вся форма — по её краю.
+    await action.hover({ position: { x: 3, y: 3 } });
     const help = page.locator('[data-help-ui] [role="region"]');
     await expect(help.getByRole("heading")).toContainText(
       "Перенаправление карточки",
@@ -114,11 +126,13 @@ test.describe("Справка всех ролей", () => {
       action.getByRole("combobox", { name: "Служба для перенаправления" }),
     ).toBeVisible();
     await page.getByRole("button", { name: "Отменить", exact: true }).click();
-    await page.getByRole("button", { name: /Служба 102.*Не принята/ }).click();
+    await page
+      .getByRole("button", { name: "Изменить статус", exact: true })
+      .click();
     await page
       .getByRole("button", { name: "Объяснение экрана", exact: true })
       .click();
-    await action.hover();
+    await action.hover({ position: { x: 3, y: 3 } });
     await expect(help.getByRole("heading")).toContainText("Изменение статуса");
     await expect(
       page.getByRole("button", { name: /\d+\. Перенаправление карточки/ }),
@@ -129,7 +143,10 @@ test.describe("Справка всех ролей", () => {
     page,
     lesson,
   }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+    // Телефон с панелью браузера и клавиатурой: связь службы с GP-09 — окно телефона, панели
+    // тренажёра с 17.10 нет (на занятии от него ничего), под АРМ ничего нет, и карточка
+    // почти помещается: прокрутки хватает, чтобы увести шапку, только на низком окне.
+    await page.setViewportSize({ width: 390, height: 420 });
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
     await page
@@ -138,18 +155,32 @@ test.describe("Справка всех ролей", () => {
     await expect(
       page.getByRole("button", { name: /\d+\. Телефоны и номер происшествия/ }),
     ).toBeVisible();
-    await page.locator('[data-help="card-services"]').scrollIntoViewIfNeeded();
+    // Шапку уводит за край прокрутка страницы до конца — к полосе служб.
+    await page.evaluate(() =>
+      scrollTo(0, document.documentElement.scrollHeight),
+    );
+    await expect
+      .poll(() =>
+        page
+          .locator('[data-help="card-header"]')
+          .evaluate((element) => element.getBoundingClientRect().bottom),
+      )
+      .toBeLessThan(0);
     await expect(
       page.getByRole("button", { name: /\d+\. Телефоны и номер происшествия/ }),
     ).toHaveCount(0);
     const help = page.locator('[data-help-ui] [role="region"]');
     // Переходы работают с клавиатуры и для частей у нижнего края экрана.
     const next = help.getByRole("button", { name: "Далее", exact: true });
-    for (let step = 0; step < 10 && (await next.isEnabled()); step++) {
+    // Частей у карточки с телефоном много (GP-23): идём до края.
+    const visited: string[] = [];
+    for (let step = 0; step < 60; step++) {
+      visited.push(await help.getByRole("heading").innerText());
+      if ((await next.getAttribute("aria-disabled")) === "true") break;
       await next.focus();
       await page.keyboard.press("Enter");
     }
-    await expect(help.getByRole("heading")).toContainText("Службы и закрытие");
+    expect(visited.join("\n")).toContain("Службы и закрытие");
     await page.screenshot({
       path: "scripts/ralph/artwox/logs/recheck/mobile-help-scroll.png",
     });
@@ -219,29 +250,12 @@ test.describe("Справка всех ролей", () => {
     await page.screenshot({ path: "scripts/ralph/artwox/logs/card-help.png" });
     await page.keyboard.press("Escape");
     await expect(page).toHaveURL(new RegExp(lesson.card.id));
-    for (const label of ["адрес", "статус", "номер наряда", "комментарий"]) {
-      if (label === "статус")
-        await page
-          .getByRole("button", { name: /Служба 102.*Получена/ })
-          .click();
-      await page
-        .getByRole("button", { name: `Подсказка: ${label}`, exact: true })
-        .click();
-      const hint = page.getByRole("note");
-      await expect(hint).toBeVisible();
-      await readable(hint);
-      await page.keyboard.press("Escape");
-      await expect(hint).toHaveCount(0);
-      await expect(page).toHaveURL(new RegExp(lesson.card.id));
-    }
-    await page.getByRole("button", { name: "Телефон", exact: true }).click();
-    await explain(page, "Телефон в карточке");
-    await page.getByRole("button", { name: "1", exact: true }).focus();
-    await page.keyboard.press("Escape");
-    await expect(page).toHaveURL(new RegExp(lesson.card.id));
-    await expect(
-      page.getByRole("button", { name: "1", exact: true }),
-    ).toHaveCount(0);
+    // Подсказок «?» у полей карточки с 29.09 нет (df0b29c) — подсказывает проводник
+    // тренировки (DT-07, tutor-pointer.spec.ts). Связь службы — окно телефона ДДС
+    // (GP-09): значок на панели карточки открывает его.
+    await openPhone(page);
+    await explain(page, "Карточка с телефоном ДДС");
+    await closePhone(page);
     await page
       .getByRole("button", { name: "Закрыть карточку", exact: true })
       .click();
@@ -317,9 +331,7 @@ test.describe("Подсказки выключены", () => {
       page.getByRole("button", { name: "Объяснение экрана" }),
     ).toHaveCount(0);
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    await expect(
-      page.getByRole("button", { name: "Телефон", exact: true }),
-    ).toBeVisible();
+    await expect(phoneButton(page)).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Объяснение экрана" }),
     ).toHaveCount(0);

@@ -130,6 +130,27 @@ async def dial_target(request: Request, card: Card, payload: dict[str, Any], now
     )
     if await db.get(Call, call_id) is not None:
         raise HTTPException(409, "Идентификатор звонка уже использован.")
+    if brigade_id:
+        assert participant is not None  # Проверен вместе с принадлежностью бригады выше.
+        # post_event уже держит Session → Assignment → Card до commit. Общая блокировка
+        # занятия сериализует набор на разных карточках участника, в том числе с worker.
+        # Не блокируем чужую Card/Call после своей: это нарушило бы порядок блокировок.
+        busy = await db.scalar(
+            select(Call.id)
+            .join(Card, Card.id == Call.card_id)
+            .join(Assignment, Assignment.id == Card.assignment_id)
+            .where(
+                Assignment.participant_id == participant.id,
+                Call.brigade_id == brigade_id,
+                Call.ended_at.is_(None),
+            )
+            .limit(1)
+        )
+        # Удержание и гудки не заканчивают звонок; после отбоя номер снова доступен.
+        if busy is not None:
+            raise HTTPException(
+                409, {"code": "line_busy", "message": "Линия занята.", "details": {}}
+            )
     db.add(
         Call(
             id=call_id,

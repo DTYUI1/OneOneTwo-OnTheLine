@@ -1,0 +1,85 @@
+{
+  "id": "a2e2a092-9d58-57a8-a375-0c047770cdce",
+  "source": {
+    "kind": "record",
+    "id": "fire_apartment_smoke.wrong-street"
+  },
+  "operator_scenario_id": "fire_apartment_smoke",
+  "card": {
+    "number": "10271704",
+    "incident_type_code": "1050102",
+    "caller_name": "Соснина Ольга",
+    "caller_status": "",
+    "phone_aon": "+79161234567",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Западное Дегунино",
+      "street": "Дубининская улица",
+      "house": "12",
+      "building": "",
+      "apartment": "47",
+      "object": "",
+      "structure": "",
+      "entrance": "2",
+      "floor": "5",
+      "code": "",
+      "descriptive": "Напротив дома продуктовый магазин, через дорогу школа"
+    },
+    "description": "Задымление в квартире 47 на пятом этаже, из-под двери идёт дым, огня не видно. В квартире пожилая соседка, на стук не открывает.",
+    "tags": [
+      "Пострадавшие"
+    ],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "задымление: квартира",
+    "service_ids": [
+      "101",
+      "102",
+      "103",
+      "MOSLIFT"
+    ]
+  },
+  "faults": [
+    {
+      "kind": "address",
+      "effect": "wrong_place",
+      "field": "street",
+      "card": "Дубининская улица",
+      "truth": "Дубнинская улица"
+    },
+    {
+      "kind": "service_missing",
+      "effect": "not_delivered",
+      "service_id": "104"
+    }
+  ],
+  "deliveries": [
+    {
+      "service_id": "101",
+      "status": "delivered",
+      "scenario_id": "b21a75db-4df7-5813-b1f6-631330044971",
+      "plan": "wrong_address"
+    },
+    {
+      "service_id": "102",
+      "status": "no_plot"
+    },
+    {
+      "service_id": "103",
+      "status": "no_plot"
+    },
+    {
+      "service_id": "MOSLIFT",
+      "status": "no_plot"
+    },
+    {
+      "service_id": "104",
+      "status": "not_delivered"
+    }
+  ]
+}

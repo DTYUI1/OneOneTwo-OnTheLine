@@ -11,6 +11,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.api.notifications import notify
+from app.api.training.scenario_events import card_alarm_busy
 from app.core.models import Assignment, Card, Participant, Prediction, Scenario, Session
 
 
@@ -65,6 +66,27 @@ def make_prediction(
     }
 
 
+async def alarm_busy(
+    db: AsyncSession, participant_id: UUID, session_id: UUID, now: datetime
+) -> bool:
+    """У обучаемого идёт тревога бригады на одной из открытых карточек занятия."""
+    cards = await db.scalars(
+        select(Card)
+        .join(Assignment, Assignment.id == Card.assignment_id)
+        .where(
+            Assignment.participant_id == participant_id,
+            Assignment.session_id == session_id,
+            Card.closed_at.is_(None),
+            Card.interrupted_at.is_(None),
+        )
+        .order_by(Card.id)
+    )
+    for card in cards:
+        if await card_alarm_busy(db, card, now):
+            return True
+    return False
+
+
 class CardScheduler:
     def __init__(self, sessions: async_sessionmaker[AsyncSession], *, batch_size: int = 23) -> None:
         self.sessions = sessions
@@ -100,7 +122,8 @@ class CardScheduler:
                 )
                 .with_for_update(skip_locked=True)
             )
-            if lesson is None:
+            # Пауза занятия (TC-12): сроки сдвинутся при снятии, сейчас ничего не выдаём.
+            if lesson is None or lesson.paused_at is not None:
                 return 0
             due = func.coalesce(Assignment.due_at, Assignment.planned_at)
             assignments = list(
@@ -124,7 +147,7 @@ class CardScheduler:
                     break
                 participant = await db.get(Participant, assignment.participant_id)
                 scenario = await db.get(Scenario, assignment.scenario_id)
-                if participant is None or scenario is None:
+                if participant is None or scenario is None or participant.paused_at is not None:
                     continue
                 configured = int(lesson.settings_snapshot.get("parallel_cards", 1))
                 capacity = max(1, min(configured, participant.level))
@@ -146,6 +169,9 @@ class CardScheduler:
                     or 0
                 )
                 if active >= capacity:
+                    continue
+                # Тревога на открытой карточке занимает обучаемого — новая подождёт (15.10).
+                if active and await alarm_busy(db, participant.id, session_id, now):
                     continue
                 existing = await db.scalar(
                     select(Card.id).where(Card.assignment_id == assignment.id)

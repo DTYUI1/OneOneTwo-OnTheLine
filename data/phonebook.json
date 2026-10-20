@@ -5,6 +5,7 @@
     "name": "Служба 101",
     "category": "fire",
     "phone_ext": "101",
+    "phone": "+74950001701",
     "voice_profile": "voice-1",
     "is_active": true
   },
@@ -14,6 +15,7 @@
     "name": "Служба 102",
     "category": "police",
     "phone_ext": "102",
+    "phone": "+74950002602",
     "voice_profile": "voice-2",
     "is_active": true
   },
@@ -23,6 +25,7 @@
     "name": "Скорая помощь",
     "category": "medical",
     "phone_ext": "103",
+    "phone": "+74950003803",
     "voice_profile": "voice-3",
     "is_active": true
   },
@@ -32,6 +35,7 @@
     "name": "Мосгаз",
     "category": "gas",
     "phone_ext": "104",
+    "phone": "+74950004904",
     "voice_profile": "voice-4",
     "is_active": true
   },
@@ -41,6 +45,7 @@
     "name": "ЖКХ",
     "category": "utilities",
     "phone_ext": "105",
+    "phone": "+74950005205",
     "voice_profile": "voice-1",
     "is_active": true
   },
@@ -50,7 +55,18 @@
     "name": "Мослифт",
     "category": "lift",
     "phone_ext": "106",
+    "phone": "+74950006306",
     "voice_profile": "voice-2",
+    "is_active": true
+  },
+  {
+    "id": "112",
+    "code": "112",
+    "name": "Система-112",
+    "category": "system112",
+    "phone_ext": "112",
+    "phone": "+74950007112",
+    "voice_profile": "voice-3",
     "is_active": true
   }
 ]

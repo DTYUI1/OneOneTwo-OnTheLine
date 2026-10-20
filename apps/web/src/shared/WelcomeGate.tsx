@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { api, csrfToken, type User } from "./api";
 import { acknowledgeWelcome, hasSeenWelcome } from "./welcome";
+import { useOperatorModule } from "./features";
 import { welcomeContent } from "./welcomeContent";
 import styles from "./WelcomeGate.module.css";
 
@@ -22,6 +23,7 @@ export function WelcomeGate({
   user: User;
   children: ReactNode;
 }) {
+  const operatorModule = useOperatorModule();
   const [seen, setSeen] = useState(() => hasSeenWelcome(user.id));
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,10 +77,10 @@ export function WelcomeGate({
   return (
     <main className={styles.welcome}>
       <h1 ref={heading} tabIndex={-1}>
-        {trainee ? "Выберите обучение" : "Добро пожаловать"}
+        {trainee && operatorModule ? "Выберите обучение" : "Добро пожаловать"}
       </h1>
       <div className={styles.tiles}>
-        {trainee ? (
+        {trainee && operatorModule ? (
           <>
             <button
               className={styles.operator}

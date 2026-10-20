@@ -1,0 +1,206 @@
+/* Обучение по интерфейсу — наставник без окна, текст — его «облако» речи (как подсказка
+   «Вместе» с наставником, TrainerCoach.module.css): белое, скруглённое, с хвостиком к голове.
+   На часть экрана показывают его рука и синяя рамка, остальное притушено тенью рамки (без
+   анимации). Кнопки — как ✓ / ✕ строки статуса, главная — синяя. Текст — 15 px. */
+
+/* Пока идёт обучение, экран только показывают: щелчки мимо подсказки ничего не нажимают. */
+.blocker {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.frame {
+  position: fixed;
+  z-index: 61;
+  border: 3px solid #1c80c2;
+  box-shadow: 0 0 0 9999px rgba(16, 24, 32, 0.45);
+  pointer-events: none;
+}
+
+.tour {
+  position: fixed;
+  z-index: 62;
+  width: min(480px, calc(100vw - 16px));
+  font:
+    14px/1.4 Arial,
+    sans-serif;
+  color: #1f2326;
+}
+
+/* Предложение без рамки — как подсказка «Вместе»: над карточкой и окном телефона (45), под
+   окнами-подтверждениями АРМ (50), чтобы не закрыть их кнопки. */
+.tour[data-spotlight="false"] {
+  z-index: 48;
+}
+
+.tour[data-placed="false"] {
+  visibility: hidden;
+}
+
+.tour p {
+  margin: 0;
+}
+
+.tour button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.tour button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.row[data-mentor-right="true"] {
+  flex-direction: row-reverse;
+}
+
+/* Наставник по пояс у края, ближнего к части экрана; место одно для всех поз. Низ — без
+   резкого среза, тень — чтобы фигура читалась и на притушенном экране. */
+.tour .mentor {
+  flex: none;
+  width: 150px;
+  height: 150px;
+  object-position: top center;
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+.cloud {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid #b9bec2;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+/* Хвостик облака — к голове наставника: слева или справа, на уровне лица. */
+.cloud::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: -9px;
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #b9bec2;
+  border-left: 1px solid #b9bec2;
+  transform: rotate(45deg);
+}
+
+.row[data-mentor-right="true"] .cloud::before {
+  left: auto;
+  right: -9px;
+  border: 0;
+  border-top: 1px solid #b9bec2;
+  border-right: 1px solid #b9bec2;
+}
+
+/* Шапка облака — тихая строка: «Обучение по интерфейсу · 3 из 15», «Без голоса», ✕. */
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 0 14px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #6a6f73;
+}
+
+.head span {
+  flex: 1;
+}
+
+.voice {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.voice input {
+  margin: 0;
+}
+
+.close {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: normal;
+  color: #555;
+  background: transparent;
+  border: 1px solid #c4c8cb;
+  border-radius: 50%;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 14px 12px;
+  font-size: 15px;
+}
+
+.speech {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.lead {
+  font-weight: 600;
+}
+
+.muted {
+  color: #555;
+  font-size: 14px;
+}
+
+.btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn {
+  padding: 5px 14px;
+  color: #1f2326;
+  background: #fff;
+  border: 1px solid #aaa;
+}
+
+.btn:hover:not(:disabled) {
+  background: #f4f4f4;
+}
+
+.main {
+  composes: btn;
+  color: #fff;
+  background: #1c80c2;
+  border-color: #1c80c2;
+}
+
+.main:hover:not(:disabled) {
+  background: #146a9c;
+}
+
+.tour button:focus-visible,
+.tour input:focus-visible {
+  outline: 2px solid #1c80c2;
+  outline-offset: 1px;
+}

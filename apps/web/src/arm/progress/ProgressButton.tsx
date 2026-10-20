@@ -1,15 +1,19 @@
 // «Мой путь»: четыре ступени обучения, где обучаемый сейчас и что осталось. Каждую
 // открытую ступень можно тренировать самому; уровень на занятии ставит преподаватель.
 // Выделена одна кнопка — текущей ступени: что делать дальше, решает путь, а не обучаемый.
+// Незачтённые карточки возвращаются повтором с «было → стало» (TC-11).
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../shared/api";
 import { Dialog } from "../Dialog";
 import { PracticeButton } from "../practice/PracticeButton";
+import { AdviceNote } from "./AdviceNote";
 import {
   barWidth,
   nextAction,
   remaining,
+  repeatLine,
+  repeatsOf,
   STATE_LABELS,
   stepState,
 } from "./progressModel";
@@ -23,6 +27,7 @@ export function ProgressButton() {
       <button
         type="button"
         className={arm.resultsButton}
+        data-help="tool-path"
         onClick={() => setOpen(true)}
         title="Ступени обучения: где вы сейчас и что осталось"
       >
@@ -44,6 +49,7 @@ function ProgressDialog({ onClose }: { onClose: () => void }) {
   });
   const own = progress.data;
   const next = own && own.steps.length > 0 ? nextAction(own.steps) : null;
+  const repeats = own ? repeatsOf(own) : [];
   return (
     <div className={styles.backdrop}>
       <Dialog label="Мой путь" className={styles.dialog} onClose={onClose}>
@@ -54,6 +60,33 @@ function ProgressDialog({ onClose }: { onClose: () => void }) {
           <p className={styles.note}>
             Все ступени пройдены — закрепляйте на ступени {next.step.number}.
           </p>
+        )}
+        {own?.advice && (
+          <AdviceNote advice={own.advice} className={styles.note} />
+        )}
+        {repeats.length > 0 && (
+          <section className={styles.repeats} aria-labelledby="repeats-title">
+            <h3 id="repeats-title">Повтор незачтённых карточек</h3>
+            <ul>
+              {repeats.map((repeat) => (
+                <li key={repeat.scenario_id} className={styles.repeat}>
+                  <p>
+                    Происшествие {repeat.number}
+                    {repeat.incident_class ? ` · ${repeat.incident_class}` : ""}
+                    , ступень {repeat.step}: {repeatLine(repeat)}.
+                  </p>
+                  {!repeat.passed && (
+                    <PracticeButton
+                      step={repeat.step}
+                      scenario={repeat.scenario_id}
+                      label="Пройти повтор"
+                      onStarted={onClose}
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
         {own && (
           <ol className={styles.steps}>

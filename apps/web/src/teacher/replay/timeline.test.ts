@@ -129,6 +129,61 @@ describe("Таймлайн", () => {
     expect(steps[2].detail).toBe("Принял");
   });
 
+  it("сказанное бригаде — в разборе «Передано бригаде: …» (GP-11)", () => {
+    const timeline = buildTimeline(
+      input([
+        ...clean,
+        event(30, "brigade_said", {
+          call_id: "c-2",
+          text: "В квартире ребёнок",
+        }),
+      ]),
+    );
+    const said = timeline.moments.find((item) =>
+      item.title.startsWith("Передано бригаде"),
+    );
+    expect(said?.title).toBe("Передано бригаде: В квартире ребёнок");
+    expect(said?.offsetS).toBe(30);
+  });
+
+  it("«Принял» на «Как приняли?» — в разборе «Доклад бригады принят» (TC-01)", () => {
+    const timeline = buildTimeline(
+      input([
+        ...clean,
+        event(40, "report_confirmed", {
+          call_id: "c-2",
+          delivery_id: "d-1",
+          text: "Принял.",
+        }),
+      ]),
+    );
+    const confirmed = timeline.moments.find((item) =>
+      item.title.startsWith("Доклад бригады принят"),
+    );
+    expect(confirmed?.title).toBe("Доклад бригады принят: Принял.");
+    expect(confirmed?.offsetS).toBe(40);
+  });
+
+  it("статус без доклада, который сервер не принял, — в ленте (GP-26)", () => {
+    const timeline = buildTimeline(
+      input([
+        ...clean,
+        event(45, "status_denied", {
+          state: "arrived",
+          code: "report_required",
+          message: "Статус «Прибытие» пока недоступен.",
+          denied_event_id: "ce-x",
+        }),
+      ]),
+    );
+    const denied = timeline.moments.find((item) =>
+      item.title.startsWith("Статус не принят"),
+    );
+    expect(denied?.title).toBe("Статус не принят: Прибытие");
+    expect(denied?.detail).toBe("Статус «Прибытие» пока недоступен.");
+    expect(denied?.offsetS).toBe(45);
+  });
+
   it("на чистом прогоне ошибок нет", () => {
     expect(buildTimeline(input(clean)).problems).toEqual([]);
   });
@@ -444,7 +499,7 @@ describe("Бригады, подсказки и адрес в журнале", (
     id: "t-1",
     service_id: "102",
     brigade_id: "b-1",
-    name: "Учебный старший бригады 1",
+    name: "Старший бригады 203",
     phone_ext: "203",
     is_active: true,
   } as CallTarget;
@@ -526,7 +581,7 @@ describe("Бригады, подсказки и адрес в журнале", (
     ]);
     expect(titles).toContainEqual([
       "Звонок бригаде 203",
-      "Учебный старший бригады 1",
+      "Старший бригады 203",
     ]);
     expect(titles).toContainEqual([
       "Доклад бригады прозвучал",
@@ -549,9 +604,19 @@ describe("Бригады, подсказки и адрес в журнале", (
 });
 
 describe("Бригада звонит сама (27.09)", () => {
+  const target = {
+    id: "t-1",
+    service_id: "101",
+    brigade_id: "b-1",
+    name: "Старший бригады 201",
+    phone_ext: "201",
+    is_active: true,
+  } as CallTarget;
+
   it("поздний ответ на вызов бригады — место в разборе", () => {
     const problems = buildTimeline(
       input(clean, {
+        targets: [target],
         callbacks: [
           {
             call_id: "cb-1",
@@ -565,7 +630,119 @@ describe("Бригада звонит сама (27.09)", () => {
       }),
     ).problems;
     const late = problems.find((item) => item.title === "Бригада ждала ответа");
-    expect(late?.detail).toContain("ждала ответа");
+    expect(late?.detail).toBe(
+      "Бригада 201 позвонила с докладом и ждала ответа 55 с.",
+    );
     expect(late?.atMs).toBe(Date.parse(at(40)));
+  });
+
+  it("второй пропуск того же доклада — «Доклад бригады потерян» (TC-02)", () => {
+    const callback = (
+      id: string,
+      startS: number,
+      reason: "missed" | "lost",
+    ) => ({
+      call_id: id,
+      brigade_id: "b-1",
+      call_target_id: "t-1",
+      started_at: at(startS),
+      answered_at: null,
+      ended_at: at(startS + 25),
+      end_reason: reason,
+    });
+    const problems = buildTimeline(
+      input(clean, {
+        targets: [target],
+        callbacks: [
+          callback("cb-1", 5, "missed"),
+          callback("cb-2", 30, "lost"),
+        ],
+      }),
+    ).problems;
+    const lost = problems.filter(
+      (item) => item.title === "Доклад бригады потерян",
+    );
+    expect(lost).toHaveLength(1);
+    expect(lost[0]?.atMs).toBe(Date.parse(at(30)));
+    expect(lost[0]?.detail).toBe(
+      "Бригада 201 звонила с докладом дважды, оба вызова пропущены.",
+    );
+  });
+});
+
+describe("Удержание (HQ-033)", () => {
+  it("собеседник не дождался на удержании — место в разборе", () => {
+    const timeline = buildTimeline(
+      input([
+        ...clean.slice(0, 7),
+        event(30, "call_hold", { call_id: "c-1" }),
+        event(35, "call_resume", { call_id: "c-1" }),
+        event(36, "call_hold", { call_id: "c-1" }),
+        event(216, "call_hangup", { call_id: "c-1" }),
+        clean[8],
+      ]),
+    );
+    const dropped = timeline.problems.filter(
+      (item) => item.title === "Не дождался на удержании",
+    );
+    expect(dropped).toHaveLength(1);
+    expect(dropped[0]?.atMs).toBe(Date.parse(at(36)));
+    expect(dropped[0]?.detail).toContain("180 с");
+    expect(timeline.moments.map((item) => item.title)).toContain(
+      "Снят с удержания",
+    );
+  });
+});
+
+describe("Отдел контроля (TC-07)", () => {
+  it("звонок при карточке без статуса — место в разборе с пояснением", () => {
+    const problems = buildTimeline(
+      input(clean, {
+        control: {
+          call_id: "ctl-1",
+          started_at: at(61),
+          answered_at: at(66),
+          ended_at: at(80),
+          end_reason: null,
+          without_status_s: 61,
+          reply_options: [{ key: "late", label: "Не успел обработать" }],
+          reply: {
+            mode: "parts",
+            text: "Не успел обработать",
+            option_key: "late",
+            at: at(70),
+          },
+        },
+      }),
+    ).problems;
+    const control = problems.find(
+      (item) => item.title === "Звонок отдела контроля",
+    );
+    expect(control?.atMs).toBe(Date.parse(at(61)));
+    expect(control?.detail).toBe(
+      "Отдел контроля звонил: карточка была без статуса 1:01. Пояснение: «Не успел обработать».",
+    );
+  });
+});
+
+describe("Проверка памяти (HQ-033)", () => {
+  it("показ и ответ — шаги ленты с итогом «N из 3»", () => {
+    const timeline = buildTimeline(
+      input([
+        ...clean.slice(0, 7),
+        event(40, "memory_check", {
+          questions: [{ text: "Сколько бригад свободно?" }],
+        }),
+        event(55, "memory_check_answer", {
+          answers: [["1"], ["Ни одна"], ["По всем отмечено"]],
+          score: 2,
+          total: 3,
+        }),
+        clean[8],
+      ]),
+    );
+    const titles = timeline.moments.map((item) => item.title);
+    expect(titles).toContain("Проверка памяти показана");
+    expect(titles).toContain("Проверка памяти: 2 из 3");
   });
 });

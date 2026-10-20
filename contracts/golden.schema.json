@@ -156,7 +156,7 @@
                       "value": {
                         "type": "object",
                         "additionalProperties": false,
-                        "description": "Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address.",
+                        "description": "Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address. Не используется АРМ ДДС с 08.10 (DT-14): адрес проверяется в комментариях; поле остаётся для старых событий.",
                         "properties": {
                           "city": {
                             "type": "string",
@@ -502,6 +502,81 @@
                   "call_id": {
                     "type": "string",
                     "format": "uuid"
+                  },
+                  "report_choices": {
+                    "type": "array",
+                    "description": "Виды доклада службе в порядке доклада: голосом (распознанный текст, сведённый к виду по частям памятки ДДС, с. 32) или вариантом ответа. full — все обязательные части: в звонке в 112 четыре (кто вы, адрес и повод, карточка, что изменилось), в остальных звонках три — карточку памятка требует только в звонке в 112; no_who, no_address, no_card, no_change — без этой части (первой недостающей обязательной); extra — с лишними догадками. no_victims и no_incident — виды до 08.10.2026, только в старых журналах. Нет поля — доклад не записан.",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "full",
+                        "no_who",
+                        "no_address",
+                        "no_card",
+                        "no_change",
+                        "extra",
+                        "no_victims",
+                        "no_incident"
+                      ]
+                    }
+                  },
+                  "report_modes": {
+                    "type": "array",
+                    "description": "Как сделан каждый доклад из report_choices, в том же порядке: voice — голосом, option — вариантом ответа; нет поля — все вариантом (отбой до голосового ввода).",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "voice",
+                        "option"
+                      ]
+                    }
+                  },
+                  "voice_failures": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Сколько раз доклад голосом не расслышан (речи нет); после двух предлагаются варианты ответа. Фраза с низкой уверенностью, которую обучаемый проверил в поле правки, сюда не входит — переспрос не штрафуется (TC-04)."
+                  },
+                  "report_parts": {
+                    "type": "array",
+                    "description": "Какие части памятки ДДС, с. 32, прозвучали в каждом докладе из report_choices, в том же порядке: who — кто вы, address — адрес и повод, card — карточка, change — что изменилось. Нет поля или элемента — части по виду доклада (вариант ответа или отбой до 08.10.2026).",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "array",
+                      "uniqueItems": true,
+                      "maxItems": 4,
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "who",
+                          "address",
+                          "card",
+                          "change"
+                        ]
+                      }
+                    }
+                  },
+                  "report_loudness": {
+                    "type": "array",
+                    "description": "Громкость каждого доклада из report_choices, в том же порядке: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null — доклад вариантом ответа или громкость не измерена. Нет поля — отбой до 12.10.2026.",
+                    "maxItems": 20,
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "quiet",
+                            "ok",
+                            "loud"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
                   }
                 },
                 "required": [
@@ -740,7 +815,9 @@
         },
         "critical_flags": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "uniqueItems": true
         },
         "total": {

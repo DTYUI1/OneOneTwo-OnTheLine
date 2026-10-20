@@ -4,7 +4,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  'summary, a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function Dialog({
   label,
@@ -27,7 +27,27 @@ export function Dialog({
         ? document.activeElement
         : null;
     ref.current?.focus();
+    // Щелчок по затемнению снимает фокус с окна. Тогда React-обработчик
+    // внутри диалога не получает Esc, а карточка под ним может закрыться.
+    const escapeOutside = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      const dialog = ref.current;
+      if (
+        !dialog ||
+        (event.target instanceof Node && dialog.contains(event.target))
+      )
+        return;
+      const dialogs = document.querySelectorAll(
+        '[role="dialog"][aria-modal="true"]',
+      );
+      if (dialogs[dialogs.length - 1] !== dialog) return;
+      event.preventDefault();
+      event.stopPropagation();
+      close.current();
+    };
+    document.addEventListener("keydown", escapeOutside, true);
     return () => {
+      document.removeEventListener("keydown", escapeOutside, true);
       if (opener?.isConnected) opener.focus();
     };
   }, []);
@@ -39,7 +59,9 @@ export function Dialog({
       return;
     }
     if (event.key !== "Tab" || !ref.current) return;
-    const items = [...ref.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
+    const items = [
+      ...ref.current.querySelectorAll<HTMLElement>(FOCUSABLE),
+    ].filter((item) => item.getClientRects().length > 0);
     if (items.length === 0) return;
     const first = items[0];
     const last = items[items.length - 1];

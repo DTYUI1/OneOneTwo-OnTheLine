@@ -43,6 +43,40 @@ export function trainingQuery(cardId: string) {
   };
 }
 
+/** Действующие бригады ДДС — общий кэш для связи карточки и колонки без карточки. */
+export function brigadesQuery(serviceId: string | null) {
+  return {
+    queryKey: ["brigades", serviceId] as const,
+    enabled: serviceId !== null,
+    retry: false,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await api.GET("/services/{id}/brigades", {
+        params: { path: { id: serviceId as string } },
+      });
+      if (!data) throw new Error(error?.message ?? "Бригады недоступны.");
+      return data.filter((item) => item.is_active);
+    },
+  };
+}
+
+/** Адресаты ДДС (бригады и службы) — общий кэш для связи карточки и вызовов в колонке. */
+export function callTargetsQuery(serviceId: string | null) {
+  return {
+    queryKey: ["call-targets", serviceId] as const,
+    enabled: serviceId !== null,
+    retry: false,
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data, error } = await api.GET("/services/{id}/call-targets", {
+        params: { path: { id: serviceId as string } },
+      });
+      if (!data) throw new Error(error?.message ?? "Адресаты недоступны.");
+      return data.filter((item) => item.is_active);
+    },
+  };
+}
+
 /**
  * `live` — идёт разговор: сведения выдаёт worker по сроку плана, и WS
  * `training.updated` может не дойти при обрыве, поэтому в разговоре чтение
@@ -56,33 +90,9 @@ export function useBrigadeData(
   const client = useQueryClient();
   const { realtime } = useSession();
 
-  const brigades = useQuery({
-    queryKey: ["brigades", serviceId],
-    enabled: serviceId !== null,
-    retry: false,
-    staleTime: 60_000,
-    queryFn: async () => {
-      const { data, error } = await api.GET("/services/{id}/brigades", {
-        params: { path: { id: serviceId as string } },
-      });
-      if (!data) throw new Error(error?.message ?? "Бригады недоступны.");
-      return data.filter((item) => item.is_active);
-    },
-  });
+  const brigades = useQuery(brigadesQuery(serviceId));
 
-  const targets = useQuery({
-    queryKey: ["call-targets", serviceId],
-    enabled: serviceId !== null,
-    retry: false,
-    staleTime: 60_000,
-    queryFn: async () => {
-      const { data, error } = await api.GET("/services/{id}/call-targets", {
-        params: { path: { id: serviceId as string } },
-      });
-      if (!data) throw new Error(error?.message ?? "Адресаты недоступны.");
-      return data.filter((item) => item.is_active);
-    },
-  });
+  const targets = useQuery(callTargetsQuery(serviceId));
 
   const training = useQuery({
     ...trainingQuery(cardId),

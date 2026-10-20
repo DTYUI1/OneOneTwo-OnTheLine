@@ -2,7 +2,7 @@ import os
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
-from uuid import UUID
+from uuid import UUID, uuid4, uuid5
 
 from evalcore.defaults import (  # type: ignore[import-untyped]
     CARD_REASON_REQUIRED,
@@ -12,14 +12,27 @@ from evalcore.defaults import (  # type: ignore[import-untyped]
 from fastapi import HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy import func, select
+from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.cards import repo, schemas
 from app.api.clock import service as clock_service
-from app.api.evaluations.service import evaluate_terminal_card
+from app.api.evaluations.service import evaluate_terminal_card, refresh_terminal_rules
 from app.api.notifications import notify
+from app.api.sessions import memory_check
+from app.api.training import briefing, caller, control, scenario_events
 from app.api.training import events as training_events
+from app.api.training.contacts import card_phone
+from app.api.training.holds import HOLD_LIMIT
 from app.api.training.status_evidence import require_report_before_status
-from app.core.models import Assignment, Call, Card, CardEvent, CardEventReceipt, Service
+from app.core.models import (
+    Assignment,
+    Call,
+    Card,
+    CardEvent,
+    CardEventReceipt,
+    Service,
+)
 from app.worker.queue import enqueue_job
 
 TERMINAL_STATES = CARD_TERMINAL_STATES
@@ -108,7 +121,19 @@ async def get_card(request: Request, card_id: UUID) -> schemas.Card:
 
 async def list_events(request: Request, card_id: UUID) -> list[schemas.StoredEvent]:
     await get_card_row(request, card_id)
-    return [serialize_event(row) for row in await repo.events(request.state.db, card_id)]
+    events = [serialize_event(row) for row in await repo.events(request.state.db, card_id)]
+    # Проверка памяти (HQ-033): верные ответы обучаемому — только после его ответа.
+    return memory_check.sealed(events) if request.state.user.role == "trainee" else events
+
+
+async def contact_service(request: Request, card: Card) -> str | None:
+    """ДДС участника карточки: абоненты телефона ДДС (GP-09) записываются на свою службу."""
+    return (await card_phone(request.state.db, card)).service_id
+
+
+async def contact_numbers(request: Request, card: Card) -> set[str]:
+    """Номера абонентов телефона ДДС на занятии карточки: список преподавателя или по умолчанию."""
+    return (await card_phone(request.state.db, card)).numbers()
 
 
 async def apply_call(
@@ -128,13 +153,16 @@ async def apply_call(
                 Service.phone_ext == payload["phone_ext"], Service.is_active.is_(True)
             )
         )
-        if service is None:
+        service_id = service.id if service is not None else await contact_service(request, card)
+        if service_id is None or (
+            service is None and payload["phone_ext"] not in await contact_numbers(request, card)
+        ):
             raise HTTPException(422, "Набран неизвестный или неактивный номер.")
         row = Call(
             id=call_id,
             card_id=card.id,
             dialed_ext=payload["phone_ext"],
-            service_id=service.id,
+            service_id=service_id,
             started_at=now,
             answered_at=None,
             ended_at=None,
@@ -145,15 +173,65 @@ async def apply_call(
     elif row is None or row.card_id != card.id:
         raise HTTPException(404, "Звонок не найден.")
     elif kind == "call_answer":
-        if row.answered_at is not None or row.ended_at is not None:
+        if row.ended_at is not None:
+            raise call_ended()
+        if row.answered_at is not None:
             raise HTTPException(409, "Звонок уже принят или завершён.")
         row.answered_at = now
     else:
         if row.ended_at is not None:
-            raise HTTPException(409, "Звонок уже завершён.")
+            raise call_ended()
         row.ended_at = now
     await request.state.db.flush()
     await notify(request.state.db, "call.state", row.id)
+
+
+async def hold_call(db: AsyncSession, card: Card, kind: str, call_id: UUID) -> None:
+    """Удержание звонка (HQ-033, `call_hold` / `call_resume`): только идущий звонок карточки.
+
+    Звонок на сервере не кончается и `call.state` не меняется — собеседник ждёт на линии.
+    Удержан ли звонок сейчас — по последнему событию удержания этого звонка в журнале.
+    """
+    call = await db.get(Call, call_id)
+    if call is None or call.card_id != card.id:
+        raise HTTPException(404, "Звонок не найден.")
+    if call.ended_at is not None:
+        raise call_ended()
+    if call.answered_at is None:
+        raise hold_state("Удержать можно только идущий разговор.")
+    marks = await db.execute(
+        select(CardEvent.type, CardEvent.payload, CardEvent.server_ts)
+        .where(CardEvent.card_id == card.id, CardEvent.type.in_(("call_hold", "call_resume")))
+        .order_by(CardEvent.server_ts, CardEvent.id)
+    )
+    held_since = None
+    for event_type, payload, at in marks:
+        if UUID(payload["call_id"]) == call_id:
+            held_since = at if event_type == "call_hold" else None
+    # HTTP может опередить запоздавший тик. Не снимаем истёкшее удержание: worker
+    # должен увидеть исходную метку и завершить звонок ровно на границе срока.
+    if held_since is not None and datetime.now(UTC) >= held_since + HOLD_LIMIT:
+        raise call_ended()
+    if kind == "call_hold" and held_since is not None:
+        raise hold_state("Звонок уже на удержании.")
+    if kind == "call_resume" and held_since is None:
+        raise hold_state("Звонок не на удержании.")
+
+
+def hold_state(message: str) -> HTTPException:
+    """Удержание не сходится с журналом (повтор после обновления страницы, гонка с отбоем).
+    Стабильный код: отметка удержания только для разбора, очередь событий карточку из-за
+    неё не останавливает (`shared/ws/outbox.ts`)."""
+    return HTTPException(409, {"code": "hold_state", "message": message, "details": {}})
+
+
+def call_ended() -> HTTPException:
+    """Звонок уже кончился на сервере: вызов бригады пропущен (TC-02) или погашен, а клиент
+    ответил или положил трубку одновременно с этим. Стабильный код: очередь событий не
+    останавливает карточку из-за такой гонки (`shared/ws/outbox.ts`)."""
+    return HTTPException(
+        409, {"code": "call_ended", "message": "Звонок уже завершён.", "details": {}}
+    )
 
 
 def require_reason(target: str, comment: str) -> None:
@@ -247,11 +325,127 @@ async def mutate_card(
             await training_events.select_brigades(request, card, payload)
         else:
             await training_events.dial_target(request, card, payload, now)
-    elif kind.startswith("call_"):
+    elif kind == "brigade_reply":
         if card.state in TERMINAL_STATES:
+            raise HTTPException(409, "Для закрытой карточки разговор с бригадой недоступен.")
+        await scenario_events.record_reply(request.state.db, card, payload)
+    elif kind == "brigade_briefing":
+        if card.state in TERMINAL_STATES:
+            raise HTTPException(409, "Для закрытой карточки разговор с бригадой недоступен.")
+        await briefing.record_briefing(request.state.db, card, payload, now)
+    elif kind == "brigade_said":
+        if card.state in TERMINAL_STATES:
+            raise HTTPException(409, "Для закрытой карточки разговор с бригадой недоступен.")
+        # Запись — сама строка card_events: журнал и разбор читают её оттуда.
+        await briefing.said_call(request.state.db, card, UUID(payload["call_id"]))
+    elif kind == "report_confirmed":
+        if card.state in TERMINAL_STATES:
+            raise HTTPException(409, "Для закрытой карточки разговор с бригадой недоступен.")
+        # «Принял» на «Как приняли?» (TC-01): запись — сама строка card_events.
+        await briefing.confirm_report(request.state.db, card, payload)
+    elif kind == "control_reply":
+        # Пояснение отделу контроля (TC-07): запись — сама строка card_events. Отдел контроля
+        # мог позвонить, пока карточка была без статуса, а ответ прийти уже после закрытия.
+        await control.control_reply_call(request.state.db, card, payload)
+    elif kind == "caller_said":
+        # Реплика живого заявителя (HQ-019): запись — сама строка card_events.
+        await caller.record_caller_line(request.state.db, card, payload)
+    elif kind in {"call_hold", "call_resume"}:
+        # Удержание (HQ-033): запись — сама строка card_events. Закрытие карточки не мешает:
+        # разговор с отделом контроля или службой мог продолжиться после статуса.
+        await hold_call(request.state.db, card, kind, UUID(payload["call_id"]))
+    elif kind.startswith("call_"):
+        # Закрытие карточки не мешает закончить уже начатый разговор, в том числе
+        # автоматическим отбоем с удержания. Принадлежность звонка проверит apply_call.
+        if card.state in TERMINAL_STATES and not (
+            kind == "call_hangup"
+            or (
+                kind != "call_dial"
+                and await control.is_control_call(request.state.db, UUID(payload["call_id"]))
+            )
+        ):
             raise HTTPException(409, "Для закрытой карточки звонки недоступны.")
         await apply_call(request, card, kind, payload, now)
     # hint_open не меняет проекцию карточки.
+
+
+async def repeated_action(
+    request: Request, row: Any, kind: str, payload: dict[str, Any]
+) -> CardEvent | None:
+    """Двойной щелчок по «Подтвердить» (TC-08): то же действие новым client_event_id.
+
+    Статус или перенаправление, после которых карточка уже в этом состоянии, повторить нельзя
+    по смыслу — переход в то же состояние никогда не допустим. Если последнее такое действие
+    этого автора на этой карточке с тем же телом — это повтор, а не новая команда: возвращаем
+    его запись. Другое тело (иной комментарий) повтором не считается и получает прежний 409.
+    """
+    card: Card = row["Card"]
+    if row["session_status"] != "running":
+        return None
+    if kind == "status_change":
+        if payload["state"] != card.state:
+            return None
+    elif kind == "redirect":
+        if card.state != "redirected" or str(payload["service_id"]) != str(
+            card.redirected_to_service_id
+        ):
+            return None
+    else:
+        return None
+    last = await request.state.db.scalar(
+        select(CardEvent)
+        .where(
+            CardEvent.card_id == card.id,
+            CardEvent.actor_id == request.state.user.id,
+            CardEvent.type == kind,
+        )
+        .order_by(CardEvent.server_ts.desc(), CardEvent.id)
+        .limit(1)
+    )
+    if last is None or last.payload != payload:
+        return None
+    return last
+
+
+def keep_denied_status(
+    request: Request, card_id: UUID, event: dict[str, Any], exc: HTTPException, now: datetime
+) -> None:
+    """Статус без доклада (409 report_required) — в журнал карточки, хотя действие отклонено.
+
+    Эталон, раздел 7: такую попытку разбор называет в «Последовательности статусов» (GP-26).
+    Отказ откатывает транзакцию запроса, поэтому запись делает transaction_middleware уже
+    после отката (`request.state.keep_on_error`). Повтор того же события вторую запись не
+    создаёт: её client_event_id выводится из client_event_id отклонённого действия.
+    """
+    detail: dict[str, Any] = exc.detail if isinstance(exc.detail, dict) else {}
+    if event["type"] != "status_change" or detail.get("code") != "report_required":
+        return
+    denied_id = UUID(event["client_event_id"])
+    values = {
+        "card_id": card_id,
+        "actor_id": request.state.user.id,
+        "client_event_id": uuid5(denied_id, "status_denied"),
+        "client_ts": datetime.fromisoformat(event["client_ts"].replace("Z", "+00:00")),
+        "server_ts": now,
+        "clock_offset_ms": request.app.state.realtime.offset_for(request.state.user.id),
+        "type": "status_denied",
+        "payload": {
+            "state": event["payload"]["state"],
+            "code": "report_required",
+            "message": str(detail.get("message", "")),
+            "denied_event_id": str(denied_id),
+        },
+    }
+
+    async def write(db: AsyncSession) -> None:
+        await db.execute(
+            insert(CardEvent)
+            .values(id=uuid4(), **values)
+            .on_conflict_do_nothing(index_elements=["actor_id", "client_event_id"])
+        )
+        await notify(db, "card.updated", card_id)
+
+    request.state.keep_on_error = [*getattr(request.state, "keep_on_error", []), write]
 
 
 async def post_event(
@@ -297,6 +491,16 @@ async def post_event(
             card=serialize_card(row),
         )
     row = await get_card_row(request, card_id, lock=True)
+    repeat = await repeated_action(request, row, body.root["type"], body.root["payload"])
+    if repeat is not None:
+        # Новую запись не создаём: «двойной щелчок — одно событие». Ключ новой попытки не
+        # хранится — её повтор снова распознается так же.
+        return schemas.EventReceipt(
+            client_event_id=event_id,
+            server_ts=repeat.server_ts,
+            duplicate=True,
+            card=serialize_card(row),
+        )
     sample_id = None
     if body.root.get("clock_sample_id"):
         sample = await clock_service.confirmed(
@@ -304,7 +508,11 @@ async def post_event(
         )
         sample_id = sample.id
     now = datetime.now(UTC)
-    await mutate_card(request, row, body.root["type"], body.root["payload"], now)
+    try:
+        await mutate_card(request, row, body.root["type"], body.root["payload"], now)
+    except HTTPException as exc:
+        keep_denied_status(request, card_id, body.root, exc, now)
+        raise
     event = CardEvent(
         card_id=card_id,
         actor_id=request.state.user.id,
@@ -321,16 +529,32 @@ async def post_event(
     await request.state.db.refresh(event, attribute_names=["server_ts"])
     if event.type in {"message_presented", "message_failed"}:
         await training_events.record_presentation(request, row["Card"], event)
-    # После статуса бригада, ждавшая решения, докладывает без ожидания тика worker.
-    if event.type in {"call_answer", "status_change"}:
+    # После статуса бригада, ждавшая решения, докладывает без ожидания тика worker; на ответ
+    # вариантом (DT-10) отвечает в том же разговоре, после вводной (GP-05) — докладывает о
+    # выезде; на «скорую уже вызвал» после своей просьбы (GP-28) — «понял, ждём».
+    if event.type in {
+        "call_answer",
+        "status_change",
+        "brigade_reply",
+        "brigade_briefing",
+        "brigade_said",
+    }:
+        from app.api.training.scenario_events import fire_due_events
         from app.worker.training import deliver_messages
 
+        # Сначала события, которым пора, — как в тике worker: иначе доклад, который ждал
+        # исхода вопроса, уходит раньше реплики события, сработавшего на том же ответе
+        # (ночной прогон 17.10: «в квартире дым» звучало после доклада о работах).
+        await fire_due_events(request.state.db, row["Card"], now)
         await deliver_messages(request.state.db, row["Card"], now)
     if row["Card"].state in TERMINAL_STATES and body.root["type"] in {
         "status_change",
         "redirect",
     }:
         await evaluate_terminal_card(request.state.db, card_id)
+    elif row["Card"].state in TERMINAL_STATES and event.type in {"call_hangup", "call_hold"}:
+        # Снимок удержания меняет доклад и без отбоя: worker мог уже завершить оценку.
+        await refresh_terminal_rules(request.state.db, card_id)
     await notify(request.state.db, "card.updated", card_id)
     result_card = serialize_card(row)
     request.state.audit_after = {

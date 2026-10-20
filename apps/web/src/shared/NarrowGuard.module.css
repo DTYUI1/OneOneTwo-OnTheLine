@@ -1,0 +1,20 @@
+.guard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: 480px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-3);
+  background: var(--color-panel);
+  color: var(--color-text);
+}
+.guard h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 400;
+}
+.guard p {
+  margin: 0;
+  line-height: 1.4;
+}

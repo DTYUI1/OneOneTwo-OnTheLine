@@ -1,0 +1,373 @@
+{
+  "format": 2,
+  "code": "pipe-access-gkh-2",
+  "version": 2,
+  "title": "Вода из подвала: найти ключи и вход",
+  "service_id": "GKH",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "14041500",
+  "complications": [],
+  "teacher_comment": "Получить полные ключевые сведения в разговоре с заявителем по полному номеру роли «Заявитель» телефонной книги занятия; затем вернуться к бригаде и передать сведения ответами «По частям». Сам ответ на звонок, неполные сведения или отсутствие передачи не разрешают работы. Общий срок — 120 секунд после обещания уточнить; при пропуске сохраняется задержка работ на 40 секунд.",
+  "outcome": {
+    "people": "На улице Пришвина, 17 бригада ждала у закрытого подвала. Заявительница со своими ключами встретила её у второго подъезда и показала серую дверь со двора. После открытия бригада обнаружила засор, прочистила канализационный лежак и откачала подвал.",
+    "late": "Пока заявительнице не дозвонились и не уточнили доступ, вода продолжала выходить из подвала; поиск ключей затянул начало работ."
+  },
+  "caller": {
+    "plot": "pipe_access",
+    "character": "calm"
+  },
+  "card": {
+    "caller_name": "Смирнова Анна Сергеевна",
+    "phone_aon": "+74951234567",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Из люка у входа в общий подвал идёт вода, течёт в подъезд. Пока неизвестно, откуда поступает вода; дверь в подвал заперта. Заявительница — старшая по дому, точное место встречи и порядок доступа в карточке не указаны. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Засор внутренней канализации",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008601",
+    "incident_type_code": "14041500"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "GKH",
+      "phone_ext": "458",
+      "before_s": 600,
+      "contact_role": "caller"
+    },
+    "expected_comment": "Улица Пришвина, дом 17. Из люка у входа в общий подвал идёт вода, течёт в подъезд. Пока неизвестно, откуда поступает вода; дверь в подвал заперта. Заявительница — старшая по дому, точное место встречи и порядок доступа в карточке не указаны. Пострадавших нет. Позвонили заявительнице: ключи у неё, встречает у второго подъезда возле синей скамейки; откроет через две минуты. Вход со двора, серая дверь справа от второго подъезда. Сведения переданы бригаде. Засор пробили, подвал откачали, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. Подвал заперт, а вода уже в подъезд из люка лезет. Ищем, кто откроет.",
+        "audio": "bank-v1/GKH/GKH.arrived.sewer.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Пробиваем лежак тросом. Засор плотный, тряпки какие-то.",
+        "audio": "bank-v1/GKH/GKH.working.sewer.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Засор пробили, подвал откачали. Работы завершены.",
+        "audio": "bank-v1/GKH/GKH.completed.sewer.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "caller_details",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, ключи от подвала у кого? Там замок висит.",
+        "audio": "bank-v1/GKH/GKH.clarify.any.5.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "ask_caller",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "ask_caller",
+          "label": "Позвоню заявителю: уточню ключи и вход"
+        },
+        {
+          "key": "guess",
+          "label": "Ключей нет, разбирайтесь без заявителя"
+        },
+        {
+          "key": "wait",
+          "label": "Ждите, сведения появятся сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, так и сделаем.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.3.ogg"
+          },
+          "effects": [],
+          "awaits_call": {
+            "contact_role": "caller",
+            "required_facts": ["where", "eta", "box"],
+            "within_s": 120,
+            "relay_event": "caller_relay_2",
+            "otherwise": [
+              {
+                "replace": "works",
+                "with": {
+                  "text": "Подвал так и не открыли. Качаем через продух, шланг в окошко кинули.",
+                  "audio": "bank-v1/GKH/GKH.working.sewer.6.ogg"
+                }
+              },
+              {
+                "delay": "works",
+                "by_s": 40
+              }
+            ]
+          }
+        },
+        "wrong": {
+          "line": {
+            "text": "Плохо. Попробуем через управляющую, но это надолго.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Подвал так и не открыли. Качаем через продух, шланг в окошко кинули.",
+                "audio": "bank-v1/GKH/GKH.working.sewer.6.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        },
+        "late": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Подвал так и не открыли. Качаем через продух, шланг в окошко кинули.",
+                "audio": "bank-v1/GKH/GKH.working.sewer.6.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Подвал так и не открыли. Качаем через продух, шланг в окошко кинули.",
+                "audio": "bank-v1/GKH/GKH.working.sewer.6.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Вода из подвала: найти ключи и вход: дозвониться, получить сведения и передать бригаде",
+        "critical": false
+      }
+    },
+    {
+      "key": "caller_relay_1",
+      "kind": "clarify",
+      "trigger": {
+        "on": "event",
+        "event": "caller_details",
+        "branch": "met",
+        "after_s": 0
+      },
+      "line": {
+        "text": "Кто нас встретит? К кому подходить?",
+        "audio": "bank-v1/GKH/GKH.clarify.any.11.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "relay",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "relay",
+          "label": "Ключи у старшей: 2-й подъезд, синяя скамейка; через 2 мин."
+        },
+        {
+          "key": "guess",
+          "label": "Ключи у дворника; встретит через полчаса"
+        },
+        {
+          "key": "wait",
+          "label": "Сведений пока нет, продолжайте ждать"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": []
+        },
+        "late": {
+          "line": null,
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Передать бригаде сведения заявителя: место встречи и срок",
+        "critical": false
+      }
+    },
+    {
+      "key": "caller_relay_2",
+      "kind": "clarify",
+      "trigger": {
+        "on": "event",
+        "event": "caller_relay_1",
+        "branch": "met",
+        "after_s": 0
+      },
+      "line": {
+        "text": "Вход в подвал откуда — со двора или из подъезда?",
+        "audio": "bank-v1/GKH/GKH.clarify.any.10.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "relay",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "relay",
+          "label": "Со двора, серая дверь справа от второго подъезда"
+        },
+        {
+          "key": "guess",
+          "label": "С улицы, красная дверь слева от первого подъезда"
+        },
+        {
+          "key": "wait",
+          "label": "Сведений пока нет, продолжайте ждать"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, есть. Идём.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": []
+        },
+        "late": {
+          "line": null,
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Передать бригаде сведения заявителя: вход в подвал",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

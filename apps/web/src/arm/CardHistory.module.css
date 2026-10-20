@@ -1,0 +1,240 @@
+/* Нижняя панель журнала использует те же цвета, плотность и прямые границы, что АРМ. */
+.history {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: clamp(160px, 30vh, 300px);
+  max-height: 45vh;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--arm-ink);
+  background: var(--arm-box);
+  border-top: 1px solid var(--arm-dark);
+  font-size: 12px;
+}
+
+.history[hidden],
+.table tr[hidden] {
+  display: none;
+}
+
+.head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+  min-height: 30px;
+  padding: 3px 8px;
+  color: var(--color-on-dark);
+  background: var(--arm-bar);
+}
+
+.title {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title strong {
+  flex: none;
+  font-size: 13px;
+}
+
+.title span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.close {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 24px;
+  padding: 3px;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--color-border);
+}
+
+.toolbar {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.filters {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.toolbar button,
+.error button {
+  min-height: 24px;
+  padding: 2px 7px;
+  color: var(--arm-ink);
+  background: var(--arm-box);
+  border: 1px solid var(--color-border);
+  font: inherit;
+}
+
+.filters button[aria-pressed="true"] {
+  color: var(--color-on-dark);
+  background: var(--arm-blue);
+  border-color: var(--arm-blue);
+}
+
+.toolbar input {
+  flex: 1 1 140px;
+  width: 160px;
+  min-width: 100px;
+  max-width: 280px;
+  height: 24px;
+  padding: 2px 6px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  font: inherit;
+}
+
+.count {
+  color: var(--arm-bar);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.toolbar .latest {
+  margin-left: auto;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.timeColumn { width: 160px; }
+.actionColumn { width: 25%; }
+.actorColumn { width: 90px; }
+
+.table th,
+.table td {
+  padding: 5px 8px;
+  text-align: left;
+  vertical-align: top;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  overflow-wrap: anywhere;
+}
+
+.table th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  color: var(--arm-ink);
+  background: var(--arm-box);
+  font-weight: normal;
+}
+
+.table td {
+  background: #fff;
+}
+
+.table .selected td {
+  background: var(--color-welcome-note);
+}
+
+.table .time {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.operator {
+  color: var(--arm-bar);
+}
+
+.late {
+  padding: 1px 2px;
+  color: var(--color-on-dark);
+  background: var(--color-danger);
+}
+
+.commentButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font: inherit;
+}
+
+.commentButton > :last-child {
+  flex: none;
+}
+
+.preview {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.emptyComment {
+  color: var(--arm-bar);
+}
+
+.fullComment {
+  max-height: min(200px, 25vh);
+  overflow: auto;
+  padding: 6px 8px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.table .details td {
+  padding: 0;
+  background: var(--color-welcome-note);
+}
+
+.error {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  color: var(--color-danger);
+}
+
+.empty {
+  margin: 0;
+  padding: 12px;
+  color: var(--arm-bar);
+}

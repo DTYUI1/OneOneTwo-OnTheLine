@@ -1,6 +1,9 @@
 import { expect } from "@playwright/test";
 // test фикстуры закрывает окно «Параллельная работа», если оно осталось от занятия.
 import { login, test } from "./captain-fixture";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 // Вход в модуль «Оператор 112»: выбор на приветствии, из шапки; выход крестиком — на экран
 // результатов 112, оттуда крестиком — к выбору обучения (просьба капитана 29.09).
@@ -90,18 +93,12 @@ test("обучаемый: выход из 112 — результаты, крес
   await expect(page.getByRole("button", { name: "Выйти" })).toBeVisible();
 });
 
-test("преподаватель заходит в «Оператор 112» из шапки и возвращается в кабинет", async ({
+test("у преподавателя в шапке нет перехода в «Оператор 112»", async ({
   page,
 }) => {
   await login(page, "teacher");
-  await page.getByRole("link", { name: "Оператор 112" }).click();
-  await expect(page).toHaveURL(/\/app\/operator/);
-  await page.getByRole("button", { name: "Принять вызов" }).click();
-  await page.getByRole("button", { name: "Закрыть карточку" }).click();
-  await expect(page).toHaveURL(/\/app\/operator\/results/);
-  // У преподавателя выбора обучения нет — крестик ведёт в кабинет.
-  await page.getByRole("button", { name: "Закрыть результаты" }).click();
-  await expect(page).toHaveURL(/\/app\/teacher/);
+  await expect(page.getByRole("button", { name: "Выйти" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Оператор 112" })).toHaveCount(0);
 });
 
 test("крестик выбора обучения — выход из учётной записи на экран входа", async ({

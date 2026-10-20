@@ -4,6 +4,7 @@ from typing import Literal
 from uuid import uuid4
 
 from fastapi import HTTPException, Request, Response
+from pydantic import ValidationError
 from sqlalchemy import func, select, text
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -79,7 +80,16 @@ async def update_settings(request: Request, value: schemas.Settings) -> schemas.
         raise HTTPException(503, "Начальные настройки не загружены. Запустите seed.")
     request.state.entity = "settings"
     request.state.entity_id = "training"
-    request.state.audit_before = row.value
+    # В журнал — настройки, как их видел администратор (GET), а не сырая строка: строка,
+    # сохранённая до нового поля (phone_contacts, веса комментария), без значений по умолчанию.
+    # Если строка не проходит схему (устаревший ключ, неверное значение), пишем её как есть:
+    # PUT — единственный способ починить такую строку из интерфейса, падать ему нельзя.
+    try:
+        request.state.audit_before = schemas.Settings.model_validate(
+            schemas.with_comment_defaults(row.value)
+        ).model_dump()
+    except ValidationError:
+        request.state.audit_before = row.value
     row.value = value.model_dump()
     row.updated_by = request.state.user.id
     row.updated_at = datetime.now(UTC)

@@ -1,0 +1,134 @@
+{
+  "answer": {
+    "bytes": 27001,
+    "sha256": "cbeeab66b9e2376700d1c2fecfaa3a480ef9eb4d34c1f7777704d90d6119ffc9"
+  },
+  "brigade": {
+    "bytes": 32852,
+    "sha256": "a33ec466a15bce05afbad1940f936faa2dc0e1777d25ce8f14db0c31703e226a"
+  },
+  "brigade-call": {
+    "bytes": 33270,
+    "sha256": "668240ed7cb54b2daf695c5c11c3f278052f858c56dc9c0bfddd9b06dce8d32e"
+  },
+  "completed": {
+    "bytes": 49989,
+    "sha256": "3d220fef6609a61c8ffdd431b63b2f5d033ebad6fb599fbcf49dba895c61aac9"
+  },
+  "decide": {
+    "bytes": 57721,
+    "sha256": "8fe29590ef9b9f460fb0f84937bae604d9effe080c5c3350d485d151c8230e3e"
+  },
+  "greet": {
+    "bytes": 110175,
+    "sha256": "2dc61a6d6231d35088c244ffca12a88450cf45f035243fc9a49747096d7f6c45"
+  },
+  "norm-30": {
+    "bytes": 56676,
+    "sha256": "33b5f5805dd64f70f0da9e2d0f962e62eaa13b1b9b74eefe4f7e9550533fd64c"
+  },
+  "pencil": {
+    "bytes": 42256,
+    "sha256": "ae789cb5469012891ba34406266fbe85a60554609352cee1ca1b2a7a3402b710"
+  },
+  "rejected": {
+    "bytes": 44764,
+    "sha256": "8eb437d9bbaa567e47c8c7a15a5f189abbc08da22ebc02f7e940bebc39108a70"
+  },
+  "report-talk": {
+    "bytes": 33270,
+    "sha256": "375787d6fe1e46c849748195f70fa96d9ae99abea96968c9dfdd78681dfaac2c"
+  },
+  "status-arrived": {
+    "bytes": 40376,
+    "sha256": "8404ad107af5c0809a693eac1531f9f12f93fdbd04fb47bfe3c5d7cf8029280e"
+  },
+  "status-responding": {
+    "bytes": 66289,
+    "sha256": "465bef1cb3665c529c377bbc64160e7daf21751226d199573469c5d166855701"
+  },
+  "status-working": {
+    "bytes": 45182,
+    "sha256": "33be4da320f1349bbb810da086baa9a72df2a6e56ca79f035715c20a0456b588"
+  },
+  "together-done": {
+    "bytes": 89277,
+    "sha256": "6eea0362a2f0dab2b2dda3852f146310c24f5e117d0dfc675a9b2f187392c004"
+  },
+  "tour-catalog": {
+    "bytes": 48944,
+    "sha256": "0dc2c8f3280a00ed7719ff455678acfa90883cfd697577d9a9ccf2d852eae888"
+  },
+  "tour-clock": {
+    "bytes": 35151,
+    "sha256": "8a1e88bee333a04b36ae25da6df9b1d2c9a438556632525ebe5186440e7ada75"
+  },
+  "tour-columns": {
+    "bytes": 37032,
+    "sha256": "05d867754c55e6ebb278e39c36dff06ee572bb255bc676e19f9a190a4d3b19db"
+  },
+  "tour-end": {
+    "bytes": 86769,
+    "sha256": "baaead4066ada009f38f17f1be5d78b1f9d099bfe6cb495e9ff0ccac64cb55d7"
+  },
+  "tour-list": {
+    "bytes": 79664,
+    "sha256": "45c23028f6ad1bd27a85014b27d84528834d825519d97ebd026e71d6402ecc0b"
+  },
+  "tour-offer": {
+    "bytes": 108294,
+    "sha256": "c0e2800672274965a0ad9f9ba4567c5a5a325838aa25f51231cdafa58c21b9d6"
+  },
+  "tour-path": {
+    "bytes": 47272,
+    "sha256": "838b9bb5786d8d6afdc40fd22f34494b5b2a5df7c351a2801ef4e997c29950ce"
+  },
+  "tour-practice": {
+    "bytes": 52496,
+    "sha256": "dce8636c8727b9f7d33b6b54da6280f0bb017178c145dc8833c34d7fa4de8654"
+  },
+  "tour-preview": {
+    "bytes": 44764,
+    "sha256": "ed1714cd29a052fb348b2bd27c13e106abc75883e469c2272bf993fe86276987"
+  },
+  "tour-reference": {
+    "bytes": 35151,
+    "sha256": "c48269432c3edbf8dff3745229343e77903d5709ef651944d4fda4105f489a67"
+  },
+  "tour-report": {
+    "bytes": 39122,
+    "sha256": "be37a38b1ac50fbac76da8bac1de407e7f63066685395214a1106d0bd85d80c0"
+  },
+  "tour-results": {
+    "bytes": 48526,
+    "sha256": "9bbc636c5b83e255de407fb813aa4f4e2669085ed48780f41b1c4b614085662f"
+  },
+  "tour-row": {
+    "bytes": 52496,
+    "sha256": "519725ddfc44abb6430a135573b811225d23e10574380c4d685ec4d81a35e114"
+  },
+  "tour-search": {
+    "bytes": 59184,
+    "sha256": "3ec7734f754317d8d4f8a877ecd0a82dba97224be4856ff2d11aee5c66427be2"
+  },
+  "tour-stages": {
+    "bytes": 110593,
+    "sha256": "a9134b60b5da8293b70c9f6870460af91eb4ee153fdcf11cd97d7768074a43cb"
+  },
+  "tour-tabs": {
+    "bytes": 70678,
+    "sha256": "a93dd31d51236afce0d43c06fc4ba80c46aa67c0f18caa6e6b008f2e8afb80bf"
+  },
+  "tour-warmup": {
+    "bytes": 49571,
+    "sha256": "a9adbb72ab47045226df60b5526dcdf733f6840bc6a8439ae59f453abe8b7aff"
+  },
+  "tour-workflow": {
+    "bytes": 49989,
+    "sha256": "1c7c2952b3e10ade7a7cca65a4b4c570091ec6d64e9397114e5c513d50d88fce"
+  },
+  "watch-done": {
+    "bytes": 33270,
+    "sha256": "20fb5f5067368d92067fac63ea73400d3a194f4bfaf267a9fd5022808d3f651f"
+  }
+}

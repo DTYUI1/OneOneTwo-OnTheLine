@@ -13,10 +13,12 @@ export function ScenarioSource({
   const content = useQuery({
     queryKey: ["scenario-content", scenarioId],
     queryFn: async () => {
-      const { data } = await api.GET("/scenarios/{id}/content", {
+      const { data, error } = await api.GET("/scenarios/{id}/content", {
         params: { path: { id: scenarioId } },
       });
-      return data ?? null;
+      if (!data)
+        throw new Error(error?.message ?? "Источник задания недоступен.");
+      return data;
     },
     staleTime: 60_000,
   });

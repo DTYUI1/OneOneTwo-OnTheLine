@@ -160,8 +160,11 @@ def main() -> int:
     (VOICES / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
+    # В бандл — версии «по телефону», если собраны (officials_phone.py, TC-09).
+    from officials_phone import bundled
+
     write_assets(
-        profiles,
+        bundled(profiles),
         {
             profile_id: {phrase_id: item["text"] for phrase_id, item in report[voice].items()}
             for profile_id, voice in PROFILES.items()

@@ -11,28 +11,41 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from app.api.ai_models.router import ENDPOINTS as AI_MODEL_ENDPOINTS
 from app.api.analysis.router import ENDPOINTS as ANALYSIS_ENDPOINTS
 from app.api.audit.router import ENDPOINTS as AUDIT_ENDPOINTS
+from app.api.briefing.router import ENDPOINTS as BRIEFING_ENDPOINTS
 from app.api.c01 import pending, validate_pending
 from app.api.cards.router import ENDPOINTS as CARD_ENDPOINTS
 from app.api.cards.service import download_audio
 from app.api.catalog.router import ENDPOINTS as CATALOG_ENDPOINTS
 from app.api.clock.router import ENDPOINTS as CLOCK_ENDPOINTS
 from app.api.content.router import ENDPOINTS as CONTENT_ENDPOINTS
+from app.api.drafts.router import ENDPOINTS as DRAFT_ENDPOINTS
 from app.api.evaluations.router import ENDPOINTS as EVALUATION_ENDPOINTS
 from app.api.foundation.router import ENDPOINTS as FOUNDATION_ENDPOINTS
 from app.api.foundation.router import make_router, require_roles
+from app.api.headset.router import router as headset_router
+from app.api.injects.router import ENDPOINTS as INJECT_ENDPOINTS
+from app.api.live.router import router as live_router
 from app.api.materials.router import ENDPOINTS as MATERIAL_ENDPOINTS
 from app.api.packs.router import ENDPOINTS as PACK_ENDPOINTS
 from app.api.problem_reports.router import ENDPOINTS as PROBLEM_REPORT_ENDPOINTS
 from app.api.progress.router import ENDPOINTS as PROGRESS_ENDPOINTS
 from app.api.realtime import RealtimeHub
+from app.api.review.router import router as review_router
 from app.api.scenarios.router import ENDPOINTS as SCENARIO_ENDPOINTS
+from app.api.screens.hub import ScreenHub
+from app.api.screens.router import ENDPOINTS as SCREEN_ENDPOINTS
 from app.api.sessions.router import ENDPOINTS as SESSION_ENDPOINTS
 from app.api.spelling.router import ENDPOINTS as SPELLING_ENDPOINTS
+from app.api.system.job_errors import ENDPOINTS as JOB_ERROR_ENDPOINTS
 from app.api.system.router import BACKUP_ENDPOINTS
 from app.api.system.router import ENDPOINTS as SYSTEM_ENDPOINTS
 from app.api.training.router import ENDPOINTS as TRAINING_ENDPOINTS
+from app.api.voice_reply.router import ENDPOINTS as VOICE_REPLY_ENDPOINTS
+from app.api.voice_report.router import ENDPOINTS as VOICE_REPORT_ENDPOINTS
+from app.api.warmups.router import ENDPOINTS as WARMUP_ENDPOINTS
 from app.core.audit import transaction_middleware
 from app.core.config import Settings
 from app.core.contracts import read_json
@@ -40,8 +53,9 @@ from app.core.db import Database
 from app.core.errors import format_validation_errors
 from app.core.security import hash_password
 from app.operator.router import router as operator_router
+from app.operator.switch import router as features_router
 
-ENDPOINTS = (
+ENDPOINTS: dict[str, tuple[Callable[..., Any], Any]] = (
     FOUNDATION_ENDPOINTS
     | CATALOG_ENDPOINTS
     | SCENARIO_ENDPOINTS
@@ -54,15 +68,24 @@ ENDPOINTS = (
     | CLOCK_ENDPOINTS
     | MATERIAL_ENDPOINTS
     | CONTENT_ENDPOINTS
+    | DRAFT_ENDPOINTS
     | PROBLEM_REPORT_ENDPOINTS
+    | INJECT_ENDPOINTS
+    | WARMUP_ENDPOINTS
     | AUDIT_ENDPOINTS
     | SYSTEM_ENDPOINTS
     | BACKUP_ENDPOINTS
+    | JOB_ERROR_ENDPOINTS
     | SPELLING_ENDPOINTS
     | PROGRESS_ENDPOINTS
+    | VOICE_REPORT_ENDPOINTS
+    | VOICE_REPLY_ENDPOINTS
+    | BRIEFING_ENDPOINTS
+    | SCREEN_ENDPOINTS
+    | AI_MODEL_ENDPOINTS
 )
 
-# Эти схемы уже закреплены D1-контрактом. Реализация T-008 валидирует их Pydantic/JSON Schema,
+# Эти схемы закреплены публичным контрактом. Реализация валидирует Pydantic/JSON Schema,
 # а экспорт сохраняет исходное представление nullable и multipart без косметического drift.
 CONTRACT_ENDPOINTS = (
     PACK_ENDPOINTS.keys()
@@ -75,8 +98,15 @@ CONTRACT_ENDPOINTS = (
     | MATERIAL_ENDPOINTS.keys()
     | CONTENT_ENDPOINTS.keys()
     | PROBLEM_REPORT_ENDPOINTS.keys()
+    | INJECT_ENDPOINTS.keys()
+    | WARMUP_ENDPOINTS.keys()
     | AUDIT_ENDPOINTS.keys()
     | SYSTEM_ENDPOINTS.keys()
+    | JOB_ERROR_ENDPOINTS.keys()
+    | VOICE_REPORT_ENDPOINTS.keys()
+    | VOICE_REPLY_ENDPOINTS.keys()
+    | BRIEFING_ENDPOINTS.keys()
+    | SCREEN_ENDPOINTS.keys()
 )
 CONTRACT_COMPONENTS = {
     "CardCurrent",
@@ -85,6 +115,7 @@ CONTRACT_COMPONENTS = {
     "Participant",
     "Session",
     "SessionInput",
+    "AISelection",
     "Assignment",
     "AssignmentInput",
     "Call",
@@ -92,7 +123,10 @@ CONTRACT_COMPONENTS = {
     "StoredEvent",
     "Job",
     "GenerateInput",
+    "GenerationTrainee",
     "CriterionResult",
+    "CriterionRemark",
+    "AICheck",
     "Evaluation",
     "OverrideInput",
     "Report",
@@ -101,9 +135,19 @@ CONTRACT_COMPONENTS = {
     "MaterialAssignmentInput",
     "ProblemReport",
     "ProblemReportInput",
+    "InjectInput",
+    "InjectResult",
+    "InjectReceipt",
+    "InjectOption",
+    "InjectFiring",
+    "InjectOverview",
+    "WarmupResult",
+    "WarmupResultInput",
+    "PracticeScenario",
     "AuditEntry",
     "AuditPage",
     "SystemStatus",
+    "ScreenShare",
 }
 
 
@@ -175,6 +219,7 @@ def create_database_app(config: Settings) -> FastAPI:
         app.state.database = Database(config.database_url)
         app.state.dummy_password_hash = await hash_password(secrets.token_urlsafe(32))
         app.state.realtime = RealtimeHub(app)
+        app.state.screens = ScreenHub(app.state.realtime)
         await app.state.realtime.start()
         try:
             yield
@@ -218,6 +263,10 @@ def create_database_app(config: Settings) -> FastAPI:
 
     app.include_router(make_router(spec, ENDPOINTS), prefix="/api")
     app.include_router(operator_router)
+    app.include_router(features_router)
+    app.include_router(live_router)
+    app.include_router(headset_router)
+    app.include_router(review_router)
     # audio_url разыменуется с теми же RBAC и privacy-проверками. Это транспорт файла,
     # а не отдельная бизнес-операция, поэтому OpenAPI D1 не расширяется.
     app.add_api_route(
@@ -250,5 +299,10 @@ def create_database_app(config: Settings) -> FastAPI:
     @app.websocket("/ws")
     async def websocket(socket: WebSocket) -> None:
         await app.state.realtime.connect(socket)
+
+    # Кадры показа экрана ученика (HQ-017) — отдельный бинарный канал, contracts/ws-events.md.
+    @app.websocket("/ws/screen")
+    async def screen_websocket(socket: WebSocket) -> None:
+        await app.state.screens.connect(socket)
 
     return app

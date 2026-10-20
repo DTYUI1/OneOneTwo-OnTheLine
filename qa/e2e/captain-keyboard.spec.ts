@@ -1,17 +1,23 @@
 import { expect } from "@playwright/test";
 import { test, login } from "./captain-fixture";
+import { confirmAgain } from "./trainer";
 
 test.describe("Клавиатура и подсказки карточки", () => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
 
-  test("Форма статуса принимает фокус и возвращает его после отмены и сохранения", async ({
+  // Строка статуса всегда на виду (DT-19): карандаш ставит фокус в «Статус»,
+  // ✕ и сохранение очищают её и возвращают фокус к карандашу.
+  test("Строка статуса принимает фокус и возвращает его к карандашу", async ({
     page,
     lesson,
   }) => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    const service = page.getByRole("button", { name: /Служба 102.*Получена/ });
-    await service.focus();
+    const pencil = page.getByRole("button", {
+      name: "Изменить статус",
+      exact: true,
+    });
+    await pencil.focus();
     await page.keyboard.press("Enter");
     const status = page.getByRole("combobox", { name: "Статус", exact: true });
     await expect(status).toBeFocused();
@@ -31,7 +37,14 @@ test.describe("Клавиатура и подсказки карточки", () 
     await expect(
       page.getByRole("button", { name: "Отменить", exact: true }),
     ).toBeFocused();
-    // «Отменить» не закрывает форму: сбрасывает ввод и возвращает фокус к статусу.
+    // Tab по полям строки по кругу: с ✕ — снова в «Статус».
+    await page.keyboard.press("Tab");
+    await expect(status).toBeFocused();
+    await page.keyboard.press("Shift+Tab");
+    // ✕ очищает строку без сохранения, фокус — на карандаше.
+    await page.keyboard.press("Enter");
+    await expect(comment).toHaveValue("");
+    await expect(pencil).toBeFocused();
     await page.keyboard.press("Enter");
     await expect(status).toBeFocused();
     await expect(comment).toHaveValue("");
@@ -44,23 +57,23 @@ test.describe("Клавиатура и подсказки карточки", () 
     await expect(
       page.getByRole("button", { name: "Подтвердить", exact: true }),
     ).toBeFocused();
-    // Форма остаётся открытой, фокус снова в статусе — следующий ставится сразу.
     await page.keyboard.press("Enter");
-    await expect(status).toBeFocused();
     await expect(status).toHaveValue("");
-    await expect(comment).toHaveValue("");
+    await expect(pencil).toBeFocused();
     await expect(page.locator('[data-help="card-history"]')).toContainText(
       "Принята — Сведения проверены дежурным.",
     );
     await page.screenshot({
       path: test.info().outputPath("status-keyboard.png"),
     });
+    await pencil.click();
     await status.selectOption("completed");
     await comment.fill("Работы завершены, сведения переданы дежурному.");
     await page
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
-    await expect(page.getByText(/Нажмите ✓ ещё раз/)).toBeVisible();
+    // Необратимый статус — вторым ✓: у ✓ подпись «Нажмите ✓ или Enter ещё раз» (17.10).
+    await expect(confirmAgain(page)).toBeVisible();
     await page
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
@@ -70,9 +83,8 @@ test.describe("Клавиатура и подсказки карточки", () 
       exact: true,
     });
     await expect(close).toBeFocused();
-    await expect(
-      page.getByRole("button", { name: /Служба 102.*Работы завершены/ }),
-    ).toBeDisabled();
+    // Карточка закрыта — карандаша на своей плитке нет.
+    await expect(pencil).toHaveCount(0);
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/app\/arm$/);
     await expect(
@@ -86,9 +98,6 @@ test.describe("Клавиатура и подсказки карточки", () 
   }) => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    await page
-      .getByRole("button", { name: "Развернуть Служба 102", exact: true })
-      .click();
     const pencil = page.getByRole("button", {
       name: "Изменить статус",
       exact: true,
@@ -98,11 +107,17 @@ test.describe("Клавиатура и подсказки карточки", () 
     const status = page.getByRole("combobox", { name: "Статус", exact: true });
     await expect(status).toBeFocused();
     await page.getByRole("button", { name: "Отменить", exact: true }).click();
-    await expect(status).toBeFocused();
+    await expect(pencil).toBeFocused();
+    await pencil.click();
     await status.selectOption("rejected");
     await page
       .getByRole("textbox", { name: "Комментарий", exact: true })
       .fill("Требуется другая служба.");
+    await page
+      .getByRole("button", { name: "Подтвердить", exact: true })
+      .click();
+    // «Не принята» — вторым ✓: первое только взводит, у ✓ подпись (17.10).
+    await expect(confirmAgain(page)).toBeVisible();
     await page
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
@@ -115,14 +130,20 @@ test.describe("Клавиатура и подсказки карточки", () 
     await expect(
       page.getByRole("combobox", { name: "Служба для перенаправления" }),
     ).toBeFocused();
-    // «Отменить» возвращает форму к статусу; «Перенаправить» — снова к службе.
+    // «Отменить» закрывает строку; «Перенаправить» — снова к службе.
     await page.getByRole("button", { name: "Отменить", exact: true }).click();
-    await expect(status).toBeFocused();
+    await expect(
+      page.getByRole("combobox", { name: "Служба для перенаправления" }),
+    ).toHaveCount(0);
     await redirect.focus();
     await page.keyboard.press("Enter");
     await page
       .getByRole("combobox", { name: "Служба для перенаправления" })
       .selectOption("101");
+    // Причина перенаправления обязательна (T-013); «Отменить» выше очистил поле.
+    await page
+      .getByRole("textbox", { name: "Комментарий", exact: true })
+      .fill("Требуется служба 101.");
     await page
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
@@ -137,7 +158,7 @@ test.describe("Клавиатура и подсказки карточки", () 
     );
   });
 
-  test("Enter в поле отправляет статус, Esc закрывает только форму", async ({
+  test("Enter в поле отправляет статус, Esc уводит фокус из строки", async ({
     page,
     lesson,
   }) => {
@@ -147,11 +168,14 @@ test.describe("Клавиатура и подсказки карточки", () 
       name: `Происшествие ${lesson.card.source.number}`,
       exact: true,
     });
-    // Пока нет первичного статуса, в шапке горит норма реакции.
-    await expect(card.locator("header")).toContainText("реакция");
+    // Учебных таймеров в АРМ нет (макет B): время до «Принята» — в учебном слое.
+    await expect(card.locator("header")).not.toContainText("реакция");
     await expect(card).not.toContainText("Код типа");
-    const service = page.getByRole("button", { name: /Служба 102.*Получена/ });
-    await service.click();
+    const pencil = page.getByRole("button", {
+      name: "Изменить статус",
+      exact: true,
+    });
+    await pencil.click();
     const status = page.getByRole("combobox", { name: "Статус", exact: true });
     const comment = page.getByRole("textbox", {
       name: "Комментарий",
@@ -163,21 +187,19 @@ test.describe("Клавиатура и подсказки карточки", () 
     });
     await expect(confirm).toHaveAttribute("title", "Подтвердить");
 
-    // Esc в комментарии: ввод сброшен, форма и карточка на месте, фокус в статусе.
+    // Esc в комментарии: фокус на карандаше, черновик цел, карточка на месте.
     await status.selectOption("accepted");
     await comment.fill("Черновик");
     await comment.focus();
     await page.keyboard.press("Escape");
-    await expect(status).toBeVisible();
-    await expect(status).toHaveValue("");
-    await expect(comment).toHaveValue("");
+    await expect(comment).toHaveValue("Черновик");
     await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
-    await expect(status).toBeFocused();
+    await expect(pencil).toBeFocused();
 
     // Ошибка пустого комментария уходит с первым введённым символом.
-    await service.click();
+    await page.getByRole("button", { name: "Отменить", exact: true }).click();
+    await expect(comment).toHaveValue("");
     await status.selectOption("accepted");
-    await comment.fill("");
     await confirm.click();
     const error = page
       .getByRole("group", { name: "Действие по карточке" })
@@ -197,16 +219,16 @@ test.describe("Клавиатура и подсказки карточки", () 
     await expect(page.locator('[data-help="card-history"]')).toContainText(
       "Принята — Принята, наряд направлен.",
     );
-    await expect(card.locator("header")).toContainText("обработка");
 
-    // Новый статус: прошлый комментарий карточки уступает место подсказке.
-    await page.getByRole("button", { name: /Служба 102.*Принята/ }).click();
+    // Новый статус: поле комментария пустое, в нём подсказка, что писать (DT-19).
+    await pencil.click();
     await status.selectOption("completed");
     await expect(comment).toHaveValue("");
-    await expect(comment).toHaveAttribute("placeholder", /результаты работ/);
+    await expect(comment).toHaveAttribute("placeholder", /^результаты работ/);
     await comment.fill("Работы завершены, сведения переданы.");
     await page.keyboard.press("Enter");
-    await expect(page.getByText(/Нажмите ✓ ещё раз/)).toBeVisible();
+    // Второй Enter сохраняет взведённый необратимый статус (подпись у ✓, 17.10).
+    await expect(confirmAgain(page)).toBeVisible();
     await page.keyboard.press("Enter");
     await expect(status).toHaveCount(0);
     await expect(page.locator('[data-help="card-history"]')).toContainText(
@@ -214,55 +236,21 @@ test.describe("Клавиатура и подсказки карточки", () 
     );
   });
 
-  test("Лента описания стоит выше ввода адреса", async ({ page, lesson }) => {
+  // DT-14 (08.10): адрес у ДДС только для чтения, как на снимках arm_dds 06–20.
+  test("Адрес в карточке только для чтения", async ({ page, lesson }) => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    const feed = page.locator('[data-help="card-description"]');
-    await expect(feed).toBeVisible();
-    const before = await feed.evaluate((element) => {
-      const input = document.querySelector('[data-help="card-address-input"]')!;
-      return Boolean(
-        element.compareDocumentPosition(input) &
-          Node.DOCUMENT_POSITION_FOLLOWING,
-      );
-    });
-    expect(before).toBe(true);
+    await expect(page.locator('[data-help="card-address"]')).toBeVisible();
+    await expect(page.locator('[data-help="card-address-input"]')).toHaveCount(
+      0,
+    );
+    await expect(page.getByLabel(/^Адрес: /)).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Сохранить адрес" }),
+    ).toHaveCount(0);
   });
 
-  test("Каждая подсказка помещается на мобильном экране", async ({
-    page,
-    lesson,
-  }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await login(page, "trainee05");
-    await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
-    await page.getByRole("button", { name: /Служба 102.*Получена/ }).click();
-    for (const label of ["адрес", "статус", "номер наряда", "комментарий"]) {
-      const hint = page.getByRole("button", {
-        name: `Подсказка: ${label}`,
-        exact: true,
-      });
-      await hint.click();
-      const note = page.getByRole("note");
-      await expect(note).toBeVisible();
-      await note.scrollIntoViewIfNeeded();
-      await page.screenshot({
-        path: test.info().outputPath(`hint-${label}.png`),
-      });
-      const trigger = await hint.boundingBox();
-      // Длинный текст не должен сжимать кнопку в почти неразличимую полоску.
-      expect(trigger!.width, label).toBeGreaterThanOrEqual(20);
-      expect(trigger!.height, label).toBeGreaterThanOrEqual(20);
-      const bounds = await note.boundingBox();
-      expect(bounds!.x, label).toBeGreaterThanOrEqual(0);
-      expect(bounds!.x + bounds!.width, label).toBeLessThanOrEqual(390);
-      expect(
-        await page.evaluate(() => document.documentElement.scrollWidth),
-        label,
-      ).toBeLessThanOrEqual(390);
-      await page.keyboard.press("Escape");
-      await expect(note).toHaveCount(0);
-      await expect(page).toHaveURL(new RegExp(`/arm/cards/${lesson.card.id}$`));
-    }
-  });
+  // Подсказки «?» у полей карточки (адрес, статус, номер наряда, комментарий) убраны
+  // 29.09 (df0b29c): подсказывает проводник тренировки у нужной кнопки — DT-07,
+  // qa/e2e/tutor-pointer.spec.ts. Проверка их размеров на мобильном экране снята.
 });

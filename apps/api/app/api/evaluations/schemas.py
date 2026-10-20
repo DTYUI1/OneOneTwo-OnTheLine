@@ -1,11 +1,22 @@
 from typing import Annotated, Literal, Self
 from uuid import UUID
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 
 from app.api.foundation.schemas import ContractModel
 
 Score = Annotated[float, Field(ge=0, le=1, strict=True)]
+
+
+class CriterionRemark(ContractModel):
+    """Замечание разбора (TC-10): цитата, последствие, страница памятки ДДС, «Повторите: …»."""
+
+    text: str
+    quote: str | None
+    consequence: str
+    memo_page: Annotated[int, Field(ge=1, strict=True)]
+    repeat: str
+    kind: Literal["error", "notice", "data"]
 
 
 class CriterionResult(ContractModel):
@@ -15,6 +26,14 @@ class CriterionResult(ContractModel):
     critical: bool
     evidence: list[str]
     explanation: str
+    remarks: list[CriterionRemark] = Field(default_factory=list)
+
+
+class AICheck(ContractModel):
+    # ИИ-проверка комментария идёт или ждёт: модель одна, проверки по очереди.
+    state: Literal["queued", "running", "failed"]
+    # Сколько задач ИИ впереди (проверки и идущая порция генерации); у идущей — 0.
+    ahead: Annotated[int, Field(ge=0)]
 
 
 class Evaluation(ContractModel):
@@ -27,6 +46,7 @@ class Evaluation(ContractModel):
     criteria: list[CriterionResult]
     model_info: dict[str, str]
     teacher_comment: str
+    ai_check: AICheck | None = None
 
 
 class OverrideInput(ContractModel):
@@ -35,6 +55,13 @@ class OverrideInput(ContractModel):
     new_total: Score | None
     reason: Annotated[str, Field(min_length=1, strict=True)]
     teacher_comment: str
+
+    @field_validator("reason")
+    @classmethod
+    def reason_not_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Укажите обоснование изменения оценки.")
+        return value.strip()
 
     @model_validator(mode="after")
     def validate_decision(self) -> Self:

@@ -5,7 +5,9 @@ import {
   formatSeconds,
   formatShare,
   normShares,
+  readyForVerdict,
   recommend,
+  reportRevision,
   traineeLines,
   typicalErrors,
 } from "./reportModel";
@@ -65,6 +67,93 @@ describe("отчёт: счётчики попыток", () => {
       partial: 1,
       unscored: 0,
     });
+  });
+});
+
+describe("отчёт: актуальность данных", () => {
+  const cards = [
+    {
+      id: "c1",
+      session_id: "s1",
+      state: "completed",
+      closed_at: "2026-10-18T12:00:00Z",
+    },
+    {
+      id: "c2",
+      session_id: "s2",
+      state: "completed",
+      closed_at: "2026-10-18T12:00:00Z",
+    },
+  ] as Parameters<typeof reportRevision>[1];
+
+  it("меняет ключ после решения преподавателя даже без смены версии оценки", () => {
+    const before = { ...evaluation("u1", 0.8), id: "e1", card_id: "c1" };
+    const after = { ...before, total: 0.4, teacher_comment: "Повторить" };
+    expect(reportRevision("s1", cards, [before])).not.toBe(
+      reportRevision("s1", cards, [after]),
+    );
+  });
+
+  it("не перечитывает отчёт из-за чужого занятия или порядка списка", () => {
+    const own = { ...evaluation("u1", 0.8), id: "e1", card_id: "c1" };
+    const other = { ...evaluation("u2", 0.4), id: "e2", card_id: "c2" };
+    expect(reportRevision("s1", cards, [own, other])).toBe(
+      reportRevision("s1", [...cards].reverse(), [own]),
+    );
+  });
+});
+
+describe("отчёт: готовый зачёт", () => {
+  it("не смешивает частичный балл с зачётом и не берёт старую версию разбора", () => {
+    const final = { ...evaluation("u1", 0.8), id: "e1", card_id: "c1" };
+    const partial = {
+      ...evaluation("u1", 0.9, undefined, "v1", "partial"),
+      id: "e2",
+      card_id: "c2",
+    };
+    const stale = {
+      ...evaluation("u1", 0.8),
+      id: "e3",
+      card_id: "c3",
+      version: 2,
+    };
+    const attempts = [
+      {
+        card_id: "c1",
+        evaluation: {
+          evaluation_id: "e1",
+          evaluation_version: 1,
+          status: "complete",
+          effective_override: null,
+        },
+      },
+      {
+        card_id: "c2",
+        evaluation: {
+          evaluation_id: "e2",
+          evaluation_version: 1,
+          status: "partial",
+          effective_override: null,
+        },
+      },
+      {
+        card_id: "c3",
+        evaluation: {
+          evaluation_id: "e3",
+          evaluation_version: 1,
+          status: "complete",
+          effective_override: null,
+        },
+      },
+    ] as unknown as Parameters<typeof readyForVerdict>[1];
+    expect(readyForVerdict([final, partial, stale], attempts)).toEqual([final]);
+    attempts[1].evaluation!.effective_override = {
+      decision: "agree",
+    } as never;
+    expect(readyForVerdict([final, partial, stale], attempts)).toEqual([
+      final,
+      partial,
+    ]);
   });
 });
 
@@ -181,22 +270,31 @@ describe("отчёт: формат времени", () => {
 });
 
 describe("нормы как доля карточек", () => {
-  it("считает карточки в нормативе и зачтённые; без оценки — не в счёт", () => {
-    const shares = normShares([
-      evaluation("u1", 0.95, [
-        crit("reaction_time", 1),
-        crit("handling_time", 1),
-      ]),
-      evaluation("u1", 0.45, [
-        crit("reaction_time", 0.2),
-        crit("call", 0, true),
-      ]),
-      evaluation("u2", 0.8, [crit("reaction_time", 1)]),
-    ]);
-    expect(shares.reaction).toEqual({ ok: 2, total: 3 });
+  it("считает только проверенное время; отсутствие штрафа не значит «в срок»", () => {
+    const evaluated = [
+      { ...evaluation("u1", 0.95), card_id: "c1" },
+      { ...evaluation("u1", 0.45, [crit("call", 0, true)]), card_id: "c2" },
+      { ...evaluation("u2", 0.8), card_id: "c3" },
+    ];
+    const attempts = [
+      {
+        card_id: "c1",
+        timing: { reaction_overdue: false, handling_overdue: false },
+      },
+      {
+        card_id: "c2",
+        timing: { reaction_overdue: true, handling_overdue: null },
+      },
+      {
+        card_id: "c3",
+        timing: { reaction_overdue: null, handling_overdue: null },
+      },
+    ] as unknown as Parameters<typeof normShares>[2];
+    const shares = normShares(evaluated, new Map(), attempts);
+    expect(shares.reaction).toEqual({ ok: 1, total: 2 });
     expect(shares.handling).toEqual({ ok: 1, total: 1 });
     expect(shares.passed).toEqual({ ok: 2, total: 3 });
-    expect(formatShare(shares.reaction)).toBe("67 %");
+    expect(formatShare(shares.reaction)).toBe("50 %");
     expect(formatShare({ ok: 0, total: 0 })).toBe("—");
   });
 

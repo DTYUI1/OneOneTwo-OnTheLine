@@ -1,0 +1,369 @@
+{
+  "format": 2,
+  "code": "traffic-blocked-101-1",
+  "version": 4,
+  "replaces": [
+    "2bc9b41e-2efb-5b1d-9bc5-9750a4468db9"
+  ],
+  "title": "ДТП, водитель зажат в машине",
+  "service_id": "101",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "2021700",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: авария, водитель зажат в машине, Каширское шоссе, 26. Расчёт просит скорую — в карточке её нет, звонок в 103 или 112 за диспетчером; затем молчит на деблокировании. Вводная преподавателя — тревога: боец порезался инструментом. Не вызвали скорую — расчёт перезванивает, пострадавших сдают полиции без врачей.",
+  "outcome": {
+    "people": "Столкнулись две легковые машины. Расчёт отжал дверь гидравликой и извлёк зажатого водителя, он был в сознании. У пассажирки второй машины болела шея — по просьбе расчёта вызвали скорую, и пострадавших передали врачам.",
+    "late": "Карточку приняли позже норматива. Водитель был зажат в машине и выйти не мог, у пассажирки второй машины болела шея, а из-под капота шёл пар."
+  },
+  "card": {
+    "caller_name": "Тимофеев Олег Викторович",
+    "phone_aon": "+79000000713",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "ДТП с заблокированными",
+    "service_ids": [
+      "101",
+      "102"
+    ],
+    "number": "70005301",
+    "incident_type_code": "2021700"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар. Водитель извлечён и передан скорой, аккумуляторы отключены, расчёт возвращается."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, расчёт со спасательным инструментом выехал.",
+        "audio": "bank-v2/101/101.responding.traffic.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Расчёт на месте, водитель зажат в салоне, начинаем деблокирование.",
+        "audio": "bank-v2/101/101.arrived.traffic.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Отжимаем дверь гидравликой, пострадавший в сознании, разговаривает с нами.",
+        "audio": "bank-v1/101/101.working.traffic.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Водитель извлечён и передан скорой, аккумуляторы отключены, расчёт возвращается.",
+        "audio": "bank-v2/101/101.completed.traffic.6.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, скорую на аварию! Пассажирка жалуется на шею, двигаться ей нельзя.",
+        "audio": "bank-v3/101/101.request_service.traffic.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял.",
+            "audio": "bank-v1/101/101.ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Работы идут, пока без изменений.",
+            "audio": "bank-v1/101/101.status_working.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 20
+            }
+          ]
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, где скорая? Водителя почти достали, ему сразу врачи нужны.",
+            "audio": "bank-v3/101/101.request_service.traffic.2.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Водителя извлекли. Скорой так и не было, пострадавших сдали полиции на обочине. Возвращаемся.",
+                "audio": "bank-v3/101/101.completed.traffic.7.ogg"
+              }
+            },
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт попросил скорую — в карточке её нет",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Без изменений. Сменили звено, работы продолжаются.",
+            "audio": "bank-v1/101/101.status_working.any.7.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Заканчиваем, осталось всё проверить и свернуться.",
+            "audio": "bank-v1/101/101.status_working.any.8.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт долго работал без доклада",
+        "critical": false
+      }
+    },
+    {
+      "key": "alarm",
+      "kind": "alarm",
+      "priority": "alarm",
+      "trigger": {
+        "on": "inject",
+        "requires_state": "arrived"
+      },
+      "line": {
+        "text": "Диспетчер, тревога! Боец порезался инструментом, кровь не останавливается!",
+        "audio": "bank-v1/101/101.alarm.any.3.ogg"
+      },
+      "expect": [
+        {
+          "action": "answer_call",
+          "within_s": 15,
+          "weight": 0.1
+        },
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 60,
+          "weight": 0.9,
+          "critical": true
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо. Перевязали, держим до скорой.",
+            "audio": "bank-v1/101/101.alarm_ack.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Понял, ждём скорую. Работы продолжаем.",
+            "audio": "bank-v1/101/101.alarm_ack.any.1.ogg"
+          },
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Тревога: боец порезался инструментом",
+        "critical": false
+      },
+      "injectable": true
+    }
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 101",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Каширское шоссе, 26",
+        "correct": true
+      },
+      {
+        "text": "Каширский проезд, 26",
+        "correct": false
+      },
+      {
+        "text": "Каширское шоссе, 62",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Авария, водитель зажат в машине",
+        "correct": true
+      },
+      {
+        "text": "Горит автомобиль",
+        "correct": false
+      },
+      {
+        "text": "Авария без пострадавших",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Водитель зажат, у пассажирки болит шея",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Пострадавших нет",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю расчёт",
+        "correct": true
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      }
+    ]
+  }
+}

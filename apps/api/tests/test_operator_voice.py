@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import pytest
 from app.api.database import create_database_app
 from fastapi.testclient import TestClient
 
@@ -9,6 +10,8 @@ from .test_lifecycle import login
 
 SCENARIO = "fire_apartment_smoke"
 CARD = "fire_apartment"
+
+pytestmark = pytest.mark.usefixtures("operator_module_on")
 
 
 class FakeSTT:

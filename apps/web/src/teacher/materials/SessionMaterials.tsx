@@ -1,28 +1,36 @@
 // Справка на занятие: преподаватель выбирает справочные материалы (только reference),
 // сервер добавляет их к занятию одним запросом с request_id (повтор безопасен),
-// назначать можно только до старта. Чтения назначенного у сервера нет — последний
-// ответ храним в sessionStorage, чтобы он пережил перезагрузку.
+// назначать можно до старта и во время занятия. Назначенное читаем с сервера.
 import { useRef, useState } from "react";
 import { api, csrfToken } from "../../shared/api";
-import { readJSON, writeJSON } from "../persist";
+import { useQuery } from "@tanstack/react-query";
 import { useMaterials } from "./MaterialsPanel";
-import { assignable, contentUrl, type Material } from "./materialsModel";
+import { assignable, contentUrl } from "./materialsModel";
 import kit from "../console/Console.module.css";
-
-const key = (sessionId: string) => `teacher:session-materials:${sessionId}`;
 
 export function SessionMaterials({
   sessionId,
-  draft,
+  canAssign,
 }: {
   sessionId: string;
-  draft: boolean;
+  canAssign: boolean;
 }) {
   const materials = useMaterials();
   const [checked, setChecked] = useState<string[]>([]);
-  const [assigned, setAssigned] = useState<Material[]>(
-    () => readJSON<Material[]>(key(sessionId)) ?? [],
-  );
+  const assignedQuery = useQuery({
+    queryKey: ["teacher-session-materials"],
+    queryFn: async () => {
+      const { data, error } = await api.GET("/materials/by-session");
+      if (!data)
+        throw new Error(
+          error?.message ?? "Не удалось загрузить назначенные материалы.",
+        );
+      return data;
+    },
+  });
+  const assigned =
+    assignedQuery.data?.find((item) => item.session_id === sessionId)
+      ?.materials ?? [];
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const last = useRef<{ body: string; requestId: string } | null>(null);
@@ -60,23 +68,21 @@ export function SessionMaterials({
       setError(
         response.status === 409
           ? (error?.message ??
-              "Материалы назначаются только до начала занятия.")
+              "Занятие завершено: добавить материалы уже нельзя.")
           : (error?.message ?? "Справка не назначена."),
       );
       return;
     }
-    const merged = [
-      ...assigned.filter((item) => !data.some((next) => next.id === item.id)),
-      ...data,
-    ];
-    setAssigned(merged);
-    writeJSON(key(sessionId), merged);
+    await assignedQuery.refetch();
     setChecked([]);
   };
 
   return (
     <div className={kit.panel}>
       <h3 className={kit.panelTitle}>Справка на занятие</h3>
+      {assignedQuery.isError && (
+        <p role="alert">{assignedQuery.error.message}</p>
+      )}
       {assigned.length > 0 && (
         <ul className={kit.handout} role="status">
           {assigned.map((item) => (
@@ -89,10 +95,12 @@ export function SessionMaterials({
           ))}
         </ul>
       )}
-      {!draft ? (
+      {!canAssign ? (
         <p className={kit.hint}>
-          Занятие уже идёт: справку назначают до старта.
-          {assigned.length === 0 && " На этой странице назначений не было."}
+          Занятие завершено. Добавить справку уже нельзя.
+          {assigned.length === 0 &&
+            !assignedQuery.isPending &&
+            " Материалы не назначены."}
         </p>
       ) : materials.isError ? (
         <p role="alert">{materials.error.message}</p>

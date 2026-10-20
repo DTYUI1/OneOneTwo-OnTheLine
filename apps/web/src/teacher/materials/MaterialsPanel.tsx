@@ -1,4 +1,4 @@
-// Материалы преподавателя (D-03, C-07): загрузка PDF/DOCX/JSON/XML/CSV, каталог с
+// Материалы преподавателя (D-03, C-07): загрузка PDF/DOCX/TXT/JSON/XML/CSV, каталог с
 // назначением версии, новая версия поверх прежней. Справку обучаемому выдаёт
 // назначение на занятии — см. SessionMaterials.
 import { useId, useRef, useState } from "react";
@@ -17,6 +17,7 @@ import {
   type Purpose,
 } from "./materialsModel";
 import kit from "../console/Console.module.css";
+import styles from "./MaterialsPanel.module.css";
 
 export function useMaterials() {
   return useQuery({
@@ -41,6 +42,7 @@ export function MaterialsPanel() {
   const fileDescription = useId();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
+  const [titleEdited, setTitleEdited] = useState(false);
   const [purpose, setPurpose] = useState<Purpose>("reference");
   const [previous, setPrevious] = useState<Material | null>(null);
   const [error, setError] = useState("");
@@ -96,6 +98,7 @@ export function MaterialsPanel() {
       );
       setFile(null);
       setTitle("");
+      setTitleEdited(false);
       setPrevious(null);
       if (input.current) input.current.value = "";
       await queries.invalidateQueries({ queryKey: ["materials"] });
@@ -125,10 +128,10 @@ export function MaterialsPanel() {
               ? `Новая версия: «${previous.title}»`
               : "Загрузить материал"}
           </h3>
-          <div className={kit.actions}>
+          <div className={styles.uploadRow}>
             <div className={kit.field}>
               <span id={fileDescription}>
-                Документ, таблица или файл данных (до 10 МиБ)
+                Файл (до 10 МиБ)
               </span>
               <input
                 ref={input}
@@ -139,8 +142,12 @@ export function MaterialsPanel() {
                 onChange={(event) => {
                   const next = event.target.files?.[0] ?? null;
                   setFile(next);
-                  if (next && !title)
+                  if (next && (!titleEdited || !title.trim())) {
                     setTitle(next.name.replace(/\.[^.]+$/, ""));
+                    setTitleEdited(false);
+                  }
+                  setNotice("");
+                  setError("");
                 }}
               />
               <button
@@ -151,7 +158,6 @@ export function MaterialsPanel() {
               >
                 Выбрать файл
               </button>
-              <span role="status">{file?.name ?? "Файл не выбран"}</span>
             </div>
             <label className={kit.field}>
               Название
@@ -159,7 +165,10 @@ export function MaterialsPanel() {
                 value={title}
                 maxLength={300}
                 className={kit.wide}
-                onChange={(event) => setTitle(event.target.value)}
+                onChange={(event) => {
+                  setTitle(event.target.value);
+                  setTitleEdited(Boolean(event.target.value.trim()));
+                }}
               />
             </label>
             <label className={kit.field}>
@@ -191,6 +200,9 @@ export function MaterialsPanel() {
               </button>
             )}
           </div>
+          <p className={styles.fileName} role="status">
+            {file?.name ?? "Файл не выбран"}
+          </p>
           {file && problem && <p className={kit.problems}>{problem}</p>}
           <p className={kit.hint}>
             Справка видна обучаемому только после назначения на занятие;
@@ -255,6 +267,7 @@ export function MaterialsPanel() {
                         onClick={() => {
                           setPrevious(material);
                           setTitle(material.title);
+                          setTitleEdited(true);
                           setPurpose(material.purpose);
                           window.scrollTo({ top: 0 });
                         }}

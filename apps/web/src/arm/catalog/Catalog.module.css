@@ -1,0 +1,6 @@
+/* Каталог сценариев — окно в виде «Моего пути» (Progress.module.css); здесь только
+   подписи групп по службам. */
+.group h3 {
+  margin: var(--space-3) var(--space-3) 0;
+  font-size: 14px;
+}

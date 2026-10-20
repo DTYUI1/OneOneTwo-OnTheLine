@@ -1,6 +1,14 @@
 import { expect, type Page } from "@playwright/test";
 import { test, login } from "./captain-fixture";
 import { visitAdmin, visitTeacher } from "./captain-screens";
+import {
+  backToContacts,
+  closePhone,
+  dialTyped,
+  expectEnded,
+  openPhone,
+} from "./phone";
+import { confirmAgain } from "./trainer";
 
 // Обозначения формата, методики, клавиш и коды справочника служб.
 const ALLOWED: Record<string, string> = {
@@ -12,6 +20,7 @@ const ALLOWED: Record<string, string> = {
   Backspace: "Клавиша удаления",
   MOSLIFT: "Код службы Мослифт из данных",
   GKH: "Код службы ЖКХ из данных",
+  SMS: "Надпись «список SMS» в шапке карточки, снимок arm_dds/06 (макет B)",
   admin: "Сервер: логин администратора, см. handoff.md",
   teacher: "Сервер: логин преподавателя, см. handoff.md",
   trainee: "Сервер: основа учебных логинов, см. handoff.md",
@@ -21,6 +30,7 @@ const ALLOWED: Record<string, string> = {
   gas: "Сервер: категория газовой службы, см. handoff.md",
   utilities: "Сервер: категория ЖКХ, см. handoff.md",
   lift: "Сервер: категория лифтовой службы, см. handoff.md",
+  system112: "Сервер: категория Системы-112 в справочнике служб (GP-04)",
   voice: "Сервер: идентификатор профиля голоса voice-1…6, см. handoff.md",
   city: "Сервер: evidence проверки адреса, см. handoff.md",
   street: "Сервер: evidence проверки адреса, см. handoff.md",
@@ -74,10 +84,12 @@ test("Русский интерфейс всех ролей с реальной 
   await russian(page, "Список происшествий");
   await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
   await russian(page, "Карточка");
+  // Подсказок «?» у полей с 29.09 нет (df0b29c): `hint_open` в занятии пишет
+  // «Объяснение экрана» открытой карточки.
   await page
-    .getByRole("button", { name: "Подсказка: адрес", exact: true })
+    .getByRole("button", { name: "Объяснение экрана", exact: true })
     .click();
-  await expect(page.getByRole("note")).toBeVisible();
+  await expect(page.locator('[data-help-ui] [role="region"]')).toBeVisible();
   await page.keyboard.press("Escape");
   await expect
     .poll(async () => {
@@ -88,27 +100,25 @@ test("Русский интерфейс всех ролей с реальной 
     })
     .toBe(true);
   await expect(page.locator('[data-help="card-history"]')).toContainText(
-    "открыта подсказка",
+    "карточка открыта",
   );
   await page.reload();
   await expect(page.locator('[data-help="card-history"] li')).toContainText([
     "карточка показана",
   ]);
-  await russian(page, "Карточка после открытия подсказки и перезагрузки");
-  await page.getByRole("button", { name: "Телефон", exact: true }).click();
-  await russian(page, "Телефон");
-  for (const digit of "102")
-    await page.getByRole("button", { name: digit, exact: true }).click();
-  await page.getByRole("button", { name: "Вызов", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "Разговор", exact: true }),
-  ).toBeVisible({ timeout: 15_000 });
-  await page
+  await russian(page, "Карточка после перезагрузки");
+  // Связь службы — окно телефона ДДС (GP-09): контакты, разговор и итог по-русски.
+  await openPhone(page);
+  await russian(page, "Телефон ДДС");
+  const talk = await dialTyped(page, "102");
+  await russian(page, "Разговор по телефону ДДС");
+  await talk
     .getByRole("button", { name: "Положить трубку", exact: true })
     .click();
-  await page
-    .getByRole("button", { name: "Звонок завершён", exact: true })
-    .click();
+  await expectEnded(talk);
+  await russian(page, "Итог звонка");
+  await backToContacts(talk);
+  await closePhone(page);
   await expect(page.locator('[data-help="card-history"]')).toContainText(
     "звонок завершён",
   );
@@ -116,7 +126,9 @@ test("Русский интерфейс всех ролей с реальной 
   await page.screenshot({
     path: "scripts/ralph/artwox/logs/recheck/card-history.png",
   });
-  await page.getByRole("button", { name: /Служба 102.*Получена/ }).click();
+  await page
+    .getByRole("button", { name: "Изменить статус", exact: true })
+    .click();
   await page.getByLabel("Статус", { exact: true }).selectOption("accepted");
   await page.getByLabel("Номер наряда", { exact: true }).fill("112");
   await page
@@ -126,17 +138,22 @@ test("Русский интерфейс всех ролей с реальной 
   await expect(page.locator('[data-help="card-history"]')).toContainText(
     "Принята",
   );
-  await page.getByRole("button", { name: /Служба 102.*Принята/ }).click();
+  await page
+    .getByRole("button", { name: "Изменить статус", exact: true })
+    .click();
   await page.getByLabel("Статус", { exact: true }).selectOption("completed");
   await page
     .getByLabel("Комментарий", { exact: true })
     .fill("Работы завершены. Сведения переданы ответственному.");
   await page.getByRole("button", { name: "Подтвердить", exact: true }).click();
-  await expect(page.getByText(/Нажмите ✓ ещё раз/)).toBeVisible();
+  // Необратимый статус — вторым ✓: у ✓ подпись «Нажмите ✓ или Enter ещё раз» (17.10).
+  await expect(confirmAgain(page)).toBeVisible();
   await page.getByRole("button", { name: "Подтвердить", exact: true }).click();
+  // Карточка закрыта: карандаша на своей плитке больше нет (разбор — в «Моих
+  // результатах», кнопки «Разбор» в АРМ нет — макет B).
   await expect(
-    page.getByRole("button", { name: "Разбор", exact: true }),
-  ).toBeVisible();
+    page.getByRole("button", { name: "Изменить статус", exact: true }),
+  ).toHaveCount(0);
   await expect(page.locator('[data-help="card-history"]')).toContainText(
     "Работы завершены",
   );

@@ -12,6 +12,7 @@ export type JournalAction =
   | "silence"
   | "advice"
   | "escalate"
+  | "senior_called"
   | "end";
 
 export interface JournalEvent {
@@ -21,6 +22,7 @@ export interface JournalEvent {
   readonly key?: string | null;
   readonly said?: string | null;
   readonly reply?: string | null;
+  readonly voice?: string | null;
   readonly note?: string | null;
   readonly outcome?: string | null;
   readonly panic_before?: number | null;
@@ -40,6 +42,37 @@ export interface CallJournal {
 
 export const EMPTY_JOURNAL: CallJournal = { events: [], steps: [] };
 
+/** Колокольчик — одно информационное событие за звонок, без оценки. */
+export function notifySenior(journal: CallJournal, t: number): CallJournal {
+  if (journal.events.some((event) => event.action === "senior_called"))
+    return journal;
+  return {
+    ...journal,
+    events: [
+      ...journal.events,
+      {
+        t: Math.max(t, journal.events.at(-1)?.t ?? 0),
+        action: "senior_called",
+        note: "позвал старшего",
+      },
+    ],
+  };
+}
+
+/** Разговор присылает свой журнал; отметка колокольчика принадлежит экрану карточки. */
+export function mergeTalkJournal(
+  current: CallJournal,
+  talk: CallJournal,
+): CallJournal {
+  return {
+    ...talk,
+    events: [
+      ...talk.events,
+      ...current.events.filter((event) => event.action === "senior_called"),
+    ].sort((a, b) => a.t - b.t),
+  };
+}
+
 /** Подписи пометок — как в прототипе: что помогло, что навредило, на что обратить внимание. */
 export const MARK_LABELS: Readonly<Record<Mark["kind"], string>> = {
   good: "помогло",
@@ -49,7 +82,11 @@ export const MARK_LABELS: Readonly<Record<Mark["kind"], string>> = {
 };
 
 /** Первая реплика: с какой паники начался звонок — событие, а не оценка оператора. */
-export function openingEvent(text: string, panic: number): JournalEvent {
+export function openingEvent(
+  text: string,
+  panic: number,
+  voice?: string,
+): JournalEvent {
   const how =
     panic >= 3
       ? "заявитель в истерике"
@@ -60,6 +97,7 @@ export function openingEvent(text: string, panic: number): JournalEvent {
     t: 0,
     action: "opening",
     reply: text,
+    ...(voice ? { voice } : {}),
     panic_before: panic,
     panic_after: panic,
     mark: { kind: "info", text: `Звонок начался: ${how}.` },
@@ -98,6 +136,7 @@ export function replyEvent(
     key,
     said: said ?? null,
     reply: result.reply.text || null,
+    ...(result.reply.voice ? { voice: result.reply.voice } : {}),
     outcome: result.reply.outcome,
     panic_before: before.panic,
     panic_after: result.state.panic,

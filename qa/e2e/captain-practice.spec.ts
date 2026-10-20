@@ -2,6 +2,18 @@ import { randomUUID } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
 import { QUESTIONS } from "../../apps/web/src/arm/quiz/quizModel";
+import { briefBrigade } from "./brigade-briefing";
+import { reportByParts } from "./report-parts";
+import {
+  answer,
+  backToContacts,
+  closePhone,
+  freeBrigade,
+  dialTyped,
+  expectTalking,
+  openPhone,
+} from "./phone";
+import { introSeenForAnyUser } from "./trainer";
 
 type Card = components["schemas"]["Card"];
 type Session = components["schemas"]["Session"];
@@ -36,6 +48,8 @@ test.afterEach(async ({ request }) => {
 });
 
 async function login(page: Page, name: string) {
+  // Окно «Как устроено обучение» (DT-18) — перед первой тренировкой; здесь о другом.
+  await page.addInitScript(introSeenForAnyUser);
   await page.goto("/app/login");
   await page.getByLabel("Логин", { exact: true }).fill(name);
   await page
@@ -77,7 +91,9 @@ test("Тренировка: памятка, проводник и бригада
   await login(page, practiceOwner);
 
   // Порядок работы всегда доступен из шапки АРМ.
-  await page.getByRole("button", { name: "Диспетчер служб" }).click();
+  await page
+    .getByRole("button", { name: /^(Диспетчер служб|Перейти в тренажёр)$/ })
+    .click();
   await page
     .getByRole("button", { name: "Порядок работы", exact: true })
     .click();
@@ -133,17 +149,13 @@ test("Тренировка: памятка, проводник и бригада
     name: `Происшествие ${card!.source.number}`,
     exact: true,
   });
-  const tutor = page.getByRole("region", { name: "Проводник тренировки" });
-  await expect(tutor.getByText("Шаг 2 из 8")).toBeVisible();
+  // Тренировка без этапа — «Сам», тест (решение 17.10): от тренажёра на экране ничего.
+  await expect(cardView).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Подсказка тренажёра" }),
+  ).toHaveCount(0);
 
   const serviceId = practice!.participants[0].dds_service_id;
-  const services: Service[] = await (
-    await page.request.get("/api/services")
-  ).json();
-  const service = services.find((item) => item.id === serviceId)!;
-  await cardView
-    .getByRole("button", { name: `Развернуть ${service.name}`, exact: true })
-    .click();
   async function status(state: string, comment: string) {
     await cardView
       .getByRole("button", { name: "Изменить статус", exact: true })
@@ -153,67 +165,69 @@ test("Тренировка: памятка, проводник и бригада
     await cardView
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
-    // Форма остаётся открытой: успешная отправка сбрасывает выбор статуса.
-    await expect(cardView.getByLabel("Статус", { exact: true })).toHaveValue(
-      "",
-    );
+    // Строка статуса всегда на виду (DT-19): после сохранения она очищена.
+    await expect(
+      cardView.getByLabel("Комментарий", { exact: true }),
+    ).toHaveValue("");
   }
   async function training(): Promise<CardTraining> {
     return (await page.request.get(`/api/cards/${card!.id}/training`)).json();
   }
 
   await status("accepted", "Принята, направляю бригаду");
-  await expect(tutor.getByText("Шаг 3 из 8")).toBeVisible();
 
-  // После отбоя полоса телефона подписана «Звонок завершён» — это та же кнопка.
-  const phone = page.getByRole("button", {
-    name: /^(Телефон|Звонок завершён)$/,
-  });
-  await phone.click();
-  const panel = page.getByRole("region", { name: "Бригады службы" });
-  await panel
-    .getByRole("checkbox", { name: `Учебная бригада 1 службы ${serviceId}` })
-    .check();
-  await panel.getByRole("button", { name: "Направить выбранные" }).click();
-  await expect(tutor.getByText("Шаг 4 из 8")).toBeVisible();
-
-  const links = panel.getByRole("list", { name: "Связь с бригадами" });
+  // Связь службы — окно телефона ДДС (GP-09): силы службы в контактах.
+  const win = await openPhone(page);
+  const sent = win.locator('button[data-state="here"]');
   async function callBrigade() {
-    await links.getByRole("button", { name: "Позвонить" }).first().click();
-    await expect(
-      page.getByRole("button", { name: "Разговор", exact: true }),
-    ).toBeVisible();
+    await openPhone(page);
+    await sent.first().click();
+    await expectTalking(win);
   }
   async function hangUp() {
-    await page.getByRole("button", { name: "Положить трубку" }).click();
-    await page
-      .getByRole("button", { name: "Звонок завершён", exact: true })
-      .click();
+    // Доставка ещё не означает, что доклад прозвучал. В CI Firefox мог начать
+    // воспроизведение позже, а отбой через фиксированные 8 с обрывал звук и
+    // оставлял следующий статус заблокированным. Ждём настоящий факт предъявления.
+    await expect
+      .poll(
+        async () =>
+          (await training()).messages.every(
+            (item) => item.state === "presented",
+          ),
+        { timeout: 30_000 },
+      )
+      .toBe(true);
+    // Бригаде нечего сказать 6 с — она кладёт трубку сама (DT-20): тогда отбой уже был.
+    const back = answer(win).getByRole("button", { name: "К контактам" });
+    if (!(await back.isVisible()))
+      await win
+        .getByRole("button", { name: "Положить трубку" })
+        .click({ timeout: 3_000 })
+        .catch(() => undefined);
+    await backToContacts(win);
   }
 
-  await callBrigade();
+  // GP-05: первый звонок — вводная по частям; бригада выезжает и докладывает о выезде.
+  await briefBrigade(page, freeBrigade(win));
   await expect
     .poll(async () => (await training()).messages.length, { timeout: 20_000 })
     .toBe(1);
   await expect
     .poll(async () => (await training()).awaiting_state)
     .toBe("responding");
-  if (testInfo.project.name === "chromium")
-    await expect(
-      panel.getByText("Бригада ждёт вашего решения", { exact: false }),
-    ).toBeVisible({ timeout: 20_000 });
   // Бригада на связи, но без статуса «Начало реагирования» дальше не докладывает.
   await page.waitForTimeout(8_000);
   expect((await training()).messages).toHaveLength(1);
   await hangUp();
+  await expect(sent).toHaveCount(1);
+  if (testInfo.project.name === "chromium")
+    await expect(
+      win.getByText("Бригада ждёт вашего решения", { exact: false }),
+    ).toBeVisible({ timeout: 20_000 });
+  // Окно телефона не заслоняет карточку, пока меняется статус.
+  await closePhone(page);
 
   await status("responding", "Бригада выехала");
-  // Доклад службе пропущен: проводник идёт за статусом и напоминает о пропуске.
-  await expect(tutor.getByText("Шаг 6 из 8")).toBeVisible();
-  await expect(
-    tutor.getByText(/Не забудьте: доложите диспетчеру службы/),
-  ).toBeVisible();
-  await phone.click();
   await callBrigade();
   await expect
     .poll(async () => (await training()).messages.length, { timeout: 20_000 })
@@ -222,6 +236,16 @@ test("Тренировка: памятка, проводник и бригада
     .poll(async () => (await training()).awaiting_state)
     .toBe("arrived");
   await hangUp();
+
+  // Доклад службе — по частям (без микрофона): своя служба набирается вручную.
+  const talk = await dialTyped(page, serviceId!);
+  // DT-05: части свёрнуты за «По частям» — голос основной путь. Полный доклад по
+  // памятке, с. 32, по частям (GP-06).
+  await reportByParts(talk);
+  // Дежурный своей службы — персонаж банка (TC-03): принимая, называет номер регистрации.
+  await expect(
+    talk.getByText(/информация принята|номер/i).last(),
+  ).toBeVisible();
 });
 
 const skipWithoutDatabase = () =>
@@ -240,7 +264,10 @@ async function enterArm(page: Page, projectName: string) {
       await dialog.getByRole("button", { name: "Понятно" }).click();
     },
   );
-  await login(page, projectName === "chromium" ? "trainee04" : "trainee05");
+  // Каждый сценарий задаёт владельца сам: после падения Playwright запускает
+  // новый worker, и значение из первого теста уже недоступно в afterEach.
+  practiceOwner = projectName === "chromium" ? "trainee04" : "trainee05";
+  await login(page, practiceOwner);
   const sessions: Session[] = await (
     await page.request.get("/api/sessions")
   ).json();
@@ -255,7 +282,9 @@ async function enterArm(page: Page, projectName: string) {
       !card.interrupted_at
     )
       await closeByApi(page, card);
-  await page.getByRole("button", { name: "Диспетчер служб" }).click();
+  await page
+    .getByRole("button", { name: /^(Диспетчер служб|Перейти в тренажёр)$/ })
+    .click();
 }
 
 /** Карточка, которую АРМ открыл сам после запуска тренировки. */
@@ -397,6 +426,10 @@ test("Проверьте себя: осталось N и тренировка п
     void dialog.dismiss();
   });
   await enterArm(page, testInfo.project.name);
+  // «Проверьте себя» — в окне «Порядок работы» (19.10), не в ряду учебных кнопок.
+  await page
+    .getByRole("button", { name: "Порядок работы", exact: true })
+    .click();
   await page
     .getByRole("button", { name: "Проверьте себя", exact: true })
     .click();

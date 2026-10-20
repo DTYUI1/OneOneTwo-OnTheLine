@@ -17,7 +17,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.api.foundation import repo as auth_repo
 from app.api.notifications import CHANNEL
-from app.core.models import Call
+from app.core.models import Call, User
 from app.core.security import read_token
 
 logger = logging.getLogger(__name__)
@@ -25,6 +25,9 @@ RETRY_INITIAL_S = 0.5
 RETRY_MAX_S = 5.0
 PROBE_INTERVAL_S = 5.0
 IO_TIMEOUT_S = 5.0
+# TC-12 (contracts/live-lesson.md): клиент пингует каждые 5 с; сокет, молчащий дольше,
+# считается оборванным — обрыв сети без закрытия TCP виден на доске не позже 45 с.
+SILENCE_TIMEOUT_S = 45.0
 TRANSPORT_ERRORS = (BrokenResourceError, ClosedResourceError, RuntimeError, WebSocketDisconnect)
 LISTENER_ERRORS = (OSError, TimeoutError, asyncpg.PostgresError, asyncpg.InterfaceError)
 
@@ -49,6 +52,7 @@ class RealtimeHub:
         self.app = app
         self.clients: dict[WebSocket, Client] = {}
         self.offsets: dict[UUID, float] = {}
+        self.silence_timeout_s = SILENCE_TIMEOUT_S
         self.listener: asyncpg.Connection | None = None
         self.tasks: set[asyncio.Task[Any]] = set()
         self.supervisor: asyncio.Task[None] | None = None
@@ -255,6 +259,16 @@ class RealtimeHub:
         # Проверка и сброс без await между ними: новое событие уйдёт уже напрямую.
         client.pending = None
 
+    async def send_to(self, user_ids: set[UUID], event_type: str, payload: Any) -> None:
+        """Событие, которое рождается в памяти API, а не в БД (screen.state, HQ-017)."""
+        await asyncio.gather(
+            *(
+                self._send_or_close(client, event_type, payload)
+                for client in list(self.clients.values())
+                if client.user_id in user_ids
+            )
+        )
+
     async def broadcast_presence(self, user_id: UUID, online: bool) -> None:
         await asyncio.gather(
             *(
@@ -288,20 +302,25 @@ class RealtimeHub:
             overrides = await evaluation_repo.latest_overrides(
                 db, [row["Evaluation"].id for row in evaluation_rows]
             )
+            checks = await evaluation_repo.ai_checks(
+                db, [row["Evaluation"].id for row in evaluation_rows]
+            )
             evaluations = [
-                serialize_evaluation(row, overrides.get(row["Evaluation"].id)).model_dump(
-                    mode="json"
-                )
+                serialize_evaluation(
+                    row, overrides.get(row["Evaluation"].id), checks.get(row["Evaluation"].id)
+                ).model_dump(mode="json")
                 for row in evaluation_rows
             ]
         return {"cards": cards, "sessions": lessons, "evaluations": evaluations}
 
-    async def connect(self, socket: WebSocket) -> None:
+    async def authenticate(self, socket: WebSocket) -> User | None:
+        """Origin и cookie сессии до accept; при отказе сокет уже закрыт (общая часть /ws и
+        /ws/screen — HQ-017)."""
         origin = socket.headers.get("origin")
         host = socket.headers.get("host")
         if origin and urlsplit(origin).netloc != host:
             await socket.close(code=4403)
-            return
+            return None
         try:
             sid, user_id = read_token(socket.cookies.get("session", ""), self.app.state.config)
             async with self.app.state.database.sessions() as db:
@@ -311,9 +330,15 @@ class RealtimeHub:
             _, user = found
         except HTTPException:
             await socket.close(code=4401)
-            return
+            return None
         except (SQLAlchemyError, OSError, TimeoutError):
             await socket.close(code=1012)
+            return None
+        return user
+
+    async def connect(self, socket: WebSocket) -> None:
+        user = await self.authenticate(socket)
+        if user is None:
             return
         await socket.accept()
         client = Client(socket=socket, user_id=user.id, role=user.role)
@@ -321,9 +346,18 @@ class RealtimeHub:
         try:
             await self.send(client, "snapshot", await self.snapshot(client))
             await self._flush_pending(client)
+            if client.role == "teacher":
+                # Доска, открытая позже учеников, иначе считала бы их «не в сети».
+                for online in {item.user_id for item in self.clients.values()} - {user.id}:
+                    await self.send(client, "presence", {"user_id": str(online), "online": True})
             await self.broadcast_presence(user.id, True)
             while True:
-                message = await self._receive(client)
+                try:
+                    async with asyncio.timeout(self.silence_timeout_s):
+                        message = await self._receive(client)
+                except TimeoutError:
+                    await self._close_client(client, code=4408)
+                    break
                 if isinstance(message, dict) and message.get("type") == "clock.ping.v2":
                     if not await self._pong_v2(client, message):
                         await socket.close(code=4400)
@@ -406,6 +440,10 @@ class RealtimeHub:
                     lesson = await session_repo.get_session(db, entity_id)
                     if lesson is None:
                         return
+                    screens = getattr(self.app.state, "screens", None)
+                    if event_type == "session.finished" and screens is not None:
+                        # Показ экранов живёт только в идущем занятии (HQ-017).
+                        await screens.end_session(entity_id)
                     for client in self.clients.values():
                         visible = (
                             client.role == "teacher" and lesson.teacher_id == client.user_id

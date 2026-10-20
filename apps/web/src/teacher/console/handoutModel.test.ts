@@ -38,6 +38,18 @@ describe("адресная выдача", () => {
     expect(plan[0].scenarioVersion).toBe(2);
   });
 
+  it("служба из списка карточки без совпадения адресата — упражнение, как на сервере", () => {
+    const lift = {
+      ...scenario("lift", "MOSLIFT", 2),
+      card: { service_ids: ["MOSLIFT", "101"] },
+    } as unknown as Scenario;
+    const plan = addItem([], seat101, lift, timing, "a");
+    expect(plan[0].mode).toBe("intentional_mismatch");
+    expect(
+      suggestPlan([seat101], [lift], new Set(["lift"]), timing, key),
+    ).toEqual([]);
+  });
+
   it("подбирает разным местам разные задания по службе и уровню", () => {
     const plan = suggestPlan(
       [seat102, seat101],
@@ -47,6 +59,7 @@ describe("адресная выдача", () => {
         scenario("fire2", "101", 2),
         scenario("fire3", "101", 3),
       ],
+      new Set(["dtp1", "dtp4", "fire2", "fire3"]),
       timing,
       key,
     );
@@ -55,6 +68,36 @@ describe("адресная выдача", () => {
       ["u2", "fire2"],
     ]);
     expect(plan.every((item) => item.mode === "profile")).toBe(true);
+  });
+
+  it("не подбирает сценарий чужой службы, где служба места лишь оповещается", () => {
+    const shared = {
+      ...scenario("shared", "102", 2),
+      card: { service_ids: ["101", "102"] },
+    } as unknown as Scenario;
+    const plan = suggestPlan(
+      [seat101],
+      [shared, scenario("own", "101", 2)],
+      new Set(["shared", "own"]),
+      timing,
+      key,
+    );
+    expect(plan.map((item) => item.scenarioId)).toEqual(["own"]);
+    // Выбранный вручную, он уходит упражнением, а не «по профилю»: сервер иначе откажет.
+    expect(addItem([], seat101, shared, timing, "z")[0].mode).toBe(
+      "intentional_mismatch",
+    );
+  });
+
+  it("не подбирает сценарий, где бригада не докладывает до конца", () => {
+    const plan = suggestPlan(
+      [seat102],
+      [scenario("golden", "102", 1), scenario("planned", "102", 1)],
+      new Set(["planned"]),
+      timing,
+      key,
+    );
+    expect(plan.map((item) => item.scenarioId)).toEqual(["planned"]);
   });
 
   it("продолжает order места после уже выданных, а не с единицы", () => {

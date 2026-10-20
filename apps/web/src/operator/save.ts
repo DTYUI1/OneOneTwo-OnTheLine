@@ -5,6 +5,7 @@ import { csrfToken } from "../shared/api";
 import type { Address } from "./model";
 import type { CallerState } from "./dialog";
 import type { CallJournal } from "./journal";
+import { phoneValue } from "./phone";
 
 export interface CardInput {
   readonly incident_type_code: string | null;
@@ -18,12 +19,20 @@ export interface CardInput {
     readonly house: string;
     readonly building: string;
     readonly apartment: string;
+    readonly object: string;
+    readonly structure: string;
+    readonly entrance: string;
+    readonly floor: string;
+    readonly code: string;
+    readonly descriptive: string;
   };
   readonly description: string;
   readonly caller_name: string;
+  readonly caller_status: string;
   readonly phone_provided: string;
   readonly phone_scene: string;
   readonly off_site: boolean;
+  readonly emergency?: boolean;
 }
 
 export interface Criterion {
@@ -42,10 +51,14 @@ export interface AttemptSummary {
   readonly created_at: string;
   readonly total: number;
   readonly max_total: number;
+  readonly actor_id?: string;
+  readonly actor_login?: string;
+  readonly actor_name?: string;
 }
 
 export interface AttemptResult extends AttemptSummary {
   readonly criteria: readonly Criterion[];
+  readonly operator_card: CardInput | null;
   /** Журнал звонка для разбора (этап 3); у попыток до этапа 3 — пустой. */
   readonly journal: CallJournal;
 }
@@ -58,6 +71,7 @@ export function cardInput(params: {
   address: Address;
   description: string;
   callerName: string;
+  callerStatus: string;
   phoneProvided: string;
   phoneScene: string;
   offSite: boolean;
@@ -74,11 +88,18 @@ export function cardInput(params: {
       house: params.address.house,
       building: params.address.korpus,
       apartment: params.address.apartment,
+      object: params.address.object,
+      structure: params.address.structure,
+      entrance: params.address.entrance,
+      floor: params.address.floor,
+      code: params.address.code,
+      descriptive: params.address.descriptive,
     },
     description: params.description,
     caller_name: params.callerName,
-    phone_provided: params.phoneProvided,
-    phone_scene: params.phoneScene,
+    caller_status: params.callerStatus,
+    phone_provided: phoneValue(params.phoneProvided),
+    phone_scene: phoneValue(params.phoneScene),
     off_site: params.offSite,
   };
 }

@@ -42,6 +42,12 @@ def check() -> None:
         "urn:openapi",
         Resource.from_contents({"$schema": "https://json-schema.org/draft/2020-12/schema", **spec}),
     )
+    for path in (ROOT / "data/link112/records").glob("*.json"):
+        Draft202012Validator(
+            {"$ref": "https://arm112.local/contracts/link112-record.schema.json"},
+            registry=registry,
+            format_checker=FormatChecker(),
+        ).validate(json.loads(path.read_text(encoding="utf-8")))
     registry = registry.with_resource(
         "https://arm112.local/contracts/openapi.json",
         Resource.from_contents({"$schema": "https://json-schema.org/draft/2020-12/schema", **spec}),
@@ -71,6 +77,16 @@ def check() -> None:
     )
     for path in (ROOT / "data/templates").glob("*.json"):
         scenario.validate(json.loads(path.read_text(encoding="utf-8")))
+    scenario_file = Draft202012Validator(
+        {"$ref": "https://arm112.local/contracts/scenario-file.schema.json"},
+        registry=registry,
+        format_checker=FormatChecker(),
+    )
+    for path in sorted((ROOT / "data/scenarios").glob("*.json")):
+        try:
+            scenario_file.validate(json.loads(path.read_text(encoding="utf-8")))
+        except Exception as error:
+            raise ValueError(f"{path.relative_to(ROOT)}: {error}") from error
     cases = list((ROOT / "data/golden_scenarios").glob("*.json"))
     if len(cases) < 10:
         raise ValueError("Нужно минимум 10 golden-фикстур")

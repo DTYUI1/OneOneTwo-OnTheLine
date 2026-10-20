@@ -20,6 +20,7 @@ import {
 
 // Реальный сценарий из seed (GET /scenarios на стенде database).
 const seed = {
+  coherence_unchecked: false,
   id: "00000000-0000-4000-8000-000000000100",
   version: 1,
   level: 1,
@@ -43,7 +44,7 @@ const seed = {
     phone_aon: "+79000000001",
     caller_name: "Учебный заявитель",
     description:
-      "Учебное происшествие: ДТП с пострадавшими. Москва, Дубнинская улица, дом 1.",
+      "Очевидец сообщает о столкновении двух легковых автомобилей у дома 1 на Дубнинской улице в Москве. Один из водителей ударился головой и жалуется на боль. Машины стоят на проезжей части, проезд затруднён.",
     phone_scene: "",
     service_ids: ["102"],
     blocked_people: false,
@@ -94,7 +95,8 @@ const TRANSITIONS: Record<string, string[]> = {
 describe("студия сценариев: форма ↔ Scenario", () => {
   it("проводит сценарий из seed через форму без потерь", () => {
     const back = scenarioFromForm(formFromScenario(seed), services);
-    expect(back).toEqual(seed);
+    // Признак ручного создания вычисляет сервер, форма не задаёт происхождение.
+    expect(back).toEqual({ ...seed, is_manual: false });
   });
 
   it("ключевые слова комментария: список без пустых и повторов, в эталон — только непустой", () => {
@@ -281,5 +283,61 @@ describe("конструктор C-05", () => {
     expect(next.teacherComment).toBe("мой комментарий");
     expect(next.description).toBe("От сервера.");
     expect(next.incidentTypeCode).toBe("2020000");
+  });
+});
+
+it("сохраняет пометку связности при редактировании и подстановке конструктора", () => {
+  const flagged = { ...seed, coherence_unchecked: true } as Scenario;
+  const form = formFromScenario(flagged);
+  expect(form.coherenceUnchecked).toBe(true);
+  expect(scenarioFromForm(form, []).coherence_unchecked).toBe(true);
+  expect(
+    formFromPreview(form, { scenario: seed as Scenario }).coherenceUnchecked,
+  ).toBe(true);
+});
+
+it("не теряет обязательные поля необязательного звонка и этапы сгенерированного пути", () => {
+  const original = structuredClone(seed);
+  original.reference.expected_call = {
+    required: false,
+    service_id: "102",
+    phone_ext: "212",
+    before_s: 180,
+    contact_role: "head",
+  };
+  original.reference.expected_flow = [
+    "received",
+    "accepted",
+    "responding",
+    "arrived",
+    "working",
+    "completed",
+  ];
+  const result = scenarioFromForm(formFromScenario(original), services);
+  expect(result.reference.expected_call).toEqual(
+    original.reference.expected_call,
+  );
+  expect(result.reference.expected_flow).toEqual(
+    original.reference.expected_flow,
+  );
+});
+
+it("снятая галочка звонка не отправляет скрытые неверные номер и срок", () => {
+  const form = {
+    ...formFromScenario(seed),
+    callRequired: false,
+    callBeforeS: 0,
+    callServiceId: "",
+    originalReference: {
+      ...seed.reference,
+      expected_call: { required: true, phone_ext: "", before_s: 0 },
+    },
+  };
+  const saved = scenarioFromForm(form, [{ id: "102", phone_ext: "102" }]);
+  expect(saved.reference.expected_call).toEqual({
+    required: false,
+    service_id: "102",
+    phone_ext: "102",
+    before_s: 180,
   });
 });

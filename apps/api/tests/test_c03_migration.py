@@ -47,7 +47,14 @@ def test_upgrade_preserves_legacy_history(migration_database_url):
         await seed(db, "test-password", include_training=False)
         teacher = await db.scalar(select(User).where(User.login == "teacher"))
         trainee = await db.scalar(select(User).where(User.login == "trainee01"))
-        scenario = await db.scalar(select(Scenario).where(Scenario.status == "approved").limit(1))
+        # Историческая БД 0003 ещё не содержит новых столбцов Scenario.
+        scenario = (
+            await db.execute(
+                select(Scenario.id, Scenario.target_service_id)
+                .where(Scenario.status == "approved")
+                .limit(1)
+            )
+        ).one()
         setting = await db.scalar(select(Setting).where(Setting.key == "global"))
         if setting is None:
             setting = await db.scalar(select(Setting).limit(1))

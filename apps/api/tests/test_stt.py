@@ -9,6 +9,7 @@ from pathlib import Path
 from uuid import UUID, uuid4
 
 import httpx
+import pytest
 from app.api.database import create_database_app
 from app.core.db import Database
 from app.core.models import Assignment, Call, Card, Job
@@ -273,6 +274,72 @@ def test_local_faster_whisper_provider_calls_transcribe_endpoint(tmp_path):
     text = asyncio.run(provider.transcribe(wav))
     assert text == "выезд на дубнинскую улицу дом один"
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("hello скорая 103 вызвана 中文", "скорая 103 вызвана"),
+        ("Hello 世界 🙂!!!", ""),
+        (
+            "Всё: Ёлочная улица, дом № 10/2, подъезд 3!",
+            "Всё: Ёлочная улица, дом № 10/2, подъезд 3!",
+        ),
+        ("неabcвызвал", "не вызвал"),
+        ("приabcнял", "при нял"),
+        ("Її і ґ ў Ə ә скорая", "скорая"),
+        ("103", "103"),
+        ("  Скорая\t\nвызвана.  ", "Скорая вызвана."),
+    ],
+)
+def test_local_provider_returns_only_russian_text(tmp_path, raw, expected):
+    def handle(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json={"text": raw, "confidence": 0.7})
+
+    provider = LocalFasterWhisperSTT(
+        base_url="http://stt.test", timeout_seconds=1, transport=httpx.MockTransport(handle)
+    )
+    wav = tmp_path / "call.wav"
+    wav.write_bytes(wav_bytes())
+    recognition = asyncio.run(provider.recognize(wav))
+    assert recognition.text == expected
+    assert recognition.confidence == 0.7
+    assert asyncio.run(provider.transcribe(wav)) == expected
+
+
+def test_local_provider_sends_hints_as_hotwords(tmp_path):
+    bodies = []
+
+    def handle(request: httpx.Request) -> httpx.Response:
+        bodies.append(request.read().decode("utf-8", "replace"))
+        return httpx.Response(200, json={"text": "Дубнинская улица", "confidence": 0.7})
+
+    provider = LocalFasterWhisperSTT(
+        base_url="http://stt.test", timeout_seconds=1, transport=httpx.MockTransport(handle)
+    )
+    wav = tmp_path / "call.wav"
+    wav.write_bytes(wav_bytes())
+    asyncio.run(provider.recognize(wav, ("Дубнинская улица", "ДТП")))
+    asyncio.run(provider.recognize(wav))
+    assert 'name="hotwords"' in bodies[0] and "Дубнинская улица ДТП" in bodies[0]
+    assert 'name="hotwords"' not in bodies[1]
+
+
+def test_local_provider_reads_loudness(tmp_path):
+    def handle(request: httpx.Request) -> httpx.Response:
+        body = {
+            "text": "Доклад",
+            "confidence": 0.7,
+            "loudness": {"speech_dbfs": -44.5, "clipped_share": 0.0},
+        }
+        return httpx.Response(200, json=body)
+
+    provider = LocalFasterWhisperSTT(
+        base_url="http://stt.test", timeout_seconds=1, transport=httpx.MockTransport(handle)
+    )
+    wav = tmp_path / "call.wav"
+    wav.write_bytes(wav_bytes())
+    assert asyncio.run(provider.recognize(wav)).loudness == (-44.5, 0.0)
 
 
 def test_local_faster_whisper_provider_falls_back_on_error(tmp_path):

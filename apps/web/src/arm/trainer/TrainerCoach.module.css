@@ -1,0 +1,335 @@
+/* Подсказка у элемента (решение 17.10) — языком АРМ, а не отдельного приложения: рамка и
+   тень окна телефона (Phone.module.css .talk), тёмная шапка как «Происшествие 101» карточки
+   и шапка окна телефона, кнопки — как ✓ / ✕ строки статуса, главная — синяя, как «просмотр».
+   Внутри — простой текст и кнопки внизу. Размеры — не мельче
+   основного текста АРМ (13–14 px). Значения — из IncidentCard.module.css; своих нет. */
+.coach {
+  --coach-ink: #1f2326;
+  --coach-muted: #555;
+  --coach-line: #aaa;
+  --coach-blue: #1c80c2;
+  /* Срочность таймера (TC-06): жёлтая стадия — как была, красная — красный АРМ. */
+  --coach-soon-bg: #f3d48a;
+  --coach-soon-ink: #101820;
+  --coach-late-bg: var(--color-danger);
+  --coach-late-ink: #fff;
+  position: fixed;
+  /* Над карточкой и окном телефона (45), под окнами-подтверждениями АРМ (50). */
+  z-index: 48;
+  width: min(340px, calc(100vw - 16px));
+  font:
+    14px/1.4 Arial,
+    sans-serif;
+  color: var(--coach-ink);
+}
+
+/* Без наставника — окно: рамка и тень окна телефона, стрелка к цели. */
+.coach[data-mentor="false"] {
+  background: #efefef;
+  border: 1px solid #aeb1b3;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.coach[data-placed="false"] {
+  visibility: hidden;
+}
+
+/* Ошибка чтения убирает форму и якорь, но не управление активным показом. */
+.coach[data-fallback="true"] {
+  right: 8px;
+  bottom: 8px;
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+}
+
+.coach[data-fallback="true"]::before {
+  display: none;
+}
+
+.coach p {
+  margin: 0;
+}
+
+.coach button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.coach button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* Хвостик — к цели: квадрат, повёрнутый на 45°, цвета той стороны, что к ней обращена. */
+.coach[data-mentor="false"]::before {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #efefef;
+  border: 1px solid #aeb1b3;
+  transform: rotate(45deg);
+}
+
+.coach[data-mentor="false"][data-side="above"]::before {
+  bottom: -7px;
+  left: calc(var(--arrow) - 6px);
+  border-top: 0;
+  border-left: 0;
+}
+
+.coach[data-mentor="false"][data-side="below"]::before {
+  top: -7px;
+  left: calc(var(--arrow) - 6px);
+  background: #303335;
+  border-color: #303335;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.coach[data-mentor="false"][data-side="left"]::before {
+  right: -7px;
+  top: calc(var(--arrow) - 6px);
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.coach[data-mentor="false"][data-side="right"]::before {
+  left: -7px;
+  top: calc(var(--arrow) - 6px);
+  border-top: 0;
+  border-right: 0;
+}
+
+/* .incidentHead карточки и шапка окна телефона */
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 4px 3px 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  background: #303335;
+}
+
+.head span {
+  flex: 1;
+}
+
+/* «Без голоса» наставника — как «Без звука» у срочности, светлым по шапке. */
+.voice {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.voice input {
+  margin: 0;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px 10px 10px;
+}
+
+.row {
+  display: flex;
+}
+
+.row[data-mentor-right="true"] {
+  flex-direction: row-reverse;
+}
+
+.cloud {
+  flex: 1;
+  min-width: 0;
+}
+
+/* С наставником (shared/mascot) — без окна: он стоит у края, ближнего к цели, и показывает
+   на неё рукой, а подсказка — его «облако» речи: белое, скруглённое, с хвостиком к голове.
+   Место под фигуру одно для всех поз: смена жеста не двигает подсказку. Текст — 15 px:
+   аудитория 45–65 лет. */
+.coach[data-mentor="true"] {
+  width: min(480px, calc(100vw - 16px));
+}
+
+.coach[data-mentor="true"] .row {
+  align-items: flex-start;
+}
+
+.coach .mentor {
+  flex: none;
+  width: 150px;
+  height: 150px;
+  object-position: top center;
+  /* По пояс — без резкого среза внизу; тень — чтобы фигура читалась на любом фоне АРМ. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+}
+
+.coach[data-mentor="true"] .cloud {
+  position: relative;
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid #b9bec2;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+}
+
+/* Хвостик облака — к голове наставника: слева или справа, на уровне лица. */
+.coach[data-mentor="true"] .cloud::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  left: -9px;
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #b9bec2;
+  border-left: 1px solid #b9bec2;
+  transform: rotate(45deg);
+}
+
+.coach[data-mentor="true"] .row[data-mentor-right="true"] .cloud::before {
+  left: auto;
+  right: -9px;
+  border: 0;
+  border-top: 1px solid #b9bec2;
+  border-right: 1px solid #b9bec2;
+}
+
+/* Шапка облака — тихая строка: этап и «Без голоса»; не тёмная полоса окна. */
+.coach[data-mentor="true"] .head {
+  padding: 6px 8px 0 14px;
+  font-size: 12px;
+  color: #6a6f73;
+  background: transparent;
+  border-radius: 14px 14px 0 0;
+}
+
+.coach[data-mentor="true"] .body {
+  padding: 4px 14px 12px;
+  font-size: 15px;
+}
+
+/* Внутри — простой текст, кнопки внизу (проверка 17.10: полоса сбоку и белые плашки
+   нагружали подсказку). */
+.btns {
+  margin-top: 4px;
+}
+
+.muted {
+  color: var(--coach-muted);
+}
+
+.src {
+  font-weight: bold;
+}
+
+.check p + p {
+  margin-top: 4px;
+}
+
+/* Кнопки — как ✓ / ✕ строки статуса; главная — синяя, как «просмотр». */
+.btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn {
+  padding: 4px 12px;
+  color: var(--coach-ink);
+  background: #fff;
+  border: 1px solid var(--coach-line);
+}
+
+.btn:hover:not(:disabled) {
+  background: #f4f4f4;
+}
+
+.main {
+  composes: btn;
+  color: #fff;
+  background: var(--coach-blue);
+  border-color: var(--coach-blue);
+}
+
+.main:hover:not(:disabled) {
+  background: #146a9c;
+}
+
+/* «Подставить» — малая кнопка в конце строки, как «сбросить» поиска. */
+.link {
+  margin-left: 4px;
+  padding: 0 8px;
+  color: var(--coach-ink);
+  background: #fff;
+  border: 1px solid #999;
+}
+
+.line b {
+  padding: 0 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* «скоро норматив» (70–100 %) и «сверх норматива» (TC-06) */
+.soon {
+  color: var(--coach-soon-ink);
+  background: var(--coach-soon-bg);
+}
+
+.late {
+  color: var(--coach-late-ink);
+  background: var(--coach-late-bg);
+}
+
+.mute {
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.coach button:focus-visible,
+.coach input:focus-visible {
+  outline: 2px solid var(--coach-blue);
+  outline-offset: 1px;
+}
+
+/* «Работа не потеряна, переподключение…» — строка АРМ у верхнего края, во всех режимах:
+   это состояние связи, а не подсказка тренажёра. */
+.connection {
+  position: fixed;
+  z-index: 48;
+  top: 8px;
+  left: 50%;
+  max-width: calc(100vw - 16px);
+  padding: 4px 10px;
+  font:
+    14px/1.4 Arial,
+    sans-serif;
+  color: #1f2326;
+  background: #fff;
+  border-left: 3px solid var(--color-danger);
+  box-shadow: 0 2px 10px #0006;
+  transform: translateX(-50%);
+}
+
+.connection button {
+  margin-left: 6px;
+  padding: 0 8px;
+  font: inherit;
+  color: #1f2326;
+  background: #fff;
+  border: 1px solid #999;
+  cursor: pointer;
+}

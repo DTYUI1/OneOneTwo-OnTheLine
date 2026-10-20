@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/scenario-gameplay.schema.json",
+  "title": "ScenarioGameplayResponse",
+  "description": "Ответ модели для генерации на каркасе сценария формата 2 (HQ-001, вариант B): только выбор фраз банка для докладов бригады. Описание заявителя, адрес, события — шаблона. Точные варианты сервер задаёт под вход (validation.gameplay_schema).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "choices"
+  ],
+  "properties": {
+    "choices": {
+      "type": "object",
+      "description": "Статус доклада → текст одной из предложенных фраз банка.",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 400
+      }
+    }
+  }
+}

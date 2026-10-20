@@ -16,12 +16,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.models import (
     Assignment,
     Brigade,
-    Call,
     CallTarget,
     Card,
     CardBrigade,
     Participant,
 )
+from app.core.read_cache import remembered
 
 BASE_BRIGADES = 2
 
@@ -92,21 +92,46 @@ async def brigade_roster(db: AsyncSession, card: Card) -> BrigadeRoster:
     return BrigadeRoster(available=tuple(brigades[: brigade_limit(max(incidents, 1))]), busy=busy)
 
 
+async def card_brigade_numbers(db: AsyncSession, card_id: UUID) -> tuple[str, ...]:
+    """Прямые номера бригад, направленных на карточку, — `EvalContext.brigade_numbers`.
+
+    Номер бригады обучаемый видит на линии («Старший бригады · 201») и вписывает его в
+    «Номер наряда» строки статуса; оценка сверяет поле с этими номерами.
+    """
+    numbers = await db.scalars(
+        select(CallTarget.phone_ext)
+        .join(CardBrigade, CardBrigade.brigade_id == CallTarget.brigade_id)
+        .where(CardBrigade.card_id == card_id)
+        .order_by(CallTarget.phone_ext)
+    )
+    return tuple(dict.fromkeys(str(number) for number in numbers))
+
+
 REFUSAL_BUSY = "busy"
 REFUSAL_NOT_ASSIGNED = "not_assigned"
 
 
-async def call_refusal(db: AsyncSession, card: Card, brigade_id: UUID) -> str | None:
-    """Почему бригада откажет диспетчеру в звонке по этой карточке; None — она направлена сюда.
+# Решение реагировать принято: бригаде можно дать вводную (памятка ДДС, с. 21).
+DECIDED_STATES = frozenset({"accepted", "responding", "arrived", "working"})
 
-    Связь у диспетчера ДДС есть со всеми своими бригадами, поэтому звонок не запрещается:
-    ненаправленная бригада отвечает, что вызов ей не назначен, занятая — что она на другом
-    происшествии. Докладов по такому звонку нет (`gating.schedule_reports`).
+
+async def call_refusal(db: AsyncSession, card: Card, brigade_id: UUID) -> str | None:
+    """Почему бригада откажет диспетчеру в звонке по этой карточке; None — она его слушает.
+
+    Связь у диспетчера ДДС есть со всеми своими бригадами, поэтому звонок не запрещается.
+    Выбор на табло сил — кому звонить (GP-05): свободная бригада после «Принята» берёт
+    трубку и выезжает по вводной (`briefing`). Занятая отвечает, что она на другом
+    происшествии; до решения по карточке и вне распоряжения диспетчера — что вызов ей не
+    назначен. Докладов по такому звонку нет (`gating.schedule_reports`).
     """
     if await db.get(CardBrigade, (card.id, brigade_id)) is not None:
         return None
     roster = await brigade_roster(db, card)
-    return REFUSAL_BUSY if brigade_id in roster.busy else REFUSAL_NOT_ASSIGNED
+    if brigade_id in roster.busy:
+        return REFUSAL_BUSY
+    if card.state in DECIDED_STATES and brigade_id in roster.available:
+        return None
+    return REFUSAL_NOT_ASSIGNED
 
 
 def assign_crew(
@@ -142,7 +167,17 @@ def assign_crew(
 async def card_crew(
     db: AsyncSession, card: Card, plan_messages: list[dict[str, Any]]
 ) -> dict[UUID, tuple[UUID, UUID]]:
-    """Бригада плана → (направленная бригада, её прямой номер) для этой карточки."""
+    """Бригада плана → (направленная бригада, её прямой номер) для этой карточки.
+
+    План — всегда план карточки: повторное чтение в транзакции — из `read_cache`.
+    """
+    crew = await remembered(db, ("card_crew", card.id), lambda: _card_crew(db, card, plan_messages))
+    return dict(crew)
+
+
+async def _card_crew(
+    db: AsyncSession, card: Card, plan_messages: list[dict[str, Any]]
+) -> dict[UUID, tuple[UUID, UUID]]:
     selected = list(
         await db.scalars(
             select(CardBrigade.brigade_id)
@@ -159,19 +194,11 @@ async def card_crew(
             .order_by(CallTarget.id)
         )
     }
-    # Кто уже на связи по этой карточке: первый отвеченный разговор без отказа.
-    answered = await db.execute(
-        select(Call.brigade_id, func.min(Call.answered_at))
-        .where(
-            Call.card_id == card.id,
-            Call.brigade_id.in_(selected),
-            Call.answered_at.is_not(None),
-            Call.refusal.is_(None),
-        )
-        .group_by(Call.brigade_id)
-        .order_by(func.min(Call.answered_at))
-    )
-    working = [brigade for brigade, _ in answered.tuples() if brigade is not None]
+    # Кто уже работает по этой карточке: выехал по вводной (GP-05), в порядке выезда.
+    from app.api.training.briefing import dispatched
+
+    sent = await dispatched(db, card.id)
+    working = [brigade for brigade in sorted(sent, key=sent.__getitem__) if brigade in selected]
     crew = assign_crew(
         plan_messages, [brigade for brigade in selected if brigade in targets], working
     )

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, csrfToken } from "../../shared/api";
 import {
-  assignableScenarios,
   distribute,
   ordersByParticipant,
   planAssignments,
@@ -17,20 +16,38 @@ import {
   useAssignments,
   useBatchAvailability,
   useIssuedAssignments,
+  useHandoutCatalog,
   useScenarios,
   useServices,
   useUsers,
 } from "./useConsoleData";
 import { AddressedHandout } from "./AddressedHandout";
+import { catalogScenarios } from "./handoutCatalog";
+import { SessionNorms } from "./SessionNorms";
+import {
+  StartButton,
+  StartStatus,
+  StartStep,
+  type StartControl,
+} from "./StartLesson";
+import { AIPreparationPanel } from "./AIPreparationPanel";
 import { SessionMaterials } from "../materials/SessionMaterials";
 import styles from "./Console.module.css";
 
-export function HandoutTab({ session }: { session: Session }) {
+export function HandoutTab({
+  session,
+  start,
+}: {
+  session: Session;
+  /** «Начать занятие» — в ряду с кнопкой выдачи; у идущего и завершённого занятия нет. */
+  start?: StartControl;
+}) {
   const queries = useQueryClient();
   // Одиночные назначения — для прежней раздачи; всё выданное — для счётчиков и очереди.
   const assignments = useAssignments(session.id);
   const issued = useIssuedAssignments(session.id);
   const scenarios = useScenarios();
+  const catalog = useHandoutCatalog();
   const users = useUsers();
   const { serviceName } = useServices();
   const [checked, setChecked] = useState<string[]>([]);
@@ -41,15 +58,28 @@ export function HandoutTab({ session }: { session: Session }) {
 
   // Сервер меняет задания только в черновике (409). Не даём преподавателю
   // отметить сценарии и узнать об этом уже из ошибки.
-  const draft = session.status === "draft";
+  const draft = session.status === "draft" && !session.ai_preparation;
   // Когда сервер принимает пачку, остаётся только адресная выдача: серия
   // одиночных запросов пачку не заменяет (I-SESSION).
   const batch = useBatchAvailability(session.id);
-  const approved = assignableScenarios(scenarios.data ?? []);
+  const approved = catalogScenarios(catalog.data ?? [], scenarios.data ?? []);
+  const catalogPending = catalog.isPending || scenarios.isPending;
+  const catalogError = catalog.error ?? scenarios.error;
+  const catalogBlocked =
+    catalogPending ||
+    Boolean(catalogError) ||
+    catalog.isFetching ||
+    scenarios.isFetching;
+  // Не отправляем оставшуюся часть набора, если выбранный ID исчез из каталога.
+  const unavailableChecked = checked.some(
+    (id) => !approved.some((item) => item.id === id),
+  );
   const plan = distribute(session.participants, approved, checked);
 
   const assign = useMutation({
     mutationFn: async () => {
+      if (catalogBlocked || unavailableChecked)
+        throw new Error("Проверьте доступность выбранных сценариев.");
       const plans = planAssignments(plan.queues, {
         from: Date.now(),
         firstDelayS,
@@ -94,6 +124,9 @@ export function HandoutTab({ session }: { session: Session }) {
 
   return (
     <>
+      {session.ai_preparation && (
+        <AIPreparationPanel preparation={session.ai_preparation} />
+      )}
       <div className={styles.panel}>
         <h3 className={styles.panelTitle}>Состав</h3>
         <table className={styles.table}>
@@ -123,6 +156,12 @@ export function HandoutTab({ session }: { session: Session }) {
       </div>
 
       {!draft && (
+        <div className={styles.panel}>
+          <SessionNorms key={session.id} session={session} />
+        </div>
+      )}
+
+      {!draft && (
         <IssuedPanel
           session={session}
           assignments={issued.data}
@@ -138,7 +177,12 @@ export function HandoutTab({ session }: { session: Session }) {
         />
       )}
 
-      {draft && <AddressedHandout session={session} />}
+      {draft && (
+        <AddressedHandout
+          session={session}
+          start={batch.available ? start : undefined}
+        />
+      )}
 
       {draft && !batch.pending && !batch.available && (
         <div className={styles.panel}>
@@ -147,9 +191,40 @@ export function HandoutTab({ session }: { session: Session }) {
             Отмеченные сценарии выдаются по очереди тем, чья служба совпадает со
             службой происшествия. Назначать можно только утверждённые.
           </p>
-          {scenarios.isPending && <p>Загружаем сценарии…</p>}
-          {approved.length === 0 && !scenarios.isPending && (
-            <p>Утверждённых сценариев пока нет.</p>
+          {catalogPending && <p role="status">Загружаем сценарии…</p>}
+          {catalogError && (
+            <div role="alert">
+              <p>{catalogError.message}</p>
+              <button
+                type="button"
+                className={styles.plain}
+                disabled={catalog.isFetching || scenarios.isFetching}
+                onClick={() => {
+                  void catalog.refetch();
+                  void scenarios.refetch();
+                }}
+              >
+                Повторить загрузку сценариев
+              </button>
+            </div>
+          )}
+          {unavailableChecked && !catalogBlocked && (
+            <div role="alert">
+              <p>
+                Часть выбранных сценариев недоступна. Снимите выбор или
+                повторите загрузку позже.
+              </p>
+              <button
+                type="button"
+                className={styles.plain}
+                onClick={() => setChecked([])}
+              >
+                Снять выбор
+              </button>
+            </div>
+          )}
+          {approved.length === 0 && !catalogBlocked && (
+            <p>В общем каталоге нет доступных сценариев.</p>
           )}
           {approved.length > 0 && (
             <div className={styles.scroll}>
@@ -173,7 +248,7 @@ export function HandoutTab({ session }: { session: Session }) {
                           <input
                             id={id}
                             type="checkbox"
-                            disabled={!draft}
+                            disabled={!draft || catalogBlocked}
                             checked={checked.includes(scenario.id)}
                             onChange={(event) =>
                               setChecked(
@@ -195,10 +270,12 @@ export function HandoutTab({ session }: { session: Session }) {
                           </span>
                         </td>
                         <td>
-                          <label htmlFor={id}>
-                            {scenario.card.incident_class ||
-                              scenario.card.description}
-                          </label>
+                          <label htmlFor={id}>{scenario.displayTitle}</label>
+                          {scenario.specifics && (
+                            <span className={styles.deliveryNote}>
+                              {scenario.specifics}
+                            </span>
+                          )}
                         </td>
                         <td>{scenario.level}</td>
                         <td>{scenario.weight}</td>
@@ -226,8 +303,12 @@ export function HandoutTab({ session }: { session: Session }) {
               })}
               {plan.unmatched.map((scenario) => (
                 <li key={scenario.id} className={styles.dropped}>
-                  «{scenario.card.incident_class || scenario.card.description}»
-                  не уйдёт: происшествие адресовано службе{" "}
+                  «
+                  {
+                    approved.find((item) => item.id === scenario.id)
+                      ?.displayTitle
+                  }
+                  » не уйдёт: происшествие адресовано службе{" "}
                   {scenarioServiceIds(scenario).map(serviceName).join(", ")}, а
                   в составе такой нет.
                 </li>
@@ -235,6 +316,7 @@ export function HandoutTab({ session }: { session: Session }) {
             </ul>
           )}
 
+          <SessionNorms key={session.id} session={session} />
           <div className={styles.actions}>
             <label className={styles.field}>
               Первая через, с
@@ -261,17 +343,30 @@ export function HandoutTab({ session }: { session: Session }) {
             <button
               type="button"
               className={styles.primary}
-              disabled={!draft || plan.queues.length === 0 || assign.isPending}
+              disabled={
+                !draft ||
+                catalogBlocked ||
+                unavailableChecked ||
+                plan.queues.length === 0 ||
+                assign.isPending
+              }
               onClick={() => assign.mutate()}
             >
               Раздать отмеченные
             </button>
+            {start && <StartButton start={start} />}
           </div>
           {error && <p role="alert">{error}</p>}
           {notice && <p role="status">{notice}</p>}
+          {start && <StartStatus start={start} />}
         </div>
       )}
-      <SessionMaterials sessionId={session.id} draft={draft} />
+      {/* Выдачи на экране нет (задания готовит ИИ) — старт отдельным шагом. */}
+      {start && !draft && <StartStep start={start} />}
+      <SessionMaterials
+        sessionId={session.id}
+        canAssign={session.status !== "finished"}
+      />
     </>
   );
 }
@@ -313,8 +408,9 @@ function IssuedPanel({
     <div className={styles.panel}>
       <h3 className={styles.panelTitle}>Выданные задания</h3>
       <p className={styles.hint}>
-        Состав заданий меняется только в черновике: занятие уже
-        {session.status === "running" ? " запущено" : " завершено"}.
+        {session.status === "draft"
+          ? "В этом занятии задания назначаются после полной подготовки набора ИИ."
+          : `Состав заданий меняется только в черновике: занятие уже ${session.status === "running" ? "запущено" : "завершено"}.`}
       </p>
       {rows.length === 0 ? (
         <p>Заданий не выдавали.</p>
@@ -352,7 +448,7 @@ function IssuedPanel({
                       упражнение: чужая служба
                     </span>
                   ) : (
-                    "по профилю службы"
+                    "своей службы"
                   )}
                 </td>
               </tr>

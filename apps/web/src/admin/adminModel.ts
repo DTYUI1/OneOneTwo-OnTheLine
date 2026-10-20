@@ -1,6 +1,7 @@
 // Администрирование (T-016): чистая логика без React и сети.
 import type { components } from "../api-client/schema";
 import {
+  BRIGADE_CRITERION_LABELS,
   COMMENT_CRITERION_LABELS,
   CRITERION_LABELS,
   criterionLabel,
@@ -28,8 +29,14 @@ export function validateSettings(value: Settings): string[] {
   const whole = (n: number) => Number.isInteger(n);
   if (!whole(value.reaction_normative_s) || value.reaction_normative_s < 1)
     problems.push("Норматив реакции — целое число секунд, не меньше 1.");
-  if (!whole(value.handling_normative_s) || value.handling_normative_s < 1)
-    problems.push("Норматив отработки — целое число секунд, не меньше 1.");
+  if (
+    !whole(value.handling_normative_s) ||
+    value.handling_normative_s < 1 ||
+    value.handling_normative_s > 3600
+  )
+    problems.push(
+      "Отработка карточки — время в формате мм:сс, от 0:01 до 60:00.",
+    );
   if (
     value.reaction_normative_s >= 1 &&
     value.handling_normative_s >= 1 &&
@@ -50,6 +57,9 @@ export function validateSettings(value: Settings): string[] {
     value.critical_cap > 1
   )
     problems.push("Потолок при критической ошибке — от 0 до 1.");
+  const factor = value.report_choice_factor ?? 0.5;
+  if (Number.isNaN(factor) || factor < 0 || factor > 1)
+    problems.push("Доля балла за доклад вариантом — от 0 до 1.");
   const weights = Object.values(value.weights);
   if (
     weights.some(
@@ -115,7 +125,7 @@ export function describeHealth(health: Health): {
   hint: string;
   tone: Tone;
 }[] {
-  return [
+  const tiles: { label: string; value: string; hint: string; tone: Tone }[] = [
     {
       label: "Итог",
       value: health.status === "ok" ? "всё работает" : "есть сбой",
@@ -151,33 +161,42 @@ export function describeHealth(health: Health): {
             : "neutral",
     },
     {
-      label: "Режим сервера",
-      value: {
-        database: "рабочий",
-        mock: "демонстрационный (без базы)",
-        skeleton: "каркас",
-      }[health.mode],
-      hint: "В демонстрационном режиме данные живут в памяти и пропадают при перезапуске.",
-      tone: health.mode === "database" ? "ok" : "neutral",
-    },
-    {
       label: "ИИ-оценка текста",
-      value: health.ai_provider === "off" ? "выключена" : health.ai_provider,
+      value:
+        {
+          off: "выключена",
+          mock: "проверочный режим",
+          local: "локальная модель",
+        }[health.ai_provider] ?? "неизвестный режим",
       hint: "Проверка понятности свободного текста в карточке.",
       tone: "neutral",
     },
   ];
+  // Рабочий режим (с базой) — норма установки в классе, о нём молчим. Демонстрационный
+  // и каркас — режимы разработки: администратор должен увидеть, что данные не сохранятся.
+  if (health.mode !== "database")
+    tiles.splice(1, 0, {
+      label: "Режим сервера",
+      value: {
+        mock: "демонстрационный — без базы",
+        skeleton: "тестовый режим без сохранения",
+      }[health.mode],
+      hint: "Это режим разработки: данные живут в памяти и пропадают при перезапуске. Для занятий сервер запускают с базой данных.",
+      tone: "bad",
+    });
+  return tiles;
 }
 
 /**
  * Критерии в порядке работы диспетчера (как в CRITERION_LABELS: реакция →
- * отработка → статусы → службы → поля → адрес → доклад), затем критерии комментария,
- * незнакомые — в конце.
+ * отработка → статусы → службы → поля → адрес → доклад), затем критерии комментария и
+ * работа с бригадой, незнакомые — в конце.
  */
 export function orderedWeightKeys(weights: Settings["weights"]): string[] {
   const known = [
     ...Object.keys(CRITERION_LABELS),
     ...Object.keys(COMMENT_CRITERION_LABELS),
+    ...Object.keys(BRIGADE_CRITERION_LABELS),
   ];
   const rank = (key: string) =>
     known.includes(key) ? known.indexOf(key) : known.length;
@@ -364,6 +383,8 @@ export const ACTION_LABELS: Record<string, string> = {
   reviseScenario: "Доработка сценария",
   updateScenarioContent: "Правка эталона",
   generatePack: "Генерация пакета",
+  generateScenario: "Генерация сценария",
+  autoAdmitScenario: "Автоматический допуск сценария",
   approvePack: "Утверждение пакета",
   createSession: "Создание занятия",
   startSession: "Начало занятия",
@@ -444,7 +465,9 @@ const SETTINGS_FIELDS: [string, string][] = [
   ["parallel_cards", "Параллельных карточек"],
   ["hints_level", "Подсказки новичку"],
   ["spelling_hints", "Подсказки орфографии"],
+  ["voice_only", "Доклад только голосом"],
   ["critical_cap", "Потолок при критической ошибке"],
+  ["report_choice_factor", "Доклад вариантом, доля балла"],
 ];
 
 type Json = Record<string, unknown> | null | undefined;
@@ -470,6 +493,7 @@ function show(
     return lookups.serviceName(String(value)) ?? String(value);
   if (key === "hints_level" || key === "spelling_hints")
     return value ? "включены" : "выключены";
+  if (key === "voice_only") return value ? "включён" : "выключен";
   if (key === "deleted_at") return "в корзине";
   if (key === "status" && entity === "backups")
     return BACKUP_STATUSES[value as BackupRun["status"]] ?? String(value);
@@ -590,15 +614,19 @@ export function describeStatus(
     tone: status.realtime.status === "ok" ? "ok" : "bad",
   });
   const { pending, running, failed } = status.queue;
+  const unread = status.queue.failed_unread ?? failed;
   tiles.push({
     label: "Очередь заданий",
-    value: failed > 0 ? `с ошибкой: ${failed}` : "без ошибок",
+    value:
+      unread > 0
+        ? `непрочитанных ошибок: ${unread}`
+        : "нет непрочитанных ошибок",
     hint:
-      `Ждут: ${pending}, выполняются: ${running}. ` +
+      `Ждут: ${pending}, выполняются: ${running}. Ошибок в журнале: ${failed}. ` +
       (status.worker.last_heartbeat_at
         ? `Обработчик откликался ${ago(status.worker.last_heartbeat_at, now)}.`
         : "Обработчик ещё не откликался."),
-    tone: failed > 0 ? "warn" : "ok",
+    tone: unread > 0 ? "warn" : "ok",
   });
   tiles.push({
     label: "Идёт занятий",
@@ -667,10 +695,17 @@ export function describeStatus(
 }
 
 /** Предупреждения для полосы на всех страницах админки: сбои компонентов уже в шапке. */
+export function systemAlertText(message: string): string {
+  return message.replace(
+    "Проверьте контейнер резервного копирования.",
+    "Попросите специалиста проверить автоматическое резервное копирование.",
+  );
+}
+
 export function adminWarnings(status: SystemStatus): string[] {
   return status.alerts
     .filter((alert) => alert.level === "warning")
-    .map((alert) => alert.message);
+    .map((alert) => systemAlertText(alert.message));
 }
 
 // Корзина и резервные копии (C-07): удаление — пометка, обезличивание — после копии.

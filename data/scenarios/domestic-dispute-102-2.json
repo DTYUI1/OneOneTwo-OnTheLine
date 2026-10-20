@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "domestic-dispute-102-2",
+  "version": 1,
+  "title": "Соседка сообщает о семейном скандале",
+  "service_id": "102",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "15190000",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Валшавское шоссе, 87» и сообщить пятый этаж. Соседка слышит скандал до выезда; к прибытию супруги успокоились. Опрос по отдельности, беседа, без задержания и медицинской помощи.",
+  "outcome": {
+    "people": "Из квартиры 52 на пятом этаже слышны крики супругов и громкая ссора. Заявительница — соседка с той же площадки. Криков о помощи и угроз оружием не слышала, сведений о пострадавших нет. К приезду наряда в квартире стало тихо, супруги открыли дверь и сообщили, что всё нормально. Их опросили по отдельности и провели беседу. Супруги помирились, заявлений нет, наряд свободен.",
+    "late": "Карточку приняли позже норматива. Из квартиры 52 на пятом этаже слышны крики супругов и громкая ссора. Заявительница — соседка с той же площадки. Криков о помощи и угроз оружием не слышала, сведений о пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Анисимова Римма Филипповна",
+    "phone_aon": "+79000000876",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Северное",
+      "street": "Варшавское шоссе",
+      "house": "87",
+      "building": "",
+      "apartment": "52"
+    },
+    "description": "Из квартиры 52 на пятом этаже слышны крики супругов и громкая ссора. Заявительница — соседка с той же площадки. Криков о помощи и угроз оружием не слышала, сведений о пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Скандал",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70008516",
+    "incident_type_code": "15190000"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Северное",
+      "street": "Варшавское шоссе",
+      "house": "87",
+      "building": "",
+      "apartment": "52"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Из квартиры 52 на пятом этаже слышны крики супругов и громкая ссора. Заявительница — соседка с той же площадки. Криков о помощи и угроз оружием не слышала, сведений о пострадавших нет. К приезду наряда в квартире стало тихо, супруги открыли дверь и сообщили, что всё нормально. Их опросили по отдельности и провели беседу. Супруги помирились, заявлений нет, наряд свободен."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Мы тут рядом, через пару минут будем.",
+        "audio": "bank-v1/102/102.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. Открыли сразу, в квартире тихо, оба говорят, что всё нормально.",
+        "audio": "bank-v1/102/102.arrived.domestic.3.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Развели по разным комнатам, опрашиваем по одному.",
+        "audio": "bank-v1/102/102.working.domestic.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Помирились, заявлений нет. Провели беседу, наряд свободен.",
+        "audio": "bank-v1/102/102.completed.domestic.2.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Валшавское шоссе, 87.",
+        "audio": "bank-v6/102/102.readback.eb158901.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, понял. Перестраиваемся, это рядом.",
+            "audio": "bank-v1/102/102.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/102/102.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/102/102.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, на каком этаже квартира?",
+        "audio": "bank-v1/102/102.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Пятый этаж, квартира 52"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните на месте"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Нет так нет. Разберёмся на месте.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/102/102.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, на каком этаже квартира?",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

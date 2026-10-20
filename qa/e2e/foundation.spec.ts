@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { TRAINEE_BEGIN, TRAINEE_GREETING } from "./operator-module";
 
 for (const [login, path, heading] of [
   ["trainee01", "/app/arm", "Список происшествий"],
@@ -15,9 +16,9 @@ for (const [login, path, heading] of [
     await expect(page).toHaveURL(new RegExp(path + "$"));
     if (login === "trainee01") {
       await expect(
-        page.getByRole("heading", { name: "Выберите обучение" }),
+        page.getByRole("heading", { name: TRAINEE_GREETING }),
       ).toBeVisible();
-      await page.getByRole("button", { name: "Диспетчер служб" }).click();
+      await page.getByRole("button", { name: TRAINEE_BEGIN }).click();
     } else {
       // С 28.09 приветствие есть у каждой роли; у преподавателя и администратора — своё.
       await expect(

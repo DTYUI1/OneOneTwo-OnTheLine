@@ -274,8 +274,10 @@ def test_successful_rules_evaluation_records_prediction_fact(
         assert evaluation.rules_scores == {"routing": 0.8}
         assert evaluation.explanation == {
             "routing": {
+                "weight": 1,
                 "explanation": "Маршрутизация выполнена.",
                 "evidence": ["Служба выбрана верно."],
+                "remarks": [],
             }
         }
         validate_json(
@@ -372,7 +374,7 @@ def test_real_evalcore_survives_api_worker_and_database_reload(
     with TestClient(create_database_app(database_config)) as teacher:
         login(teacher)
         initial = teacher.get(f"/api/evaluations/{found_id}").json()
-    assert initial["model_info"]["rules"] == "evalcore"
+    assert initial["model_info"]["rules"] == "evalcore-report-completion-v3"
     # Критерии комментария (28.09) считаются, когда их вес есть в настройках занятия.
     assert {item["key"] for item in initial["criteria"]} == {*CRITERIA, *COMMENT_CRITERIA}
     assert all(item["evidence"] and item["explanation"] for item in initial["criteria"])
@@ -502,7 +504,7 @@ def test_reports_include_effective_totals_weakest_criteria_prediction_and_csv(
         assert exported.status_code == 200
         assert exported.content.startswith(b"\xef\xbb\xbf")
         assert "ФИО;АРМ;Балл;" in exported.text.lstrip("\ufeff")
-        assert "Обучаемый 01;1;0.8;" in exported.text
+        assert "Иванов Дмитрий Сергеевич;1;0.8;" in exported.text
         assert teacher.get(f"/api/reports/session/{uuid4()}").status_code == 404
     with TestClient(create_database_app(database_config)) as trainee:
         login(trainee, "trainee01")

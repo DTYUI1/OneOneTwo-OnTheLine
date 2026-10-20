@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid5
 
-from sqlalchemy import delete, text
+from sqlalchemy import delete, inspect, text, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -32,6 +32,11 @@ from app.core.models import (
 from app.core.security import hash_password
 
 logger = logging.getLogger(__name__)
+
+LEGACY_DEMO_NAMES = {
+    "teacher": "Преподаватель",
+    **{f"trainee{index:02d}": f"Обучаемый {index:02d}" for index in range(1, 6)},
+}
 
 
 async def insert_missing(db: AsyncSession, model: type[Base], rows: list[dict[str, Any]]) -> None:
@@ -103,7 +108,14 @@ async def seed(
     services = read("phonebook.json")
     for service in services:
         validate_json(service, "urn:openapi#/components/schemas/Service")
-    await insert_missing(db, Service, services)
+    # Тесты миграций загружают справочник в схему ранней ревизии: без городского номера
+    # (0021 общей ветки) служба вставляется без него.
+    columns = await (await db.connection()).run_sync(
+        lambda sync: {column["name"] for column in inspect(sync).get_columns("services")}
+    )
+    await insert_missing(
+        db, Service, [{k: v for k, v in item.items() if k in columns} for item in services]
+    )
     if include_training:
         from app.seed.training import seed_catalog
 
@@ -128,10 +140,22 @@ async def seed(
                 }
             ],
         )
+        # Обновляем только прежние демо-подписи, сохраняя введённые вручную ФИО.
+        if legacy_name := LEGACY_DEMO_NAMES.get(account["login"]):
+            await db.execute(
+                update(User)
+                .where(
+                    User.id == UUID(account["id"]),
+                    User.login == account["login"],
+                    User.full_name == legacy_name,
+                )
+                .values(full_name=account["full_name"])
+            )
     await sync_classifier(db, classifier)
     # Golden и template D1 имеют общий UUID при разном весе. Пакет использует golden;
     # исходный шаблон сохраняется отдельно, без потери одной из версий артефакта.
     scenarios: dict[str, dict[str, Any]] = {}
+    legacy_descriptions: dict[str, list[str]] = {}
     for path in sorted((data_dir / "templates").glob("*.json")):
         value = json.loads(path.read_text(encoding="utf-8"))
         await artifact(path, value, "https://arm112.local/contracts/scenario.schema.json")
@@ -140,6 +164,13 @@ async def seed(
         value = json.loads(path.read_text(encoding="utf-8"))
         await artifact(path, value, "https://arm112.local/contracts/golden.schema.json")
         scenarios[value["scenario"]["id"]] = value["scenario"]
+        legacy_descriptions[value["scenario"]["id"]] = [
+            f"Учебное происшествие: {value['scenario']['card']['incident_class']}. "
+            "Москва, Дубнинская улица, дом 1."
+        ]
+    legacy_descriptions.setdefault("00000000-0000-4000-8000-000000000100", []).append(
+        "Учебный сценарий: ДТП с пострадавшими у дома 1."
+    )
     # C-05: задания по билетам заказчика; эталон команды остаётся draft до проверки
     # преподавателем. Происхождение каждого — data/ticket_scenarios/manifest.json.
     for path in sorted((data_dir / "ticket_scenarios").glob("ticket-*.json")):
@@ -149,6 +180,39 @@ async def seed(
     await insert_missing(
         db, Scenario, [{**value, "id": UUID(value["id"])} for value in scenarios.values()]
     )
+    # Обновляем только прежние учебные описания, не затрагивая правки преподавателя,
+    # остальные поля карточки, эталон, события и уже выданные карточки занятия.
+    for scenario_id, descriptions in legacy_descriptions.items():
+        if scenario_id in scenarios:
+            await db.execute(
+                update(Scenario)
+                .where(
+                    Scenario.id == UUID(scenario_id),
+                    Scenario.card["description"].astext.in_(descriptions),
+                    # Если менялись обстоятельства, новый текст им уже может не подходить.
+                    Scenario.card.contains(
+                        {
+                            key: value
+                            for key, value in scenarios[scenario_id]["card"].items()
+                            if key
+                            in {
+                                "address",
+                                "incident_class",
+                                "incident_type_code",
+                                "victims",
+                                "ambulance_refused",
+                                "blocked_people",
+                                "emergency",
+                            }
+                        }
+                    ),
+                )
+                .values(
+                    card=Scenario.card.op("||")(
+                        {"description": scenarios[scenario_id]["card"]["description"]}
+                    )
+                )
+            )
     for path in sorted((data_dir / "packs").glob("*.json")):
         value = json.loads(path.read_text(encoding="utf-8"))
         await artifact(

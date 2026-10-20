@@ -40,11 +40,14 @@ def response_content(description: str) -> dict:
 
 
 def test_local_qwen_uses_schema_and_accepts_grounded_json():
+    schema = json.loads((ROOT / "contracts/scenario-narrative.schema.json").read_text("utf-8"))
+
     def handle(request: httpx.Request) -> httpx.Response:
         assert request.url == "http://llm.test/v1/chat/completions"
         body = json.loads(request.content)
         assert body["model"] == "qwen3-4b-2507-q4km"
-        assert body["response_format"]["type"] == "json_schema"
+        assert "response_format" not in body
+        assert body["json_schema"] == schema
         assert json.loads(body["messages"][1]["content"]) == FACTS
         return httpx.Response(
             200,
@@ -87,3 +90,17 @@ def test_local_qwen_http_error_falls_back_without_job_failure():
         provider(transport).complete_json(json.dumps(FACTS, ensure_ascii=False, sort_keys=True))
     )
     assert result is None
+
+
+def test_only_transient_provider_errors_are_retryable():
+    for status, retryable in [(400, False), (401, False), (404, False), (429, True), (503, True)]:
+        llm = provider(httpx.MockTransport(lambda request, status=status: httpx.Response(status)))
+        assert asyncio.run(llm.complete_json(json.dumps(FACTS))) is None
+        assert llm.last_diagnostics["retryable"] is retryable
+
+    def timeout(request):
+        raise httpx.ReadTimeout("timeout", request=request)
+
+    llm = provider(httpx.MockTransport(timeout))
+    assert asyncio.run(llm.complete_json(json.dumps(FACTS))) is None
+    assert llm.last_diagnostics["retryable"] is True

@@ -1,8 +1,9 @@
+import { FieldHelp } from "../../shared/FieldHelp";
 // Отчёт по занятию (D-02): попытки по стадиям, графики балла и времени,
 // причины отличий по каждому месту, типичные ошибки группы, прогноз против
 // факта и разбор человека. Цифры — из ответов сервера (те же, что в CSV);
 // браузер не пересчитывает баллы и время (ответ капитана §2).
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../shared/api";
 import {
@@ -22,10 +23,13 @@ import {
   linesFromAnalytics,
   formatSeconds,
   recommend,
+  readyForVerdict,
+  reportRevision,
   traineeLines,
   typicalErrors,
   type TraineeLine,
 } from "./reportModel";
+import { LessonReview } from "./LessonReview";
 import { ScoreChart, TimeChart } from "./ReportCharts";
 import {
   attemptOwner,
@@ -85,26 +89,41 @@ export function ReportTab({
   session: Session;
   onNewLesson?: (prefill: LessonPrefill) => void;
 }) {
+  const evaluations = useEvaluations();
+  const cards = useCards();
+  const revision = reportRevision(
+    session.id,
+    cards.data ?? [],
+    evaluations.data ?? [],
+  );
+  const reportEnabled =
+    session.status !== "draft" && !cards.isPending && !evaluations.isPending;
   const report = useQuery({
-    queryKey: ["report", session.id],
-    enabled: session.status !== "draft",
+    queryKey: ["report", session.id, revision],
+    enabled: reportEnabled,
     queryFn: async () => {
-      const { data } = await api.GET("/reports/session/{id}", {
+      const { data, error } = await api.GET("/reports/session/{id}", {
         params: { path: { id: session.id } },
       });
-      return data ?? null;
+      if (!data) throw new Error(error?.message ?? "Отчёт недоступен.");
+      return data;
     },
   });
   // Аналитика C-06: время по методике занятия, слои оценки, ошибки по категориям.
   // Нет её (старый сервер, 501) — отчёт строится по прежнему источнику.
   const analytics = useQuery({
-    queryKey: ["analytics", session.id],
-    enabled: session.status !== "draft",
+    queryKey: ["analytics", session.id, revision],
+    enabled: reportEnabled,
     queryFn: async (): Promise<SessionAnalytics | null> => {
-      const { data } = await api.GET("/reports/session/{id}/analytics", {
-        params: { path: { id: session.id } },
-      });
-      return data ?? null;
+      const { data, response, error } = await api.GET(
+        "/reports/session/{id}/analytics",
+        {
+          params: { path: { id: session.id } },
+        },
+      );
+      if (response.status === 501) return null;
+      if (!data) throw new Error(error?.message ?? "Аналитика недоступна.");
+      return data;
     },
   });
   // Итог завершения: прерванные попытки и отменённые выдачи (C-03).
@@ -112,42 +131,80 @@ export function ReportTab({
     queryKey: ["lifecycle", session.id],
     enabled: session.status === "finished",
     queryFn: async () => {
-      const { data } = await api.GET("/sessions/{id}/lifecycle", {
-        params: { path: { id: session.id } },
-      });
-      return data ?? null;
+      const { data, response, error } = await api.GET(
+        "/sessions/{id}/lifecycle",
+        {
+          params: { path: { id: session.id } },
+        },
+      );
+      if (response.status === 501) return null;
+      if (!data)
+        throw new Error(error?.message ?? "Итог завершения недоступен.");
+      return data;
     },
   });
-  const evaluations = useEvaluations();
   // Ступень обучения каждого обучаемого (GET /progress): подсказка к выбору уровня.
   const progress = useQuery({
     queryKey: ["progress"],
-    queryFn: async () => (await api.GET("/progress")).data ?? [],
+    queryFn: async () => {
+      const { data, error } = await api.GET("/progress");
+      if (!data) throw new Error(error?.message ?? "Ступени недоступны.");
+      return data;
+    },
   });
   const stepOf = (userId: string) =>
     progress.data?.find((item) => item.user_id === userId);
-  const cards = useCards();
   const users = useUsers();
   const issued = useIssuedAssignments(session.id);
   const [openUser, setOpenUser] = useState<string | null>(null);
+  const personRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (openUser) personRef.current?.focus();
+  }, [openUser]);
 
   if (session.status === "draft")
     return (
       <p className={styles.placeholder}>Отчёт появится после старта занятия.</p>
     );
-  if (report.isPending || evaluations.isPending || cards.isPending)
+  if (
+    report.isError ||
+    evaluations.isError ||
+    cards.isError ||
+    users.isError ||
+    issued.isError
+  )
+    return (
+      <p role="alert" className={styles.placeholder}>
+        Отчёт не загрузился полностью. Цифры не показаны, чтобы не принять
+        отсутствующие данные за нули.{" "}
+        <button
+          type="button"
+          className={styles.plain}
+          onClick={() => {
+            void report.refetch();
+            void evaluations.refetch();
+            void cards.refetch();
+            void users.refetch();
+            void issued.refetch();
+          }}
+        >
+          Повторить
+        </button>
+      </p>
+    );
+  if (
+    report.isPending ||
+    evaluations.isPending ||
+    cards.isPending ||
+    users.isPending ||
+    issued.isPending ||
+    analytics.isPending
+  )
     return <p className={styles.placeholder}>Собираем отчёт…</p>;
   if (!report.data)
     return (
       <p role="alert" className={styles.placeholder}>
-        Отчёт не загрузился.{" "}
-        <button
-          type="button"
-          className={styles.plain}
-          onClick={() => void report.refetch()}
-        >
-          Повторить
-        </button>
+        Отчёт недоступен.
       </p>
     );
 
@@ -200,7 +257,14 @@ export function ReportTab({
         : [];
     }),
   );
-  const shares = normShares(sessionEvaluations, teacherTotals);
+  const currentShares = normShares(sessionEvaluations, teacherTotals, attempts);
+  const readyEvaluations = readyForVerdict(sessionEvaluations, attempts);
+  const shares = {
+    ...currentShares,
+    passed: analytics.data
+      ? normShares(readyEvaluations, teacherTotals, attempts).passed
+      : { ok: 0, total: 0 },
+  };
   const cardById = new Map(sessionCards.map((card) => [card.id, card]));
   const forecasts = forecastLines(
     report.data.predictions,
@@ -219,7 +283,56 @@ export function ReportTab({
   const opened = lines.find((line) => line.userId === openUser) ?? null;
 
   return (
-    <div className={styles.tabBody}>
+    <div className={`${styles.tabBody} ${styles.reportReadable}`}>
+      {analytics.isError && (
+        <p role="alert" className={styles.warning}>
+          Подробная аналитика не загрузилась. Графики и причины показаны по
+          основному отчёту.{" "}
+          <button
+            type="button"
+            className={styles.plain}
+            onClick={() => void analytics.refetch()}
+          >
+            Повторить загрузку аналитики
+          </button>
+        </p>
+      )}
+      {analytics.isSuccess && analytics.data === null && (
+        <p className={styles.warning}>
+          Сервер не поддерживает подробную аналитику. Доля зачтённых не
+          показывается: без разбора нельзя отличить предварительный балл от
+          готового решения.
+        </p>
+      )}
+      {session.status === "finished" &&
+        (lifecycle.isError ||
+          (lifecycle.isSuccess && lifecycle.data === null)) && (
+          <p role="alert" className={styles.warning}>
+            Сведения о прерванных попытках не загрузились. Их отсутствие здесь
+            не означает, что прерванных попыток не было.{" "}
+            {lifecycle.isError && (
+              <button
+                type="button"
+                className={styles.plain}
+                onClick={() => void lifecycle.refetch()}
+              >
+                Повторить загрузку
+              </button>
+            )}
+          </p>
+        )}
+      {progress.isError && (
+        <p role="alert" className={styles.warning}>
+          Ступени обучения не загрузились; баллы отчёта доступны.{" "}
+          <button
+            type="button"
+            className={styles.plain}
+            onClick={() => void progress.refetch()}
+          >
+            Повторить загрузку ступеней
+          </button>
+        </p>
+      )}
       <div className={styles.panel}>
         <h3 className={styles.panelTitle}>Попытки</h3>
         <div className={styles.tiles}>
@@ -229,6 +342,7 @@ export function ReportTab({
               ["карточек пришло", counts.appeared],
               ["закрыто", counts.closed],
               ["оценено", counts.scored],
+              ["из них предварительно", counts.partial],
               ["закрыто без оценки", counts.unscored],
             ] as const
           ).map(([label, value]) => (
@@ -247,7 +361,7 @@ export function ReportTab({
                 `обработаны за ${Math.round(normatives.handling / 60)} мин`,
                 shares.handling,
               ],
-              ["зачтено", shares.passed],
+              ["зачтено по текущим разборам", shares.passed],
             ] as const
           ).map(([label, share]) => (
             <div key={label} className={styles.tile}>
@@ -290,8 +404,9 @@ export function ReportTab({
         {counts.partial > 0 && (
           <p className={styles.note}>
             {counts.partial} из {counts.scored} оценок — предварительные:
-            правила посчитаны, а оценка свободного текста ИИ не выполнялась.
-            Балл по правилам действителен, текст доклада не оценён.
+            правила посчитаны, а проверка свободного текста ИИ ещё не
+            завершилась или отключена. Балл по правилам действителен, но средний
+            балл и рекомендация уровня могут измениться.
           </p>
         )}
         <p className={styles.hint}>
@@ -335,6 +450,9 @@ export function ReportTab({
 
       <div className={styles.panel}>
         <h3 className={styles.panelTitle}>Причины отличий</h3>
+        <p className={styles.hint}>
+          Нажмите на фамилию, чтобы открыть подробный разбор обучаемого.
+        </p>
         <div className={styles.scroll}>
           <table className={styles.table}>
             <thead>
@@ -434,19 +552,30 @@ export function ReportTab({
       </div>
 
       {opened && (
-        <PersonPanel
-          line={opened}
-          session={session}
-          rows={rows.filter(
-            (row) => row.evaluation.trainee_id === opened.userId,
-          )}
-          forecasts={forecasts}
-          attempts={attempts.filter((item) => ownerOf(item) === opened.userId)}
-          scenarioOf={scenarioOf}
-          onNewLesson={onNewLesson}
-          onClose={() => setOpenUser(null)}
-        />
+        <div
+          ref={personRef}
+          tabIndex={-1}
+          aria-label={`Разбор: ${opened.fullName}`}
+          className={styles.personFocus}
+        >
+          <PersonPanel
+            line={opened}
+            session={session}
+            rows={rows.filter(
+              (row) => row.evaluation.trainee_id === opened.userId,
+            )}
+            forecasts={forecasts}
+            attempts={attempts.filter(
+              (item) => ownerOf(item) === opened.userId,
+            )}
+            scenarioOf={scenarioOf}
+            onNewLesson={onNewLesson}
+            onClose={() => setOpenUser(null)}
+          />
+        </div>
       )}
+
+      <LessonReview sessionId={session.id} />
 
       <div className={styles.panel}>
         <h3 className={styles.panelTitle}>Типичные ошибки группы</h3>
@@ -504,10 +633,10 @@ function PersonPanel({
   onNewLesson?: (prefill: LessonPrefill) => void;
   onClose: () => void;
 }) {
-  const advice = recommend(
-    line.level,
-    rows.map((row) => row.evaluation),
-  );
+  const ownEvaluations = rows.map((row) => row.evaluation);
+  const ready = readyForVerdict(ownEvaluations, attempts);
+  const incomplete = ownEvaluations.filter(hasScore).length - ready.length;
+  const advice = recommend(line.level, ready);
   return (
     <div className={styles.panel} aria-label={`Разбор: ${line.fullName}`}>
       <div className={styles.actions}>
@@ -519,15 +648,31 @@ function PersonPanel({
         </button>
       </div>
 
+      {incomplete > 0 && (
+        <p className={styles.warning}>
+          {incomplete} оценок ещё без готового разбора или решения
+          преподавателя. Средний балл и рекомендация уровня могут измениться.
+        </p>
+      )}
+
       {line.recommendation && (
         <div className={styles.note}>
-          <strong>Рекомендация сервера: </strong>
+          <strong>
+            {incomplete > 0
+              ? "Предварительная рекомендация: "
+              : "Рекомендация: "}
+          </strong>
           {DIRECTION_LABELS[line.recommendation.direction]}
           {line.recommendation.direction === "keep"
             ? ` уровень ${line.recommendation.level}`
             : ` уровня ${line.recommendation.level}`}
-          , вес {line.recommendation.weight}. {line.recommendation.explanation}{" "}
-          (по {line.recommendation.based_on_attempts} попыткам)
+          , вес задания {line.recommendation.weight}
+          <FieldHelp label="Рекомендуемый вес задания">
+            Сложность задания внутри уровня: 1 — легче, 10 — труднее.
+            Рекомендация учитывает результаты обучаемого.
+          </FieldHelp>
+          . {line.recommendation.explanation} (по{" "}
+          {line.recommendation.based_on_attempts} попыткам)
           {onNewLesson && (
             <>
               {" "}
@@ -581,7 +726,10 @@ function PersonPanel({
       )}
 
       {rows.length === 0 && (
-        <p className={styles.muted}>Вердиктов по этому месту пока нет.</p>
+        <p className={styles.muted}>
+          Вердиктов по этому месту пока нет. Они появятся, когда обучаемый
+          закроет первую карточку.
+        </p>
       )}
       {rows.map(({ evaluation, card }) => {
         const forecast = forecasts.find(
@@ -644,7 +792,7 @@ function PersonPanel({
               </p>
             )}
             <ul className={styles.criteriaList}>
-              {weakestFirst(evaluation)
+              {weakestFirst(evaluation, true)
                 .filter((criterion) => criterion.score < 1)
                 .map((criterion) => (
                   <li
@@ -705,7 +853,9 @@ function AttemptDetails({ analysis }: { analysis?: AttemptAnalysis }) {
                     {" "}
                     {row.verdict === "over"
                       ? `· дольше норматива ${formatSeconds(row.normative)}`
-                      : `· в нормативе ${formatSeconds(row.normative)}`}
+                      : row.verdict === "estimated"
+                        ? "· норматив не проверен, штрафа нет"
+                        : `· в нормативе ${formatSeconds(row.normative)}`}
                   </span>
                 )}
               </td>

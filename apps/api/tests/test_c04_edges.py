@@ -12,7 +12,14 @@ from app.api.training.audio import register_asset
 from app.api.training.content import store_plan
 from app.core.contracts import validate_json
 from app.core.db import Database
-from app.core.models import Brigade, CallTarget, MessageDelivery, ScenarioTrainingPlan, User
+from app.core.models import (
+    Brigade,
+    Call,
+    CallTarget,
+    MessageDelivery,
+    ScenarioTrainingPlan,
+    User,
+)
 from app.worker.training import TrainingScheduler
 from fastapi import HTTPException
 from sqlalchemy import func, select
@@ -113,13 +120,26 @@ def test_hangup_and_finish_prevent_future_delivery(training_case):
         try:
             # После трубки бригада с готовым докладом перезванивает сама (27.09): это
             # входящий вызов, а не выдача — без ответа диспетчера доклад не выдаётся.
+            # Тик общий для всех идущих занятий базы: считаем вызовы этой карточки.
             assert (
                 await TrainingScheduler(database.sessions).tick(
                     datetime.now(UTC) + timedelta(days=1)
                 )
-                == 1
+                >= 1
             )
             async with database.sessions() as db:
+                assert (
+                    await db.scalar(
+                        select(func.count())
+                        .select_from(Call)
+                        .where(
+                            Call.card_id == UUID(case.card["id"]),
+                            Call.direction == "inbound",
+                            Call.ended_at.is_(None),
+                        )
+                    )
+                    == 1
+                )
                 assert (
                     await db.scalar(
                         select(func.count())
@@ -132,6 +152,9 @@ def test_hangup_and_finish_prevent_future_delivery(training_case):
             await database.close()
 
     asyncio.run(check())
+    # Новый набор допустим только после завершения входящего вызова той же бригады.
+    (incoming,) = training(case)["incoming"]
+    send(case, "call_hangup", {"call_id": incoming["call_id"]})
     select_and_dial(case)
 
     async def race():

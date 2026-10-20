@@ -29,9 +29,14 @@ const m = (
 describe("материалы занятия", () => {
   it("тип по расширению и отказ в неподдержанных", () => {
     expect(mediaTypeFor("Памятка ДДС.PDF")).toBe("application/pdf");
+    expect(mediaTypeFor("Памятка.TXT")).toBe("text/plain");
+    expect(fileProblem({ name: "памятка.txt", size: 10 })).toBeNull();
+    expect(fileProblem({ name: "фото.jpeg", size: 10 })).toContain(
+      "Допустимые форматы: PDF, DOCX, TXT, JSON, XML и CSV",
+    );
     expect(mediaTypeFor("разбор.docx")).toMatch(/wordprocessingml/);
     expect(fileProblem({ name: "фото.png", size: 10 })).toBe(
-      "Тип файла не поддерживается. Выберите документ, таблицу или файл данных из списка в окне выбора файла.",
+      "Тип файла не поддерживается. Допустимые форматы: PDF, DOCX, TXT, JSON, XML и CSV.",
     );
   });
 

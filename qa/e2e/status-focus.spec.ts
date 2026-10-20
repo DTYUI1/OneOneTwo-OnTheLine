@@ -1,15 +1,24 @@
 import { expect } from "@playwright/test";
 import { test, login } from "./captain-fixture";
+import { confirmAgain } from "./trainer";
 
-test.describe("Фокус формы статуса после ответа сервера", () => {
+// Строка статуса с клавиатуры — как в макете B (README «Строка статуса с клавиатуры»):
+// строка всегда на виду (DT-19), карандаш или Alt+Z ставит фокус в «Статус», цифра —
+// пункт списка, Tab по полям по кругу, Enter сохраняет и очищает строку, номер наряда
+// остаётся.
+test.describe("Фокус строки статуса", () => {
   test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
 
-  test("Переход в «Номер наряда» во время отправки не отменяется возвратом в «Статус»", async ({
+  test("После сохранения фокус на карандаше, следующий статус — с клавиатуры", async ({
     page,
     lesson,
   }) => {
     await login(page, "trainee05");
     await page.locator(`[data-card-id="${lesson.card.id}"]`).click();
+    const pencil = page.getByRole("button", {
+      name: "Изменить статус",
+      exact: true,
+    });
     const status = page.getByRole("combobox", { name: "Статус", exact: true });
     const number = page.getByRole("textbox", { name: "Номер наряда" });
     const comment = page.getByRole("textbox", {
@@ -17,36 +26,41 @@ test.describe("Фокус формы статуса после ответа се
       exact: true,
     });
     const history = page.locator('[data-help="card-history"]');
-    // Форма видна сразу, без клика по плашке службы.
+    // Строка статуса на виду сразу, без карандаша.
     await expect(status).toBeVisible();
 
-    // Проверка докладов перед отправкой — первый await; задерживаем её ответ,
-    // чтобы обучаемый успел перейти в другое поле.
-    let delay = true;
-    await page.route(/\/cards\/[^/]+\/training$/, async (route) => {
-      if (delay) await new Promise((resolve) => setTimeout(resolve, 1500));
-      await route.continue();
-    });
-
+    await pencil.click();
+    await expect(status).toBeFocused();
     await status.selectOption("rejected");
+    await number.fill("12");
     await comment.fill("Требуется другая служба.");
     await page
       .getByRole("button", { name: "Подтвердить", exact: true })
       .click();
-    await number.focus();
+    // «Не принята» — первое ✓ только взводит (подпись у ✓), второй ✓ сохраняет (17.10).
+    await expect(confirmAgain(page)).toBeVisible();
+    await page
+      .getByRole("button", { name: "Подтвердить", exact: true })
+      .click();
     await expect(history).toContainText("Требуется другая служба.");
     await expect(status).toHaveValue("");
-    await expect(number).toBeFocused();
+    await expect(pencil).toBeFocused();
 
-    // Без перехода фокус, как и раньше, возвращается в «Статус» — следующий
-    // статус ставится подряд без клика.
-    delay = false;
-    await status.selectOption("accepted");
-    await comment.fill("Сведения проверены дежурным.");
-    await comment.press("Enter");
+    // Enter на карандаше — фокус в строку; номер наряда остался от прошлого статуса.
+    await page.keyboard.press("Enter");
+    await expect(status).toBeFocused();
+    await expect(number).toHaveValue("12");
+    await page.keyboard.press("1");
+    await expect(status).toHaveValue("accepted");
+    await page.keyboard.press("Tab");
+    await expect(number).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(comment).toBeFocused();
+    await page.keyboard.insertText("Сведения проверены дежурным.");
+    await page.keyboard.press("Enter");
     await expect(history).toContainText(
       "Принята — Сведения проверены дежурным.",
     );
-    await expect(status).toBeFocused();
+    await expect(pencil).toBeFocused();
   });
 });

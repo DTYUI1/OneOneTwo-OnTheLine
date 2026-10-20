@@ -6,11 +6,43 @@ export type Pack = components["schemas"]["Pack"];
 export type Job = components["schemas"]["Job"];
 
 export const JOB_LABELS: Record<Job["status"], string> = {
+  cancelled: "Остановлено",
   pending: "в очереди",
   running: "генерируется",
   done: "готово",
   failed: "ошибка",
 };
+
+/** Старое служебное название переводится в UI без перезаписи исторического пакета. */
+export function displayPackTitle(title: string): string {
+  const personal = packPersonalization(title);
+  if (personal) return personal.title;
+  return title.replace(
+    /^Сгенерированный пакет \((?:seed|исходное число) (-?\d+)\)$/,
+    "Сгенерированный пакет (число для генерации $1)",
+  );
+}
+
+/** Старые пакеты хранят объяснение подбора прямо в названии. */
+export function packPersonalization(title: string) {
+  const match = /^Подобрано для ([^:]+): (.+)$/s.exec(title);
+  if (!match) return null;
+  const labels: Record<string, string> = {
+    "ловушкой повтора адреса": "Повтор адреса",
+    "вызовом другой службы": "Вызов другой службы",
+    "проверкой связи с молчащей бригадой": "Проверка связи с молчащей бригадой",
+    "ответом на вопрос бригады": "Ответ на вопрос бригады",
+    "быстрой реакцией на тревогу": "Реакция на тревогу",
+  };
+  const errors = [
+    ...match[2].matchAll(/(\d+) из (\d+) с (.+?) — ранее допускал ошибки/g),
+  ].map(([, count, total, skill]) => ({
+    skill: labels[skill] ?? `Задания с ${skill}`,
+    count: Number(count),
+    total: Number(total),
+  }));
+  return { title: `Подобрано для ${match[1]}`, errors, explanation: match[2] };
+}
 
 /** Пакет, появившийся после генерации: legacy generate не возвращает его ID. */
 export function newPack(before: Pack[], after: Pack[]): Pack | null {
@@ -54,7 +86,7 @@ export function summarizePack(scenarios: Scenario[]): PackSummary {
   return { total: scenarios.length, approved, ready, blocked };
 }
 
-/** Случайный seed для воспроизводимой генерации: тот же seed — тот же пакет. */
+/** Исходное число для повторяемого выбора фактов происшествий. */
 export function randomSeed(): number {
   return Math.floor(Math.random() * 1_000_000);
 }

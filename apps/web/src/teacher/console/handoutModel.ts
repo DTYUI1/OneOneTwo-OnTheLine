@@ -2,12 +2,7 @@
 // Отправляется одной пачкой POST /sessions/{id}/assignments/batch — всё или ничего,
 // повтор с тем же request_id безопасен (contracts/C01_INTERFACES.md, I-SESSION).
 import type { components } from "../../api-client/schema";
-import {
-  scenarioServiceIds,
-  type Assignment,
-  type Participant,
-  type Scenario,
-} from "./model";
+import type { Assignment, Participant, Scenario } from "./model";
 
 export type BatchInput = components["schemas"]["AssignmentBatchInput"];
 export type BatchIssue = components["schemas"]["BatchValidationIssue"];
@@ -29,16 +24,28 @@ export interface PlanItem {
 
 type Seat = Pick<Participant, "user_id" | "dds_service_id" | "level">;
 
-/** Свой ли сценарий участнику: служба происшествия совпадает с его ДДС на занятии. */
+/**
+ * Свой ли сценарий участнику: служба-адресат сценария совпадает с его ДДС на
+ * занятии. Так же решает сервер (C01_INTERFACES, `profile`): службы из
+ * `card.service_ids` карточку своей не делают, иначе пачка не принимается (422).
+ */
 export function matchesService(
   scenario: Scenario,
   participant: Pick<Participant, "dds_service_id">,
 ): boolean {
-  const ids = scenarioServiceIds(scenario);
-  return (
-    ids.includes(participant.dds_service_id) ||
-    scenario.target_service_id === participant.dds_service_id
-  );
+  return scenario.target_service_id === participant.dds_service_id;
+}
+
+/**
+ * Сценарий адресован службе участника: сервер принимает режим «по профилю» только
+ * для него (`target_service_id`). Сценарий, где служба участника лишь перечислена среди
+ * оповещаемых, — чужой: уходит только как упражнение на неверную доставку.
+ */
+export function isTargetedAt(
+  scenario: Pick<Scenario, "target_service_id">,
+  participant: Pick<Participant, "dds_service_id">,
+): boolean {
+  return scenario.target_service_id === participant.dds_service_id;
 }
 
 /**
@@ -65,7 +72,7 @@ export function addItem(
       scenarioId: scenario.id,
       scenarioVersion: scenario.version,
       delayS: last ? last.delayS + timing.intervalS : timing.firstDelayS,
-      mode: matchesService(scenario, participant)
+      mode: isTargetedAt(scenario, participant)
         ? "profile"
         : "intentional_mismatch",
     },
@@ -74,11 +81,14 @@ export function addItem(
 
 /**
  * Подобрать каждому месту утверждённые сценарии его службы и его уровня —
- * так разные места получают разные задания без ручного перебора.
+ * так разные места получают разные задания без ручного перебора. Только те, где
+ * бригада докладывает до завершающего статуса (`GET /scenarios/playable`):
+ * иначе карточку не закрыть (эталон ДДС, 1.5).
  */
 export function suggestPlan(
   participants: Seat[],
   approved: Scenario[],
+  playable: ReadonlySet<string>,
   timing: { firstDelayS: number; intervalS: number },
   newKey: () => string,
 ): PlanItem[] {
@@ -86,7 +96,8 @@ export function suggestPlan(
   for (const participant of participants)
     for (const scenario of approved)
       if (
-        matchesService(scenario, participant) &&
+        playable.has(scenario.id) &&
+        isTargetedAt(scenario, participant) &&
         scenario.level === participant.level
       )
         plan = addItem(plan, participant, scenario, timing, newKey());

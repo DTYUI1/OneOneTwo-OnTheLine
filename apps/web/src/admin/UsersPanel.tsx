@@ -1,7 +1,7 @@
 // Учётные записи (C-07): создание, правка, пароль, блокировка — POST/PUT /users.
 // Удаление — в корзину (POST /users/{id}/trash): вход закрывается сразу, ФИО и логин
 // стираются только после резервной копии; до этого учётку можно вернуть из корзины.
-// АРМ и служба здесь — значения профиля; на занятии преподаватель может назначить другие.
+// АРМ и служба здесь — значения учётной записи; на занятии преподаватель может назначить другие.
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, csrfToken } from "../shared/api";
@@ -26,6 +26,7 @@ import {
 } from "./adminModel";
 import kit from "../teacher/console/Console.module.css";
 import styles from "./Admin.module.css";
+import { isDdsService } from "../shared/services";
 
 const ROLE_ORDER: Record<User["role"], number> = {
   admin: 0,
@@ -117,7 +118,7 @@ export function UsersPanel({ onTrash }: { onTrash?: () => void } = {}) {
         <UserForm
           mode="create"
           initial={emptyDraft()}
-          services={services.data ?? []}
+          services={(services.data ?? []).filter(isDdsService)}
           self={false}
           onCancel={() => setOpen(null)}
           onDone={(user, password) =>
@@ -132,7 +133,7 @@ export function UsersPanel({ onTrash }: { onTrash?: () => void } = {}) {
           mode="edit"
           initial={draftFromUser(target)}
           userId={target.id}
-          services={services.data ?? []}
+          services={(services.data ?? []).filter(isDdsService)}
           self={target.id === me.id}
           onCancel={() => setOpen(null)}
           onDone={(user) => void done(`Сохранено: ${user.full_name}.`)}
@@ -194,7 +195,7 @@ export function UsersPanel({ onTrash }: { onTrash?: () => void } = {}) {
             .map((key) => `${ROLE_LABELS[key]}: ${counts[key]}`)
             .join(" · ")}
           {blocked > 0 && ` · заблокировано: ${blocked}`}. АРМ и служба — из
-          профиля; на занятии преподаватель может назначить другие.
+          учётной записи; на занятии преподаватель может назначить другие.
           {inTrash > 0 && (
             <>
               {" "}

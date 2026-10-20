@@ -12,7 +12,20 @@ from pydantic_core import CoreSchema
 
 from app.core.contracts import read_json, validate_json
 
-PENDING_EVENTS = {"brigades_select", "call_dial_target", "message_presented", "message_failed"}
+PENDING_EVENTS = {
+    "brigades_select",
+    "call_dial_target",
+    "message_presented",
+    "message_failed",
+    "brigade_reply",
+    "brigade_briefing",
+    "brigade_said",
+    "report_confirmed",
+    "control_reply",
+    "call_hold",
+    "call_resume",
+    "caller_said",
+}
 # Дефолты новой методики берутся из контракта, а не из констант кода (I-TIME v3).
 DEFAULT_TIMING_POLICY: dict[str, Any] = read_json("contracts/c01.schema.json")["$defs"][
     "TimingPolicy"
@@ -77,6 +90,8 @@ def reject_extensions(operation_id: str, body: Any, role: str) -> None:
         raise HTTPException(403, "Недостаточно прав для учебного действия.")
     if operation_id == "createSession" and "timing_policy" in body:
         pending("C-02")
+    if operation_id == "createSession" and body.get("ai_selection") is not None:
+        pending("ИИ-подбора: нужен режим PostgreSQL и локальная модель")
     if operation_id == "generatePack" and "options" in body:
         pending("C-05")
     if operation_id == "finishSession":

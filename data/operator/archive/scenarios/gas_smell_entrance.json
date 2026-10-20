@@ -8,7 +8,8 @@
   "questionnaire_id": "gas_smell",
   "caller": {
     "name": "Лебедева Марина Сергеевна",
-    "phone": "+79031234567"
+    "phone": "+79031234567",
+    "status": "очевидец"
   },
   "address": {
     "city": "Москва",
@@ -17,9 +18,11 @@
     "street": "Профсоюзная улица",
     "house": "56",
     "building": "",
-    "apartment": ""
+    "apartment": "",
+    "entrance": "2"
   },
   "opening": "Здравствуйте, у нас в подъезде сильно пахнет газом.",
+  "named_address_fields": ["entrance"],
   "description_reference": "Резкий запах газа в подъезде дома 56 по Профсоюзной улице, между вторым и четвёртым этажом; источник запаха заявитель не видит, дверь подъезда открыта.",
   "answers": {
     "address": {

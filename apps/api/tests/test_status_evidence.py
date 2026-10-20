@@ -9,12 +9,13 @@ import pytest
 from app.api.database import create_database_app
 from app.api.training.content import store_plan
 from app.core.db import Database
-from app.core.models import Call, Evaluation, Scenario, User
+from app.core.models import BrigadeBriefing, Call, Evaluation, Scenario, User
 from app.worker.training import TrainingScheduler
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
 from . import test_c03_sessions as c03
+from .briefing_helpers import briefing_payload
 from .test_c04_training import event, playback
 from .test_lifecycle import login, run_db
 
@@ -100,6 +101,7 @@ def call_brigade(case):
         {"call_id": call_id, "call_target_id": case.target["id"], "brigade_id": case.brigade["id"]},
     )
     send(case, "call_answer", {"call_id": call_id})
+    send(case, "brigade_briefing", briefing_payload(case.card, call_id))
     return call_id
 
 
@@ -107,7 +109,11 @@ def deliver_until(case, call_id, seconds):
     """Выдать доклады, чей срок наступил за `seconds` с ответа бригады."""
 
     async def answered(db):
-        return (await db.get(Call, UUID(call_id))).answered_at
+        # Отсчёт докладов — от вводной бригаде в этом разговоре (GP-05).
+        briefed = await db.scalar(
+            select(BrigadeBriefing.briefed_at).where(BrigadeBriefing.call_id == UUID(call_id))
+        )
+        return briefed or (await db.get(Call, UUID(call_id))).answered_at
 
     answered_at = run_db(case.url, answered)
 

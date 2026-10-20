@@ -25,10 +25,21 @@ const excluded =
 const sources = files(root).filter(
   (file) => /\.tsx?$/.test(file) && !excluded.test(file.replaceAll("\\", "/")),
 );
+// Окно телефона (GP-23): его кнопки есть в объяснении экрана, поэтому их разметка data-help
+// и подписи считаются, хотя правила тона к репликам софтфона не применяются.
+const softphone = files(root).filter(
+  (file) =>
+    /\.tsx$/.test(file) &&
+    !/\.test\./.test(file) &&
+    file.replaceAll("\\", "/").includes("/arm/softphone/") &&
+    !/\/stand(?:-live)?\.tsx$/.test(file.replaceAll("\\", "/")),
+);
 type Text = { file: string; line: number; value: string };
 const texts: Text[] = [];
 const regions: string[] = [];
-for (const file of sources) {
+const phoneTexts: Text[] = [];
+for (const file of [...sources, ...softphone]) {
+  const target = softphone.includes(file) ? phoneTexts : texts;
   const source = ts.createSourceFile(
     file,
     readFileSync(file, "utf8"),
@@ -45,7 +56,7 @@ for (const file of sources) {
         ts.isJsxText(node)) &&
       /[а-яё]/i.test(node.text)
     ) {
-      texts.push({
+      target.push({
         file: relative(process.cwd(), file).replaceAll("\\", "/"),
         line:
           source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1,
@@ -67,13 +78,18 @@ for (const file of sources) {
             ...[
               "health",
               "settings",
+              "modules",
               "users",
               "backups",
               "services",
+              "models",
               "audit",
               "reports",
             ].map((key) => `admin-${key}`),
           );
+        else if (expression === "{helpKey}")
+          // Кнопка «Тренировка» в списке (ArmPage): в других окнах части нет.
+          regions.push("tool-practice");
         else if (expression === "{`teacher-${current}`}")
           regions.push(
             ...["handout", "live", "verdicts", "report"].map(
@@ -154,10 +170,20 @@ describe("Тексты интерфейса капитана", () => {
       expect(new Set(guide.order).size).toBe(guide.order.length);
       expect([...guide.order].sort()).toEqual(Object.keys(guide.topics).sort());
       // CSV — буквальное имя кнопки выгрузки, требуемое HELP-01.
-      for (const topic of Object.values(guide.topics))
-        expect((topic.title + topic.text).replaceAll("CSV", "")).not.toMatch(
+      for (const [key, topic] of Object.entries(guide.topics)) {
+        // Названия физических клавиш — как в инструкции оператора 112.
+        const names =
+          key === "operator-shortcuts"
+            ? /\b(?:CSV|Alt|Enter|Esc|Ctrl|Shift|Tab|F[1-3]|[A-Z])\b/g
+            : key === "card-history"
+              ? /\b(?:CSV|Esc)\b/g
+              : /CSV/g;
+        expect((topic.title + topic.text).replace(names, "")).not.toMatch(
           /[A-Za-z]/,
         );
+        for (const row of topic.table?.rows ?? [])
+          expect(row.join(" ").replace(names, "")).not.toMatch(/[A-Za-z]/);
+      }
     });
   }
   it("не оставляет части без объяснений", () => {
@@ -166,7 +192,7 @@ describe("Тексты интерфейса капитана", () => {
     expect([...keys].filter((key) => !regions.includes(key))).toEqual([]);
   });
   it("в справках называет существующие элементы интерфейса", () => {
-    const ui = texts
+    const ui = [...texts, ...phoneTexts]
       .filter(
         (text) =>
           !text.file.includes("/help/") && !text.file.endsWith("/Hint.tsx"),
@@ -182,10 +208,11 @@ describe("Тексты интерфейса капитана", () => {
       names.filter((name) => !ui.some((text) => text.includes(name))),
     ).toEqual([]);
   });
-  it("проводник тренировки не отправляет за повтором в список происшествий", () => {
-    // Повтор — кнопка «Ещё раз» рядом с «Разбор» на последнем шаге.
+  it("тренажёр не отправляет за повтором в список происшествий", () => {
+    // Повтор — кнопка «Ещё раз «Вместе»» рядом с «Разбор» в окне «Этап пройден»
+    // обучения (DT-18; прежде — полоса проводника над карточкой).
     const tutor = texts.filter((text) =>
-      text.file.endsWith("arm/practice/TutorPanel.tsx"),
+      text.file.endsWith("arm/trainer/TrainerDialogs.tsx"),
     );
     expect(tutor.length).toBeGreaterThan(0);
     const all = tutor.map((text) => text.value).join(" ");

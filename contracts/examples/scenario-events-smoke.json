@@ -1,0 +1,145 @@
+{
+  "$comment": "Черновик к contracts/scenario-events.md от 04.10, не валидируется; принятый формат — раздел «Принято 08.10» и ScenarioEvent в c01.schema.json. Задымление в квартире, служба 101: фрагмент TrainingPlan с полем events, вводная и запись срабатывания.",
+  "plan_fragment": {
+    "version": 1,
+    "required_brigade_ids": ["00000000-0000-4000-8000-000000003001"],
+    "messages": [
+      {
+        "message": {"id": "00000000-0000-4000-8000-000000003101", "version": 1, "text": "Расчёт на месте, поднимаемся на девятый этаж.", "audio": null},
+        "brigade_id": "00000000-0000-4000-8000-000000003001",
+        "call_target_id": "00000000-0000-4000-8000-000000003002",
+        "available_after_s": 6,
+        "expected_comment": "Расчёт на месте, поднимаемся на девятый этаж.",
+        "requires_state": "responding",
+        "justifies_state": "arrived"
+      },
+      {
+        "message": {"id": "00000000-0000-4000-8000-000000003102", "version": 1, "text": "Дверь вскрыта, горит кухня, подана вода, мужчину вынесли и передали скорой.", "audio": null},
+        "brigade_id": "00000000-0000-4000-8000-000000003001",
+        "call_target_id": "00000000-0000-4000-8000-000000003002",
+        "available_after_s": 40,
+        "expected_comment": "Дверь вскрыта, горит кухня, подана вода.",
+        "requires_state": "arrived",
+        "justifies_state": "working"
+      }
+    ],
+    "observable_defects": [],
+    "events": [
+      {
+        "id": "00000000-0000-4000-8000-000000003201",
+        "version": 1,
+        "kind": "clarify",
+        "actor": "brigade",
+        "brigade_id": "00000000-0000-4000-8000-000000003001",
+        "call_target_id": "00000000-0000-4000-8000-000000003002",
+        "channel": "brigade_call",
+        "priority": "normal",
+        "trigger": {"on": "message", "message_id": "00000000-0000-4000-8000-000000003101", "after_s": 0},
+        "line": {"id": "00000000-0000-4000-8000-000000003211", "version": 1, "text": "Подъездов шесть. На каком этаже квартира сто пятнадцать?", "audio": null},
+        "expect": [
+          {"action": "reply", "answer": "floor_9", "within_s": 30}
+        ],
+        "reply_options": [
+          {"key": "floor_9", "label": "Девятый этаж"},
+          {"key": "unknown", "label": "Не знаю — ищите по подъездам"},
+          {"key": "later", "label": "Уточню у заявителя и перезвоню"}
+        ],
+        "branches": {
+          "met": {"line": {"id": "00000000-0000-4000-8000-000000003212", "version": 1, "text": "Понял, девятый этаж. Поднимаемся.", "audio": null}, "effects": []},
+          "wrong": {"line": {"id": "00000000-0000-4000-8000-000000003213", "version": 1, "text": "Понял. Будем искать по подъездам, это займёт время.", "audio": null},
+                    "effects": [{"delay": "00000000-0000-4000-8000-000000003102", "by_s": 90}]},
+          "missed": {"line": null, "effects": [{"delay": "00000000-0000-4000-8000-000000003102", "by_s": 90}]}
+        },
+        "review": {"label": "Расчёт спросил этаж — этаж был в описании карточки", "critical": false},
+        "injectable": false
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000003301",
+        "version": 1,
+        "kind": "request_service",
+        "actor": "brigade",
+        "brigade_id": "00000000-0000-4000-8000-000000003001",
+        "call_target_id": "00000000-0000-4000-8000-000000003002",
+        "channel": "brigade_call",
+        "priority": "normal",
+        "trigger": {"on": "state", "state": "arrived", "after_s": 20},
+        "line": {"id": "00000000-0000-4000-8000-000000003311", "version": 1, "text": "Диспетчер, дверь вскрыли, мужчину вынесли на площадку. Он без сознания. Срочно нужна скорая!", "audio": null},
+        "expect": [
+          {"action": "call_service", "service_id": "103", "within_s": 60}
+        ],
+        "branches": {
+          "met": {"line": null, "effects": []},
+          "missed": {"line": null, "effects": [{"fire": "00000000-0000-4000-8000-000000003401"}]}
+        },
+        "review": {"label": "Расчёт попросил скорую", "critical": true},
+        "injectable": false
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000003401",
+        "version": 1,
+        "kind": "request_service",
+        "actor": "brigade",
+        "brigade_id": "00000000-0000-4000-8000-000000003001",
+        "call_target_id": "00000000-0000-4000-8000-000000003002",
+        "channel": "brigade_call",
+        "priority": "normal",
+        "trigger": {"on": "event", "event_id": "00000000-0000-4000-8000-000000003301", "branch": "missed", "after_s": 0},
+        "line": {"id": "00000000-0000-4000-8000-000000003411", "version": 1, "text": "Диспетчер, скорая будет?", "audio": null},
+        "expect": [
+          {"action": "call_service", "service_id": "103", "within_s": 60}
+        ],
+        "branches": {
+          "met": {"line": null, "effects": []},
+          "missed": {"line": null, "effects": [
+            {"replace": "00000000-0000-4000-8000-000000003102",
+             "with": {"id": "00000000-0000-4000-8000-000000003412", "version": 1, "text": "Кухню тушим, подана вода. Мужчина без сознания на площадке, скорой нет, ждём.", "audio": null}}
+          ]}
+        },
+        "review": {"label": "Расчёт повторно спросил про скорую", "critical": true},
+        "injectable": false
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000003501",
+        "version": 1,
+        "kind": "alarm",
+        "actor": "brigade",
+        "brigade_id": "00000000-0000-4000-8000-000000003001",
+        "call_target_id": "00000000-0000-4000-8000-000000003002",
+        "channel": "brigade_call",
+        "priority": "alarm",
+        "trigger": {"on": "inject", "requires_state": "arrived"},
+        "line": {"id": "00000000-0000-4000-8000-000000003511", "version": 1, "text": "Тревога! Боец упал в пролёт лестницы. Травма ноги, сам идти не может. Срочно нужна скорая!", "audio": null},
+        "expect": [
+          {"action": "answer_call", "within_s": 10, "critical": true},
+          {"action": "call_service", "service_id": "103", "within_s": 60, "critical": true}
+        ],
+        "branches": {
+          "met": {"line": {"id": "00000000-0000-4000-8000-000000003512", "version": 1, "text": "Понял, ждём скорую. Работы продолжаем.", "audio": null}, "effects": []}
+        },
+        "review": {"label": "Тревога: травмирован боец", "critical": true},
+        "injectable": true
+      }
+    ]
+  },
+  "inject_request": {
+    "request_id": "00000000-0000-4000-8000-000000003901",
+    "event": {"source": "plan", "key": "00000000-0000-4000-8000-000000003501"},
+    "targets": "all"
+  },
+  "inject_response": {
+    "results": [
+      {"participant_id": "00000000-0000-4000-8000-000000003911", "card_id": "00000000-0000-4000-8000-000000003921", "state": "fired", "firing_id": "00000000-0000-4000-8000-000000003931"},
+      {"participant_id": "00000000-0000-4000-8000-000000003912", "card_id": null, "state": "not_applicable", "reason": "Бригада ещё не на месте: дождитесь доклада о прибытии."}
+    ]
+  },
+  "firing": {
+    "id": "00000000-0000-4000-8000-000000003931",
+    "card_id": "00000000-0000-4000-8000-000000003921",
+    "event_id": "00000000-0000-4000-8000-000000003501",
+    "event_version": 1,
+    "source": "inject",
+    "injected_by": "00000000-0000-4000-8000-000000003941",
+    "fired_at": "2026-10-15T09:03:00Z",
+    "delivery_id": "00000000-0000-4000-8000-000000003951"
+  }
+}

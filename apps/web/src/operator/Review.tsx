@@ -106,6 +106,34 @@ export function AttemptScore({
               </span>
             </div>
             <p>{criterion.explanation}</p>
+            {criterion.key === "address" && result.operator_card && (
+              <div role="group" aria-label="Сохранённый адрес">
+                {(
+                  [
+                    ["city", "Населённый пункт"],
+                    ["okrug", "Округ"],
+                    ["district", "Район"],
+                    ["street", "Улица"],
+                    ["house", "Дом"],
+                    ["building", "Корпус"],
+                    ["apartment", "Квартира"],
+                    ["object", "Объект"],
+                    ["structure", "Строение/сооружение"],
+                    ["entrance", "Подъезд"],
+                    ["floor", "Этаж"],
+                    ["code", "Код"],
+                    ["descriptive", "Описательный адрес"],
+                  ] as const
+                ).map(
+                  ([field, label]) =>
+                    result.operator_card!.address[field] && (
+                      <p key={field}>
+                        {label}: {result.operator_card!.address[field]}
+                      </p>
+                    ),
+                )}
+              </div>
+            )}
           </li>
         ))}
       </ul>

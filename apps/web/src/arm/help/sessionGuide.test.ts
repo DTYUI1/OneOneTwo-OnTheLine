@@ -26,6 +26,10 @@ const lesson = (
     parallel_cards: 1,
     hints_level: hints,
     spelling_hints: false,
+    voice_only: false,
+    final_shift: false,
+    demo: false,
+    report_choice_factor: 0.5,
     weights: { address: 1 },
   },
 });

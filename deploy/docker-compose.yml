@@ -51,17 +51,32 @@ services:
     environment:
       API_MODE: ${API_MODE:-mock}
       DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-local}
+      DEMO_ACCOUNTS_SHOWN: ${DEMO_ACCOUNTS_SHOWN:-false}
       COOKIE_SECURE: ${COOKIE_SECURE:-true}
       JWT_SECRET: ${JWT_SECRET:-}
       SESSION_TTL_SECONDS: ${SESSION_TTL_SECONDS:-28800}
       DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://arm112:local-dev-only@db:5432/arm112}
       AI_PROVIDER: ${AI_PROVIDER:-off}
+      # Доклад службе голосом (DT-05) и вопрос оператора 112 распознаются сразу, в разговоре:
+      # api обращается к сервису stt сам, без очереди worker.
+      STT_PROVIDER: ${STT_PROVIDER:-off}
+      STT_BASE_URL: ${STT_BASE_URL:-http://stt:9000}
+      STT_TIMEOUT_SECONDS: ${STT_TIMEOUT_SECONDS:-30}
+      STT_MIN_CONFIDENCE: ${STT_MIN_CONFIDENCE:-0.45}
       AUDIO_DIR: /data/audio
       # Материалы C-07 в томе пользовательских артефактов: его архивирует backup C-08.
       MATERIALS_DIR: /data/audio/materials
       # Папка копий backup — только чтение: «Состояние системы» показывает последнюю (C-07).
       BACKUP_STATUS_DIR: /backups
-    volumes: [audio-data:/data/audio, '${BACKUP_DIR:-../backups}:/backups:ro']
+      # «Модели ИИ» в админке (HQ-016): какие файлы моделей на месте, состояние роутера
+      # llama.cpp и видеокарты хоста (AI_HARDWARE пишет scripts/stand/up.sh).
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://llm:8080/v1}
+      LLM_MODELS_DIR: /models
+      AI_HARDWARE: ${AI_HARDWARE:-}
+    volumes:
+      - audio-data:/data/audio
+      - ${BACKUP_DIR:-../backups}:/backups:ro
+      - ${LLM_MODELS_HOST_DIR:-../models}:/models:ro
     depends_on:
       migrate: {condition: service_completed_successfully}
     healthcheck:
@@ -90,10 +105,15 @@ services:
       WORKER_RETRY_BASE_SECONDS: ${WORKER_RETRY_BASE_SECONDS:-2}
       WORKER_BATCH_SIZE: ${WORKER_BATCH_SIZE:-23}
       LLM_BASE_URL: ${LLM_BASE_URL:-http://llm:8080/v1}
-      LLM_MODEL: ${LLM_MODEL:-qwen3-4b-2507-q4km}
+      # Пресет роутера по умолчанию; выбор администратора в «Модели ИИ» его заменяет.
+      LLM_MODEL: ${LLM_MODEL:-qwen3-4b-cpu}
       LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-30}
       LLM_TEMPERATURE: ${LLM_TEMPERATURE:-0.2}
       LLM_MAX_TOKENS: ${LLM_MAX_TOKENS:-300}
+      GENERATION_TIMEOUT_SECONDS: ${GENERATION_TIMEOUT_SECONDS:-180}
+      GENERATION_MAX_TOKENS: ${GENERATION_MAX_TOKENS:-1536}
+      GENERATION_COHERENCE: ${GENERATION_COHERENCE:-true}
+      GENERATION_COHERENCE_JOBS: ${GENERATION_COHERENCE_JOBS:-2}
       JUDGE_TIMEOUT_SECONDS: ${JUDGE_TIMEOUT_SECONDS:-120}
     volumes: [audio-data:/data/audio]
     depends_on:
@@ -153,34 +173,23 @@ services:
       retries: 60
   llm:
     profiles: [llm]
-    image: arm112-llm:0.1.0
+    image: ${LLM_IMAGE:-arm112-llm:0.1.0}
     pull_policy: never
+    # Роутер llama.cpp (HQ-016): модели и режим процессор/видеокарта — пресеты
+    # deploy/llm/models.ini, выбирает администратор без перезапуска; держим одну модель.
     command:
-      - -m
-      - /models/model.gguf
-      - --alias
-      - qwen3-4b-2507-q4km
+      - --models-preset
+      - /config/models.ini
+      - --models-max
+      - '1'
       - --host
       - 0.0.0.0
       - --port
       - '8080'
-      - --ctx-size
-      - '4096'
-      - --threads
-      - '8'
-      - --threads-batch
-      - '8'
-      - --parallel
-      - '1'
-      - --cont-batching
-      - --cache-prompt
-      - --metrics
       - --no-webui
-      - --device
-      - none
-      - --n-gpu-layers
-      - '0'
-    volumes: ['${LLM_MODEL_FILE:-../models/qwen3-4b-instruct-2507-q4_k_m.gguf}:/models/model.gguf:ro']
+    volumes:
+      - ${LLM_MODELS_HOST_DIR:-../models}:/models:ro
+      - ./llm/models.ini:/config/models.ini:ro
     restart: unless-stopped
     logging: *logging
   stt:

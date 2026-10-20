@@ -1,5 +1,8 @@
 import { expect, test, type Locator } from "@playwright/test";
 import { ask, cardQuestions, openCall, question } from "./operator-call";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 // Этап 1 плана docs/operator_112_review/PLAN.md: экран оператора 112 был свёрстан под
 // 1920×1080, и на ноутбуке разговор с заявителем сжимался до нуля. Проверяем три окна:
@@ -14,7 +17,6 @@ const SIZES = [
   { width: 1536, height: 864 },
   { width: 1920, height: 1080 },
 ];
-const UNUSED = "В тренажёре не используется";
 
 async function box(locator: Locator) {
   const result = await locator.boundingBox();
@@ -129,14 +131,32 @@ for (const viewport of SIZES) {
       expect(await background(asked)).not.toBe(await background(tag));
     });
 
-    test("подписи шапки не обрезаны, нерабочие кнопки неактивны", async ({
-      page,
-    }) => {
+    test("подписи шапки не обрезаны, кнопки доступны", async ({ page }) => {
       await openCall(page, "fire_apartment_smoke");
+      const response = await page.request.get("/api/auth/me");
+      expect(response.ok()).toBe(true);
+      const user = await response.json();
+      const name = page.getByLabel("Обучаемый", { exact: true });
+      await expect(name).toHaveText(user.full_name?.trim() || user.login);
+      await expect(name).toHaveAttribute(
+        "title",
+        user.full_name?.trim() || user.login,
+      );
+      await expect(name).toBeInViewport({ ratio: 1 });
+      expect(
+        await name.evaluate((element) => {
+          const own = element.getBoundingClientRect();
+          const header = element.closest("header")!.getBoundingClientRect();
+          return (
+            own.top >= header.top &&
+            own.bottom <= header.bottom &&
+            own.right <= header.right
+          );
+        }),
+      ).toBe(true);
       for (const name of ["записи звонков", "список SMS"]) {
         const button = page.getByRole("button", { name, exact: true });
-        await expect(button).toBeDisabled();
-        await expect(button).toHaveAttribute("title", UNUSED);
+        await expect(button).toBeEnabled();
         const fits = await button.evaluate((element) => {
           const own = element.getBoundingClientRect();
           const panel = element.parentElement!.getBoundingClientRect();
@@ -151,9 +171,10 @@ for (const viewport of SIZES) {
       }
       await expect(
         page.getByRole("button", { name: "Переводчик" }),
-      ).toBeDisabled();
-      for (const name of ["Статус заявителя", "Язык заявителя"])
-        await expect(page.getByLabel(name)).toBeDisabled();
+      ).toBeEnabled();
+      for (const name of ["Язык заявителя"])
+        await expect(page.getByLabel(name)).toBeEnabled();
+      await expect(page.getByLabel("Статус заявителя")).toBeEnabled();
       // Рабочие элементы не задеты.
       await expect(
         page.getByRole("button", { name: "сохранить", exact: true }),

@@ -15,6 +15,7 @@ import styles from "./ResultsPage.module.css";
 import { useHelpGuide } from "../shared/help/HelpProvider";
 import { RESULTS_GUIDE } from "./help/topics";
 import { useHelpEnabled } from "./help/useHelpEnabled";
+import { criterionScoreLabel } from "./results/debrief";
 
 export function ResultsPage() {
   useHelpGuide(useHelpEnabled() ? RESULTS_GUIDE : null);
@@ -112,7 +113,7 @@ export function ResultsPage() {
                     <tr key={criterion.key}>
                       <th scope="row">
                         {criterionLabel(criterion.key)}
-                        {criterion.critical && (
+                        {criterion.weight !== 0 && criterion.critical && (
                           <span className={styles.critical}>
                             {" "}
                             · Критическая ошибка
@@ -120,7 +121,11 @@ export function ResultsPage() {
                         )}
                       </th>
                       <td>
-                        {hasScore(result) ? formatScore(criterion.score) : "—"}
+                        {hasScore(result)
+                          ? criterion.weight === 0
+                            ? criterionScoreLabel(criterion)
+                            : formatScore(criterion.score)
+                          : "—"}
                       </td>
                       <td>
                         <p>{readable(criterion.explanation)}</p>

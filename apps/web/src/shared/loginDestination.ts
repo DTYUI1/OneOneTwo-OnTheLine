@@ -4,6 +4,7 @@ import type { User } from "./api";
 export function loginDestination(
   role: User["role"],
   returnTo: unknown,
+  operatorModule = false,
 ): string {
   const home = role === "trainee" ? "/arm" : `/${role}`;
   if (typeof returnTo !== "string") return home;
@@ -12,7 +13,7 @@ export function loginDestination(
   // или открыть кабинет другой роли. Права на саму карточку проверяет API.
   const traineePage =
     [
-      "/operator",
+      ...(operatorModule ? ["/operator"] : []),
       "/arm",
       "/arm/results",
       "/arm/reference",

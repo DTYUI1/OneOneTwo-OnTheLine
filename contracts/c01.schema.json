@@ -1191,6 +1191,9 @@
             "working"
           ],
           "description": "Бригада ждёт решения диспетчера: доклад выдаётся только после того, как карточка дошла до этого статуса; available_after_s тогда отсчитывается от позднего из двух моментов — ответа на звонок и установки статуса. Нет поля — прежний отсчёт от ответа."
+        },
+        "task_change": {
+          "$ref": "#/$defs/TaskChange"
         }
       },
       "required": [
@@ -1199,6 +1202,706 @@
         "call_target_id",
         "available_after_s",
         "expected_comment"
+      ]
+    },
+    "TaskChange": {
+      "description": "Доклад с места меняет задачу (TC-05, contracts/scenario-events.md, «Доклад меняет задачу»): после первого подтверждённого предъявления доклада (message_presented) эталон сценария для оценки этой карточки меняется — заданные поля expected_flow, expected_call и expected_comment заменяют эталонные, comment_keywords дописываются к ним. Срок нового звонка within_s отсчитывается от предъявления доклада. Доклад не предъявлен — эталон прежний. Обучаемому эталон и срок не показываются: о перемене он узнаёт из самого доклада.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "more_victims",
+            "rescue",
+            "other_service"
+          ],
+          "description": "Что изменилось: more_victims — пострадавших больше, чем в карточке; rescue — нужна деблокировка или спасение людей; other_service — нужна служба, которой у ДДС нет."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Строка разбора: что изменилось и что теперь нужно, например «Загорелась машина — нужна пожарная охрана, сообщить в 112»."
+        },
+        "expected_flow": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "added",
+              "received",
+              "accepted",
+              "rejected",
+              "responding",
+              "arrived",
+              "working",
+              "refused",
+              "completed",
+              "redirected"
+            ]
+          },
+          "description": "Новый эталонный ход статусов вместо reference.expected_flow."
+        },
+        "expected_call": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Звонок, которого теперь требует обстановка, вместо reference.expected_call. Оценка (критерий call) считает норматив before_s как время от выдачи карточки до предъявления доклада плюс within_s.",
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "service_id": {
+              "type": "string"
+            },
+            "phone_ext": {
+              "type": "string",
+              "pattern": "^[0-9]{3}$"
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3600,
+              "description": "Срок звонка в секундах от предъявления доклада."
+            },
+            "contact_role": {
+              "type": "string",
+              "enum": [
+                "head",
+                "response_chief",
+                "crew_chief",
+                "crew_specialist",
+                "caller"
+              ]
+            }
+          },
+          "required": [
+            "required",
+            "service_id",
+            "phone_ext",
+            "within_s"
+          ]
+        },
+        "expected_comment": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Новый образец комментария вместо reference.expected_comment."
+        },
+        "comment_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "maxItems": 20,
+          "description": "Ключевые слова комментария, которые дописываются к reference.comment_keywords (критерий comment_keywords), варианты — через «/»."
+        }
+      },
+      "required": [
+        "kind",
+        "label"
+      ],
+      "minProperties": 3
+    },
+    "ScenarioEventTrigger": {
+      "description": "Когда событие срабатывает. state — карточка дошла до статуса не ниже указанного (правило requires_state, gating.py), отсчёт after_s от позднего из моментов «бригада на связи» и «статус поставлен»; message — после первого предъявления доклада плана; no_contact — бригада молчит silent_s (нет предъявленных реплик и разговоров с ней), пока карточка не ниже state; event — страховочная реплика мира после ветки другого события; inject — только вводной преподавателя (DT-06).",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": {
+              "const": "state"
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "accepted",
+                "responding",
+                "arrived",
+                "working"
+              ]
+            },
+            "after_s": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          },
+          "required": [
+            "on",
+            "state",
+            "after_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": {
+              "const": "message"
+            },
+            "message_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "after_s": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          },
+          "required": [
+            "on",
+            "message_id",
+            "after_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": {
+              "const": "no_contact"
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "accepted",
+                "responding",
+                "arrived",
+                "working"
+              ]
+            },
+            "silent_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3600
+            }
+          },
+          "required": [
+            "on",
+            "state",
+            "silent_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": {
+              "const": "event"
+            },
+            "event_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "branch": {
+              "type": "string",
+              "enum": [
+                "met",
+                "wrong",
+                "missed"
+              ]
+            },
+            "after_s": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          },
+          "required": [
+            "on",
+            "event_id",
+            "branch",
+            "after_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": {
+              "const": "inject"
+            },
+            "requires_state": {
+              "type": "string",
+              "enum": [
+                "accepted",
+                "responding",
+                "arrived",
+                "working"
+              ]
+            }
+          },
+          "required": [
+            "on"
+          ]
+        }
+      ]
+    },
+    "ScenarioEventExpectation": {
+      "description": "Чего мир ждёт от обучаемого и за сколько секунд от срабатывания (within_s). reply — ответ бригаде вариантом (brigade_reply) с option_key; answer_call — ответить на вызов (реплика предъявлена); call_service — набрать один из номеров phone_exts (скорая — 103 или 112); call_brigade — позвонить бригаде события, она ответила; correct_readback — поправить расчёт, повторивший адрес с ошибкой: вариант option_key в том же разговоре или отвеченный звонок бригаде до срока (пока она в пути), другой вариант без поправки — ошибка. Необязательные weight (доля в балле события) и critical (невыполнение — критическая ошибка). Исход считает evalcore/brigade.py.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "const": "reply"
+            },
+            "option_key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 900
+            },
+            "weight": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "description": "Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9."
+            },
+            "critical": {
+              "type": "boolean",
+              "description": "Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу."
+            }
+          },
+          "required": [
+            "action",
+            "option_key",
+            "within_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "const": "answer_call"
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 900
+            },
+            "weight": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "description": "Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9."
+            },
+            "critical": {
+              "type": "boolean",
+              "description": "Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу."
+            }
+          },
+          "required": [
+            "action",
+            "within_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "const": "call_service"
+            },
+            "phone_exts": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9]{3}$"
+              }
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 900
+            },
+            "weight": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "description": "Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9."
+            },
+            "critical": {
+              "type": "boolean",
+              "description": "Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу."
+            }
+          },
+          "required": [
+            "action",
+            "phone_exts",
+            "within_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "const": "call_brigade"
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 900
+            },
+            "weight": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "description": "Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9."
+            },
+            "critical": {
+              "type": "boolean",
+              "description": "Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу."
+            }
+          },
+          "required": [
+            "action",
+            "within_s"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "const": "correct_readback"
+            },
+            "option_key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 900
+            },
+            "weight": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1,
+              "description": "Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9."
+            },
+            "critical": {
+              "type": "boolean",
+              "description": "Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу."
+            }
+          },
+          "required": [
+            "action",
+            "option_key",
+            "within_s"
+          ]
+        }
+      ]
+    },
+    "ReplyOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Вариант ответа бригаде в окне разговора; правильный не отмечается.",
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "key",
+        "label"
+      ]
+    },
+    "ScenarioEventBranch": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Что делает мир по исходу: реплика бригады в ответ (выдаётся тем же путём, что доклады) и последствия для докладов плана. delay — доклад готов позже на by_s; replace — доклад приходит с другим содержанием (version — как у доклада плана, justifies_state не меняется). Действуют последствия текущей ветки: поздняя реакция сменяет missed на late.",
+      "properties": {
+        "line": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InformationMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "effects": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "delay": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "by_s": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 3600
+                  }
+                },
+                "required": [
+                  "delay",
+                  "by_s"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "replace": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "with": {
+                    "$ref": "#/$defs/InformationMessage"
+                  }
+                },
+                "required": [
+                  "replace",
+                  "with"
+                ]
+              }
+            ]
+          }
+        },
+        "awaits_call": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Ветка ждёт звонка диспетчера абоненту телефона ДДС (HQ-019): доклад плана, который держит событие, не приходит, пока диспетчер не позвонил этому абоненту, но не дольше within_s от исхода ветки. Позвонил (звонок отвечен) — последствия ветки (effects); не позвонил к сроку — вместо них otherwise. Номера абонентов задаёт занятие (settings.phone_contacts); абонента нет в списке — ветка действует без ожидания.",
+          "properties": {
+            "relay_event": {"type": "string", "format": "uuid"},
+            "required_facts": {"type": "array", "minItems": 1, "maxItems": 12, "uniqueItems": true, "items": {"type": "string", "minLength": 1}, "description": "Полные сведения заявителя, полученные после срабатывания события; ответ на звонок и on:first недостаточны."},
+            "contact_role": {
+              "type": "string",
+              "enum": [
+                "head",
+                "response_chief",
+                "crew_chief",
+                "crew_specialist",
+                "caller"
+              ]
+            },
+            "within_s": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 600
+            },
+            "otherwise": {
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "delay": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "by_s": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 3600
+                      }
+                    },
+                    "required": [
+                      "delay",
+                      "by_s"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "replace": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "with": {
+                        "$ref": "#/$defs/InformationMessage"
+                      }
+                    },
+                    "required": [
+                      "replace",
+                      "with"
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "contact_role",
+            "within_s",
+            "otherwise"
+          ]
+        }
+      },
+      "required": [
+        "line",
+        "effects"
+      ]
+    },
+    "ScenarioEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Событие сценария (DT-10, contracts/scenario-events.md): что бригада сообщает помимо планового доклада и чего после этого ждёт. Реплика выдаётся тем же путём, что доклады (MessageDelivery → message_presented); план, ожидания и ветки обучаемому не уходят. Доклад плана, на который действуют последствия события, ждёт исхода события (не дольше within_s).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "clarify",
+            "request_service",
+            "silence",
+            "alarm",
+            "readback_error"
+          ]
+        },
+        "actor": {
+          "type": "string",
+          "enum": [
+            "brigade"
+          ]
+        },
+        "brigade_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "call_target_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "brigade_call"
+          ]
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "alarm"
+          ]
+        },
+        "trigger": {
+          "$ref": "#/$defs/ScenarioEventTrigger"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InformationMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expect": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/ScenarioEventExpectation"
+          }
+        },
+        "reply_options": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/ReplyOption"
+          }
+        },
+        "branches": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "met": {
+              "$ref": "#/$defs/ScenarioEventBranch"
+            },
+            "wrong": {
+              "$ref": "#/$defs/ScenarioEventBranch"
+            },
+            "late": {
+              "$ref": "#/$defs/ScenarioEventBranch"
+            },
+            "missed": {
+              "$ref": "#/$defs/ScenarioEventBranch"
+            },
+            "already": {
+              "$ref": "#/$defs/ScenarioEventBranch"
+            },
+            "surprise": {
+              "$ref": "#/$defs/ScenarioEventBranch"
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "critical": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "label",
+            "critical"
+          ]
+        },
+        "injectable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "kind",
+        "actor",
+        "brigade_id",
+        "call_target_id",
+        "channel",
+        "priority",
+        "trigger",
+        "line",
+        "expect",
+        "branches",
+        "review",
+        "injectable"
       ]
     },
     "TrainingPlan": {
@@ -1263,6 +1966,26 @@
               "explanation"
             ]
           }
+        },
+        "events": {
+          "type": "array",
+          "description": "События бригады (DT-10): уточнение, просьба о другой службе, молчание, тревога. Необязательно: план без поля работает как прежде.",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/ScenarioEvent"
+          }
+        },
+        "control_call": {
+          "$ref": "#/$defs/ControlCallPlan",
+          "description": "Звонок отдела контроля при карточке без статуса (TC-07). Необязательно."
+        },
+        "outcome": {
+          "$ref": "#/$defs/ScenarioOutcome",
+          "description": "Исход сценария для разбора (GP-27). Необязательно: без него разбор берёт исход тренировки по номеру карточки."
+        },
+        "caller": {
+          "$ref": "#/$defs/ScenarioCaller",
+          "description": "Живой заявитель (HQ-019) — как в файле сценария. Необязательно."
         }
       },
       "required": [
@@ -1336,6 +2059,75 @@
           "type": "string",
           "format": "date-time",
           "pattern": "Z$"
+        },
+        "reply_options": {
+          "type": "array",
+          "description": "Варианты ответа бригаде на эту реплику (события clarify, readback_error); нет поля — отвечать не нужно. Правильный не отмечается.",
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/ReplyOption"
+          }
+        },
+        "answer": {
+          "type": "boolean",
+          "description": "Ответ бригады на реакцию диспетчера (ветка события: «Понял, спасибо, дальше сами»), а не доклад: «Как приняли?» после него бригада не спрашивает. Нет поля — доклад или реплика события."
+        },
+        "departure": {
+          "type": "boolean",
+          "description": "Доклад о выезде (обосновывает «Начало реагирования»). На «доложите обстановку» бригада его не повторяет: «выезжаем» в пути противоречит сказанному — до следующего доклада она обещает доложить по прибытии. Нет поля — не доклад о выезде."
+        },
+        "service_news": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "called_at"
+          ],
+          "properties": {
+            "called_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "by": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "told_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Время своевременной вести по журналу сервера; HTTP ACK сам по себе её не подтверждает."
+            }
+          },
+          "description": "Подтверждённое окно ручной вести по всем ожиданиям call_service: AND групп, OR номеров внутри группы, включая только 112 и произвольные трёхзначные номера. null — хотя бы одна группа не вызвана; called_at — последний необходимый набор, by — ближайший срок вести (нет by — срока пока нет). Независимо от scalar needs_service. Отсутствующее поле — старая выдача, допустим прежний fallback."
+        },
+        "needs_service": {
+          "type": "string",
+          "enum": [
+            "101",
+            "102",
+            "103",
+            "104",
+            "GKH",
+            "MOSLIFT"
+          ],
+          "description": "Реплика просит вызвать другую службу (событие request_service или тревога с ожиданием call_service, HQ-055): служба справочника из номеров ожидания, кроме 112. Вызвав её, диспетчер сам сообщает бригаде — перезвонив или вернувшись с удержания; на «уже едет», «отправил» без названия службы бригада отвечает фразой места service_coming об этой службе («Понял, ждём скорую»). Нет поля — реплика службу не просит."
+        },
+        "service_called_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "По этой просьбе позвонили в службу needs_service — момент набора номера (HQ-055); служба вызвана заранее, до просьбы (GP-28), — момент того звонка. С него весть «уже едет», «отправил» засчитывается и бригада отвечает «Понял, ждём скорую»; раньше служба ещё не вызвана — обычный ответ на фразу. Нет поля — в службу по просьбе ещё не звонили."
+        },
+        "news_by": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Срок сообщить бригаде, что служба едет: её приезд, 20 с после отбоя звонка в службу (HQ-055); служба вызвана заранее (GP-28) — срок ответа на просьбу. После срока служба уже приехала (реплика ветки surprise) — весть не засчитывается, окно отвечает обычной фразой. Нет поля при service_called_at — звонок в службу ещё идёт, срока пока нет."
+        },
+        "reply_by": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Срок ответа на услышанный вопрос бригады (реплика с reply_options) — срок её события: его ожиданий, кроме ответа на вызов (evalcore.brigade.expectation_deadline, HQ-058). До срока бригада, снятая с удержания, повторяет вопрос и придерживает следующую реплику до ответа; после срока — «на связи» и новость, вопрос не повторяет. Нет поля — вопрос ещё не услышан или ответа вариантом не ждут."
         }
       },
       "required": [
@@ -1515,6 +2307,18 @@
               "type": "null"
             }
           ]
+        },
+        "reply_key": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Какой вариант ответа выбран на эту реплику (brigade_reply); null — ещё не отвечали. Поле может отсутствовать у старого сервера."
         }
       },
       "required": [
@@ -1532,7 +2336,7 @@
       "properties": {
         "missing_report_states": {
           "type": "array",
-          "description": "Доступные сейчас переходы, для которых ещё не предъявлен доклад бригады. Пустой список означает, что доклад не мешает выбору статуса. Поле может отсутствовать у старого сервера.",
+          "description": "Доступные сейчас переходы, для которых ещё не предъявлен доклад бригады. Пустой список означает, что доклад не мешает выбору статуса. Этап хода работ, о котором бригада плана не докладывает вовсе и которого нет в эталоне хода статусов, в списке всегда: такой статус сервер не принимает (409 report_required, GP-12). Поле может отсутствовать у старого сервера.",
           "items": {
             "type": "string",
             "enum": [
@@ -1607,6 +2411,14 @@
                 "type": "string",
                 "format": "date-time",
                 "pattern": "Z$"
+              },
+              "priority": {
+                "type": "string",
+                "enum": [
+                  "normal",
+                  "alarm"
+                ],
+                "description": "alarm — тревога бригады: свой сигнал вызова. Нет поля — normal."
               }
             },
             "required": [
@@ -1619,7 +2431,7 @@
         },
         "callbacks": {
           "type": "array",
-          "description": "История входящих вызовов бригад по карточке: когда бригада позвонила, когда диспетчер ответил (null — не ответил) и когда вызов закончился. По ней разбор показывает, сколько бригада ждала ответа; поле может отсутствовать у старого сервера.",
+          "description": "История входящих вызовов бригад по карточке: когда бригада позвонила, когда диспетчер ответил (null — не ответил) и когда вызов закончился. По ней разбор показывает, сколько бригада ждала ответа и какой доклад пропущен (`end_reason`); поле может отсутствовать у старого сервера.",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -1664,6 +2476,23 @@
                     "type": "null"
                   }
                 ]
+              },
+              "end_reason": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "missed",
+                      "lost",
+                      "report_heard",
+                      "session_finished"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Чем кончился вызов без разговора (TC-02): missed — диспетчер не ответил за 25 с, бригада ждёт перезвона и позвонит ещё раз через 40 с; lost — тот же доклад пропущен второй раз подряд, бригада больше не звонит с ним сама (доклад «потерян», строка разбора), услышать его можно, только позвонив бригаде; report_heard — доклад услышан в звонке диспетчера; session_finished — занятие завершено. null — вызов ещё звонит или кончился разговором. Нет поля — старый сервер."
               }
             },
             "required": [
@@ -1710,6 +2539,79 @@
               "card_number"
             ]
           }
+        },
+        "brigade_contacts": {
+          "type": "array",
+          "description": "Сведения мира для табло сил (DT-10, решение 08.10): когда направленная бригада последний раз была на связи — предъявленная реплика или разговор с ней. По ним видно, сколько бригада молчит; это не подсказка. Поле может отсутствовать у старого сервера.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "brigade_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "last_contact_at": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "Z$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "brigade_id",
+              "last_contact_at"
+            ]
+          }
+        },
+        "service_calls": {
+          "type": "array",
+          "description": "Звонки в службы по карточке после «Принята» (исходящие, без отказа), по времени набора. По ним окно телефона знает, что служба уже вызвана (GP-28, HQ-055): весть «скорую вызвал» засчитывается только после набора номера службы — до звонка бригада отвечает на фразу обычно («Принял»), после — «Понял, ждём скорую». Звонок в 112 (service_id 112) — вызов любой службы. Поле может отсутствовать у старого сервера.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "service_id": {
+                "type": "string",
+                "description": "Служба справочника, в которую звонили (Service.id: 101–104, 112, GKH, MOSLIFT…)."
+              },
+              "started_at": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$",
+                "description": "Момент набора номера (время сервера)."
+              }
+            },
+            "required": [
+              "service_id",
+              "started_at"
+            ]
+          }
+        },
+        "control": {
+          "description": "Звонок отдела контроля по карточке (TC-07): null — не звонил; поле может отсутствовать у старого сервера. Звонок не входит в incoming и callbacks — они только о бригадах.",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ControlCall"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome": {
+          "$ref": "#/$defs/ScenarioOutcome",
+          "description": "Исход сценария карточки (из плана). Отдаётся только после закрытия или прерывания карточки; у сценария без исхода и у старого сервера поля нет."
+        },
+        "caller": {
+          "$ref": "#/$defs/ScenarioCaller",
+          "description": "Живой заявитель сценария карточки (HQ-019): сюжет и характер по умолчанию из плана. У сценария без заявителя и у старого сервера поля нет."
         }
       },
       "required": [
@@ -3390,6 +4292,30 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "generation_state": {
+          "type": "string",
+          "enum": [
+            "waiting",
+            "queued",
+            "generating",
+            "ready",
+            "failed",
+            "stopping",
+            "cancelled"
+          ]
+        },
+        "estimated_item_seconds": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Ориентировочное время одного сценария: местный замер за сутки, иначе эталон модели и режима."
         }
       },
       "required": [
@@ -3440,6 +4366,9 @@
               "type": "null"
             }
           ]
+        },
+        "can_regenerate": {
+          "type": "boolean"
         }
       },
       "required": [
@@ -3742,7 +4671,8 @@
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/json",
             "application/xml",
-            "text/csv"
+            "text/csv",
+            "text/plain"
           ]
         },
         "size_bytes": {
@@ -4303,6 +5233,463 @@
         "message",
         "details"
       ]
+    },
+    "ControlCallPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Звонок отдела контроля реагирования (TC-07; памятка ДДС, с. 26–28): если у карточки дольше after_s с её появления нет статуса реагирования («Принята» или «Не принята»), отдел контроля звонит диспетчеру и просит пояснить причину. Не больше одного звонка на карточку. Ответ — голосом или вариантом из reply_options (событие control_reply); на оценку не влияет, попадает в разбор. Необязательная часть плана: без неё отдел контроля не звонит.",
+      "properties": {
+        "after_s": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 1800,
+          "description": "Сколько секунд реального времени карточка может быть без статуса реагирования до звонка."
+        },
+        "reply_options": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "description": "Варианты пояснения без микрофона: до трёх коротких; правильный не отмечается — пояснение не оценивается.",
+          "items": {
+            "$ref": "#/$defs/ReplyOption"
+          }
+        }
+      },
+      "required": [
+        "after_s",
+        "reply_options"
+      ]
+    },
+    "ScenarioOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Исход сценария — блок «Что было дальше» в разборе (GP-27): что стало с людьми и чем обернулась задержка. Пишется по фактам реплик и карточки самого сценария. Читает только разбор закрытой карточки: пока карточка идёт, сервер исход не отдаёт. Без блока (старые сценарии) разбор берёт исход тренировки data/practice по номеру карточки.",
+      "properties": {
+        "people": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Полный ход: что стало с людьми, когда службы отработали вовремя."
+        },
+        "late": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Чем обернулась задержка: «Принята» (или «Не принята») позже норматива реакции."
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Почему это важно. Только с источником; нет источника — поля нет."
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Что значит ход статусов не по эталону именно в этом сценарии (например, «Отказ от выполнения работ» вместо «Работы завершены»). Нет поля — общая строка разбора: статусы шли не по докладам бригады."
+        }
+      },
+      "required": [
+        "people",
+        "late"
+      ]
+    },
+    "ControlCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Звонок отдела контроля по карточке (TC-07): входящий вызов без бригады (Call.direction = inbound, phone_ext 112). Звонит 25 с, без ответа — end_reason missed; повторно не звонит. Пояснение диспетчера — событие control_reply.",
+      "properties": {
+        "call_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "answered_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "Z$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "missed",
+                "session_finished"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "without_status_s": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Сколько секунд карточка была без статуса реагирования к началу звонка."
+        },
+        "reply_options": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/ReplyOption"
+          }
+        },
+        "reply": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Пояснение диспетчера — первое событие control_reply этого звонка.",
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "voice",
+                    "parts"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "option_key": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                }
+              },
+              "required": [
+                "mode",
+                "text",
+                "option_key",
+                "at"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "call_id",
+        "started_at",
+        "answered_at",
+        "ended_at",
+        "end_reason",
+        "without_status_s",
+        "reply_options",
+        "reply"
+      ]
+    },
+    "BackgroundCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Фоновая отработанная карточка реестра ДДС (TC-07, «Живая смена»): карточка прошлой смены своей службы, уже закрытая. Только вид реестра: не Card, в занятие, выдачу, оценку, разбор и прогресс не входит; действий по ней нет. Время — до начала занятия.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "appeared_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "status_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "completed",
+            "refused",
+            "rejected"
+          ],
+          "description": "Последний статус службы по карточке."
+        },
+        "source": {
+          "$ref": "https://arm112.local/contracts/openapi.json#/components/schemas/CardSource"
+        }
+      },
+      "required": [
+        "id",
+        "session_id",
+        "appeared_at",
+        "status_at",
+        "state",
+        "source"
+      ]
+    },
+    "MemoryCheckQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Вопрос проверки памяти: варианты ответа; при `multiple` — выбрать все верные.",
+      "properties": {
+        "key": {
+          "type": "string",
+          "enum": [
+            "free_brigades",
+            "on_scene",
+            "unreported"
+          ],
+          "description": "free_brigades — сколько бригад своей службы свободно; on_scene — какие бригады на месте (доклад о прибытии или о работах услышан, о завершении — нет); unreported — по каким карточкам услышанный доклад бригады ещё не отмечен статусом."
+        },
+        "text": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "multiple": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "key",
+        "text",
+        "options",
+        "multiple"
+      ]
+    },
+    "MemoryCheckResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Итог проверки: ответы обучаемого, верные ответы на момент показа и пояснения — в порядке вопросов.",
+      "properties": {
+        "answers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        },
+        "correct": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "why": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "answered_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "answers",
+        "correct",
+        "why",
+        "score",
+        "total",
+        "answered_at"
+      ]
+    },
+    "MemoryCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Проверка памяти посреди финальной смены (HQ-033, прототип A «Стоп-кадр», решение 18.10 — без паузы): три вопроса об обстановке, верные ответы сервер считает по состоянию смены на момент показа. Запись — в журнале первой карточки смены (`card_id`): `memory_check` при показе, `memory_check_answer` при ответе.",
+      "properties": {
+        "card_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Карточка смены, в журнал которой пишется проверка (первая по времени появления)."
+        },
+        "shown_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/MemoryCheckQuestion"
+          }
+        },
+        "result": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/MemoryCheckResult"
+            }
+          ],
+          "description": "null — ещё не ответил."
+        }
+      },
+      "required": [
+        "card_id",
+        "shown_at",
+        "questions",
+        "result"
+      ],
+      "examples": [
+        {
+          "card_id": "00000000-0000-4000-8000-000000000200",
+          "shown_at": "2026-10-18T09:03:10Z",
+          "questions": [
+            {
+              "key": "free_brigades",
+              "text": "Сколько бригад вашей службы свободно прямо сейчас?",
+              "options": [
+                "0",
+                "1",
+                "2",
+                "3"
+              ],
+              "multiple": false
+            },
+            {
+              "key": "on_scene",
+              "text": "Какие бригады уже на месте?",
+              "options": [
+                "Бригада 1",
+                "Бригада 2",
+                "Ни одна"
+              ],
+              "multiple": true
+            },
+            {
+              "key": "unreported",
+              "text": "По какой карточке доклад бригады ещё не отмечен статусом?",
+              "options": [
+                "36812345 — пожар: мусор",
+                "По всем отмечено"
+              ],
+              "multiple": true
+            }
+          ],
+          "result": null
+        }
+      ]
+    },
+    "MemoryCheckAnswers": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Ответы на проверку памяти — в порядке вопросов; у каждого вопроса — выбранные варианты.",
+      "properties": {
+        "answers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        }
+      },
+      "required": [
+        "answers"
+      ]
+    },
+    "ScenarioCaller": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Живой заявитель сценария (HQ-019, docs/dds_caller.md): звонок диспетчера на номер роли «Заявитель» телефона ДДС идёт не как звонок в службу (доклад, «Информация принята»), а разговором с заявителем — диспетчер спрашивает, заявитель отвечает фразами своей книги банка (scripts/voices/bank/callers). plot — сюжет: ключ происшествия в книгах заявителя (incidents), по нему окно телефона берёт реплики; character — характер по умолчанию (calm — спокойная, confused — растерянная), преподаватель может сменить его у абонента занятия (PhoneContact.character). Нет блока — звонок заявителю идёт как прежде.",
+      "properties": {
+        "plot": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Ключ сюжета в книгах заявителя (incidents), например animal_shaft."
+        },
+        "character": {
+          "type": "string",
+          "enum": [
+            "calm",
+            "confused"
+          ],
+          "default": "calm",
+          "description": "Характер заявителя по умолчанию: calm — отвечает сразу и полностью, confused — переспрашивает, часть сведений даёт только на уточнение. Сведения у обоих одни."
+        }
+      },
+      "required": [
+        "plot"
+      ]
+    },
+    "ScenarioCorrectionInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "note"
+      ],
+      "properties": {
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        }
+      }
     }
   }
 }

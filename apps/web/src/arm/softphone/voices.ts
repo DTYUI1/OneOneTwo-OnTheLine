@@ -4,6 +4,7 @@
 // Главное правило зоны: таймер не выдаётся за речь. Если звука не было, диалог не
 // считается успешным — исход возвращается наружу и показывается человеку.
 
+import { bankText } from "./bank";
 import type { Refusal } from "./machine";
 import { REFUSAL_ASSETS } from "./refusalAssets";
 import { VOICE_ASSETS, type VoiceAsset } from "./voiceAssets";
@@ -13,10 +14,18 @@ export type Phrase = "listen" | "accepted";
 /** Всё, что говорит собеседник в разговоре: реплики Q14 и отказ бригады. */
 export type Spoken = Phrase | Refusal;
 
-/** Обязательные фразы Q&A Q14 и `data/voices/manifest.json` — мужской род по умолчанию. */
+/**
+ * Обязательные фразы Q&A Q14 — они же фразы банка озвучки общего дежурного (GP-25,
+ * `OFFICIAL.json`), мужской род. Пока звучат записи Piper (`data/voices/manifest.json`),
+ * на экране — текст записи в роде её голоса (`phraseText`).
+ */
+export const PHRASE_ID: Record<Phrase, string> = {
+  listen: "OFFICIAL.answer.any.1",
+  accepted: "OFFICIAL.accepted.any.1",
+};
 export const PHRASE_TEXT: Record<Phrase, string> = {
-  listen: "Слушаю вас",
-  accepted: "Я вас понял, информация принята",
+  listen: bankText(PHRASE_ID.listen),
+  accepted: bankText(PHRASE_ID.accepted),
 };
 
 /**
@@ -58,9 +67,11 @@ export function phraseDurationMs(phrase: Spoken): number {
 /**
  * `played` — реплику слышно. `failed` — звука не было: файла нет, браузер не
  * пустил или устройство отказало. Текст показывается в обоих случаях, но
- * `failed` не выдаётся за состоявшийся разговор.
+ * `failed` не выдаётся за состоявшийся разговор. `cancelled` — звук оборвали
+ * намеренно (новый звук или отмена): это не поломка устройства, и реплику
+ * можно проиграть снова (проверка 17.10: «Устройство не воспроизвело реплику»).
  */
-export type VoiceOutcome = "played" | "failed";
+export type VoiceOutcome = "played" | "failed" | "cancelled";
 
 export interface VoiceResult {
   readonly outcome: VoiceOutcome;
@@ -78,6 +89,11 @@ export interface Voices {
    * сколько держать текст, если звука не будет.
    */
   playAsset(url: string | null, readMs: number): Promise<VoiceResult>;
+  /**
+   * Сколько ещё звучать текущей реплике, мс (HQ-052: говорить можно чуть раньше её конца).
+   * `null` — ничего не звучит или конец пока неизвестен (запись ещё не загрузилась).
+   */
+  remainingMs(): number | null;
   cancel(): void;
   setMuted(muted: boolean): void;
   setVolume(volume: number): void;
@@ -102,12 +118,20 @@ const DEVICE = "Устройство не воспроизвело реплик�
 export function createVoices(): Voices {
   let audio: HTMLAudioElement | null = null;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  // Конец текста без звука (`hold`), мс эпохи.
+  let holdUntil: number | null = null;
+  // Исход звучащей реплики: оборвали её — она кончается «отменой», а не ошибкой устройства.
+  let interrupt: (() => void) | null = null;
   let muted = false;
   let volume = 1;
 
   function stop(): void {
     clearTimeout(timer);
     timer = undefined;
+    holdUntil = null;
+    const interrupted = interrupt;
+    interrupt = null;
+    interrupted?.();
     if (!audio) return;
     // Снимаем источник, иначе элемент держит файл до сборки мусора.
     audio.pause();
@@ -118,11 +142,12 @@ export function createVoices(): Voices {
 
   /** Звука нет: текст держится столько же, сколько звучала бы речь. */
   function hold(readMs: number, note: string): Promise<VoiceResult> {
+    holdUntil = Date.now() + readMs;
     return new Promise((resolve) => {
-      timer = setTimeout(
-        () => resolve({ outcome: "failed", startedInMs: null, note }),
-        readMs,
-      );
+      timer = setTimeout(() => {
+        holdUntil = null;
+        resolve({ outcome: "failed", startedInMs: null, note });
+      }, readMs);
     });
   }
 
@@ -146,10 +171,17 @@ export function createVoices(): Voices {
 
     return new Promise<VoiceResult>((resolve) => {
       let startedInMs: number | null = null;
+      let settled = false;
       const done = (result: VoiceResult) => {
+        if (settled) return;
+        settled = true;
+        if (interrupt === cancel) interrupt = null;
         if (audio === element) stop();
         resolve(result);
       };
+      const cancel = () =>
+        done({ outcome: "cancelled", startedInMs: null, note: null });
+      interrupt = cancel;
       element.addEventListener("playing", () => {
         startedInMs ??= Date.now() - started;
       });
@@ -197,6 +229,14 @@ export function createVoices(): Voices {
     },
     playAsset(url, readMs): Promise<VoiceResult> {
       return start(url, readMs, url ? null : NO_FILE);
+    },
+    remainingMs(): number | null {
+      if (holdUntil !== null) return Math.max(0, holdUntil - Date.now());
+      if (!audio || audio.paused || audio.ended) return null;
+      const { duration, currentTime } = audio;
+      if (!Number.isFinite(duration) || duration <= 0) return null;
+      const rate = audio.playbackRate > 0 ? audio.playbackRate : 1;
+      return Math.max(0, ((duration - currentTime) * 1000) / rate);
     },
     cancel(): void {
       stop();

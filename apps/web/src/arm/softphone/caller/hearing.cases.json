@@ -1,0 +1,187 @@
+{
+  "note": "Примеры распознавания фразы диспетчера живым заявителем (HQ-019): общие для окна телефона (hearing.ts, cases.test.ts) и прогона связности (hear в apps/api/app/tools/coherence/caller.py, apps/api/tests/test_coherence_caller.py). asks — вопросы по порядку: сведение таблицы сюжета, readback:<дом>:<квартира> (пусто — не назван), come, bye, other, again; numbers — числа фразы по порядку.",
+  "plot": "animal_shaft",
+  "street": "Кировоградская улица",
+  "cases": [
+    {
+      "text": "Кировоградская, 22, квартира 85, верно?",
+      "asks": ["readback:22:85"],
+      "service": false,
+      "reason": false,
+      "yes": false,
+      "numbers": [22, 85]
+    },
+    {
+      "text": "Квартира пятьдесят восемь?",
+      "asks": ["readback::58"],
+      "service": false,
+      "reason": false,
+      "yes": false,
+      "numbers": [58]
+    },
+    {
+      "text": "Кировоградская улица, дом двадцать два, квартира пятьдесят восемь, верно?",
+      "asks": ["readback:22:58"],
+      "service": false,
+      "reason": false,
+      "yes": false,
+      "numbers": [22, 58]
+    },
+    {
+      "text": "Кировоградская, 2, кв. 85",
+      "asks": ["readback:2:85"],
+      "service": false,
+      "reason": false,
+      "yes": false,
+      "numbers": [2, 85]
+    },
+    {
+      "text": "Пятьдесят восьмая, восьмой этаж?",
+      "asks": ["address"],
+      "service": false,
+      "reason": false,
+      "yes": false,
+      "numbers": [58, 8]
+    },
+    {
+      "text": "Назовите номер квартиры",
+      "asks": ["address"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Аварийная служба ЖКХ, по заявке. Где вы, когда подойдёте?",
+      "asks": ["where", "eta"],
+      "service": true,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Диспетчер ЖКХ, по вашей заявке о котёнке.",
+      "asks": [],
+      "service": true,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Где котёнок?",
+      "asks": ["other"],
+      "service": false,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Котёнок ещё мяукает?",
+      "asks": ["other"],
+      "service": false,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Аварийная служба ЖКХ. Где котёнок?",
+      "asks": ["other"],
+      "service": true,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Аварийная служба ЖКХ, по заявке о котёнке?",
+      "asks": [],
+      "service": true,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Это насчёт котёнка в шахте. Чей он?",
+      "asks": ["owner"],
+      "service": false,
+      "reason": true,
+      "yes": false
+    },
+    {
+      "text": "Можно вскрыть короб? Газом не пахнет?",
+      "asks": ["box", "danger"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Кто-нибудь пострадал? Как давно это слышно?",
+      "asks": ["people", "since"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Это вы звонили в 112?",
+      "asks": ["who"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Что случилось?",
+      "asks": ["what"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Через сколько будете?",
+      "asks": ["eta"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Подойдите, пожалуйста, к подъезду",
+      "asks": ["come"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Подойдите, пожалуйста, бригада ждёт у двери.",
+      "asks": ["come"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Спасибо, до свидания.",
+      "asks": ["bye"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Какая погода у вас?",
+      "asks": ["other"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Повторите, пожалуйста",
+      "asks": ["again"],
+      "service": false,
+      "reason": false,
+      "yes": false
+    },
+    {
+      "text": "Да, верно.",
+      "asks": [],
+      "service": false,
+      "reason": false,
+      "yes": true
+    },
+    {
+      "text": "",
+      "asks": [],
+      "service": false,
+      "reason": false,
+      "yes": false
+    }
+  ]
+}

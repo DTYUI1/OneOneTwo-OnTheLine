@@ -10,7 +10,12 @@ test.describe("Закрытие справки на прокрученной с�
         page,
         lesson,
       }) => {
-        await page.setViewportSize({ width: 390, height: 844 });
+        // Карточка обучаемого теперь короче 844 px (вся страница — около 810 px):
+        // длинную страницу ему даёт невысокий телефон 390×640, разметка в тесте не меняется.
+        await page.setViewportSize({
+          width: 390,
+          height: role === "trainee05" ? 640 : 844,
+        });
         await login(page, role);
         if (role === "trainee05") {
           await page.locator(`[data-card-id="${lesson.card.id}"]`).click();

@@ -1,277 +1,589 @@
-/* Раскладка и цвета сняты со скриншотов arm_dds/06 и 09; пиксельная сверка — T-028. */
+/* Карточка АРМ-112 — зона 1 макета B. Значения сняты со скриншотов arm_dds/06–20 и
+   перенесены из prototype-b/proto.css («зона 1: карточка», «полоса служб»). */
 .card {
+  --arm-page: #c9ced1;
+  --arm-box: #efefef;
+  --arm-dark: #2f353a;
+  --arm-bar: #49555d;
+  --arm-blue: #1c80c2;
+  --arm-chp: #e9663c;
+  --arm-ink: #1f2326;
+  position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--color-panel);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
   height: 100%;
   min-height: 0;
   overflow: hidden;
+  color: var(--arm-ink);
+  background: var(--arm-page);
 }
 
+.card > * {
+  flex: none;
+}
+
+/* ---------- шапка: трубка, три телефона, номер, «просмотр / дополнение» (06) */
 .head {
   display: grid;
-  /* Число колонок плавает: у закрытой карточки добавляется «Разбор». */
-  grid-template-columns: 1fr;
-  grid-auto-columns: auto;
-  grid-auto-flow: column;
-  gap: var(--space-3);
+  grid-template-columns:
+    180px 22px minmax(0, 1fr) 22px minmax(0, 1fr) 22px minmax(0, 1fr)
+    minmax(150px, auto) 88px;
+  gap: 4px;
+  align-items: stretch;
+  padding: 6px 8px;
+}
+
+.call {
+  display: flex;
   align-items: center;
-  padding: var(--space-2) var(--space-3);
-  background: #dfe3e5;
-  border-bottom: 1px solid var(--color-border);
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--arm-box);
 }
 
-.phones {
-  display: flex;
-  gap: var(--space-2);
+.hang {
+  width: 30px;
+  color: #1f1f1f;
 }
 
-/* Три телефона делят строку шапки поровну, как в arm_dds/06. */
-.phone {
-  display: flex;
-  flex: 1 1 0;
-  flex-direction: column;
-  min-width: 180px;
-  min-height: 52px;
-  padding: var(--space-1) var(--space-2);
-  background: var(--color-on-dark);
-  border: 1px solid var(--color-border);
-}
-
-.phoneLabel {
-  color: #6c757b;
+.off {
   font-size: 12px;
 }
 
-.phoneValue {
-  min-height: 18px;
+.miniRow {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.mini,
+.miniOff {
+  padding: 1px 4px;
+  font-size: 9px;
+  color: #333;
+  white-space: nowrap;
+  background: #fff;
+  border: 1px solid #888;
+}
+
+.miniOff {
+  color: #f4f4f4;
+  background: #a9adb0;
+  border-color: #a9adb0;
+}
+
+.phoneIcons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  color: #6b7175;
+}
+
+.phoneIcons > * {
+  width: 16px;
+  height: 16px;
+}
+
+.phone {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--arm-box);
+}
+
+.label {
+  display: block;
+  font-size: 10px;
+  color: #444;
 }
 
 .headInfo {
   display: flex;
   flex-direction: column;
-  text-align: right;
-  font-size: 12px;
+  padding: 4px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+  background: var(--arm-box);
+  border: 0;
+  color: inherit;
+  text-align: left;
 }
 
 .headInfo strong {
-  font-size: var(--font-size);
+  font-size: 14px;
 }
 
-.timer {
-  font-size: 20px;
-  font-variant-numeric: tabular-nums;
-  padding: var(--space-1) var(--space-2);
-  background: var(--color-on-dark);
-  border: 1px solid var(--color-border);
-}
-
-/* Норматив отработки превышен — красное поле, как в боевой карточке. */
-.timerOverdue {
-  composes: timer;
-  background: var(--color-danger);
-  color: var(--color-on-dark);
-  border-color: var(--color-danger);
-}
-
-/* Подпись «реакция / обработка» на красном поле — цветом самого поля. */
-.timerOverdue .fieldLabel {
-  color: inherit;
-}
-
-.close {
-  margin-left: auto;
-  align-self: flex-end;
-  color: var(--color-on-dark);
-  background: var(--color-header);
-  border: 1px solid var(--color-border);
-}
-
-.body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1px;
-  background: var(--color-border);
-  flex: 1;
-  min-height: 0;
-}
-
-.left,
-.right {
-  background: var(--color-panel);
-  padding: var(--space-3);
+.mode {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 4px;
+}
+
+.view,
+.add {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #fff;
+  border: 0;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.view {
+  background: var(--arm-blue);
+  cursor: default;
+}
+
+.add {
+  background: var(--arm-dark);
+}
+
+/* ---------- две колонки карточки (06) */
+.body {
+  flex: 1 1 auto !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  min-height: 0;
+  padding: 2px 8px 8px;
+  overflow: hidden;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   min-width: 0;
   min-height: 0;
   overflow: auto;
 }
 
-.fieldLabel {
-  color: #6c757b;
-  font-size: 12px;
-  display: block;
+.box {
+  padding: 8px 10px;
+  background: var(--arm-box);
 }
 
-.caller,
+.caller {
+  display: flex;
+  flex-direction: column;
+  min-height: 40px;
+}
+
+.callerLabel {
+  font-size: 9px;
+  color: #444;
+}
+
+/* Статус заявителя рядом с ФИО — «Иванов  очевидец» (памятка ДДС, с. 18, 23). */
+.callerStatus {
+  margin-left: 8px;
+  font-size: 11px;
+  color: #444;
+}
+
 .address {
-  background: #e3e6e8;
-  padding: var(--space-2);
-  border: 1px solid var(--color-border);
-}
-
-/* Лента описания — по своему тексту, свободная высота колонки уходит истории. */
-.feed {
-  background: #e3e6e8;
-  border: 1px solid var(--color-border);
-  padding: var(--space-2);
-  min-height: 70px;
-  overflow: auto;
-}
-
-.feedLine p {
-  margin: var(--space-1) 0 0;
-}
-
-/* Дата и оператор над текстом вызова — жирным, как в arm_dds/06. */
-.feedMeta {
-  color: var(--color-text);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
   font-size: 13px;
+}
+
+.pin {
+  color: #222;
+}
+
+/* Лента описания — высокий светлый блок, ниже серое поле, как на скриншоте 06. */
+.feed {
+  position: relative;
+  flex: none;
+  min-height: 340px;
+  font-size: 13px;
+  outline: none;
+}
+
+.feed p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.feedMeta {
   font-weight: bold;
+  white-space: pre;
+}
+
+.flagsRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
 }
 
 .flags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
-  padding: var(--space-2);
-  background: #e3e6e8;
-  border: 1px solid var(--color-border);
+  gap: 0 10px;
+  font-size: 13px;
 }
 
-.emergency {
-  background: var(--color-danger);
-  color: var(--color-on-dark);
-  padding: 0 var(--space-2);
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 10px;
 }
 
-.incident {
-  border: 1px solid var(--color-border);
+.chs,
+.chp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.chs {
+  padding: 2px 6px;
+  background: #fff;
+  border: 1px solid #999;
+}
+
+.chs.chsOn {
+  color: #fff;
+  background: var(--arm-chp);
+  border-color: var(--arm-chp);
+}
+
+.chp {
+  padding: 3px 7px;
+  color: #555;
+  background: #e2e5e7;
+  border: 1px solid #999;
+}
+
+.badgePen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #555;
+  border-radius: 50%;
+  padding: 2px;
+  color: inherit;
+  background: transparent;
+}
+
+.chs,
+.chp,
+.badgePen {
+  cursor: pointer;
+}
+.badges button:hover {
+  filter: brightness(0.92);
+}
+.badges button:focus-visible {
+  outline: 3px solid #1c80c2;
+  outline-offset: 2px;
 }
 
 .incidentHead {
   margin: 0;
-  padding: var(--space-2);
-  background: var(--color-header);
-  color: var(--color-on-dark);
-  font-size: var(--font-size);
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  background: #303335;
 }
 
-.tags,
-.incidentClass {
-  padding: var(--space-2);
-  background: var(--color-on-dark);
-  border-top: 1px solid var(--color-border);
+/* «Происшествие 101» — ссылка с пунктирным подчёркиванием (06). */
+.incidentHead span {
+  border-bottom: 1px dashed #fff;
 }
 
-/* История занимает свободную высоту колонки; свежая запись прокручивается на вид. */
-.history {
-  flex: 1;
-  /* Не схлопывается на низком экране: тогда прокручивается колонка. */
-  min-height: 120px;
-  border: 1px solid var(--color-border);
-  background: var(--color-on-dark);
-  padding: var(--space-2);
-  overflow: auto;
+.tags {
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: bold;
+  background: var(--arm-box);
 }
 
-.historyHead {
+.klass {
+  font-size: 13px;
+}
+
+/* Состояние контекста занятия: без него неизвестно, за какую службу работает обучаемый. */
+.context {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--arm-box);
+}
+
+/* ---------- полоса служб, история статусов, строка статуса (06–20) */
+.servicesWrap {
+  position: relative;
+}
+
+.services {
+  display: flex;
+  align-items: stretch;
+  height: 62px;
+  padding-left: 8px;
+  color: #fff;
+  background: var(--arm-bar);
+}
+
+.servicesLabel {
+  align-self: center;
+  padding-right: 10px;
+  font-size: 13px;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  padding: 12px 4px 4px;
+  color: #fff;
+  background: var(--arm-bar);
+  border-left: 1px solid #3a4349;
+}
+
+.tileName {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tileState {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Своя служба подчёркнута (06), с открытой строкой статуса — синяя (09). */
+.tileOwn .tileName {
+  text-decoration: underline;
+}
+
+.tileOpen {
+  background: var(--arm-blue);
+}
+
+.tileUp {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  display: inline-flex;
+  padding: 0 6px;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  transform: translateX(-50%);
+}
+
+.tilePen {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  display: inline-flex;
+  padding: 2px;
+  color: #fff;
+  background: transparent;
+  border: 0;
+}
+
+button.tileUp:disabled,
+.tilePen:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.servicesRight {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin: 0 0 var(--space-2);
+  gap: 8px;
+  margin-left: auto;
+  padding-right: 8px;
 }
 
-.history h3 {
-  margin: 0;
-  font-size: var(--font-size);
-}
-
-.history ul {
-  margin: 0;
-  padding-left: var(--space-3);
-}
-
-/* Строка действия раскрывается над панелью служб — arm_dds/09. */
-/* Панель статуса — в строке служб справа от плашек, как на arm_dds/09:
-   карточка над ней не сдвигается, а пустая часть строки служб работает. */
-.formDock {
+.square {
   position: relative;
-  flex: 1 1 560px;
-  /* Ровно полоса служб (под запасом яруса): заметки встают над полосой. */
-  margin-top: var(--services-tier);
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  min-width: 0;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  color: #fff;
+  background: transparent;
+  border: 1px solid #c3cacf;
+}
+
+/* Перенаправление — действие контракта (C-01), на скриншотах кнопки нет:
+   стоит рядом с «!» и ✕, в цветах полосы служб. */
+.redirect {
+  height: 38px;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #fff;
+  background: transparent;
+  border: 1px solid #c3cacf;
+}
+
+/* Первичный статус позже 30 с — время на красном, как в АРМ (памятка ДДС, с. 25). */
+.late {
+  padding: 0 2px;
+  color: #fff;
+  background: var(--color-danger);
+}
+
+/* Строка статуса: «Статус · Номер наряда · Комментарий · ✓ · ✕» над полосой (08, 09). */
+.line {
+  position: absolute;
+  z-index: 12;
+  left: 52px;
+  bottom: calc(100% + 30px);
+  /* Полоса короче макета (правка 19.10): комментарию хватает, телефон рядом не мешает. */
+  width: min(820px, calc(100% - 70px));
 }
 
 .form {
   display: flex;
-  gap: var(--space-1);
-  padding: var(--space-1);
-  background: var(--color-on-dark);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 2px 8px #10182033;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  color: var(--arm-ink);
+  background: #fff;
+  box-shadow: 0 2px 10px #0006;
 }
 
-.form select,
+/* Комментарий — всё свободное место; статус по длине названия, номер наряда — 3–4 цифры. */
+.form select {
+  flex: 0 1 auto;
+  /* Длинные названия («Отказ от выполнения работ») сокращаются: список при выборе полный. */
+  width: 15ch;
+  min-width: 0;
+  padding: 3px 4px;
+  text-overflow: ellipsis;
+  background: #fff;
+  border: 0;
+  border-bottom: 1px solid #333;
+}
+
 .form input {
-  border: 1px solid var(--color-border);
+  flex: 1 1 0;
+  /* Комментарий забирает место, освобождённое статусом и номером наряда. */
+  min-width: 0;
+  padding: 3px 2px;
+  border: 0;
+  border-bottom: 1px solid #999;
 }
 
-.form button {
-  min-width: 36px;
-  background: var(--color-on-dark);
-  border: 1px solid var(--color-border);
+.form .number {
+  flex: 0 0 auto;
+  width: 6ch;
 }
 
-/* Подсказки, предупреждение и ошибка — одной строкой над полями, в запасе строки
-   служб над полосой: форма занимает только полосу, заметки растут вверх поверх
-   фона карточки и ничего не раздвигают. */
-.formNotes {
+.ok,
+.cancel {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 3px;
+  color: #555;
+  background: #fff;
+  border: 1px solid #aaa;
+}
+
+.cancel {
+  margin-left: 8px;
+}
+
+/* Закрытая карточка: «Карточка закрыта. Разбор» на месте строки статуса. */
+.closedLine {
+  justify-content: space-between;
+  padding: 6px 10px;
+}
+
+.review {
+  padding: 4px 14px;
+  color: var(--arm-ink);
+  background: #fff;
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+
+/* Предупреждение, ошибка и подсказки орфографии — строкой над полями. */
+.lineNotes {
   position: absolute;
-  bottom: calc(100% + var(--space-1));
+  bottom: calc(100% + 4px);
   left: 0;
   right: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1) var(--space-3);
+  gap: 4px 16px;
   font-size: 13px;
 }
 
-/* Подсказки орфографии (учебный режим): слово с ошибкой и варианты исправления. */
-.formSpelling {
+.lineSpelling,
+.lineError {
+  padding: 2px 8px;
+  color: var(--arm-ink);
+  background: #fff;
+  border-left: 3px solid var(--arm-blue);
+}
+
+.lineSpelling {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1) var(--space-2);
+  gap: 4px 8px;
   /* Снизу запас под волнистое подчёркивание. */
-  padding: 2px var(--space-2) 5px;
-  color: var(--color-text);
-  background: var(--color-on-dark);
-  border-left: 3px solid var(--color-danger);
+  padding-bottom: 5px;
+  border-left-color: var(--color-danger);
+}
+
+.lineError {
+  color: var(--color-danger);
+  border-left-color: var(--color-danger);
+}
+
+/* «Нажмите ✓ или Enter ещё раз — карточка закроется»: необратимый статус взведён первым ✓.
+   Стоит над ✓ — у правого края строки, там, куда нажимают второй раз. */
+.lineConfirm {
+  margin-left: auto;
+  margin-right: 36px;
+  padding: 2px 8px;
+  font-weight: bold;
+  color: var(--arm-ink);
+  background: #fff;
+  border-left: 3px solid var(--arm-blue);
 }
 
 .spellingItem {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 4px;
 }
 
 .misspelled {
@@ -280,358 +592,72 @@
 }
 
 .spellingFix {
-  padding: 0 var(--space-1);
-  color: var(--color-text);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  cursor: pointer;
-}
-
-.spellingFix:hover,
-.spellingFix:focus-visible {
-  border-color: var(--color-active);
-}
-
-.formWarning,
-.formError {
-  padding: 2px var(--space-2);
-  color: var(--color-text);
-  background: var(--color-on-dark);
-  border-left: 3px solid var(--color-active);
-}
-
-.formError {
-  color: var(--color-danger);
-  border-left-color: var(--color-danger);
-}
-
-.number {
-  width: 120px;
-}
-
-.comment {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Строка служб держит над плашками место под раскрытый ярус (--services-tier,
-   высота яруса своей службы). Полоса служб — только нижняя часть строки, над ней
-   фон карточки: ярус встаёт над полосой, как на arm_dds/07, и ничего не сдвигает. */
-.services {
-  --services-tier: 42px;
-  display: flex;
-  align-items: stretch;
-  gap: var(--space-1);
-  padding: var(--space-2);
-  background: linear-gradient(
-    to bottom,
-    transparent calc(var(--space-2) + var(--services-tier)),
-    var(--color-list) 0
-  );
-  color: var(--color-on-dark);
-  flex-wrap: wrap;
-}
-
-/* Отступ сверху — высота яруса: подпись по центру полосы, а не всей строки. */
-.servicesLabel {
-  align-self: center;
-  margin-top: var(--services-tier);
-  padding-right: var(--space-2);
-}
-
-.service {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 130px;
-  text-align: center;
-  background: #9aa4aa;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  font-size: 12px;
-}
-
-/* Своя ДДС — активная плашка, по ней открывается форма статуса. */
-.serviceOwn {
-  composes: service;
-  background: var(--color-on-dark);
-  border-color: var(--color-active);
-  color: var(--color-active);
-}
-
-.redirect {
-  align-self: center;
-  margin-top: var(--services-tier);
-  background: var(--color-on-dark);
-  border: 1px solid var(--color-border);
-}
-
-/* Колонка службы: плашка внизу, раскрытый ярус уходит вверх — arm_dds/07.
-   Ширина постоянная, длинный текст — с многоточием, как «Получена слу…» на
-   снимке: смена статуса не сужает плитку и не сдвигает её «карандаш». */
-.serviceColumn {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  width: 130px;
-}
-
-.service > *,
-.details > * {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* «подразделения не передаются» у чужой службы — в две строки, без обрезки. */
-.details > span:only-child {
-  white-space: normal;
-}
-
-.plate {
-  display: flex;
-  flex-direction: column;
-}
-
-.toggle {
-  padding: 0;
-  line-height: 1;
-  font-size: 11px;
-  background: #9aa4aa;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-bottom: none;
-}
-
-.details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-width: 130px;
-  padding: var(--space-1);
-  font-size: 12px;
-  background: #78848b;
-  color: var(--color-on-dark);
-  border: 1px solid var(--color-border);
-  border-bottom: none;
-}
-
-.detailsOwn {
-  composes: details;
-  background: var(--color-on-dark);
-  color: var(--color-text);
-}
-
-/* Ярус ровно той высоты, под которую строка держит место. */
-.details,
-.detailsOwn {
-  position: relative;
-  height: var(--services-tier);
-  justify-content: center;
-}
-
-/* «Карандаш» — в углу яруса, как на arm_dds/07: ярус в две строки. */
-.detailsOwn > .pencil {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  max-width: none;
-}
-
-/* Свёрнутый ярус невидим, но место держит. */
-.detailsFolded {
-  visibility: hidden;
-}
-
-/* «Карандаш» из боевого АРМ: смена статуса из раскрытого яруса своей службы. */
-.pencil {
-  padding: 0 var(--space-1);
-  background: transparent;
-  border: 1px solid var(--color-border);
-}
-
-/* Состояние контекста занятия: без него неизвестно, за какую службу работает обучаемый. */
-.context {
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
-  background: #cfd4d7;
-  border-top: 1px solid var(--color-border);
-}
-
-/* «Разбор» — синяя кнопка, как «просмотр» в шапке карточки arm_dds/07. */
-.review {
-  padding: 6px 14px;
-  color: var(--color-on-dark);
-  font-size: 13px;
-  background: var(--color-active);
-  border: 1px solid var(--color-active);
-}
-
-/* Ручной ввод адреса (D-03): отдельно от исходного адреса карточки. */
-.manualAddress {
-  margin: 0;
-  padding: var(--space-2) var(--space-3);
-  background: var(--color-on-dark);
-  border: 1px solid var(--color-border);
-}
-
-.manualAddress legend {
   padding: 0 4px;
-  color: #6c757b;
-  font-size: 12px;
+  color: var(--arm-ink);
+  background: transparent;
+  border: 1px solid #aaa;
 }
 
-.manualFields {
-  display: grid;
-  grid-template-columns: 1fr 2fr 0.7fr 0.7fr 0.7fr;
-  gap: var(--space-1) var(--space-2);
-}
-
-.manualFields label {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
+/* Подсказки сочетаний при зажатом Alt (инструкция 112, раздел 13; README B). */
+.kbd {
+  position: absolute;
+  z-index: 30;
+  top: -8px;
+  right: -6px;
+  padding: 1px 5px;
   font-size: 11px;
-  color: #6c757b;
-}
-
-.manualFields input {
-  min-width: 0;
-  padding: 4px 6px;
-  font-size: 13px;
-  border: 1px solid var(--color-border);
-}
-
-.manualActions {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  margin-top: var(--space-1);
-}
-
-.manualState {
-  color: #6c757b;
-  font-size: 12px;
-}
-
-/* Цвет — из токенов снимков АРМ, отдельного «зелёного» в палитре нет. */
-.manualSaved {
-  color: var(--color-active);
-}
-
-/* Адрес ещё не введён: поле видно сразу, его не пропустить. */
-.manualNeeded {
-  border: 2px solid var(--color-active);
-}
-
-/* Шаг «Принять решение»: плашка своей службы уже в рамке active,
-   поэтому акцент — внешний контур того же токена, а не толщина рамки. */
-.serviceOwn.manualNeeded {
-  outline: 2px solid var(--color-active);
-  outline-offset: 2px;
-}
-
-.manualNeeded legend {
-  color: var(--color-active);
-  font-size: 13px;
   font-weight: bold;
-}
-
-@media (max-width: 700px) {
-  .manualFields {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* Подсказки начального уровня (FR-1.6) */
-.hint {
-  position: relative;
-  display: inline-flex;
-  align-items: flex-start;
-  gap: var(--space-1);
-}
-
-.hintButton {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  padding: 0;
-  color: var(--color-on-dark);
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 20px;
-  background: var(--color-active);
-  border: 0;
-  border-radius: 50%;
-}
-
-.hintText {
-  max-width: 320px;
-  padding: var(--space-1) var(--space-2);
-  color: var(--color-text);
-  font-size: var(--font-size);
   line-height: 1.4;
-  background: #eef5f9;
-  border-left: 3px solid var(--color-active);
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+  background: #111;
+  border-radius: 3px;
 }
 
-.hintLabel {
-  color: #6c757b;
-  font-size: 12px;
-  line-height: 20px;
+.kbdLine {
+  top: auto;
+  bottom: calc(100% + 4px);
+  right: 0;
 }
 
-/* Узкий экран: шапка переносится по строкам, карточка — в одну колонку.
+.form {
+  position: relative;
+}
+
+/* Узкий экран: шапка и полоса служб переносятся, карточка — в одну колонку.
    Раскладка скриншота ДДС остаётся для широкого экрана АРМ. */
 @media (max-width: 600px) {
   .card {
     height: auto;
     overflow: visible;
   }
-  .form {
-    flex-wrap: wrap;
-  }
-  .form .number {
-    flex: 1;
-  }
-  /* Комментарий — главное поле формы: на узком экране ему целая строка. */
-  .form .comment {
-    flex-basis: 100%;
-    order: 1;
-  }
   .head {
     display: flex;
     flex-wrap: wrap;
-    padding: var(--space-2);
-  }
-  .phones {
-    flex-wrap: wrap;
-    width: 100%;
   }
   .phone {
     flex: 1 1 140px;
-    min-width: 0;
-  }
-  .headInfo {
-    text-align: left;
-    flex: 1;
   }
   .body {
     grid-template-columns: 1fr;
   }
-  .left,
-  .right {
-    padding: var(--space-2);
+  .feed {
+    min-height: 120px;
   }
-  /* Узкий экран: строка служб переносится, запас под ярус — в общей полосе. */
   .services {
-    background: var(--color-list);
+    flex-wrap: wrap;
+    height: auto;
   }
-  /* Карточка растёт по содержимому: истории — своя высота с прокруткой. */
-  .history {
-    flex: none;
-    max-height: 320px;
+  .line {
+    left: 0;
+    width: 100%;
+  }
+  .form {
+    flex-wrap: wrap;
+  }
+  .form .comment {
+    flex-basis: 100%;
+    order: 1;
   }
 }

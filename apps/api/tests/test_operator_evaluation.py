@@ -1,9 +1,10 @@
 import json
 from pathlib import Path
 
+import pytest
 from app.operator.caller import CallerState, address_field_match, mentions
 from app.operator.evaluation import DEFAULT_WEIGHTS, _eval_order, evaluate
-from app.operator.router import CardInput, _card_for_dispatch
+from app.operator.router import CardInput, card_for_dispatch
 from app.operator.scenarios import load_scenarios
 from jsonschema import Draft202012Validator
 
@@ -33,6 +34,152 @@ def _evaluate_fire(**card):
     }
     result = evaluate(scenario, **{**ideal, **card})
     return {criterion.key: criterion for criterion in result.criteria}
+
+
+@pytest.mark.parametrize(
+    "field", ["object", "structure", "entrance", "floor", "code", "descriptive"]
+)
+def test_new_address_fields_only_score_when_named(field):
+    scenario = _scenario("fire_apartment_smoke")
+    scenario = {
+        **scenario,
+        "named_address_fields": [field],
+        "address": {**scenario["address"], field: "2"},
+        "landmark_synonyms": ["школа"],
+    }
+    if field == "descriptive":
+        scenario["address"][field] = "Напротив школы"
+
+    def score(address):
+        return next(
+            c
+            for c in evaluate(
+                scenario,
+                incident_type_code=scenario["incident_type_code"],
+                tags=[],
+                services=[],
+                address=address,
+                description="",
+                elapsed_s=90,
+                caller=IDEAL_CALLER,
+            ).criteria
+            if c.key == "address"
+        )
+
+    wrong = {**scenario["address"], field: "неизвестно"}
+    assert score(wrong).score < 1
+    assert field != "entrance" or "подъезд" in score(wrong).explanation
+    scenario["named_address_fields"] = []
+    assert score(wrong).score == 1
+
+
+def test_child_landmark_and_floor_accept_synonyms():
+    scenario = _scenario("elevator_stuck")
+    assert {"entrance", "floor", "descriptive"} <= set(scenario["named_address_fields"])
+    result = evaluate(
+        scenario,
+        incident_type_code=scenario["incident_type_code"],
+        tags=scenario["expected_tags"],
+        services=scenario["expected_services"],
+        address={
+            **scenario["address"],
+            "entrance": "второй",
+            "floor": "между четвёртым и пятым",
+            "descriptive": "Дом напротив школы",
+        },
+        description=scenario["description_reference"],
+        elapsed_s=90,
+        caller=IDEAL_CALLER,
+    )
+    assert next(c for c in result.criteria if c.key == "address").score == 1
+
+
+@pytest.mark.parametrize(
+    ("floor", "accepted"),
+    [("4-5", True), ("4 и 5", True), ("между 4 и 5 этажом", True), ("5", False)],
+)
+def test_child_floor_accepts_numbers_without_words(floor, accepted):
+    scenario = _scenario("elevator_stuck")
+    result = evaluate(
+        scenario,
+        incident_type_code=scenario["incident_type_code"],
+        tags=scenario["expected_tags"],
+        services=scenario["expected_services"],
+        address={**scenario["address"], "floor": floor},
+        description=scenario["description_reference"],
+        elapsed_s=90,
+        caller=IDEAL_CALLER,
+    )
+    assert (next(c for c in result.criteria if c.key == "address").score == 1) is accepted
+
+
+def test_address_score_is_unchanged_without_new_named_fields():
+    scenario = {**_scenario("fire_apartment_smoke"), "named_address_fields": ["district"]}
+    result = evaluate(
+        scenario,
+        incident_type_code=scenario["incident_type_code"],
+        tags=[],
+        services=[],
+        address={**scenario["address"], "apartment": "48", "entrance": "999"},
+        description="",
+        elapsed_s=90,
+        caller=IDEAL_CALLER,
+    )
+    address = next(c for c in result.criteria if c.key == "address")
+    assert address.score == 1 - 1 / 7
+    assert address.weight == 20
+
+
+def test_named_door_code_accepts_words_and_digits():
+    scenario = _scenario("heart_attack_home")
+    assert mentions(scenario["answers"]["access"]["calm"], ["58"])
+    result = evaluate(
+        scenario,
+        incident_type_code=scenario["incident_type_code"],
+        tags=[],
+        services=[],
+        address={**scenario["address"], "code": "пятьдесят восемь"},
+        description="",
+        elapsed_s=90,
+        caller=IDEAL_CALLER,
+    )
+    assert next(c for c in result.criteria if c.key == "address").score == 1
+    assert not mentions("пятьдесят семь", ["58"])
+    assert not mentions("пять и восемь", ["58"])
+
+
+@pytest.mark.parametrize("status", ["очевидец", "родственник", ""])
+def test_caller_status_explains_without_changing_score(status):
+    before = _evaluate_fire()
+    after = _evaluate_fire(caller_status=status)
+    assert [(c.score, c.points, c.weight) for c in before.values()] == [
+        (c.score, c.points, c.weight) for c in after.values()
+    ]
+    explanation = after["caller"].explanation
+    assert "Статус заявителя" in explanation
+    assert ("верно: очевидец" if status == "очевидец" else "нужно: очевидец") in explanation
+
+
+def test_dispatch_includes_new_address_fields_and_status():
+    scenario = _scenario("fire_apartment_smoke")
+    card = CardInput(
+        incident_type_code=scenario["incident_type_code"],
+        address={
+            **scenario["address"],
+            "object": "дом",
+            "structure": "1",
+            "entrance": "2",
+            "floor": "5",
+            "code": "58",
+            "descriptive": "школа",
+        },
+        caller_status="очевидец",
+    )
+    built = card_for_dispatch(scenario, card, "0123456789abcdef")
+    assert built is not None
+    assert built["address"] == card.address.model_dump()
+    assert built["caller_status"] == card.caller_status
+    CARD_SCHEMA.validate(built)
 
 
 def test_weights_sum_to_100():
@@ -138,15 +285,60 @@ def test_dispatch_card_matches_card_schema():
         description=scenario["description_reference"],
         caller_name=scenario["caller"]["name"],
     )
-    built = _card_for_dispatch(scenario, card, "0123456789abcdef")
+    built = card_for_dispatch(scenario, card, "0123456789abcdef")
     assert built is not None
     CARD_SCHEMA.validate(built)
+
+
+def test_dispatch_card_takes_caller_name_only_from_operator_input():
+    """DT-04: пустое имя не заменяется именем из сюжета — правда в карточку не протекает."""
+    scenario = _scenario("fire_apartment_smoke")
+    card = CardInput(incident_type_code=scenario["incident_type_code"], caller_name="")
+    built = card_for_dispatch(scenario, card, "0123456789abcdef")
+    assert built is not None
+    assert built["caller_name"] == ""
+    # АОН оператор не вводит — он из сценария.
+    assert built["phone_aon"] == scenario["caller"]["phone"]
+
+
+def test_dispatch_card_keeps_emergency_from_operator_input():
+    scenario = _scenario("fire_apartment_smoke")
+    code = scenario["incident_type_code"]
+    plain = card_for_dispatch(scenario, CardInput(incident_type_code=code), "0123456789abcdef")
+    marked = card_for_dispatch(
+        scenario, CardInput(incident_type_code=code, emergency=True), "0123456789abcdef"
+    )
+    assert plain is not None and plain["emergency"] is False
+    assert marked is not None and marked["emergency"] is True
+
+
+def test_dispatch_card_phones_follow_card_schema():
+    scenario = _scenario("fire_apartment_smoke")
+    for raw, expected in [
+        ("8 916 123-45-67", "+79161234567"),
+        ("+7 (916) 123 45 67", "+79161234567"),
+        ("9161234567", "+79161234567"),
+        ("", ""),
+    ]:
+        card = CardInput(
+            incident_type_code=scenario["incident_type_code"],
+            phone_provided=raw,
+            phone_scene=raw,
+        )
+        built = card_for_dispatch(scenario, card, "0123456789abcdef")
+        assert built is not None
+        assert (built["phone_provided"], built["phone_scene"]) == (expected, expected), raw
+        CARD_SCHEMA.validate(built)
+    # Неполный номер не проходит маску ввода (contract 11.10) — до карточки он не доходит.
+    for raw in ("123-45", "не помнит"):
+        with pytest.raises(ValueError):
+            CardInput(incident_type_code=scenario["incident_type_code"], phone_provided=raw)
 
 
 def test_card_without_incident_type_has_no_dispatch_card():
     scenario = _scenario("fire_apartment_smoke")
     card = CardInput(incident_type_code=None)
-    assert _card_for_dispatch(scenario, card, "0123456789abcdef") is None
+    assert card_for_dispatch(scenario, card, "0123456789abcdef") is None
 
 
 def test_description_in_own_words_gets_full_score():
@@ -307,7 +499,7 @@ def test_district_and_okrug_not_named_by_caller_are_optional():
 
 def test_other_scenarios_do_not_require_district_or_okrug():
     for scenario in load_scenarios():
-        if scenario.get("named_address_fields"):
+        if {"okrug", "district"} & set(scenario.get("named_address_fields", ())):
             continue
         address = {**scenario["address"], "okrug": "", "district": ""}
         result = evaluate(

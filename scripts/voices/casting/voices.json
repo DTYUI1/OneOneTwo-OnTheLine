@@ -1,0 +1,78 @@
+{
+  "about": "Голоса бригад выбраны на кастинге 16.10 (brikkerdev). Должностные лица служб — кандидаты того же кастинга, не взятые в бригады (второй партией банка, 16.10). Модель и voice_id — для сборки озвучки и банка фраз.",
+  "model": "eleven_v4",
+  "voices": {
+    "101": {
+      "name": "Феликс",
+      "voice_id": "sRk0zCqhS2Cmv0bzx5wA",
+      "gender": "male"
+    },
+    "102": {
+      "name": "Артём",
+      "voice_id": "rQOBu7YxCDxGiFdTm28w",
+      "gender": "male"
+    },
+    "103": {
+      "name": "Ольга",
+      "voice_id": "d60rsXo2p0OwikDR5bS7",
+      "gender": "female"
+    },
+    "104": {
+      "name": "Алексей",
+      "voice_id": "9AjtU6o19uipv7QL8dLL",
+      "gender": "male"
+    },
+    "GKH": {
+      "name": "Кирилл",
+      "voice_id": "srULqtwUV9XZPg1ZCO5w",
+      "gender": "male"
+    },
+    "MOSLIFT": {
+      "name": "Олег",
+      "voice_id": "m2gtxNsYBaIRqPBA5vU5",
+      "gender": "male"
+    },
+    "OFFICIAL": {
+      "name": "Алан",
+      "voice_id": "zWSsRd3J6WyZFl12aGMB",
+      "gender": "male",
+      "character": "общий дежурный и оператор 112"
+    },
+    "OFFICIAL_101": {
+      "name": "Василий",
+      "voice_id": "1REYVgkHGlaFX4Rz9cPZ",
+      "gender": "male",
+      "character": "дежурный Соколов, служба 101"
+    },
+    "OFFICIAL_102": {
+      "name": "Максим",
+      "voice_id": "HcaxAsrhw4ByUo4CBCBN",
+      "gender": "male",
+      "character": "оперативный дежурный Медведев, служба 102"
+    },
+    "OFFICIAL_103": {
+      "name": "Маруся",
+      "voice_id": "sNQyZH8Wfcnv7zh3rHxR",
+      "gender": "female",
+      "character": "старший диспетчер Ковалёва, скорая помощь 103"
+    },
+    "OFFICIAL_104": {
+      "name": "Елена",
+      "voice_id": "0ArNnoIAWKlT4WweaVMY",
+      "gender": "female",
+      "character": "диспетчер Белова, газовая служба 104"
+    },
+    "CALLER_CALM": {
+      "name": "Лиза",
+      "voice_id": "KzqxCy7zSSePwgb1Cz0Q",
+      "gender": "female",
+      "character": "заявитель Орлова, хозяйка квартиры (бытовой сценарий ЖКХ, HQ-019) — спокойная; кандидат кастинга 103, не взятый в бригады"
+    },
+    "CALLER_CONFUSED": {
+      "name": "Лиза",
+      "voice_id": "KzqxCy7zSSePwgb1Cz0Q",
+      "gender": "female",
+      "character": "та же заявитель Орлова — растерянная: один абонент — один голос, характер — текстом и тегами подачи"
+    }
+  }
+}

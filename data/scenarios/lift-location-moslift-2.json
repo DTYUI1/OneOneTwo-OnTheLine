@@ -1,0 +1,348 @@
+{
+  "format": 2,
+  "code": "lift-location-moslift-2",
+  "version": 2,
+  "title": "Застрявший лифт: уточнить подъезд и кабину",
+  "service_id": "MOSLIFT",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "14100100",
+  "complications": [],
+  "teacher_comment": "Получить полные ключевые сведения в разговоре с заявителем по полному номеру роли «Заявитель» телефонной книги занятия; затем вернуться к бригаде и передать сведения ответами «По частям». Сам ответ на звонок, неполные сведения или отсутствие передачи не разрешают работы. Общий срок — 120 секунд после обещания уточнить; при пропуске сохраняется задержка работ на 40 секунд.",
+  "outcome": {
+    "people": "Механик прибыл к дому на Профсоюзной улице, 98. После звонка соседке диспетчер уточнил третий подъезд со двора, левый пассажирский лифт и остановку между четвёртым и пятым этажами. Механик освободил двух взрослых пассажиров и запустил лифт.",
+    "late": "Без уточнения подъезда и нужной кабины механик ищет их по длинному дому, а двое пассажиров дольше остаются в остановившемся лифте."
+  },
+  "caller": {
+    "plot": "lift_location",
+    "character": "calm"
+  },
+  "card": {
+    "caller_name": "Соколова Елена Павловна",
+    "phone_aon": "+74951234568",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "В одном из лифтов дома застряли двое взрослых, связь с ними есть, жалоб нет. Подъезд, кабина и точные этажи в первичном обращении не указаны. Заявительница — соседка, вышла во двор встретить механика.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте",
+    "service_ids": [
+      "MOSLIFT"
+    ],
+    "number": "70008602",
+    "incident_type_code": "14100100"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "MOSLIFT"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "MOSLIFT",
+      "phone_ext": "458",
+      "before_s": 600,
+      "contact_role": "caller"
+    },
+    "expected_comment": "В одном из лифтов дома застряли двое взрослых, связь с ними есть, жалоб нет. Подъезд, кабина и точные этажи в первичном обращении не указаны. Заявительница — соседка, вышла во двор встретить механика. Позвонили заявительнице: третий подъезд со двора, левый пассажирский лифт между четвёртым и пятым этажами; в кабине двое взрослых без жалоб. Сведения переданы механику. Пассажиров вывел, все в порядке, лифт запущен, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, еду.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Кабина стоит между этажами, связь с кабиной есть, люди спокойные.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.arrived.lift_stuck.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Обесточил лифт, иду на ручное опускание. Сейчас подведу кабину к этажу.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.working.lift_stuck.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пассажиров вывел, все в порядке. Лифт запустил, работы завершены.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.completed.lift_stuck.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "caller_details",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, подъезд какой? Дом длинный, подъездов много.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "ask_caller",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "ask_caller",
+          "label": "Позвоню заявителю: уточню подъезд и лифт"
+        },
+        {
+          "key": "guess",
+          "label": "Ищите с первого подъезда, звонить не нужно"
+        },
+        {
+          "key": "wait",
+          "label": "Ждите, сведения появятся сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, так быстрее будет.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_ok.any.3.ogg"
+          },
+          "effects": [],
+          "awaits_call": {
+            "contact_role": "caller",
+            "required_facts": ["where", "box"],
+            "within_s": 120,
+            "relay_event": "caller_relay_2",
+            "otherwise": [
+              {
+                "delay": "works",
+                "by_s": 40
+              }
+            ]
+          }
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, буду искать сам, это займёт время.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашёл сам.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_late.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Застрявший лифт: уточнить подъезд и кабину: дозвониться, получить сведения и передать бригаде",
+        "critical": false
+      }
+    },
+    {
+      "key": "caller_relay_1",
+      "kind": "clarify",
+      "trigger": {
+        "on": "event",
+        "event": "caller_details",
+        "branch": "met",
+        "after_s": 0
+      },
+      "line": {
+        "text": "Лифтов тут два. Заявка на какой, левый или правый?",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify.any.9.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "relay",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "relay",
+          "label": "Третий подъезд со двора, левый пассажирский лифт"
+        },
+        {
+          "key": "guess",
+          "label": "Первый подъезд с улицы, правый грузовой лифт"
+        },
+        {
+          "key": "wait",
+          "label": "Сведений пока нет, продолжайте ждать"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, понял, этого хватит.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": []
+        },
+        "late": {
+          "line": null,
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Передать бригаде сведения заявителя: подъезд и кабина",
+        "critical": false
+      }
+    },
+    {
+      "key": "caller_relay_2",
+      "kind": "clarify",
+      "trigger": {
+        "on": "event",
+        "event": "caller_relay_1",
+        "branch": "met",
+        "after_s": 0
+      },
+      "line": {
+        "text": "Диспетчер, на каком этаже встали, известно?",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "relay",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "relay",
+          "label": "Между 4-м и 5-м; двое взрослых, без жалоб"
+        },
+        {
+          "key": "guess",
+          "label": "Между 1-м и 2-м; один ребёнок, ему плохо"
+        },
+        {
+          "key": "wait",
+          "label": "Сведений пока нет, продолжайте ждать"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, иду туда.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_ok.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": []
+        },
+        "late": {
+          "line": null,
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Передать бригаде сведения заявителя: этажи и пассажиры",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

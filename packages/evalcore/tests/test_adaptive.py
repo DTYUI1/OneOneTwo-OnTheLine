@@ -45,8 +45,8 @@ def test_cold_start_keeps_level_and_explains_limited_history(count):
     assert result.level == 2
     assert result.direction == "keep"
     assert result.based_on_attempts == count
-    assert "Холодный старт" in result.evidence[0]
-    assert "Холодный старт" in result.explanation
+    assert "меньше трёх" in result.evidence[0]
+    assert "меньше трёх" in result.explanation
 
 
 def test_high_scores_without_critical_or_timing_errors_increase_one_step():

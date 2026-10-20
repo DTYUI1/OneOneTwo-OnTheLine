@@ -1,0 +1,42 @@
+{
+  "id": "fire_apartment_smoke.wrong-street",
+  "title": "Дым в квартире: улица записана с ошибкой, газ не отмечен",
+  "operator_scenario_id": "fire_apartment_smoke",
+  "level": 1,
+  "elapsed_s": 140,
+  "card": {
+    "incident_type_code": "1050102",
+    "tags": [
+      "victims"
+    ],
+    "services": [
+      "101",
+      "102",
+      "103",
+      "MOSLIFT"
+    ],
+    "address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Западное Дегунино",
+      "street": "Дубининская улица",
+      "house": "12",
+      "building": "",
+      "apartment": "47",
+      "object": "",
+      "structure": "",
+      "entrance": "2",
+      "floor": "5",
+      "code": "",
+      "descriptive": "Напротив дома продуктовый магазин, через дорогу школа"
+    },
+    "description": "Задымление в квартире 47 на пятом этаже, из-под двери идёт дым, огня не видно. В квартире пожилая соседка, на стук не открывает.",
+    "caller_name": "Соснина Ольга",
+    "caller_status": "",
+    "phone_provided": "",
+    "phone_scene": "",
+    "off_site": false,
+    "emergency": false
+  },
+  "teacher_note": "Две ошибки оператора: «Дубининская» вместо «Дубнинской» (бригады едут не туда) и не отмечена газификация — служба 104 карточку не получает."
+}

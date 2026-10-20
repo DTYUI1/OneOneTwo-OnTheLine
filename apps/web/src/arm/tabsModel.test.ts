@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Card } from "../shared/api";
-import { tabClock, workingCards } from "./tabsModel";
+import { tabClock, workBadge, workingCards } from "./tabsModel";
 
 const card = (id: string, over: Partial<Card> = {}): Card =>
   ({
@@ -81,5 +81,34 @@ describe("вкладки происшествий", () => {
         norms,
       ),
     ).toMatchObject({ seconds: 20 });
+  });
+});
+
+describe("таймер отработки на вкладке", () => {
+  const work = (seconds: number) =>
+    ({ label: "обработка", seconds, overdue: false }) as const;
+
+  it("показывает только обработку: реакции и закрытой карточке таймер не нужен", () => {
+    expect(
+      workBadge({ label: "реакция", seconds: 12, overdue: false }, 180),
+    ).toBeNull();
+    expect(workBadge(null, 180)).toBeNull();
+  });
+
+  it("три стадии, как у «Принята»: до 70 % спокойно, до норматива жёлтый, дальше красный", () => {
+    expect(workBadge(work(102), 180)).toEqual({
+      text: "01:42",
+      stage: "calm",
+      title: "Отработка 01:42 из 3:00. Ожидание доклада бригады не считается.",
+    });
+    expect(workBadge(work(126), 180)?.stage).toBe("soon");
+    expect(workBadge(work(180), 180)?.stage).toBe("soon");
+    expect(workBadge(work(181), 180)?.stage).toBe("over");
+  });
+
+  it("норматив занятия, изменённый преподавателем, — в подсказке и стадиях", () => {
+    const badge = workBadge(work(200), 270);
+    expect(badge?.stage).toBe("soon");
+    expect(badge?.title).toContain("из 4:30");
   });
 });

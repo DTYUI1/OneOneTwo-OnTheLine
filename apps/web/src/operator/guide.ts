@@ -127,7 +127,7 @@ export function nextTip(input: GuideInput): GuideTip | null {
     return {
       target: "options",
       title: "Спросите ориентир",
-      text: "Ориентир — второй способ найти место: магазин, школа, остановка.",
+      text: "Спросите ориентир и внесите его в «Описательный адрес»: магазин, школа, остановка.",
     };
   if (talking && !state.confirmed)
     return {
@@ -159,7 +159,7 @@ export function nextTip(input: GuideInput): GuideTip | null {
     return {
       target: "steps",
       title: "Шаг 5 — детали и доступ",
-      text: "Подъезд, этаж, доступ — чтобы бригада быстро вошла.",
+      text: "Спросите подъезд, этаж, код и доступ. Внесите названное в адрес, чтобы бригада быстро вошла.",
     };
   if (!card.tagsAnswered)
     return {

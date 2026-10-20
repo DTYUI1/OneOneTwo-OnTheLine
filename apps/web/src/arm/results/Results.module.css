@@ -27,7 +27,8 @@
 .counters {
   margin: 0;
   color: #5c6771;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .close {
@@ -42,6 +43,11 @@
 .empty {
   margin: var(--space-4);
   line-height: 1.5;
+}
+
+.empty button {
+  min-height: 36px;
+  font-size: 14px;
 }
 
 .body {
@@ -102,7 +108,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-3);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .hasComment {
@@ -161,6 +167,12 @@
   font-weight: bold;
 }
 
+.scoreSource,
+.overrideReason {
+  margin: var(--space-2) 0 0;
+  line-height: 1.5;
+}
+
 /* Первый экран разбора: вердикт и повтор ступени в одной строке. */
 .verdictRow {
   display: flex;
@@ -176,13 +188,8 @@
 }
 
 /* Процент подчинён вердикту: цвет текста, при «не зачтено» — цвет ошибки. */
-.passed .percent,
-.passed .pending {
+.passed .percent {
   color: var(--color-text);
-}
-
-.pending {
-  font-size: 13px;
 }
 
 .focus {
@@ -211,7 +218,8 @@
   margin: var(--space-2) 0 0;
   padding-left: 0;
   list-style: none;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .timeline li {
@@ -226,6 +234,33 @@
   display: inline-block;
   min-width: 48px;
   font-variant-numeric: tabular-nums;
+}
+
+/* Отметка ленты «+12,3 с» (TC-11): обычный шрифт, цифры одной ширины. */
+.since {
+  display: inline-block;
+  min-width: 88px;
+  color: #5c6771;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Звонок на разборе (TC-11): запись, распознанное, записанное. */
+.call + .call {
+  margin-top: var(--space-3);
+}
+
+.call p {
+  margin: 0;
+}
+
+.call audio {
+  max-width: 100%;
+}
+
+.filter {
+  display: inline-block;
+  margin-top: var(--space-2);
+  cursor: pointer;
 }
 
 .note {
@@ -281,7 +316,7 @@
 .hint {
   margin: var(--space-2) 0 0;
   color: #5c6771;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .muted {
@@ -308,8 +343,25 @@
 
 .criterionHead {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-3);
+}
+
+.criterionHead span {
+  font-variant-numeric: tabular-nums;
+}
+
+.criteria > li,
+.criteria p,
+.comment {
+  overflow-wrap: anywhere;
+}
+
+.panel button:focus-visible,
+.panel summary:focus-visible {
+  outline: 3px solid var(--color-active);
+  outline-offset: 2px;
 }
 
 /* Критический критерий: по нему оценка режется целиком (critical_cap). */
@@ -321,7 +373,7 @@
   margin: var(--space-1) 0 0;
   padding-left: var(--space-3);
   color: #5c6771;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 @media (max-width: 900px) {
@@ -389,6 +441,28 @@
   border-color: var(--color-danger);
 }
 
+/* Замечание разбора (TC-10): цитата, последствие, «Повторите: …» и страница памятки. */
+.remark {
+  margin: var(--space-1) 0 0;
+  line-height: 1.5;
+}
+
+.remark + .remark {
+  margin-top: var(--space-2);
+}
+
+.quote {
+  margin: var(--space-1) 0;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-panel);
+  border-left: 3px solid var(--color-border);
+}
+
+.memo {
+  color: #5c6771;
+  white-space: nowrap;
+}
+
 /* Вердикт попытки: слово и цвет — «Зачтено / Не зачтено». */
 .passed,
 .failed {
@@ -433,4 +507,11 @@
   .aar {
     grid-template-columns: 1fr;
   }
+}
+
+/* «Что было дальше» (DT-08): исход читается как короткий рассказ, крупнее фактов. */
+.outcome {
+  margin: 0 0 var(--space-2);
+  font-size: 15px;
+  line-height: 1.5;
 }

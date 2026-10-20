@@ -14,6 +14,9 @@ import {
   talk,
 } from "./operator-call";
 import { login } from "./captain-fixture";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 // Этап 2 плана docs/operator_112_review/PLAN.md: живой звонок — «Принять вызов», голос и
 // фон, истерика и «Успокоить» (IAED), пауза оператора, ухудшение и совет, 4 персонажа.

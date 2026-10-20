@@ -1,0 +1,190 @@
+{
+  "format": 2,
+  "code": "lift-fire-moslift-1",
+  "version": 1,
+  "title": "Дым в шахте и пассажиры между этажами",
+  "service_id": "MOSLIFT",
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "1050502",
+  "complications": [],
+  "teacher_comment": "Мослифт, уровень 1. После прибытия механик просит пожарных: вызвать 101 или 112 и сообщить ему. При пропуске вызова механик сам опускает кабину, открывает двери и обесточивает лифт; доклад о работах задерживается. В штатной ветке людей выводят вместе с пожарными. Статусы после докладов.",
+  "outcome": {
+    "people": "В пассажирском лифте четвёртого подъезда между вторым и третьим этажами остановилась кабина с двумя взрослыми. Из шахты пахнет гарью, виден дым. Пассажиры отвечают через двери, на самочувствие пока не жалуются. Заявитель из квартиры 76 находится у лифта. По просьбе механика вызвали пожарных. Пассажиров вывели совместно с пожарными, никто не надышался. Лифт обесточен и закрыт до комиссии.",
+    "late": "Карточку приняли позже норматива. В пассажирском лифте четвёртого подъезда между вторым и третьим этажами остановилась кабина с двумя взрослыми. Из шахты пахнет гарью, виден дым. Пассажиры отвечают через двери, на самочувствие пока не жалуются. Заявитель из квартиры 76 находится у лифта."
+  },
+  "card": {
+    "caller_name": "Рябинин Глеб Тимофеевич",
+    "phone_aon": "+79000000872",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": "76"
+    },
+    "description": "В пассажирском лифте четвёртого подъезда между вторым и третьим этажами остановилась кабина с двумя взрослыми. Из шахты пахнет гарью, виден дым. Пассажиры отвечают через двери, на самочувствие пока не жалуются. Заявитель из квартиры 76 находится у лифта.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "задымление: лифт",
+    "service_ids": [
+      "MOSLIFT"
+    ],
+    "number": "70008512",
+    "incident_type_code": "1050502"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "MOSLIFT"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": "76"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "MOSLIFT",
+      "phone_ext": "106",
+      "before_s": 180
+    },
+    "expected_comment": "В пассажирском лифте четвёртого подъезда между вторым и третьим этажами остановилась кабина с двумя взрослыми. Из шахты пахнет гарью, виден дым. Пассажиры отвечают через двери, на самочувствие пока не жалуются. Заявитель из квартиры 76 находится у лифта. По просьбе механика вызвали пожарных. Пассажиров вывели совместно с пожарными, никто не надышался. Лифт обесточен и закрыт до комиссии."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, еду.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыл. Дым в шахте, а кабина встала между этажами, в ней люди. Пожарных пока нет!",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.arrived.lift_fire.5.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Людей из кабины вывели вместе с пожарными, все целы. Обесточиваю.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.working.lift_fire.5.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Людей вывели, никто не надышался. Лифт закрыл до комиссии.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.completed.lift_fire.5.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "firefighters",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, из шахты тянет гарью. Вызывайте пожарных!",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.request_service.any.4.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "101",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ага, ясно.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.ack.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Кабину опустил вниз, двери оставил открытыми. Теперь обесточил весь лифт.",
+                "audio": "bank-v1/MOSLIFT/MOSLIFT.working.lift_fire.1.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик просит пожарных из-за дыма в шахте",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

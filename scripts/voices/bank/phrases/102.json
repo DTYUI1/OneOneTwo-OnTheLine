@@ -1,0 +1,4480 @@
+{
+  "service": "102",
+  "speaker": "brigade",
+  "gender": "male",
+  "incidents": {
+    "fight": "Драка на улице",
+    "traffic": "Авария: охрана места и оформление",
+    "theft": "Кража, грабёж",
+    "hooligan": "Хулиганство, шум, нарушение тишины",
+    "drunk": "Человек лежит на улице, пьяный в общественном месте",
+    "missing": "Пропал человек или ребёнок",
+    "car_theft": "Угон машины",
+    "suspicious": "Подозрительный предмет",
+    "smoke": "Пожар или задымление: охрана порядка, вскрытие квартиры",
+    "domestic": "Семейный скандал",
+    "door": "Вскрытая или открытая квартира"
+  },
+  "phrases": [
+    {
+      "id": "102.answer.any.1",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Наряд, слушаю.",
+      "facts": []
+    },
+    {
+      "id": "102.answer.any.2",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, диспетчер, на связи.",
+      "facts": []
+    },
+    {
+      "id": "102.answer.any.3",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Слушаю, говорите.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.1",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.2",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, наряд выдвигается.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.3",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Мы тут рядом, через пару минут будем.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.4",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, едем. С сиреной пойдём.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.5",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, экипаж направляется, по прибытии доложу.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.6",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, понял. Уже в машине.",
+      "facts": []
+    },
+    {
+      "id": "102.enroute.any.1",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, минуты три-четыре.",
+      "facts": []
+    },
+    {
+      "id": "102.enroute.any.2",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "В пути. Пробка на светофоре, пробиваемся с сиреной.",
+      "facts": []
+    },
+    {
+      "id": "102.enroute.any.3",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезжаем, дом уже вижу.",
+      "facts": []
+    },
+    {
+      "id": "102.enroute.any.4",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, на месте доложу.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.1",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, встали. Улица перекрыта, объезжаем дворами.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.2",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаемся, на мосту авария, стоим в потоке.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.3",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Двор заставлен машинами, не проехать. Бросаем экипаж, идём пешком.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.4",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, машина встала, не заводится. Добираемся пешком, тут недалеко.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.5",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Шлагбаум закрыт, охраны нет. Ищем, как въехать.",
+      "facts": []
+    },
+    {
+      "id": "102.wrong_place.any.1",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, мы на месте, а тут тихо. Никто не вызывал. Проверьте адрес!",
+      "facts": []
+    },
+    {
+      "id": "102.wrong_place.any.2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "По этому адресу никого. Соседи ничего не слышали. Диспетчер, адрес точно тот?",
+      "facts": []
+    },
+    {
+      "id": "102.wrong_place.any.3",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приехали, а здесь стройка, жилого дома нет. Уточните адрес!",
+      "facts": []
+    },
+    {
+      "id": "102.readback_fixed.any.1",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял поправку, разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "102.readback_fixed.any.2",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, ошибся. Едем по правильному адресу.",
+      "facts": []
+    },
+    {
+      "id": "102.readback_fixed.any.3",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, понял. Перестраиваемся, это рядом.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.1",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.2",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.3",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.4",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял вас.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.5",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, принял.",
+      "facts": []
+    },
+    {
+      "id": "102.not_understood.any.1",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял, повторите.",
+      "facts": []
+    },
+    {
+      "id": "102.not_understood.any.2",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вас плохо слышно, повторите.",
+      "facts": []
+    },
+    {
+      "id": "102.not_understood.any.3",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Связь рвётся. Ещё раз, что сказали?",
+      "facts": []
+    },
+    {
+      "id": "102.end_call.any.1",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "102.end_call.any.2",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, отбой.",
+      "facts": []
+    },
+    {
+      "id": "102.end_call.any.3",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, работаем. Конец связи.",
+      "facts": []
+    },
+    {
+      "id": "102.end_call.any.4",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, будем на связи.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.1",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем на месте, доложу по итогу.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.2",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Опрашиваем людей, пока без изменений.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.3",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё под контролем, оформляем.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.4",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем. Минут через десять освободимся.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.5",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё на месте, пишем протокол.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.1",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "floor",
+      "text": "Диспетчер, на каком этаже квартира?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.2",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "entrance",
+      "text": "Диспетчер, какой подъезд? Их тут много, табличек нет.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.3",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "intercom",
+      "text": "Диспетчер, код домофона есть? Стоим у двери.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.4",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "caller_phone",
+      "text": "Диспетчер, дайте телефон заявителя, не можем его найти.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.5",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "access",
+      "text": "Диспетчер, как во двор заехать? Кругом ворота.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.6",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "landmark",
+      "text": "Диспетчер, ориентир какой-нибудь есть? Тут одни гаражи.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.7",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "people",
+      "text": "Диспетчер, сколько их там, по карточке?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.8",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "suspect_look",
+      "text": "Диспетчер, приметы есть? Во что одет, куда пошёл?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.9",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "weapon",
+      "text": "Диспетчер, заявитель про оружие что-нибудь говорил?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.10",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "vehicle",
+      "text": "Диспетчер, марка и цвет машины в карточке есть?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_ok.any.1",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, поднимаемся.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_ok.any.2",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, нашли, заходим.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_ok.any.3",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, вижу. Идём туда.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_ok.any.4",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, спасибо, дальше сами.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_unknown.any.1",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, будем искать сами, это займёт время.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_unknown.any.2",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно. Пойдём по квартирам, поспрашиваем.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_unknown.any.3",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нет так нет. Разберёмся на месте.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_late.any.1",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже нашли сами.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_late.any.2",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поздно, диспетчер, мы уже внутри.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify_late.any.3",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, но соседи подсказали раньше. Работаем.",
+      "facts": []
+    },
+    {
+      "id": "102.request_service.any.1",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "103",
+      "text": "Диспетчер, нужна скорая! Мужчине разбили голову, кровь не останавливается.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.request_service.any.2",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "103",
+      "text": "Срочно скорую, человек без сознания, дышит плохо.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.request_service.any.3",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "103",
+      "text": "Вызовите скорую, женщине плохо с сердцем, сидит бледная.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.request_service.any.4",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "101",
+      "text": "Диспетчер, из окна валит дым, нужны пожарные!",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "102.request_service.any.5",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "101",
+      "text": "Вызывайте пожарных, в квартире что-то горит, дверь заперта.",
+      "facts": [
+        "fire",
+        "no_access"
+      ]
+    },
+    {
+      "id": "102.request_service.any.6",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "101",
+      "text": "Нужны спасатели вскрыть дверь, за ней кто-то стонет.",
+      "facts": [
+        "no_access",
+        "victims"
+      ]
+    },
+    {
+      "id": "102.request_service.any.7",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "104",
+      "text": "Диспетчер, в подъезде сильно пахнет газом. Вызывайте газовую службу.",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "102.request_service.any.8",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "104",
+      "text": "Нужна газовая аварийка, в квартире запах газа, жильцов выводим.",
+      "facts": [
+        "gas",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.request_service.any.9",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "GKH",
+      "text": "Диспетчер, трубу прорвало, вода хлещет на лестницу. Нужен слесарь.",
+      "facts": []
+    },
+    {
+      "id": "102.request_service.any.10",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "GKH",
+      "text": "Вызовите сантехника, в квартире потоп, вода по стенам.",
+      "facts": []
+    },
+    {
+      "id": "102.request_service.any.11",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "MOSLIFT",
+      "text": "Диспетчер, в лифте застрял человек, нужен лифтёр.",
+      "facts": []
+    },
+    {
+      "id": "102.request_service.any.12",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "MOSLIFT",
+      "text": "Вызовите Мослифт, кабина встала между этажами, внутри ребёнок.",
+      "facts": []
+    },
+    {
+      "id": "102.alarm.any.1",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[shouting]",
+      "text": "Тревога! Нападение на наряд, напарника ударили ножом! Срочно скорую и подкрепление!",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.alarm.any.2",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[out of breath]",
+      "text": "Тревога! Оказывают сопротивление, их много, не справляемся! Нужна помощь!",
+      "facts": []
+    },
+    {
+      "id": "102.alarm.any.3",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[shouting]",
+      "text": "Тревога! Сотрудника сбила машина, лежит, не встаёт! Скорую срочно!",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.alarm.any.4",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[urgent]",
+      "text": "Тревога! Собака порвала сотруднику руку, кровь сильная. Нужна скорая.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.alarm_ack.any.1",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ждём скорую.",
+      "facts": []
+    },
+    {
+      "id": "102.alarm_ack.any.2",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Держимся, ждём подкрепление.",
+      "facts": []
+    },
+    {
+      "id": "102.alarm_ack.any.3",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял. Руку перетянули, ждём.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.any.1",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы закончили, наряд освободился.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.any.2",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, оформили. Возвращаемся на маршрут.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.any.3",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Материал собран, передаём в дежурную часть. Экипаж свободен.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.any.4",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Закончили. Протокол составлен, люди опрошены, едем в отдел.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.any.1",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вызов ложный, никто ничего не видел. Работы не проводили.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.refused.any.2",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "На месте всё спокойно, не подтвердилось. Наряд освободился.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.refused.any.3",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока ехали, все разошлись. Работать не с кем.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.refused.any.4",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не наше, диспетчер. Соседи спорят из-за парковки, это гражданское дело. Разъяснили и уехали.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "102.arrived.fight.1",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Прибыли. Драка у входа в бар, разнимаем.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.fight.2",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "На месте. Драки уже нет, один лежит на асфальте, лицо в крови.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.arrived.fight.3",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Диспетчер, прибыли. Участники разбегаются, одного держим.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.working.fight.1",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Опрашиваем очевидцев, смотрим камеры у магазина.",
+      "facts": []
+    },
+    {
+      "id": "102.working.fight.2",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Участников развели по разным машинам, выясняем, кто начал.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.working.fight.3",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Ищем второго, по приметам убежал во дворы.",
+      "facts": []
+    },
+    {
+      "id": "102.update.fight.1",
+      "slot": "update",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Диспетчер, у одного в кармане нож. Изъяли, будем оформлять отдельно.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.update.fight.2",
+      "slot": "update",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Пострадавшему хуже, начал терять сознание.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.completed.fight.1",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Зачинщиков доставили в отдел, пострадавшего забрала скорая. Наряд свободен.",
+      "facts": [
+        "detained",
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.fight.2",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Пострадавших нет, заявлений никто писать не стал. Побеседовали, отпустили.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.fight.3",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Зачинщик задержан. Потерпевший от скорой отказался, пишет заявление.",
+      "facts": [
+        "detained",
+        "victims",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "102.refused.fight.1",
+      "slot": "refused",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Прибыли, а там пусто. Охранник говорит, разошлись минут десять назад. Работы не проводили.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.refused.fight.2",
+      "slot": "refused",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Не драка это. Парни дурачились на камеру, снимали ролик.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.traffic.1",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Экипаж на месте. Машины стоят в крайнем ряду, выставили знак, перекрываем полосу.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.traffic.2",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Прибыли. Машина на боку в кювете, водитель внутри, в сознании.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.arrived.traffic.3",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "На месте. Легковая въехала в автобус, пассажиры вышли, стоят на остановке.",
+      "facts": []
+    },
+    {
+      "id": "102.working.traffic.1",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Составляем схему, меряем тормозной путь.",
+      "facts": []
+    },
+    {
+      "id": "102.working.traffic.2",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Регулируем движение вручную, пробка до перекрёстка.",
+      "facts": []
+    },
+    {
+      "id": "102.working.traffic.3",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Проверяем водителей на алкоголь, от одного запах.",
+      "facts": []
+    },
+    {
+      "id": "102.update.traffic.1",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Диспетчер, под капотом загорелось! Отводим людей, нужны пожарные.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "102.update.traffic.2",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Второй водитель сбежал, машину бросил. Ищем по номерам.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.completed.traffic.1",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Схема составлена, машины убрали на обочину, движение открыли. Экипаж свободен.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.traffic.2",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пострадавшего увезла скорая, виновника доставили на освидетельствование. Освободились.",
+      "facts": [
+        "victims",
+        "hospitalized",
+        "detained"
+      ]
+    },
+    {
+      "id": "102.refused.traffic.1",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Машин на месте нет, участники разъехались до нас.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.refused.traffic.2",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водители оформились сами, по европротоколу, и разъехались. Работы не проводили.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.theft.1",
+      "slot": "arrived",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Прибыли в магазин. Охрана держит одного, вынес товар под курткой.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.arrived.theft.2",
+      "slot": "arrived",
+      "incidents": [
+        "theft"
+      ],
+      "text": "На месте. Потерпевшая у подъезда, сумку вырвали, грабитель убежал.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.arrived.theft.3",
+      "slot": "arrived",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Прибыли. Дверь открыта, замок цел, внутри всё перевёрнуто.",
+      "facts": []
+    },
+    {
+      "id": "102.working.theft.1",
+      "slot": "working",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Принимаем заявление, составляем список похищенного.",
+      "facts": []
+    },
+    {
+      "id": "102.working.theft.2",
+      "slot": "working",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Прочёсываем дворы с напарником, ищем по приметам.",
+      "facts": []
+    },
+    {
+      "id": "102.working.theft.3",
+      "slot": "working",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Смотрим записи с камер, грабитель попал в кадр.",
+      "facts": []
+    },
+    {
+      "id": "102.update.theft.1",
+      "slot": "update",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Диспетчер, задержали по приметам у метро. Похищенное при нём.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.completed.theft.1",
+      "slot": "completed",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Подозреваемый доставлен в отдел, заявление принято. Свободны.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.completed.theft.2",
+      "slot": "completed",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Задержать не удалось, ориентировку передали. Материал собран.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.refused.theft.1",
+      "slot": "refused",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Кражи не было. Хозяйка нашла кошелёк в другой сумке.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.refused.theft.2",
+      "slot": "refused",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Товар вернули, охрана отпустила, заявлений нет. Работы не проводили.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.hooligan.1",
+      "slot": "arrived",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Прибыли. Музыка на весь двор, из открытой машины.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.hooligan.2",
+      "slot": "arrived",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "На месте. Компания на детской площадке, орут, бьют бутылки.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.hooligan.3",
+      "slot": "arrived",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Прибыли к квартире. За дверью гремит, на звонок не открывают.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "102.working.hooligan.1",
+      "slot": "working",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Беседуем с хозяином, музыку убавили.",
+      "facts": []
+    },
+    {
+      "id": "102.working.hooligan.2",
+      "slot": "working",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Составляем протокол, нарушитель не отпирается.",
+      "facts": []
+    },
+    {
+      "id": "102.working.hooligan.3",
+      "slot": "working",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Устанавливаем личности, документов ни у кого нет.",
+      "facts": []
+    },
+    {
+      "id": "102.update.hooligan.1",
+      "slot": "update",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Диспетчер, один полез на напарника с кулаками. Скрутили, везём в отдел.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.completed.hooligan.1",
+      "slot": "completed",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Шум прекратили, на нарушителя составлен протокол. Наряд свободен.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.hooligan.2",
+      "slot": "completed",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Самых буйных доставили в отдел, остальные разошлись.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.refused.hooligan.1",
+      "slot": "refused",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Тихо, никого. Соседи говорят, сами затихли час назад.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.refused.hooligan.2",
+      "slot": "refused",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Шумят законно, днём ремонт. Разъяснили заявителю.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.drunk.1",
+      "slot": "arrived",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Прибыли. Мужчина на остановке, лежит, на вопросы мычит.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.drunk.2",
+      "slot": "arrived",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "На месте. Спит на лавке, сильный запах алкоголя, документов нет.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.drunk.3",
+      "slot": "arrived",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Прибыли. Лежит у подъезда, ссадина на голове, в себя не приходит.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.working.drunk.1",
+      "slot": "working",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Приводим в чувство, пытаемся узнать, где живёт.",
+      "facts": []
+    },
+    {
+      "id": "102.working.drunk.2",
+      "slot": "working",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Нашли паспорт в кармане, звоним родным.",
+      "facts": []
+    },
+    {
+      "id": "102.working.drunk.3",
+      "slot": "working",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Не встаёт. Положили на бок, укрыли курткой, ждём скорую.",
+      "facts": []
+    },
+    {
+      "id": "102.update.drunk.1",
+      "slot": "update",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Диспетчер, ему хуже, дышит редко. Скорую бы побыстрее.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.completed.drunk.1",
+      "slot": "completed",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Скорая забрала, наряд свободен.",
+      "facts": [
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.drunk.2",
+      "slot": "completed",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Жена пришла, увела домой. Освободились.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.drunk.3",
+      "slot": "completed",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Начал буянить, доставили в отдел до вытрезвления.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.refused.drunk.1",
+      "slot": "refused",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Никого нет, видно, встал и ушёл сам.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.arrived.missing.1",
+      "slot": "arrived",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Прибыли к заявительнице. Мама в слезах, ребёнок не вернулся из школы.",
+      "facts": [
+        "victim_child"
+      ]
+    },
+    {
+      "id": "102.arrived.missing.2",
+      "slot": "arrived",
+      "incidents": [
+        "missing"
+      ],
+      "text": "На месте. Дед ушёл из дома в тапочках, с памятью у него плохо.",
+      "facts": [
+        "victim_elderly",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.arrived.missing.3",
+      "slot": "arrived",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Прибыли. Опрашиваем родных, берём свежую фотографию.",
+      "facts": []
+    },
+    {
+      "id": "102.working.missing.1",
+      "slot": "working",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Обходим дворы и подъезды, проверяем подвалы.",
+      "facts": []
+    },
+    {
+      "id": "102.working.missing.2",
+      "slot": "working",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Ориентировку разослали по экипажам, смотрим камеры у метро.",
+      "facts": []
+    },
+    {
+      "id": "102.working.missing.3",
+      "slot": "working",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Обзваниваем больницы и друзей, пробиваем телефон.",
+      "facts": []
+    },
+    {
+      "id": "102.update.missing.1",
+      "slot": "update",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Диспетчер, похожего видели у пруда. Едем туда.",
+      "facts": []
+    },
+    {
+      "id": "102.update.missing.2",
+      "slot": "update",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Нашли рюкзак на остановке. Ребёнка рядом нет.",
+      "facts": [
+        "victim_child"
+      ]
+    },
+    {
+      "id": "102.completed.missing.1",
+      "slot": "completed",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Нашёлся! Сидел у друга, телефон разрядился. Вернули родителям.",
+      "facts": [
+        "victim_child"
+      ]
+    },
+    {
+      "id": "102.completed.missing.2",
+      "slot": "completed",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Деда нашли в соседнем районе, замёрз, но цел. Отвезли домой.",
+      "facts": [
+        "victim_elderly",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.completed.missing.3",
+      "slot": "completed",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Нашли, переохлаждение, скорая забрала. Родным сообщили.",
+      "facts": [
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "102.refused.missing.1",
+      "slot": "refused",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Отбой розыску, вернулся сам, пока мы ехали.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.car_theft.1",
+      "slot": "arrived",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Прибыли. Владелец на парковке, машины нет, на асфальте стекло.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.car_theft.2",
+      "slot": "arrived",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "На месте. Машина во дворе, без номеров, замок вскрыт.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.car_theft.3",
+      "slot": "arrived",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Прибыли. Сигнализация воет, рядом никого.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.working.car_theft.1",
+      "slot": "working",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Пробиваем по базе, не эвакуатор ли забрал.",
+      "facts": []
+    },
+    {
+      "id": "102.working.car_theft.2",
+      "slot": "working",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Опрашиваем владельца, смотрим камеры у шлагбаума.",
+      "facts": []
+    },
+    {
+      "id": "102.working.car_theft.3",
+      "slot": "working",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Ориентировку передали всем экипажам, перекрываем выезды из района.",
+      "facts": []
+    },
+    {
+      "id": "102.update.car_theft.1",
+      "slot": "update",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Диспетчер, машину видели на выезде на кольцевую. Передайте постам.",
+      "facts": []
+    },
+    {
+      "id": "102.update.car_theft.2",
+      "slot": "update",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Угонщика держим! Пытался уехать, догнали на светофоре.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.completed.car_theft.1",
+      "slot": "completed",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Взяли за рулём, доставили в отдел. Машину вернули хозяину.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.completed.car_theft.2",
+      "slot": "completed",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Заявление принято, машина в розыске. Освободились.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.car_theft.1",
+      "slot": "refused",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Не угон. Машину эвакуировали за неправильную парковку, хозяину объяснили.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.refused.car_theft.2",
+      "slot": "refused",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Хозяин вспомнил, что оставил машину у другого дома. Нашлась.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.suspicious.1",
+      "slot": "arrived",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Прибыли. Сумка под лавкой у входа в метро, хозяина нет.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.suspicious.2",
+      "slot": "arrived",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "На месте. Коробка в подъезде у лифта, из неё торчат провода.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.suspicious.3",
+      "slot": "arrived",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Прибыли. Чемодан на остановке, люди стоят прямо рядом.",
+      "facts": []
+    },
+    {
+      "id": "102.working.suspicious.1",
+      "slot": "working",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Отводим людей, оцепляем, никого не подпускаем.",
+      "facts": []
+    },
+    {
+      "id": "102.working.suspicious.2",
+      "slot": "working",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Выводим жильцов из подъезда, ждём кинолога.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.working.suspicious.3",
+      "slot": "working",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Перекрыли проход, ищем хозяина по камерам.",
+      "facts": []
+    },
+    {
+      "id": "102.update.suspicious.1",
+      "slot": "update",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Хозяин нашёлся, забыл сумку, идёт сюда.",
+      "facts": []
+    },
+    {
+      "id": "102.update.suspicious.2",
+      "slot": "update",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Диспетчер, собака что-то учуяла. Нужны взрывотехники, расширяем оцепление.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.suspicious.1",
+      "slot": "completed",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Проверили, в сумке вещи. Вернули хозяину, оцепление сняли.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.suspicious.2",
+      "slot": "completed",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Сапёры предмет забрали, жильцы вернулись по квартирам. Свободны.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.refused.suspicious.1",
+      "slot": "refused",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Ничего опасного, пакет с мусором. Ложная тревога.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.smoke.1",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Наряд на месте, пожарные уже работают. Перекрыли подъезд.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "102.arrived.smoke.2",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли. На этаже пахнет гарью, дверь никто не открывает.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "102.arrived.smoke.3",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "На месте. Жильцы высыпали во двор, держим их подальше от входа.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.working.smoke.1",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Охраняем вскрытую квартиру, хозяина нет, ищем родственников.",
+      "facts": []
+    },
+    {
+      "id": "102.working.smoke.2",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарные вскрывают дверь, мы рядом, понятых нашли.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "102.working.smoke.3",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Отгоняем зевак, освобождаем проезд для пожарных машин.",
+      "facts": []
+    },
+    {
+      "id": "102.update.smoke.1",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Диспетчер, в квартире хозяин, без сознания. Пожарные выносят.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.1",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Квартиру закрыли, ключи у соседки, родным сообщили. Наряд освободился.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.smoke.2",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожар потушили, хозяина забрала скорая. Квартиру опечатали, свободны.",
+      "facts": [
+        "fire",
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.3",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Задымление прошло, пострадавших нет. Освободились.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.refused.smoke.1",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяин открыл сам, подгорела еда. Правонарушения нет, работы не проводили.",
+      "facts": [
+        "self_resolved",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "102.arrived.domestic.1",
+      "slot": "arrived",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Прибыли. За дверью крик, женщина плачет. Стучим.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "102.arrived.domestic.2",
+      "slot": "arrived",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "На месте. Муж пьяный, у жены синяк на лице, ребёнок заперся в комнате.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.arrived.domestic.3",
+      "slot": "arrived",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Прибыли. Открыли сразу, в квартире тихо, оба говорят, что всё нормально.",
+      "facts": []
+    },
+    {
+      "id": "102.working.domestic.1",
+      "slot": "working",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Развели по разным комнатам, опрашиваем по одному.",
+      "facts": []
+    },
+    {
+      "id": "102.working.domestic.2",
+      "slot": "working",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Принимаем заявление от жены, муж в коридоре с напарником.",
+      "facts": []
+    },
+    {
+      "id": "102.working.domestic.3",
+      "slot": "working",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Соседи говорят, скандалят не первый раз. Записываем.",
+      "facts": []
+    },
+    {
+      "id": "102.update.domestic.1",
+      "slot": "update",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Диспетчер, он схватил нож и заперся на кухне! Работаем.",
+      "facts": []
+    },
+    {
+      "id": "102.update.domestic.2",
+      "slot": "update",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Жена передумала, заявление писать не хочет.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.domestic.1",
+      "slot": "completed",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Мужа доставили в отдел, жене выдали направление на освидетельствование.",
+      "facts": [
+        "detained",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.completed.domestic.2",
+      "slot": "completed",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Помирились, заявлений нет. Провели беседу, наряд свободен.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.refused.domestic.1",
+      "slot": "refused",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Скандала нет, это телевизор громко работал. Ложный вызов.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.door.1",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Прибыли. Дверь приоткрыта, замок выбит, внутри никого.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.door.2",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "На месте. Дверь нараспашку, свет горит, хозяйку соседи давно не видели.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.door.3",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Прибыли. На двери следы взлома, соседка ждёт в коридоре.",
+      "facts": []
+    },
+    {
+      "id": "102.working.door.1",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Осматриваем квартиру, вещи разбросаны. Ждём хозяина.",
+      "facts": []
+    },
+    {
+      "id": "102.working.door.2",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Ищем хозяина через управляющую компанию, дверь охраняем.",
+      "facts": []
+    },
+    {
+      "id": "102.working.door.3",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Ждём следственную группу, ничего не трогаем.",
+      "facts": []
+    },
+    {
+      "id": "102.update.door.1",
+      "slot": "update",
+      "incidents": [
+        "door"
+      ],
+      "text": "Диспетчер, хозяин на полу в комнате! Живой, но слабый.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.update.door.2",
+      "slot": "update",
+      "incidents": [
+        "door"
+      ],
+      "text": "Хозяин дозвонился, едет. Говорит, пропал ноутбук.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.door.1",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Хозяин приехал, проверил, ничего не пропало. Квартиру закрыли.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.door.2",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Квартира опечатана, материал по краже передали в отдел. Свободны.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.door.1",
+      "slot": "refused",
+      "incidents": [
+        "door"
+      ],
+      "text": "Хозяин дома, просто забыл закрыть. Работы не проводили.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.refused.door.2",
+      "slot": "refused",
+      "incidents": [
+        "door"
+      ],
+      "text": "Внутри ремонт, дверь сняли специально, рабочие на месте.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.intro.any.1",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Старший наряда на связи.",
+      "facts": []
+    },
+    {
+      "id": "102.intro.any.2",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Экипаж патрульно-постовой службы, по вашей карточке.",
+      "facts": []
+    },
+    {
+      "id": "102.intro.any.3",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это патруль, который вы направили. Докладываю.",
+      "facts": []
+    },
+    {
+      "id": "102.intro.any.4",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, диспетчер? Старший экипажа, звоню по вызову.",
+      "facts": []
+    },
+    {
+      "id": "102.no_reply.any.1",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло? Слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "102.no_reply.any.2",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "102.no_reply.any.3",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приём, приём! Есть кто на линии?",
+      "facts": []
+    },
+    {
+      "id": "102.no_reply.any.4",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да ответьте же! У нас время идёт!",
+      "facts": []
+    },
+    {
+      "id": "102.confirm_request.any.1",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как приняли?",
+      "facts": []
+    },
+    {
+      "id": "102.confirm_request.any.2",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как поняли меня?",
+      "facts": []
+    },
+    {
+      "id": "102.confirm_request.any.3",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записали? Подтвердите.",
+      "facts": []
+    },
+    {
+      "id": "102.confirm_request.any.4",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Доклад приняли?",
+      "facts": []
+    },
+    {
+      "id": "102.repeat_report.any.1",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю.",
+      "facts": []
+    },
+    {
+      "id": "102.repeat_report.any.2",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, записывайте.",
+      "facts": []
+    },
+    {
+      "id": "102.repeat_report.any.3",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, повторю.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.7",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть. Заканчиваем оформление по соседству и туда.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.8",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, мы ближайшие, разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.9",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес записал. Выдвигаемся двумя экипажами.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.any.10",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принято, уже заводимся.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.6",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.7",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Добро.",
+      "facts": []
+    },
+    {
+      "id": "102.ack.any.8",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записал.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.6",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ждём оперативную группу, место пока охраняем сами.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.7",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё возимся. Свидетелей много, всех переписываем.",
+      "facts": []
+    },
+    {
+      "id": "102.status_working.any.8",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Напарник пробивает людей по базе, я с заявителем. Скоро закончим.",
+      "facts": []
+    },
+    {
+      "id": "102.enroute.any.5",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Свернули во дворы, уже близко.",
+      "facts": []
+    },
+    {
+      "id": "102.enroute.any.6",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Идём с маячками по встречке, скоро будем.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.6",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Навигатор завёл в тупик. Разворачиваемся, теряем время.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.7",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нас по дороге остановили граждане, ещё одно происшествие. Разберёмся и сразу к вам.",
+      "facts": []
+    },
+    {
+      "id": "102.delay.any.8",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пробили колесо на яме. Напарник меняет, задерживаемся.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.11",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "victims",
+      "text": "А пострадавшие там есть, заявитель не говорил?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.12",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "meet",
+      "text": "Заявитель нас встретит? Тут сам чёрт ногу сломит.",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.13",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "previous_calls",
+      "text": "По этому адресу раньше выезжали? Что там за люди?",
+      "facts": []
+    },
+    {
+      "id": "102.clarify.any.14",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "animals",
+      "text": "Диспетчер, собака в квартире есть? Не хочу сюрпризов.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.any.5",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Отработали, пострадавших нет. Экипаж снова на маршруте.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.any.6",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Объяснения взяли, рапорт допишу в машине. Готовы к следующему.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.any.5",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Разобрались без нас, заявитель вызов отменяет. Работы не проводили.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.refused.any.6",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тут вопрос к управляющей компании, не к полиции. Дали телефон и уехали.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "102.arrived.fight.4",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Девушка сидит на бордюре, губа разбита. Говорит, ударил знакомый.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.arrived.fight.5",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Подъехали, драчуны разбежались. У магазина кровь на асфальте и разбитая бутылка.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.arrived.fight.6",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Так, двое толкались у остановки, при нас утихли. Травм не видно.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.working.fight.4",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Скорая обрабатывает пострадавшего, потом опросим его.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.working.fight.5",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Сличаем показания. Каждый говорит, что первым ударили его.",
+      "facts": []
+    },
+    {
+      "id": "102.working.fight.6",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Задержанного досматриваем, при нём кастет.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.update.fight.3",
+      "slot": "update",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Тот, что убежал, вернулся с друзьями. Обстановка накаляется.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.fight.4",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Пострадавшую передали скорой, обидчик скрылся. Ориентировку разослали.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "handed_103",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.completed.fight.5",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Обоих доставили в отдел за драку в общественном месте. Пострадавших нет.",
+      "facts": [
+        "detained",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.fight.6",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Парня госпитализировали со сломанным носом, нападавших не нашли. Материал в отдел.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.refused.fight.3",
+      "slot": "refused",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Помирились до нас, жмут друг другу руки. Претензий нет, работы не проводили.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.traffic.4",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пожилую женщину сбили на переходе, лежит. Водитель не уехал, стоит рядом.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.arrived.traffic.5",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Докладываю: две легковые, помяты бамперы, водители целы, ругаются.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.arrived.traffic.6",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителя зажало в салоне, дверь заклинило. Говорит, болит нога.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "102.working.traffic.4",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Фотографируем место, переписываем свидетелей с остановки.",
+      "facts": []
+    },
+    {
+      "id": "102.working.traffic.5",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Ждём эвакуатор, машина перегородила две полосы.",
+      "facts": []
+    },
+    {
+      "id": "102.working.traffic.6",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Изымаем запись с регистратора, водители спорят, кто ехал на красный.",
+      "facts": []
+    },
+    {
+      "id": "102.update.traffic.3",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пассажирке стало плохо, теряет сознание. Скорую бы быстрее!",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.completed.traffic.3",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пострадавших нет, водителям выдали справки для страховой. Движение восстановлено.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.traffic.4",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пенсионерку передали скорой, водителя оформили на месте. Освободились.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.traffic.5",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель от больницы отказался, расписался. Машину забрал эвакуатор, мы свободны.",
+      "facts": [
+        "victims",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "102.refused.traffic.3",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Аварии нет, машина просто заглохла посреди дороги. Помогли откатить.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.theft.4",
+      "slot": "arrived",
+      "incidents": [
+        "theft"
+      ],
+      "text": "У пенсионера вырвали пакет у подъезда, он упал, разбил колено. Грабитель убежал.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_male",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.arrived.theft.5",
+      "slot": "arrived",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Карманника поймали сами пассажиры, держат у входа в метро. Никто не пострадал.",
+      "facts": [
+        "detained",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.arrived.theft.6",
+      "slot": "arrived",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Мы в кафе. Касса пустая, сейф не тронут, хозяйка в шоке.",
+      "facts": []
+    },
+    {
+      "id": "102.working.theft.4",
+      "slot": "working",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Блокируем похищенные карты, звоним в банк вместе с владельцем.",
+      "facts": []
+    },
+    {
+      "id": "102.working.theft.5",
+      "slot": "working",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Обходим ломбарды поблизости, приметы вещей разослали.",
+      "facts": []
+    },
+    {
+      "id": "102.working.theft.6",
+      "slot": "working",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Задержанного досмотрели, при нём чужой телефон и чужие карты.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.update.theft.2",
+      "slot": "update",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Во дворе нашли выброшенную сумку. Денег нет, документы на месте.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.theft.3",
+      "slot": "completed",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Потерпевшей обработали ссадину, от больницы отказалась. Грабителя ищем, заявление приняли.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "refused_hospital",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.completed.theft.4",
+      "slot": "completed",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Вора задержали, похищенное вернули владельцу. Пострадавших нет, наряд свободен.",
+      "facts": [
+        "detained",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.theft.5",
+      "slot": "completed",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Деда передали скорой, давление подскочило. Грабитель не установлен, материал в отдел.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_male",
+        "handed_103",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.refused.theft.3",
+      "slot": "refused",
+      "incidents": [
+        "theft"
+      ],
+      "text": "Это не кража, спор с банком из-за списания. Посоветовали идти в банк, уехали.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "102.arrived.hooligan.4",
+      "slot": "arrived",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Во дворе побиты стёкла у машин. Хулиганов уже нет.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.arrived.hooligan.5",
+      "slot": "arrived",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Подростки толкнули прохожего с лестницы, у мужчины разбит лоб. Двоих держим.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "detained"
+      ]
+    },
+    {
+      "id": "102.arrived.hooligan.6",
+      "slot": "arrived",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Застали парня с баллончиком, расписывает стену и при нас не прекращает.",
+      "facts": []
+    },
+    {
+      "id": "102.working.hooligan.4",
+      "slot": "working",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Обходим соседей, кто подтвердит шум, записываем.",
+      "facts": []
+    },
+    {
+      "id": "102.working.hooligan.5",
+      "slot": "working",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Компанию переписываем, бутылки велели убрать за собой.",
+      "facts": []
+    },
+    {
+      "id": "102.working.hooligan.6",
+      "slot": "working",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Буяна посадили в машину, пинает дверь. Успокаиваем.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.update.hooligan.2",
+      "slot": "update",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Там гуляет целая свадьба, расходиться не хотят. Подкрепление бы.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.hooligan.3",
+      "slot": "completed",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Хулигана доставили в отдел, прохожего с разбитым лбом увезла скорая.",
+      "facts": [
+        "detained",
+        "victims",
+        "victim_male",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.hooligan.4",
+      "slot": "completed",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Разбежались до нас. Пострадавших нет, ущерб описали, материал передаём.",
+      "facts": [
+        "gone",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.hooligan.5",
+      "slot": "completed",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Музыку выключили, хозяин извинился перед соседями. Предупредили, уехали.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.hooligan.3",
+      "slot": "refused",
+      "incidents": [
+        "hooligan"
+      ],
+      "text": "Шумит не квартира, а вентиляция магазина внизу. Это к управляющей компании.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "102.arrived.drunk.4",
+      "slot": "arrived",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Женщина сидит на земле у метро, сильно пьяна, вся дрожит.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.arrived.drunk.5",
+      "slot": "arrived",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Это не пьяный. Пожилой мужчина у магазина, перегаром не пахнет, похоже, сердце.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.arrived.drunk.6",
+      "slot": "arrived",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Тут подросток на лавке, рядом бутылка, на вопросы не отвечает.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "102.working.drunk.4",
+      "slot": "working",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Личность установили по проездному, живёт в соседнем доме.",
+      "facts": []
+    },
+    {
+      "id": "102.working.drunk.5",
+      "slot": "working",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Сажаем в машину, сам идти не может. Отвезём домой.",
+      "facts": []
+    },
+    {
+      "id": "102.working.drunk.6",
+      "slot": "working",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Дозвонились родителям подростка, мать едет.",
+      "facts": [
+        "victim_child"
+      ]
+    },
+    {
+      "id": "102.update.drunk.2",
+      "slot": "update",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Очнулся, встал и порывается уйти. Документов нет, держим рядом.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.drunk.4",
+      "slot": "completed",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Женщину госпитализировали с переохлаждением. Свободны.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "102.completed.drunk.5",
+      "slot": "completed",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Дедушку передали скорой, подозревают инсульт. Родным сообщили.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_male",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.drunk.6",
+      "slot": "completed",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Протрезвел, мы проводили до подъезда. Травм нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.refused.drunk.2",
+      "slot": "refused",
+      "incidents": [
+        "drunk"
+      ],
+      "text": "Не пьяный. Парень уснул на лавке после ночной смены, разбудили, пошёл домой.",
+      "facts": [
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.missing.4",
+      "slot": "arrived",
+      "incidents": [
+        "missing"
+      ],
+      "text": "У заявителя бабушка не вернулась из поликлиники, телефон молчит.",
+      "facts": [
+        "victim_elderly",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.arrived.missing.5",
+      "slot": "arrived",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Мы у заявителя. Дочь-подросток ушла после ссоры с отцом, забрала вещи.",
+      "facts": [
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.arrived.missing.6",
+      "slot": "arrived",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Жена говорит, муж не вернулся с работы. Гудки идут, трубку не берёт.",
+      "facts": [
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.working.missing.4",
+      "slot": "working",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Проверяем соцсети, читаем переписку с друзьями.",
+      "facts": []
+    },
+    {
+      "id": "102.working.missing.5",
+      "slot": "working",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Подключили волонтёров, прочёсываем парк цепью.",
+      "facts": []
+    },
+    {
+      "id": "102.working.missing.6",
+      "slot": "working",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Опрашиваем охрану торгового центра, там её видели последний раз.",
+      "facts": [
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.update.missing.3",
+      "slot": "update",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Телефон пропавшего включился, сигнал у вокзала. Едем туда.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.missing.4",
+      "slot": "completed",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Бабушку нашли на конечной автобуса, растерянная, но целая. Отвезли домой.",
+      "facts": [
+        "victim_elderly",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.completed.missing.5",
+      "slot": "completed",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Девочку нашли у подруги, домой ехать не хотела. Передали отцу, поговорили с обоими.",
+      "facts": [
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "102.completed.missing.6",
+      "slot": "completed",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Нашли через больницы. Его привезли туда с улицы без документов. Жене сообщили.",
+      "facts": [
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "102.refused.missing.2",
+      "slot": "refused",
+      "incidents": [
+        "missing"
+      ],
+      "text": "Никто не пропадал. Ребёнок у бабушки, родители просто не договорились.",
+      "facts": [
+        "victim_child",
+        "false_call"
+      ]
+    },
+    {
+      "id": "102.arrived.car_theft.4",
+      "slot": "arrived",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Охранник парковки держит парня, сидел в чужой машине и копался в проводах.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.arrived.car_theft.5",
+      "slot": "arrived",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Хозяйка оставила ключи в машине на минуту, вернулась — машины нет.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.car_theft.6",
+      "slot": "arrived",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Водителя выкинули из машины на светофоре, ударили и уехали на ней. Он здесь, лицо в крови.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "gone"
+      ]
+    },
+    {
+      "id": "102.working.car_theft.4",
+      "slot": "working",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "У машины спутниковая охрана, хозяин звонит туда, ждём координаты.",
+      "facts": []
+    },
+    {
+      "id": "102.working.car_theft.5",
+      "slot": "working",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Осматриваем место, нашли брошенные инструменты угонщика.",
+      "facts": []
+    },
+    {
+      "id": "102.working.car_theft.6",
+      "slot": "working",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Задержанного везём в отдел, машину охраняем до эксперта.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.update.car_theft.3",
+      "slot": "update",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Машину нашли брошенной в соседнем районе, угонщиков нет.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.completed.car_theft.3",
+      "slot": "completed",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Машину вернули хозяину, угонщик скрылся. Материал передали в отдел.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.completed.car_theft.4",
+      "slot": "completed",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Нападавших взяли на посту, водителя осмотрела скорая. Машину вернули.",
+      "facts": [
+        "detained",
+        "victims",
+        "victim_male",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.car_theft.5",
+      "slot": "completed",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Угнать не успели, вскрыли только замок. Пострадавших нет, заявление приняли.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.refused.car_theft.3",
+      "slot": "refused",
+      "incidents": [
+        "car_theft"
+      ],
+      "text": "Сын взял машину без спроса, уже вернул. Хозяин заявление забрал.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.suspicious.4",
+      "slot": "arrived",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Так, пакет на ручке двери в подъезде. Внутри что-то тикает.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.suspicious.5",
+      "slot": "arrived",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Предмет у входа в школу, детей уже вывели во двор.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.arrived.suspicious.6",
+      "slot": "arrived",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Под машиной у торгового центра свёрток, примотан скотчем к днищу.",
+      "facts": []
+    },
+    {
+      "id": "102.working.suspicious.4",
+      "slot": "working",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Перекрываем движение по улице, разворачиваем машины.",
+      "facts": []
+    },
+    {
+      "id": "102.working.suspicious.5",
+      "slot": "working",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Эвакуируем торговый центр, людей выводим через запасные выходы.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.working.suspicious.6",
+      "slot": "working",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Дворник говорит, предмет появился ночью. Переписываем его.",
+      "facts": []
+    },
+    {
+      "id": "102.update.suspicious.3",
+      "slot": "update",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Взрывотехники приехали, работают. Мы держим периметр.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.suspicious.3",
+      "slot": "completed",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Внутри старые книги, кто-то выбросил. Оцепление сняли, пострадавших нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.suspicious.4",
+      "slot": "completed",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Предмет вывезли на полигон, торговый центр снова открыт. Наряд освободился.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.completed.suspicious.5",
+      "slot": "completed",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Шутника, который подложил муляж, вычислили по камерам и доставили в отдел.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.refused.suspicious.2",
+      "slot": "refused",
+      "incidents": [
+        "suspicious"
+      ],
+      "text": "Пока ехали, хозяин сумку забрал. Предмета нет, работы не проводили.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.smoke.4",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарные вывели бабушку, надышалась дымом, сидит у подъезда.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "fire"
+      ]
+    },
+    {
+      "id": "102.arrived.smoke.5",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Мы во дворе. На балконе люди, выйти не могут, на лестнице дым. Пожарные ставят автолестницу.",
+      "facts": [
+        "blocked",
+        "fire"
+      ]
+    },
+    {
+      "id": "102.arrived.smoke.6",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарные уже вскрыли дверь. Чадит кастрюля, огня нет.",
+      "facts": [
+        "no_fire"
+      ]
+    },
+    {
+      "id": "102.working.smoke.4",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Помогаем выводить жильцов, стучим во все двери подряд.",
+      "facts": [
+        "evacuated"
+      ]
+    },
+    {
+      "id": "102.working.smoke.5",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Переписываем имущество во вскрытой квартире, понятые подписывают.",
+      "facts": []
+    },
+    {
+      "id": "102.working.smoke.6",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Опрашиваем соседей, кто видел, откуда пошёл огонь.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "102.update.smoke.2",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "В лифте застряли люди, а подъезд в дыму! Пожарные поднимаются.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.4",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Бабушку госпитализировали с отравлением дымом. Квартиру закрыли, наряд свободен.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "hospitalized",
+        "fire"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.5",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Людей с балкона сняли, все целы. Жильцы вернулись, оцепление сняли.",
+      "facts": [
+        "blocked",
+        "evacuated",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.6",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяин спал, на плите сгорел ужин. Разбудили, проветрили, пострадавших нет.",
+      "facts": [
+        "no_fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.refused.smoke.2",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дыма нет, соседи жарили шашлык во дворе. Ложный вызов.",
+      "facts": [
+        "false_call",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "102.arrived.domestic.4",
+      "slot": "arrived",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Жена ударила мужа сковородой, у него рассечена голова. Сидит на кухне, зажимает полотенцем.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.arrived.domestic.5",
+      "slot": "arrived",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Подъехали. Сын кричит на пожилую мать, требует денег. Она напугана, травм нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.arrived.domestic.6",
+      "slot": "arrived",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Муж ушёл до нас. Жена с детьми дома, напуганы, дверь на цепочке.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.working.domestic.4",
+      "slot": "working",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "С детьми сидит соседка, а мы говорим с родителями по отдельности.",
+      "facts": []
+    },
+    {
+      "id": "102.working.domestic.5",
+      "slot": "working",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Вызвали участкового, он эту семью знает.",
+      "facts": []
+    },
+    {
+      "id": "102.working.domestic.6",
+      "slot": "working",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Мужа вывели в машину, грозится, что вернётся.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.update.domestic.3",
+      "slot": "update",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Ребёнок говорит, отец его тоже бил. На руках синяки.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "102.completed.domestic.3",
+      "slot": "completed",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Мужу голову перевязала скорая, от больницы отказался. Жену везём в отдел за объяснением.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.domestic.4",
+      "slot": "completed",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Мужа на месте нет, жене оставили телефон участкового. Пострадавших нет.",
+      "facts": [
+        "gone",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.completed.domestic.5",
+      "slot": "completed",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Ребёнка госпитализировали, отца доставили в отдел. Сообщили в опеку.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized",
+        "detained"
+      ]
+    },
+    {
+      "id": "102.refused.domestic.2",
+      "slot": "refused",
+      "incidents": [
+        "domestic"
+      ],
+      "text": "Это не скандал, а спор о разделе квартиры. Дело для суда, разъяснили.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "102.arrived.door.4",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Дверь открыта, на пороге лежит мужчина без сознания.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.arrived.door.5",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Докладываю: в квартире посторонний, говорит, что снимает. Документов нет, держим.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.arrived.door.6",
+      "slot": "arrived",
+      "incidents": [
+        "door"
+      ],
+      "text": "Входная открыта, а комната заперта изнутри, оттуда зовут на помощь.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "102.working.door.4",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Сверяем с соседкой, какие вещи здесь были, а каких нет.",
+      "facts": []
+    },
+    {
+      "id": "102.working.door.5",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Слесарь из управляющей меняет замок, мы ждём.",
+      "facts": []
+    },
+    {
+      "id": "102.working.door.6",
+      "slot": "working",
+      "incidents": [
+        "door"
+      ],
+      "text": "Проверяем по базе, кто здесь прописан.",
+      "facts": []
+    },
+    {
+      "id": "102.update.door.3",
+      "slot": "update",
+      "incidents": [
+        "door"
+      ],
+      "text": "Соседи видели двоих с сумками, ушли в сторону метро. Передаём приметы.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "102.completed.door.3",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Мужчину передали скорой. Квартиру закрыли, ключи сдали в отдел.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.door.4",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Постороннего доставили в отдел, хозяйка его не знает. Квартиру закрыли.",
+      "facts": [
+        "detained"
+      ]
+    },
+    {
+      "id": "102.completed.door.5",
+      "slot": "completed",
+      "incidents": [
+        "door"
+      ],
+      "text": "Хозяйку выпустили из комнаты, цела. Замок поменяли, свободны.",
+      "facts": [
+        "blocked",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "102.refused.door.3",
+      "slot": "refused",
+      "incidents": [
+        "door"
+      ],
+      "text": "Хозяйка вернулась, пока мы ехали, и закрыла дверь. Претензий нет.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "102.arrived.traffic.7",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Экипаж на месте. Осматриваем участок дороги: аварии не видно, на обочине никого."
+    },
+    {
+      "id": "102.briefing_ask.any.1",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял вас. Адрес и что произошло, коротко.",
+      "asks": "both"
+    },
+    {
+      "id": "102.briefing_ask.any.2",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес повторите: улица, номер дома.",
+      "asks": "address"
+    },
+    {
+      "id": "102.briefing_ask.any.3",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес записал. Что там произошло?",
+      "asks": "what"
+    },
+    {
+      "id": "102.refusal_busy.any.1",
+      "slot": "refusal_busy",
+      "incidents": [
+        "*"
+      ],
+      "text": "Наряд занят на другом происшествии, выехать не можем."
+    },
+    {
+      "id": "102.refusal_not_assigned.any.1",
+      "slot": "refusal_not_assigned",
+      "incidents": [
+        "*"
+      ],
+      "text": "Этот вызов не наш, нам его не назначали. Уточните наряд."
+    },
+    {
+      "id": "102.responding.fight.1",
+      "slot": "responding",
+      "incidents": [
+        "fight",
+        "smoke"
+      ],
+      "text": "Вызов принят, наряд направлен.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.fight.7",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Наряд на месте, драку прекратили, двое задержаны.",
+      "facts": []
+    },
+    {
+      "id": "102.working.fight.7",
+      "slot": "working",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Опрашиваем свидетелей, пострадавшего передаём скорой.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.fight.7",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Задержанные доставлены в отдел полиции, наряд освободился.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.fight.8",
+      "slot": "arrived",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Наряд на месте, осматриваем площадь у входа.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.fight.4",
+      "slot": "refused",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Драки нет, участники разошлись, свидетелей не нашли, работы не проводили.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.smoke.7",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Наряд на месте, работаем вместе с пожарными, подъезд перекрыт.",
+      "facts": []
+    },
+    {
+      "id": "102.working.smoke.7",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Охраняем вскрытую квартиру, устанавливаем родственников хозяина.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.smoke.7",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Квартира закрыта, родственникам сообщено, наряд освободился.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.smoke.8",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Наряд на месте, поднимаемся к квартире.",
+      "facts": []
+    },
+    {
+      "id": "102.refused.smoke.3",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяин открыл дверь сам, дым от подгоревшей еды, правонарушения нет, работы не проводили.",
+      "facts": []
+    },
+    {
+      "id": "102.responding.traffic.1",
+      "slot": "responding",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Вызов принят, экипаж ДПС направлен.",
+      "facts": []
+    },
+    {
+      "id": "102.arrived.traffic.8",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Экипаж на месте, выставили ограждение, правый ряд перекрыт.",
+      "facts": []
+    },
+    {
+      "id": "102.working.traffic.7",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Оформляем ДТП, опрашиваем водителей и очевидцев.",
+      "facts": []
+    },
+    {
+      "id": "102.completed.traffic.6",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Схема составлена, машины убраны с проезжей части, движение открыто, экипаж освободился.",
+      "facts": []
+    },
+    {
+      "id": "102.request_service.traffic.1",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "needs": "101",
+      "text": "Диспетчер, водителя самим не достать, дверь заклинило. Нужны спасатели с инструментом!",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "102.request_service.traffic.2",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "needs": "101",
+      "text": "Спасатели едут? Водитель всё ещё зажат, из-под капота уже дымит.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "102.request_service.traffic.3",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "needs": "103",
+      "text": "Диспетчер, скорая где? Водитель совсем плохой, еле дышит.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "102.working.traffic.8",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Спасателей нет. Отжимаем дверь монтировкой сами, водитель стонет.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "102.completed.traffic.7",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Скорой так и не было, водителя повезли в больницу на попутке. Движение открыли, мы свободны.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "102.request_service.smoke.1",
+      "slot": "request_service",
+      "incidents": [
+        "smoke"
+      ],
+      "needs": "103",
+      "text": "Диспетчер, скорой всё нет! Хозяин наглотался дыма, хрипит.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "102.working.smoke.8",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарных нет. Ломаем дверь сами, на площадке уже не продохнуть.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.8",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дверь вскрыли сами, огонь сбили огнетушителем. Хозяина забрала скорая, квартиру опечатали.",
+      "facts": [
+        "fire",
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "102.completed.smoke.9",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Скорой так и не дождались, хозяина повезли в больницу на патрульной машине. Квартиру закрыли.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "102.completed.fight.8",
+      "slot": "completed",
+      "incidents": [
+        "fight"
+      ],
+      "text": "Скорая так и не приехала, пострадавшего отвезли в травмпункт сами. Задержанных доставили в отдел.",
+      "facts": [
+        "victims",
+        "detained"
+      ]
+    },
+    {
+      "id": "102.service_coming.any.1",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, скорую ждём, место для машины освободим.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "102.service_coming.any.2",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть, ждём скорую.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "102.service_coming.any.3",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, врачей ждём, встретим их.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "102.service_coming.any.4",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, пожарных ждём, людей отводим подальше.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "102.service_coming.any.5",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, пожарные едут — держим подъезд.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "102.service_coming.any.6",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, ждём спасателей.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "102.service_coming.any.7",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, газовую службу ждём, оцепление держим.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "102.service_coming.any.8",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, Мосгаз дождёмся.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "102.service_coming.any.9",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, аварийку ждём.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "102.service_coming.any.10",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, коммунальщики едут — ждём.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "102.service_coming.any.11",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, механика ждём.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "102.service_coming.any.12",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, ждём лифтёров.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "102.service_surprise.any.1",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая подъехала. Хорошо, но вы бы предупредили, что вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "102.service_surprise.any.2",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая на месте. А передать, что едут, никак?",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "102.service_surprise.any.3",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, врачи уже здесь. Сказали бы — мы бы проход освободили.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "102.service_surprise.any.4",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарные подъехали. Спасибо, конечно, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "102.service_surprise.any.5",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пожарный расчёт уже тут. Нас предупреждать надо.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "102.service_surprise.any.6",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Спасатели приехали. Хорошо, но сказали бы, что вызвали, мы бы встретили.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "102.service_surprise.any.7",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Газовая служба приехала. Хорошо, но предупредили бы нас.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "102.service_surprise.any.8",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мосгаз на месте. А нам почему не сообщили?",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "102.service_surprise.any.9",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Аварийка подъехала. Могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "102.service_surprise.any.10",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, сантехники уже тут. В другой раз передавайте, что едут.",
+      "facts": [],
+      "needs": "GKH"
+    },
+    {
+      "id": "102.service_surprise.any.11",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Механик Мослифта подъехал. Хорошо, но предупреждать надо.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "102.service_surprise.any.12",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Лифтёры приехали. Сказали бы — мы бы их у входа встретили.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "102.request_service.traffic.4",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Диспетчер, пожарных вызвали? Горит сильнее, огнетушителем не сбить.",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101",
+      "tone": "[urgent]"
+    },
+    {
+      "id": "102.request_service.traffic.5",
+      "slot": "request_service",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пожарные будут? Машина уже вся в огне, людей держим подальше.",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101",
+      "tone": "[urgent]"
+    },
+    {
+      "id": "102.completed.traffic.8",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пожарные машину потушили, полосу освободили. Работы закончили, наряд освободился.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "102.completed.traffic.9",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пожарных не дождались, тушили огнетушителями сами — машина выгорела. Полосу освободили, наряд свободен.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "102.working.traffic.9",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Спасатели деблокировали водителя, дверь срезали. Регулируем движение вручную.",
+      "facts": [
+        "blocked"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "102.update.wrong_briefing.1",
+      "slot": "update",
+      "requires": [
+        "wrong_briefing"
+      ],
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "facts": [],
+      "when": "Только после выезда по полной вводной с неверным поводом; не случайная обстановка сценария."
+    }
+  ]
+}

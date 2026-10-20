@@ -1,0 +1,263 @@
+{
+  "format": 2,
+  "code": "lift-stuck-moslift-2",
+  "version": 7,
+  "replaces": [
+    "5af45208-fae1-5b13-9f83-657c768195c8"
+  ],
+  "title": "Застревание в лифте, плохо пассажирке",
+  "service_id": "MOSLIFT",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "14100101",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: застревание в лифте, плохо пассажирке, Профсоюзная улица, 98, корпус 2. Механик повторяет адрес с ошибкой («восемьдесят девять») — поправить. На месте пассажирке хуже, механик просит скорую: позвонить в 103 или 112 (скорой в карточке нет). Лифт обслуживает другая организация — работ не было, карточку закрывает «Отказ от выполнения работ» с причиной. Не вызвали скорую — механик перезванивает и уезжает, а женщина остаётся в кабине без врачей. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Механик Мослифта приехал на Профсоюзную улицу, 98, корпус 2: этот лифт обслуживает другая организация, ключей у механика нет. Женщине в кабине стало хуже — по просьбе механика вызвали скорую. Информацию механик передал диспетчеру той организации.",
+    "late": "Карточку приняли позже норматива. Женщина с болью в сердце сидела в кабине, а то, что лифт чужой, выяснилось, только когда механик доехал.",
+    "status": "Работ у Мослифта не было: лифт обслуживает другая организация. Такую карточку закрывают «Отказом от выполнения работ» с причиной, а не «Работы завершены»."
+  },
+  "card": {
+    "caller_name": "Рябов Андрей Сергеевич",
+    "phone_aon": "+79000000712",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "description": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (требуется медицинская помощь)",
+    "service_ids": [
+      "101",
+      "MOSLIFT"
+    ],
+    "number": "70005222",
+    "incident_type_code": "14100101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "refused"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "MOSLIFT"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "MOSLIFT",
+      "phone_ext": "106",
+      "before_s": 180
+    },
+    "expected_comment": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть. Пассажирке плохо, задыхается — вызвана скорая. Этот лифт обслуживает другая организация, ключей у нас нет, работы не проводили, информацию передали её диспетчеру."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Понял, заявку взял, выезжаю.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.responding.any.2.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Механик на месте, осматриваем машинное помещение.",
+        "audio": "bank-v2/MOSLIFT/MOSLIFT.arrived.lift_ill.9.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Лифт обслуживает другая организация, работ не проводил. Скорая приехала, врачи говорят с пассажиркой через двери, ждём их механика.",
+        "audio": "bank-v9/MOSLIFT/MOSLIFT.refused.lift_ill.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "refused"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Понял: Профсоюзная, восемьдесят девять, корпус два. Еду!",
+        "audio": "bank-v4/MOSLIFT/MOSLIFT.readback_trap.96ec6e5f.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Профсоюзная улица, 98, корпус 2"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял поправку, разворачиваюсь.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.readback_fixed.any.1.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/MOSLIFT/MOSLIFT.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/MOSLIFT/MOSLIFT.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик повторил адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, пассажиру плохо, задыхается. Нужна скорая, срочно!",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.request_service.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ага, ясно.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.ack.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, скорая будет? Женщине в кабине совсем плохо, а мне её не достать.",
+            "audio": "bank-v3/MOSLIFT/MOSLIFT.request_service.lift_ill.1.ogg"
+          },
+          "effects": [
+            {
+              "replace": "outcome",
+              "with": {
+                "text": "Лифт чужой, ключей у меня нет, их механику передал. Женщина так и сидит в кабине, скорой нет. Работ не проводил.",
+                "audio": "bank-v3/MOSLIFT/MOSLIFT.refused.lift_ill.5.ogg"
+              }
+            },
+            {
+              "delay": "outcome",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик попросил скорую пассажирке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

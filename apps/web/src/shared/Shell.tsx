@@ -10,12 +10,15 @@ import {
 import { api, csrfToken, type User } from "./api";
 import { SessionContext } from "./session";
 import { RealtimeClient } from "./ws/client";
+import { useOperatorModule } from "./features";
 import { CHOOSE_TRAINING, WelcomeGate } from "./WelcomeGate";
 import { describeOutage } from "./systemAlert";
 import { HelpButton, HelpProvider } from "./help/HelpProvider";
 import { HelpTip } from "./help/HelpTip";
-import { WorkflowButton } from "./WorkflowGuide";
+import { WorkflowButton, WorkflowProvider } from "./WorkflowGuide";
+import { LogoutButton } from "./LogoutButton";
 import { ReportButton } from "./ReportButton";
+import { setMascotUser } from "./mascot/mascotModel";
 import styles from "./Shell.module.css";
 
 /** Сбой сервера виден преподавателю и администратору на любом экране (FR-7.4). */
@@ -48,10 +51,17 @@ function SystemAlert({ role }: { role: User["role"] }) {
 }
 
 function AuthorizedShell({ user }: { user: User }) {
+  const operatorModule = useOperatorModule();
   const header = useRef<HTMLElement>(null);
   const shell = useRef<HTMLDivElement>(null);
   // Карточка оператора 112 во весь экран, как в card_112: без шапки тренажёра.
   const bare = useLocation().pathname.startsWith("/operator");
+  // Наставник — свой у каждого пользователя (mascotModel.ts): смена входа без перезагрузки
+  // перечитывает фигуру и голос до отрисовки.
+  useLayoutEffect(() => {
+    setMascotUser(user.id);
+    return () => setMascotUser(null);
+  }, [user.id]);
   useLayoutEffect(() => {
     const update = () =>
       shell.current?.style.setProperty(
@@ -111,58 +121,69 @@ function AuthorizedShell({ user }: { user: User }) {
       });
       if (error) {
         setError(error.message);
-        return;
+        return false;
       }
       realtime.stop();
       queries.clear();
       navigate("/login", { replace: true });
+      return true;
     } catch {
       setError("Не удалось выйти: сервер недоступен.");
+      return false;
     }
   }
   return (
     <SessionContext.Provider value={{ user, realtime }}>
       <HelpProvider>
-        <div ref={shell} className={styles.shell}>
-          {!bare && (
-            <header ref={header} className={styles.header}>
-              <span>ГБУ Система 112 · Учебный симулятор</span>
-              <span>
-                {user.full_name}
-                {user.workstation_number && ` · АРМ ${user.workstation_number}`}
-              </span>
-              <time>{clock.toLocaleTimeString("ru-RU")}</time>
-              {user.role === "trainee" && (
-                <Link to="/arm/results">Мои результаты</Link>
-              )}
-              {user.role === "trainee" && <WorkflowButton />}
-              <ReportButton />
-              {/* Обучаемый — к выбору обучения «112» / «Диспетчер служб» (просьба
-                  капитана 29.09), у преподавателя выбора нет — сразу в модуль. */}
-              {user.role === "trainee" && (
-                <Link to="/arm" state={CHOOSE_TRAINING}>
-                  Оператор 112
-                </Link>
-              )}
-              {user.role === "teacher" && (
-                <Link to="/operator">Оператор 112</Link>
-              )}
-              <button onClick={() => void logout()}>Выйти</button>
-              {/* Место «?» занято и там, где у экрана нет объяснения: кнопки шапки
+        <WorkflowProvider>
+          <div ref={shell} className={styles.shell}>
+            {!bare && (
+              <header ref={header} className={styles.header}>
+                <span>ГБУ Система 112 · Учебный симулятор</span>
+                <span>
+                  {user.full_name}
+                  {user.workstation_number &&
+                    ` · АРМ ${user.workstation_number}`}
+                </span>
+                <time>{clock.toLocaleTimeString("ru-RU")}</time>
+                {user.role === "trainee" && (
+                  <Link to="/arm/results">Мои результаты</Link>
+                )}
+                {user.role === "trainee" && <WorkflowButton />}
+                <ReportButton />
+                {/* Обучаемый — к выбору обучения «112» / «Диспетчер служб» (просьба
+                  капитана 29.09); у преподавателя перехода в обучение 112 нет
+                  (docs/dds_gameplay.md, раздел 9). */}
+                {showsOperatorLink(user.role, operatorModule) && (
+                  <Link to="/arm" state={CHOOSE_TRAINING}>
+                    Оператор 112
+                  </Link>
+                )}
+                <LogoutButton role={user.role} onLogout={logout} />
+                {/* Место «?» занято и там, где у экрана нет объяснения: кнопки шапки
                   не уезжают влево, когда «?» появляется (список → карточка). */}
-              <span className={styles.helpSlot}>
-                <HelpButton />
-              </span>
-            </header>
-          )}
-          {!bare && <HelpTip userId={user.id} />}
-          {error && <p role="alert">{error}</p>}
-          {user.role !== "trainee" && <SystemAlert role={user.role} />}
-          <Outlet />
-        </div>
+                <span className={styles.helpSlot}>
+                  <HelpButton />
+                </span>
+              </header>
+            )}
+            {!bare && <HelpTip userId={user.id} />}
+            {error && <p role="alert">{error}</p>}
+            {user.role !== "trainee" && <SystemAlert role={user.role} />}
+            <Outlet />
+          </div>
+        </WorkflowProvider>
       </HelpProvider>
     </SessionContext.Provider>
   );
+}
+
+/** Ссылка «Оператор 112» в шапке — только у обучаемого. */
+export function showsOperatorLink(
+  role: User["role"],
+  moduleEnabled: boolean,
+): boolean {
+  return moduleEnabled && role === "trainee";
 }
 
 export function Shell({ roles }: { roles: User["role"][] }) {

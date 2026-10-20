@@ -12,6 +12,7 @@ models
 **/.ruff_cache
 **/dist
 .env
+scripts/stand/.local
 data/models
 data/recordings
 qa/results

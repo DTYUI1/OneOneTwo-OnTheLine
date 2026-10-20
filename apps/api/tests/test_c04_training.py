@@ -19,6 +19,7 @@ from app.core.contracts import validate_json
 from app.core.db import Database
 from app.core.models import (
     Assignment,
+    BrigadeBriefing,
     Call,
     Card,
     MessageDelivery,
@@ -33,6 +34,7 @@ from sqlalchemy import func, select, update
 from sqlalchemy.exc import DBAPIError
 
 from . import test_c03_sessions as c03
+from .briefing_helpers import briefing_payload
 from .test_lifecycle import event as legacy_event
 from .test_lifecycle import login, run_db
 
@@ -178,6 +180,9 @@ def select_and_dial(case, *, answer=True, target=None):
     )
     if answer:
         send(case, "call_answer", {"call_id": call_id})
+        # Вводная (GP-05): без неё бригада не выезжает и не докладывает.
+        if target["brigade_id"]:
+            send(case, "brigade_briefing", briefing_payload(case.card, call_id))
     return call_id
 
 
@@ -223,17 +228,16 @@ def test_manual_selection_target_resolution_and_no_plan_leak(training_case):
         "call_target_id": case.target["id"],
         "brigade_id": case.brigade["id"],
     }
-    # Номер ненаправленной бригады не запрещён: она отвечает отказом и не докладывает.
-    refused = {**dial, "call_id": str(uuid4())}
-    send(case, "call_dial_target", refused)
-    send(case, "call_answer", {"call_id": refused["call_id"]})
-    assert call_refusal(case, refused["call_id"]) == "not_assigned"
-    assert training(case)["messages"] == []
+    # Свободная бригада после «Принята» берёт трубку (GP-05), но без вводной не выезжает.
+    silent = {**dial, "call_id": str(uuid4())}
+    send(case, "call_dial_target", silent)
+    send(case, "call_answer", {"call_id": silent["call_id"]})
+    assert call_refusal(case, silent["call_id"]) is None
     send(case, "brigades_select", {"brigade_ids": [case.brigade["id"]]})
-    # Направили во время отказного разговора — в нём доклада всё равно нет.
+    # Выбор на табло сил тоже не отправляет: доклада нет ни сейчас, ни после тика.
     assert worker_tick(case) == 0
     assert training(case)["messages"] == []
-    send(case, "call_hangup", {"call_id": refused["call_id"]})
+    send(case, "call_hangup", {"call_id": silent["call_id"]})
     send(case, "call_dial_target", {**dial, "brigade_id": None}, expected=422)
     send(case, "call_dial_target", dial)
     assert call_refusal(case, dial["call_id"]) is None
@@ -242,6 +246,8 @@ def test_manual_selection_target_resolution_and_no_plan_leak(training_case):
     assert call["service_id"] == case.target["service_id"]
     assert training(case)["messages"] == []
     send(case, "call_answer", {"call_id": dial["call_id"]})
+    assert training(case)["messages"] == []
+    send(case, "brigade_briefing", briefing_payload(case.card, dial["call_id"]))
     assert len(training(case)["messages"]) == 2
     send(case, "brigades_select", {"brigade_ids": [case.brigades[1]["id"]]})
     assert training(case)["selected_brigade_ids"] == [case.brigades[1]["id"]]
@@ -283,7 +289,7 @@ def test_legacy_assignment_keeps_reports_after_scenario_retirement(training_case
 
 def test_undispatched_brigade_and_unbound_target_do_not_issue_messages(training_case):
     case = training_case
-    # Направлена только бригада плана; вторая на звонок отвечает отказом и не докладывает.
+    # Направлена только бригада плана; вторая берёт трубку, но без вводной не докладывает.
     send(case, "brigades_select", {"brigade_ids": [case.brigade["id"]]})
     call_id = str(uuid4())
     send(
@@ -296,7 +302,7 @@ def test_undispatched_brigade_and_unbound_target_do_not_issue_messages(training_
         },
     )
     send(case, "call_answer", {"call_id": call_id})
-    assert call_refusal(case, call_id) == "not_assigned"
+    assert call_refusal(case, call_id) is None
     assert training(case)["messages"] == []
     send(case, "call_hangup", {"call_id": call_id})
     unbound = next(t for t in case.targets if t["brigade_id"] is None)
@@ -331,10 +337,14 @@ def test_delayed_delivery_and_two_workers_keep_one_delivery(training_case):
     asyncio.run(run())
     send(case, "call_answer", {"call_id": call_id})
     assert training(case)["messages"] == []
+    send(case, "brigade_briefing", briefing_payload(case.card, call_id))
+    assert training(case)["messages"] == []
 
     async def advance(db):
-        call = await db.get(Call, UUID(call_id))
-        return call.answered_at
+        # Отсчёт докладов — от вводной (GP-05).
+        return await db.scalar(
+            select(BrigadeBriefing.briefed_at).where(BrigadeBriefing.call_id == UUID(call_id))
+        )
 
     answered_at = run_db(case.url, advance)
 
@@ -499,6 +509,10 @@ def test_concurrent_playback_outcomes_cannot_both_succeed(training_case):
     run_db(case.url, verify)
 
 
+def without_contacts(view):
+    return {key: value for key, value in view.items() if key != "brigade_contacts"}
+
+
 def test_finish_and_restart_preserve_evidence_and_reject_new_confirmations(training_case):
     case = training_case
     select_and_dial(case)
@@ -516,10 +530,12 @@ def test_finish_and_restart_preserve_evidence_and_reject_new_confirmations(train
     assert send(case, "message_presented", payload, body=body).json()["duplicate"]
     response = send(case, "message_presented", playback(delivery), expected=409)
     assert response.json()["code"] == "session_finished"
-    assert training(case) == before
+    # Завершение кладёт открытую трубку: бригада уже не «на связи сейчас» (DT-10), остальное то же.
+    after = training(case)
+    assert without_contacts(after) == without_contacts(before)
     with TestClient(create_database_app(case.config)) as restarted:
         login(restarted, "trainee01")
-        assert restarted.get(f"/api/cards/{case.card['id']}/training").json() == before
+        assert restarted.get(f"/api/cards/{case.card['id']}/training").json() == after
 
     async def no_more(db):
         assert (

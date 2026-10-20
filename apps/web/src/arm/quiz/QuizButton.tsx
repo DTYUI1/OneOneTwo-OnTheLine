@@ -1,7 +1,12 @@
 // Кнопка «Проверьте себя» и окно теста по памятке ДДС (quizModel). Результат в оценку
 // не идёт: это самопроверка перед тренировкой. Ошибки помнит только браузер — следующий
 // тест начинается с них; после 5 из 5 отсюда же запускается тренировка.
+//
+// Кнопка — в окне «Порядок работы» (просьба капитана 19.10): прочитал порядок — проверь
+// себя. Список происшествий отдаёт её окну через useWorkflowExtra; окно теста — поверх
+// страницы (портал): «Порядок работы» перед ним закрывается.
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { Dialog } from "../Dialog";
 import { PracticeButton } from "../practice/PracticeButton";
 import {
@@ -16,19 +21,28 @@ import {
 import arm from "../ArmPage.module.css";
 import styles from "./Quiz.module.css";
 
-export function QuizButton() {
+/** Строка в окне «Порядок работы»: пояснение и кнопка теста. */
+export function QuizInWorkflow({ close }: { readonly close: () => void }) {
   const [open, setOpen] = useState(false);
   return (
     <>
+      <span>Прочитали порядок? Пять вопросов по памятке ДДС.</span>
       <button
         type="button"
         className={arm.resultsButton}
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          close();
+          setOpen(true);
+        }}
         title="Пять вопросов по памятке ДДС: статусы, сроки, комментарии"
       >
         Проверьте себя
       </button>
-      {open && <QuizDialog onClose={() => setOpen(false)} />}
+      {open &&
+        createPortal(
+          <QuizDialog onClose={() => setOpen(false)} />,
+          document.body,
+        )}
     </>
   );
 }

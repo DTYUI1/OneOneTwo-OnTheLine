@@ -8,7 +8,8 @@
   "questionnaire_id": "person_danger",
   "caller": {
     "name": "Титова Светлана Игоревна",
-    "phone": "+79261239001"
+    "phone": "+79261239001",
+    "status": "очевидец"
   },
   "address": {
     "city": "Москва",
@@ -17,9 +18,12 @@
     "street": "Ленинский проспект",
     "house": "90",
     "building": "",
-    "apartment": ""
+    "apartment": "",
+    "descriptive": "Около остановки"
   },
   "opening": "Алло, тут человеку плохо, он лежит на тротуаре и не может встать!",
+  "named_address_fields": ["descriptive"],
+  "landmark_synonyms": ["около остановки", "остановка"],
   "description_reference": "У дома 90 на Ленинском проспекте на тротуаре лежит мужчина, зовёт на помощь, на виске кровь, встать не может, вокруг него никого нет.",
   "answers": {
     "address": {

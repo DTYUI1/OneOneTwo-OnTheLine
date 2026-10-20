@@ -12,7 +12,8 @@ from app.core.models import AuditLog
 logger = logging.getLogger(__name__)
 # POST без изменений в системе: проверка текста идёт на каждую паузу в наборе — журнал
 # засорился бы, а записывать в нём нечего.
-READ_ONLY_OPERATIONS = frozenset({"checkSpelling"})
+# Ничего не меняют: проверка текста и распознавание доклада голосом (результат — в отбое).
+READ_ONLY_OPERATIONS = frozenset({"checkSpelling", "recognizeReport", "recognizeReply"})
 
 
 async def transaction_middleware(
@@ -25,6 +26,9 @@ async def transaction_middleware(
             response = await call_next(request)
             if response.status_code >= 400:
                 await db.rollback()
+                # Что остаётся и после отказа: статус без доклада в журнале карточки (GP-26).
+                for write in getattr(request.state, "keep_on_error", ()):
+                    await write(db)
             route = request.scope.get("route")
             if (
                 request.method not in {"GET", "HEAD", "OPTIONS"}

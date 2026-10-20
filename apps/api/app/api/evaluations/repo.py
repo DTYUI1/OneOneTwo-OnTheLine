@@ -1,12 +1,13 @@
 from uuid import UUID
 
-from sqlalchemy import RowMapping, select
+from sqlalchemy import RowMapping, case, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.models import (
     Assignment,
     Card,
     Evaluation,
+    Job,
     Participant,
     Prediction,
     Session,
@@ -130,3 +131,44 @@ async def report_predictions(db: AsyncSession, session_id: UUID) -> list[Predict
         .order_by(Prediction.made_at, Prediction.id)
     )
     return list((await db.scalars(query)).all())
+
+
+async def ai_checks(db: AsyncSession, evaluation_ids: list[UUID]) -> dict[UUID, tuple[str, int]]:
+    """Состояние ИИ-проверки оценок: (queued | running | failed, задач ИИ впереди).
+
+    Очередь — как у worker (`queue.claim`): идущие задачи, затем ждущие, проверки раньше
+    генерации, по run_after. Оценка без задачи или с законченной — не в словаре.
+    """
+    if not evaluation_ids:
+        return {}
+    wanted = {str(item) for item in evaluation_ids}
+    active = list(
+        await db.scalars(
+            select(Job)
+            .where(Job.kind.in_(["evaluate", "generate"]), Job.status.in_(["running", "pending"]))
+            .order_by(
+                case((Job.status == "running", 0), else_=1),
+                case((Job.kind == "generate", 1), else_=0),
+                Job.run_after,
+                Job.id,
+            )
+        )
+    )
+    checks: dict[UUID, tuple[str, int]] = {}
+    for ahead, job in enumerate(active):
+        target = job.payload.get("evaluation_id") if job.kind == "evaluate" else None
+        if target in wanted and UUID(target) not in checks:
+            checks[UUID(target)] = (
+                "running" if job.status == "running" else "queued",
+                0 if job.status == "running" else ahead,
+            )
+    failed = await db.scalars(
+        select(Job.payload["evaluation_id"].astext).where(
+            Job.kind == "evaluate",
+            Job.status == "failed",
+            Job.payload["evaluation_id"].astext.in_(wanted),
+        )
+    )
+    for target in failed:
+        checks.setdefault(UUID(target), ("failed", 0))
+    return checks

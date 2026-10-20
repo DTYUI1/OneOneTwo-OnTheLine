@@ -62,3 +62,54 @@ export function placeMarkers(
     return place;
   });
 }
+
+export type Corner = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+
+/** Порядок углов: правый нижний — привычное место панели, остальные — если он занят. */
+const CORNERS: readonly Corner[] = [
+  "bottom-right",
+  "bottom-left",
+  "top-right",
+  "top-left",
+];
+
+function overlapArea(a: Box, b: Box) {
+  const width =
+    Math.min(a.left + a.width, b.left + b.width) - Math.max(a.left, b.left);
+  const height =
+    Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top);
+  return width > 0 && height > 0 ? width * height : 0;
+}
+
+/**
+ * Угол экрана для панели объяснения. Окна вроде телефона ДДС открываются в правом нижнем
+ * углу и двигаются куда угодно: панель в постоянном углу закрывала бы ту самую часть,
+ * которую объясняет. Берём угол, где панель меньше всего закрывает выбранную часть.
+ */
+export function bubbleCorner(
+  part: Box,
+  bubble: { width: number; height: number },
+  viewport: { width: number; height: number },
+  margin: number,
+): Corner {
+  const place = (corner: Corner): Box => ({
+    left: corner.endsWith("left")
+      ? margin
+      : viewport.width - margin - bubble.width,
+    top: corner.startsWith("top")
+      ? margin
+      : viewport.height - margin - bubble.height,
+    width: bubble.width,
+    height: bubble.height,
+  });
+  let best = CORNERS[0];
+  let least = Infinity;
+  for (const corner of CORNERS) {
+    const area = overlapArea(place(corner), part);
+    if (area < least) {
+      best = corner;
+      least = area;
+    }
+  }
+  return best;
+}

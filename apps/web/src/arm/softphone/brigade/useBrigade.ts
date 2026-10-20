@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type CardEvent } from "../../../shared/api";
 import { useSession } from "../../../shared/session";
 import { reportMayStart } from "../speech";
+import { confirmDial } from "../dialConfirmation";
 import { createVoices, type Voices } from "../voices";
 import type { BrigadeData } from "./data";
 import {
@@ -20,24 +21,31 @@ import {
 } from "./evidence";
 import {
   type BoardRow,
+  type BrigadeQuestion,
   directBlock,
   forcesBoard,
+  openQuestion,
   pendingMessages,
   presentedMessages,
 } from "./logic";
 import type { CardState } from "../../cardModel";
+import { replyHowPayload, type ReplyHow } from "./voiceReply";
 
 type CallTarget = BrigadeData["targets"][number];
 
 export interface Listening {
   /** Ответ на текущий звонок; `null` — разговора ещё не было. */
   readonly talkStartedAt: number | null;
-  readonly lastVoiceAt: number | null;
   /**
    * Бригада на линии; `null` — разговора с бригадой нет. Доклад звучит сам только в
    * разговоре с той бригадой, что его выдала: не после отбоя и не в чужом звонке.
    */
   readonly brigadeId: string | null;
+  /**
+   * Бригада, снятая с удержания, повторила свой вопрос и ждёт ответа в его сроке (HQ-058,
+   * `holdsNews`): новая реплика ждёт ответа или срока.
+   */
+  readonly hold?: boolean;
 }
 
 export interface BrigadeInput {
@@ -46,8 +54,13 @@ export interface BrigadeInput {
   readonly sessionFinished: boolean;
   /** Статус карточки: бригаду направляют только после «Принята»; `null` — неизвестен. */
   readonly cardState?: CardState | null;
-  /** Что слышно в разговоре: доклад ждёт, пока диспетчер договорит. */
+  /** Кто на линии и с какого момента: доклад ждёт, пока диспетчер представится. */
   readonly listen?: () => Listening;
+  /**
+   * На линии ещё звучит другая реплика (повтор адреса, ответ бригады записью банка): доклад
+   * ждёт её конца, а не звучит поверх (проверка 17.10).
+   */
+  readonly quiet?: boolean;
 }
 
 export interface BrigadeView {
@@ -77,7 +90,9 @@ export interface BrigadeView {
   /** Выданный, но ещё не предъявленный доклад. */
   readonly current: InformationEvidence | null;
   readonly playing: boolean;
-  /** Доклад готов, но бригада ещё слушает диспетчера. */
+  /** Сколько ещё звучать докладу, мс; `null` — не звучит или конец неизвестен (HQ-052). */
+  readonly playLeftMs: () => number | null;
+  /** Доклад готов, но бригада ещё дослушивает диспетчера (первые 2 с). */
   readonly listening: boolean;
   readonly note: string | null;
   /** Повтор аудио, пока доклад не предъявлен. */
@@ -86,11 +101,44 @@ export interface BrigadeView {
   readonly confirmRead: () => void;
   /** На линии сменился собеседник — проверить, не пора ли бригаде докладывать. */
   readonly recheck: () => void;
+  /** Вопрос бригады в разговоре `callId`, на который ещё не ответили (DT-10). */
+  readonly question: (
+    callId: string | null,
+    brigadeId?: string | null,
+  ) => BrigadeQuestion | null;
+  /**
+   * Ответ бригаде вариантом или голосом (DT-16): событие `brigade_reply`, бригада ответит
+   * в разговоре. `how` — как дан ответ; без него — вариантом.
+   */
+  readonly reply: (
+    callId: string,
+    deliveryId: string,
+    optionKey: string,
+    how?: ReplyHow,
+  ) => void;
+  /** Бригады, выехавшие по вводной (GP-05): только подтверждённые сервером. */
+  readonly dispatched: readonly string[];
+  /** Сказанное бригаде вне вопроса и не вводная (GP-11): событие `brigade_said` в журнал. */
+  readonly say: (callId: string, text: string) => void;
+  /** «Принял» на «Как приняли?» (TC-01): событие `report_confirmed` в журнал карточки. */
+  readonly confirm: (
+    callId: string,
+    deliveryId: string,
+    text: string,
+    accepted?: () => void,
+  ) => void;
+  /** Полная вводная бригаде (GP-05): событие `brigade_briefing`, бригада выезжает. */
+  readonly brief: (
+    callId: string,
+    brigadeId: string,
+    mode: "voice" | "parts",
+    text: string,
+  ) => void;
 }
 
 export function useBrigade(input: BrigadeInput): BrigadeView {
   const { realtime } = useSession();
-  const { cardId, data, sessionFinished } = input;
+  const { cardId, data, sessionFinished, quiet = false } = input;
   const block = directBlock(input.cardState ?? null);
   const [touched, setTouched] = useState(false);
   const [selected, setSelected] = useState<readonly string[]>([]);
@@ -103,11 +151,25 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
   const voicesRef = useRef<Voices | null>(null);
   const ledgersRef = useRef(new Map<string, Ledger>());
   const autoPlayedRef = useRef(new Set<string>());
-  const seenRef = useRef(new Map<string, number>());
   const listenRef = useRef(input.listen);
   listenRef.current = input.listen;
   const [listening, setListening] = useState(false);
   const [recheck, setRecheck] = useState(0);
+  const confirmations = useRef(new Map<string, () => void>());
+  const confirmScope = useRef({ cardId, realtime, sessionFinished });
+  if (
+    confirmScope.current.cardId !== cardId ||
+    confirmScope.current.realtime !== realtime ||
+    confirmScope.current.sessionFinished !== sessionFinished
+  )
+    confirmScope.current = { cardId, realtime, sessionFinished };
+  useEffect(() => {
+    const pending = confirmations.current;
+    return () => {
+      for (const dispose of pending.values()) dispose();
+      pending.clear();
+    };
+  }, [cardId, realtime, sessionFinished]);
   const finishedRef = useRef(sessionFinished);
   finishedRef.current = sessionFinished;
 
@@ -306,6 +368,12 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
         Math.max(1200, audio?.duration_ms ?? 1200),
       )) ?? { outcome: "failed" as const, startedInMs: null, note: null };
       setPlaying(false);
+      // Оборвали (отбой, удержание, другой звук) — попытка не засчитана и не провалена:
+      // доклад прозвучит снова, когда линия освободится.
+      if (played.outcome === "cancelled") {
+        autoPlayedRef.current.delete(delivery.delivery_id);
+        return;
+      }
       if (played.outcome === "played") {
         resolveAttempt(attempt, "presented");
         return;
@@ -319,10 +387,10 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
   );
 
   // Бригада докладывает сама: выданное аудио звучит один раз автоматически,
-  // дальше — только по кнопке повтора. Сначала она дослушивает диспетчера:
-  // не раньше 2 с после ответа и не поверх его речи (speech.ts).
+  // дальше — по кнопке повтора или «Повторите доклад». Сначала она дослушивает
+  // диспетчера: не раньше 2 с после ответа (speech.ts).
   useEffect(() => {
-    if (!current || playing || sessionFinished) return;
+    if (!current || playing || sessionFinished || quiet) return;
     const id = current.delivery.delivery_id;
     if (
       current.state !== "delivered" ||
@@ -335,17 +403,15 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
       setListening(false);
       return;
     }
-    const now = Date.now();
-    if (!seenRef.current.has(id)) seenRef.current.set(id, now);
+    if (heard?.hold) {
+      setListening(false);
+      const timer = setTimeout(() => setRecheck((value) => value + 1), 250);
+      return () => clearTimeout(timer);
+    }
     if (
       heard &&
       heard.talkStartedAt !== null &&
-      !reportMayStart({
-        now,
-        talkStartedAt: heard.talkStartedAt,
-        reportSeenAt: seenRef.current.get(id) ?? now,
-        lastVoiceAt: heard.lastVoiceAt,
-      })
+      !reportMayStart({ now: Date.now(), talkStartedAt: heard.talkStartedAt })
     ) {
       setListening(true);
       const timer = setTimeout(() => setRecheck((value) => value + 1), 150);
@@ -354,7 +420,12 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
     setListening(false);
     autoPlayedRef.current.add(id);
     void present(current);
-  }, [current, playing, sessionFinished, present, recheck]);
+  }, [current, playing, sessionFinished, quiet, present, recheck]);
+
+  const playLeftMs = useCallback(
+    () => voicesRef.current?.remainingMs() ?? null,
+    [],
+  );
 
   const recheckNow = useCallback(() => setRecheck((value) => value + 1), []);
 
@@ -388,10 +459,132 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
       ),
     [data.targets, committed],
   );
-  const board = useMemo(
-    () => forcesBoard(brigades, data.targets, committed, busy),
-    [brigades, data.targets, committed, busy],
+  const contactList = data.training?.brigade_contacts;
+  const contacts = useMemo(
+    () =>
+      new Map(
+        (contactList ?? []).map((item) => [
+          item.brigade_id,
+          item.last_contact_at,
+        ]),
+      ),
+    [contactList],
   );
+  const board = useMemo(
+    () => forcesBoard(brigades, data.targets, committed, busy, contacts),
+    [brigades, data.targets, committed, busy, contacts],
+  );
+
+  // Ответ уходит в очередь событий; до ответа сервера варианты больше не показываем.
+  const [answered, setAnswered] = useState<readonly string[]>([]);
+  const question = useCallback(
+    (callId: string | null, brigadeId: string | null = null) =>
+      openQuestion(messages ?? [], callId, answered, brigadeId),
+    [messages, answered],
+  );
+  const reply = useCallback(
+    (callId: string, deliveryId: string, optionKey: string, how?: ReplyHow) => {
+      if (sessionFinished) return;
+      setAnswered((ids) => [...ids, deliveryId]);
+      void send({
+        client_event_id: crypto.randomUUID(),
+        client_ts: new Date().toISOString(),
+        type: "brigade_reply",
+        payload: {
+          call_id: callId,
+          delivery_id: deliveryId,
+          option_key: optionKey,
+          ...replyHowPayload(how),
+        },
+      } satisfies CardEvent).finally(data.refresh);
+    },
+    [send, sessionFinished, data.refresh],
+  );
+
+  // enqueue подтверждает лишь запись в outbox; выезд подтверждает выдача сервера.
+  const brief = useCallback(
+    (
+      callId: string,
+      _brigadeId: string,
+      mode: "voice" | "parts",
+      text: string,
+    ) => {
+      if (sessionFinished) return;
+      void send({
+        client_event_id: crypto.randomUUID(),
+        client_ts: new Date().toISOString(),
+        type: "brigade_briefing",
+        payload: { call_id: callId, mode, text },
+      } satisfies CardEvent).then(data.refresh, () => {
+        setNote(
+          "Не удалось отправить вводную. Повторите её после восстановления связи.",
+        );
+        data.refresh();
+      });
+    },
+    [send, sessionFinished, data.refresh],
+  );
+  const say = useCallback(
+    (callId: string, text: string) => {
+      if (sessionFinished || !text.trim()) return;
+      void send({
+        client_event_id: crypto.randomUUID(),
+        client_ts: new Date().toISOString(),
+        type: "brigade_said",
+        payload: { call_id: callId, text: text.trim().slice(0, 1000) },
+      } satisfies CardEvent).finally(data.refresh);
+    },
+    [send, sessionFinished, data.refresh],
+  );
+  const confirm = useCallback(
+    (
+      callId: string,
+      deliveryId: string,
+      text: string,
+      accepted?: () => void,
+    ) => {
+      if (sessionFinished || !text.trim()) return;
+      const key = JSON.stringify([callId, deliveryId]);
+      if (confirmations.current.has(key)) return;
+      const scope = confirmScope.current;
+      // Резервируем до записи в очередь: возможны синхронная квитанция и повторный щелчок.
+      confirmations.current.set(key, () => {});
+      let settled = false;
+      const finish = () => {
+        settled = true;
+        confirmations.current.delete(key);
+        data.refresh();
+      };
+      const attempt = confirmDial(
+        realtime,
+        cardId,
+        {
+          client_event_id: crypto.randomUUID(),
+          client_ts: new Date().toISOString(),
+          type: "report_confirmed",
+          payload: {
+            call_id: callId,
+            delivery_id: deliveryId,
+            text: text.trim().slice(0, 1000),
+          },
+        },
+        {
+          isCurrent: () => confirmScope.current === scope,
+          accepted: () => {
+            finish();
+            accepted?.();
+          },
+          rejected: (message) => {
+            finish();
+            setNote(message);
+          },
+        },
+      );
+      if (!settled) confirmations.current.set(key, attempt.dispose);
+    },
+    [realtime, cardId, sessionFinished, data.refresh],
+  );
+  const dispatched = serverSelected;
 
   return {
     // Статус, которого бригада ждёт перед следующим докладом. Сервер отдаёт его
@@ -411,10 +604,17 @@ export function useBrigade(input: BrigadeInput): BrigadeView {
     accepted,
     current,
     playing,
+    playLeftMs,
     listening: listening && current !== null && !playing,
     note,
     replay,
     confirmRead,
     recheck: recheckNow,
+    question,
+    reply,
+    dispatched,
+    say,
+    confirm,
+    brief,
   };
 }

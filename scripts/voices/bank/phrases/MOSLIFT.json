@@ -1,0 +1,3019 @@
+{
+  "service": "MOSLIFT",
+  "speaker": "brigade",
+  "gender": "male",
+  "incidents": {
+    "lift_stuck": "Застревание в лифте",
+    "lift_child": "Ребёнок один в застрявшем лифте",
+    "lift_ill": "Пассажиру плохо в застрявшем лифте",
+    "lift_fault": "Лифт не работает, двери не закрываются, кабина дёргается",
+    "lift_fire": "Задымление в шахте или машинном помещении"
+  },
+  "phrases": [
+    {
+      "id": "MOSLIFT.answer.any.1",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мослифт, механик слушает.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.answer.any.2",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, на связи.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.answer.any.3",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Механик, слушаю, говорите.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.1",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, выезжаю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.2",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, заявку взял, выезжаю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.3",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Инструмент в машине, еду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.4",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, еду. Ключи от машинного помещения при мне.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.5",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял. Скажите там людям, пусть сами двери не раздвигают. Еду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.6",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Закончил на соседнем объекте, выезжаю, буду скоро.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.enroute.any.1",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Еду, минут через пять буду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.enroute.any.2",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "В пути. На выезде пробка, но скоро буду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.enroute.any.3",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезжаю уже, ищу, где встать.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.enroute.any.4",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Еду. Доложу с места.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.1",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, стою в пробке, впереди авария. Задерживаюсь.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.2",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаюсь: двор перекрыт шлагбаумом, никто не открывает. Иду пешком с инструментом.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.3",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, был на другом застревании, только освободился. Выезжаю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.4",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Колесо пробил. Меняю, минут десять потеряю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.5",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Навигатор завёл не на тот въезд, объезжаю квартал.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.wrong_place.any.1",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, я на месте, а тут никто не застревал, лифт ходит. Проверьте адрес!",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.wrong_place.any.2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "По этому адресу вызова нет, жильцы ничего не знают. Куда мне?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.wrong_place.any.3",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут дом вообще без лифта. Адрес точно правильный?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.readback_fixed.any.1",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял поправку, разворачиваюсь.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.readback_fixed.any.2",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, другой адрес. Перестраиваюсь, еду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.readback_fixed.any.3",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, хорошо, что поправили. Еду туда.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.1",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.2",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.3",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно, понял.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.4",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, понял, учту.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.5",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, работаю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.not_understood.any.1",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял, повторите.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.not_understood.any.2",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, плохо слышно, в шахте связь режет. Повторите.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.not_understood.any.3",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, пожалуйста, не расслышал.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.end_call.any.1",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.end_call.any.2",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, отключаюсь.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.end_call.any.3",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, до связи.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.end_call.any.4",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ладно, работаю. Конец связи.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.1",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаю, диспетчер. Лифт обесточил, разбираюсь.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.2",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока в машинном помещении. Ещё немного.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.3",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы идут, как закончу — доложу.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.4",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ищу неисправность. Похоже, плата управления, проверяю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.5",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаю. Связь с кабиной есть, люди спокойные.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.clarify.any.1",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, подъезд какой? Дом длинный, подъездов много.",
+      "facts": [],
+      "asks": "entrance"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.2",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, на каком этаже встали, известно?",
+      "facts": [],
+      "asks": "floor"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.3",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, какой лифт: пассажирский или грузовой?",
+      "facts": [],
+      "asks": "lift_kind"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.4",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, код домофона есть? Стою у двери.",
+      "facts": [],
+      "asks": "intercom"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.5",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, есть телефон заявителя? Хочу узнать, что у них в кабине.",
+      "facts": [],
+      "asks": "caller_phone"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.6",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, выход на крышу закрыт на замок, в машинное не попасть. Кто открывает, управляющая компания?",
+      "facts": [],
+      "asks": "access"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.7",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, ключей от машинного помещения на этот дом у меня нет. Не знаете, у кого они?",
+      "facts": [],
+      "asks": "machine_room_keys"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.8",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, сколько человек в кабине? Взрослые, дети?",
+      "facts": [],
+      "asks": "people_inside"
+    },
+    {
+      "id": "MOSLIFT.clarify_ok.any.1",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, поднимаюсь.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_ok.any.2",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, спасибо, иду туда.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_ok.any.3",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, так быстрее будет.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_ok.any.4",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, понял, этого хватит.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_unknown.any.1",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, буду искать сам, это займёт время.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_unknown.any.2",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ладно, спрошу у жильцов.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_unknown.any.3",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял. Тогда пройду по этажам, послушаю, где стучат.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_late.any.1",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже нашёл сам.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_late.any.2",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поздно, диспетчер, жильцы уже открыли.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify_late.any.3",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Спасибо, уже разобрался.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.request_service.any.1",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пассажиру плохо, задыхается. Нужна скорая, срочно!",
+      "facts": [
+        "victims"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.2",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нужна скорая. Женщину вывел, она сознание теряет.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.3",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вызовите скорую к подъезду: пожилой мужчина после кабины, на сердце жалуется.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_male"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.4",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, из шахты тянет гарью. Вызывайте пожарных!",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.5",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Кабину сам не опущу, заклинило на ловителях. Нужны спасатели, вызывайте.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.6",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, в машинном помещении искрит щит и дым. Нужны пожарные!",
+      "facts": [
+        "fire"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.7",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, в машинном помещении сорван замок, кабели порезаны. Нужна полиция.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "MOSLIFT.request_service.any.8",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мужчина в кабине пьяный, кидается на двери, выпускать опасно. Пришлите полицию.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "MOSLIFT.alarm.any.1",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер! Сорвался в приямок, нога... не могу встать!",
+      "facts": [],
+      "tone": "[in pain]"
+    },
+    {
+      "id": "MOSLIFT.alarm.any.2",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Напарника ударило током в машинном, он без сознания!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "MOSLIFT.alarm.any.3",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер... током ударило, рука не слушается. Скорую мне.",
+      "facts": [],
+      "tone": "[out of breath]"
+    },
+    {
+      "id": "MOSLIFT.alarm.any.4",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "text": "Тревога! Противовес пошёл, руку зажало! Срочно скорую!",
+      "facts": [],
+      "tone": "[shouting]"
+    },
+    {
+      "id": "MOSLIFT.alarm_ack.any.1",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, жду скорую.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.alarm_ack.any.2",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял... держусь, жду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.alarm_ack.any.3",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, напарника не трогаю, жду врачей.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.any.1",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы завершены, лифт запущен, ходит нормально.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.any.2",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, закончил. Лифт в работе, заявку закрываю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.any.3",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пассажиров вывел, лифт отключил до ремонта, заявку передал ремонтникам.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.any.4",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Готово. Люди вышли, кабину проверил, запускаю в работу.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.any.1",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, этот лифт не наш, его обслуживает другая организация. Ключей у меня нет, работ не проводил.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.any.2",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Отбой, диспетчер: пассажиры вышли сами до моего приезда. Работ не было.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.any.3",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ложный вызов. Лифт стоит внизу, пустой, двери открыты.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.any.4",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приехал — никого. Жильцы говорят, двери соседи раздвинули, люди разошлись.",
+      "facts": [
+        "self_resolved",
+        "gone"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "На месте. Кабина стоит между этажами, связь с кабиной есть, люди спокойные.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Прибыл. Кабина чуть не дошла до этажа, двери приоткрыты, пассажира вижу.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Диспетчер, на месте. Переговорное не работает, стучу — отвечают. Иду в машинное.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Механик на месте. Лифт встал без света, в кабине темно, люди нервничают.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.1",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Обесточил лифт, иду на ручное опускание. Сейчас подведу кабину к этажу.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.2",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Кабину подвёл к этажу, открываю двери шахты ключом.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.3",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Штурвал крутится туго, тормоз еле отходит. Работаю, людей держу на связи.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.4",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Нашёл: дверной контакт не замкнулся. Сбрасываю, пробую запустить из машинного.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.update.lift_stuck.1",
+      "slot": "update",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Диспетчер, кабина села на ловители, вручную не опустить. Будет дольше.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_stuck.2",
+      "slot": "update",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Диспетчер, женщине в кабине душно, говорит, тяжело дышать. Пока держится.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_stuck.1",
+      "slot": "completed",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Пассажиров вывел, все в порядке. Лифт запустил, работы завершены.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_stuck.2",
+      "slot": "completed",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Люди вышли, к врачу никто не просится. Лифт оставил отключённым, табличку повесил.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_stuck.3",
+      "slot": "completed",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Готово. Бабушку вывел, посидела на лавочке, всё хорошо. Лифт работает.",
+      "facts": [
+        "blocked",
+        "victim_elderly",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_stuck.1",
+      "slot": "refused",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Диспетчер, пока ехал, лифт перезапустили с пульта, люди вышли. Работ не проводил.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_stuck.2",
+      "slot": "refused",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Застревания нет. Кабина внизу, пустая, лифт ходит. Кто вызывал — не нашёл.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "На месте. В кабине мальчик, один, плачет. Говорю с ним через дверь.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Прибыл. Девочка в кабине одна, мама внизу у шахты, нервничает больше ребёнка.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Механик на месте. Ребёнок по связи не отвечает, но стучит. Бегу в машинное.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Диспетчер, на месте. Кабина у самого этажа, в щель вижу ребёнка, разговариваю с ним.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.1",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Ребёнку сказал сесть на пол и двери не трогать. Обесточиваю, опускаю.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.2",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Опускаю вручную, потихоньку, чтобы не дёрнуло. Мама с ним через двери разговаривает.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.3",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Считаем с ним вслух, чтобы не боялся, а я кручу штурвал. Почти подвёл.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.4",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Двери шахты открыл, кабина выше на полметра. Подсаживать не буду, дожимаю до этажа.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_child.1",
+      "slot": "update",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Диспетчер, ребёнок перестал отвечать. Стучу — тишина. Тороплюсь.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_child.2",
+      "slot": "update",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Диспетчер, мама говорит, у мальчика астма. Ингалятор с собой, пока дышит нормально.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_child.1",
+      "slot": "completed",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Ребёнка достал, отдал маме. Ревёт, но целый. Работы завершены.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_child.2",
+      "slot": "completed",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Девочку вывел, мама забрала домой. Лифт отключил до ремонта.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_child.3",
+      "slot": "completed",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Ребёнка вывел, передал скорой, пусть посмотрят. Лифт в работе.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_child.1",
+      "slot": "refused",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Диспетчер, ребёнка уже нет: сосед раздвинул двери и увёл его домой. Работ не проводил.",
+      "facts": [
+        "self_resolved",
+        "victim_child",
+        "gone"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_child.2",
+      "slot": "refused",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Ложная тревога. Сын поднялся по лестнице, сидит дома. Лифт исправен.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "На месте. Связь с кабиной есть, мужчине плохо, жалуется на сердце.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Прибыл. Женщина в кабине, говорит, кружится голова, душно. Начинаю сразу.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Диспетчер, на месте. Пассажир в кабине не отвечает, только хрипит. Работаю быстро.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Механик на месте. В кабине пожилая женщина, говорит, сахар упал. Соседи ей воду в щель просовывают.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_elderly",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.1",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Обесточил, опускаю вручную. Пассажиру сказал сесть и дышать медленно.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.2",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Двери кабины раздвинул на ладонь, воздух пошёл, ей полегче.",
+      "facts": [
+        "blocked",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.3",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Кабина ниже этажа, через верх вытаскивать нельзя. Подвожу, ещё пара минут.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.4",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Тормоз отжал, кабина пошла. Пассажир на связи, отвечает, но вяло.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_ill.1",
+      "slot": "update",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Диспетчер, пассажир перестал отвечать. Похоже, сознание потерял!",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_ill.2",
+      "slot": "update",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Диспетчер, ей лучше: попила воды, сидит, разговаривает. Продолжаю.",
+      "facts": [
+        "blocked",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.1",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Пассажира вывел и передал скорой. Лифт отключён до ремонта, работы завершены.",
+      "facts": [
+        "blocked",
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.2",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Мужчину вывел, врачи забрали в больницу. Лифт запустил.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.3",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Женщину вывел, от скорой отказалась, ушла домой своими ногами. Лифт в работе.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.1",
+      "slot": "refused",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Диспетчер, пассажира до меня вывели жильцы, его уже увезла скорая. Лифт работает, мне тут делать нечего.",
+      "facts": [
+        "blocked",
+        "self_resolved",
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.2",
+      "slot": "refused",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Лифт не наш, обслуживает другая организация. Человеку плохо — звоните их механику, и скорую туда.",
+      "facts": [
+        "blocked",
+        "other_org",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "На месте. Двери кабины не закрываются, лифт стоит. Людей внутри нет.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Прибыл. Кабина дёргается на пуске, жильцы боятся ездить. Отключаю, смотрю.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Диспетчер, на месте. Лифт не вызывается ни с одного этажа, в машинном тишина.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Механик на месте. Кабина ездит, но встаёт ниже этажа, ступенька в ладонь. Люди спотыкаются.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.1",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Лифт отключил. Дверной ролик отвалился, ставлю новый.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.2",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Чищу порог: камешек в пазу, двери до конца не доходили.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.3",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Дёргает из-за тормоза, разрегулирован. Подтягиваю, потом прогоню по этажам.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.4",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Меняю пускатель в шкафу управления, старый подгорел.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.update.lift_fault.1",
+      "slot": "update",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Диспетчер, тут надолго: канаты износились, лифт ставлю на ремонт.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.update.lift_fault.2",
+      "slot": "update",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Диспетчер, причина проще, чем думал. Скоро запущу.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fault.1",
+      "slot": "completed",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Двери отрегулировал, лифт запустил, прогнал по этажам — ходит нормально.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fault.2",
+      "slot": "completed",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Лифт оставил отключённым, нужна замена деталей. Табличку повесил, заявку в ремонт передал.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fault.3",
+      "slot": "completed",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Готово, тормоз отрегулировал. Кабина идёт плавно, больше не дёргает.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_fault.1",
+      "slot": "refused",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Диспетчер, лифт исправен. Двери не закрывались — в проёме коляску оставили.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_fault.2",
+      "slot": "refused",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Диспетчер, лифты в этом доме другой организации, у них свой механик. Жильцам дал телефон их диспетчерской.",
+      "facts": [
+        "other_org",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "На месте. В машинном помещении дым, пожарные уже здесь. Обесточиваю лифт.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Прибыл. Из шахты тянет гарью, пожарные ведут разведку. Отключаю лифты в подъезде.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Диспетчер, на месте. Дым в шахте, в кабине никого, пожарные проверили.",
+      "facts": [
+        "fire",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Механик на месте. Пожарные просят опустить кабину вниз и обесточить, делаю.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.1",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Кабину опустил вниз, двери оставил открытыми. Теперь обесточил весь лифт.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.2",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Горел двигатель лебёдки, пожарные потушили. Проверяю шкаф управления.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.3",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Дымил мусор в приямке, кто-то окурок кинул. Пожарные проливают, я рядом.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.4",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Проветриваем машинное, дверь на крышу открыли. Лифт сегодня не включу.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_fire.1",
+      "slot": "update",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Диспетчер, дым пошёл в шахту соседнего лифта. Отключаю и его.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_fire.2",
+      "slot": "update",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Диспетчер, огня нет: дымил перегретый тормоз. Пожарные уже сворачиваются.",
+      "facts": [
+        "no_fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fire.1",
+      "slot": "completed",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Пожарные закончили. Лифт обесточен и закрыт до ремонта, работы завершены.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fire.2",
+      "slot": "completed",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Задымление устранено, машинное проветрили. Двигатель сгорел, лифт стоит до замены.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fire.3",
+      "slot": "completed",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Проверил после пожарных: всё сухо, проводка цела. Лифт запустил.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.refused.lift_fire.1",
+      "slot": "refused",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Диспетчер, дыма в шахте нет. Гарью тянуло с улицы, во дворе мусор жгли.",
+      "facts": [
+        "false_call",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_fire.2",
+      "slot": "refused",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Лифты в этом доме обслуживает другая организация, их механик уже здесь с пожарными. Я снимаюсь.",
+      "facts": [
+        "other_org"
+      ]
+    },
+    {
+      "id": "MOSLIFT.intro.any.1",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мослифт, механик на связи.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.intro.any.2",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это механик из Мослифта, по вашей заявке.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.intro.any.3",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, диспетчерская? Мослифт беспокоит, механик.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.intro.any.4",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Механик аварийной службы Мослифта. Докладываю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.no_reply.any.1",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.no_reply.any.2",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло? Меня слышно?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.no_reply.any.3",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть кто на связи? Я жду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.no_reply.any.4",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло! Мне сегодня ответят или нет?",
+      "facts": [],
+      "tone": "[annoyed]"
+    },
+    {
+      "id": "MOSLIFT.confirm_request.any.1",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как приняли?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.confirm_request.any.2",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняли меня?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.confirm_request.any.3",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записали? Подтвердите.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.confirm_request.any.4",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как поняли, диспетчер?",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.repeat_report.any.1",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.repeat_report.any.2",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, записывайте.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.repeat_report.any.3",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, повторяю медленно.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Механик здесь. В кабине мужчина с собакой, ругается, но в порядке. Иду наверх.",
+      "facts": [
+        "blocked",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Так, на месте. Кабина полная, народ с работы ехал. Жалоб нет, ждут.",
+      "facts": [
+        "blocked",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_stuck.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Внутри дедушка, слышит плохо. Кричу ему через двери, чтобы сел и ждал.",
+      "facts": [
+        "blocked",
+        "victim_elderly",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.5",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Кабина выше этажа, опускаю. Женщине сказал отойти от дверей.",
+      "facts": [
+        "blocked",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.6",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Тормоз отжали вдвоём с напарником, кабина пошла. Ещё полметра.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_stuck.7",
+      "slot": "working",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Людей вывел первым делом, теперь ищу, почему встал.",
+      "facts": [
+        "blocked"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_stuck.3",
+      "slot": "update",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Мужчина в кабине запаниковал, бьёт по дверям. Уговариваю сидеть спокойно.",
+      "facts": [
+        "blocked",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_stuck.4",
+      "slot": "completed",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Вывел мужчину. Торопился на работу, убежал, даже спасибо не сказал. Лифт ходит.",
+      "facts": [
+        "blocked",
+        "victim_male",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_stuck.5",
+      "slot": "completed",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Всех вывел, никто не пострадал. Лифт стоит до замены платы.",
+      "facts": [
+        "blocked",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_stuck.6",
+      "slot": "completed",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Женщину с ребёнком вывел, оба в порядке. Лифт запустил.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "victim_child",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_stuck.3",
+      "slot": "refused",
+      "incidents": [
+        "lift_stuck"
+      ],
+      "text": "Лифт тут ведомственный, у бизнес-центра своя служба. Их механик уже выводит людей, я не нужен.",
+      "facts": [
+        "blocked",
+        "other_org"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Мальчишка в кабине бодрый, в телефон играет, говорит, не страшно. Начинаю.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "victim_male",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Внутри брат с сестрой, без взрослых. Старший успокаивает младшую.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_child.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Девочка в кабине одна, плачет, говорит, тошнит. Тороплюсь.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.5",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Попросил девочку нажать кнопку открытия дверей — не сработало. Иду крутить вручную.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.6",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Соседка сидит у дверей, разговаривает с малым, а я в машинном. Ещё чуть-чуть.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_child.7",
+      "slot": "working",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Кабину подвёл, открываю двери. Ребёнку сказал отойти к задней стенке.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_child.3",
+      "slot": "update",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Родители так и не пришли, ребёнок один. Кому его отдать, когда выведу?",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_child.4",
+      "slot": "completed",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Брата с сестрой вывел, бабушка их забрала. Лифт в работе.",
+      "facts": [
+        "blocked",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_child.5",
+      "slot": "completed",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Мальчика вывел. Родителей дома нет, оставил с соседкой, она их знает. Лифт запустил.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_child.6",
+      "slot": "completed",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Ребёнка достал. Родителей не нашли, передал полиции.",
+      "facts": [
+        "blocked",
+        "victim_child",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_child.3",
+      "slot": "refused",
+      "incidents": [
+        "lift_child"
+      ],
+      "text": "Ребёнка в кабине нет. Постоял минуту, лифт сам поехал, мальчик уже дома.",
+      "facts": [
+        "self_resolved",
+        "victim_child",
+        "victim_male",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "В кабине несколько человек, одному стало плохо, остальные его держат. Начинаю.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "На месте. В кабине беременная, тянет живот, просит быстрее.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Механик здесь. Пожилой мужчина в кабине, голос слабый, говорит, давление.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_elderly",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.5",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Кабину не опустить, вскрываю двери на этаже. Врачи стоят рядом.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.6",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Дедушке сказал не вставать, сидеть на полу. Кручу штурвал, кабина пошла.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_elderly",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.7",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Двери открыл, женщину выводим под руки, врачи принимают.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_ill.3",
+      "slot": "update",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Диспетчер, ей хуже, говорит, схватки начались. Скорая где?",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ],
+      "tone": "[anxious]"
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.4",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Мужчину вывел, на воздухе полегчало, от врачей отказался. Лифт ходит.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.5",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Бабушку вынесли на руках, врачи увезли в больницу. Лифт закрыл до проверки.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "handed_103",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.6",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Всех вывел. Кому было плохо, врачи осмотрели на месте, увозить не стали. Лифт в работе.",
+      "facts": [
+        "blocked",
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.3",
+      "slot": "refused",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Пассажир выбрался сам, лифт довёз до этажа. Ушёл, от помощи отказался, соседи видели. Лифт исправен.",
+      "facts": [
+        "self_resolved",
+        "gone"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Кнопки в кабине сожжены, кто-то зажигалкой поработал. Лифт стоит.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Прибыл. Бабушке дверями руку прижало, синяк, к врачу не хочет.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fault.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Лифт ездит сам по себе: вызываешь на один этаж, приходит на другой. Отключаю.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.5",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Кнопочный пост меняю, старый весь оплавлен.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.6",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Дверь шахты отжата, замок не встаёт. Похоже, ломом поддевали. Выправляю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.working.lift_fault.7",
+      "slot": "working",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Точная остановка сбилась, датчик сполз. Ставлю на место, проверю на каждом этаже.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.update.lift_fault.3",
+      "slot": "update",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Тут хуже, чем думал: двери в порядке, а в шахту с крыши течёт вода. Лифт оставляю выключенным.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fault.4",
+      "slot": "completed",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Пост заменил, лифт в работе. Жильцы просят камеру в кабину, передам.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fault.5",
+      "slot": "completed",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Датчик выставил, кабина встаёт ровно в этаж. Работы завершены.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fault.6",
+      "slot": "completed",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Лифт отключил до просушки шахты, табличку повесил. Крышу пусть смотрит управляющая компания.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_fault.3",
+      "slot": "refused",
+      "incidents": [
+        "lift_fault"
+      ],
+      "text": "Неисправности нет. Лифт стоял на плановом осмотре, коллега уже закончил.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Прибыл. Дым в шахте, а кабина встала между этажами, в ней люди. Пожарных пока нет!",
+      "facts": [
+        "fire",
+        "blocked"
+      ],
+      "tone": "[alarmed]"
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Дыма уже нет, только запах горелой изоляции в машинном. Пожарные смотрят.",
+      "facts": [
+        "no_fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_fire.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Машинное заперто, дым идёт из-под двери. Пожарные вскрывают.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.5",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Людей из кабины вывели вместе с пожарными, все целы. Обесточиваю.",
+      "facts": [
+        "fire",
+        "blocked",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.6",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Вводной рубильник выключил, щит обесточен. Пожарные заходят с огнетушителями.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.working.lift_fire.7",
+      "slot": "working",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Ищу, откуда дым. Кабель в шахте оплавился по всей длине.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.update.lift_fire.3",
+      "slot": "update",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Диспетчер, пожарные вывели жильца сверху, наглотался дыма. Им занимается скорая.",
+      "facts": [
+        "fire",
+        "victims",
+        "handed_103"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fire.4",
+      "slot": "completed",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Кабель в шахте под замену, лифт обесточен. Пожарные уехали, работы завершены.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fire.5",
+      "slot": "completed",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Людей вывели, никто не надышался. Лифт закрыл до комиссии.",
+      "facts": [
+        "fire",
+        "blocked",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "MOSLIFT.completed.lift_fire.6",
+      "slot": "completed",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Огня не было: замкнуло в щите, оплавилось и задымило. Щит заменим, лифт пока стоит.",
+      "facts": [
+        "no_fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.lift_fire.3",
+      "slot": "refused",
+      "incidents": [
+        "lift_fire"
+      ],
+      "text": "Ложный вызов. Из подвала по шахте поднимался пар, приняли за дым. Лифт исправен.",
+      "facts": [
+        "false_call",
+        "no_fire"
+      ]
+    },
+    {
+      "id": "MOSLIFT.responding.any.7",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть, выдвигаюсь. Я в соседнем квартале, быстро буду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.8",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял. Беру напарника, вдвоём быстрее.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.9",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записал. Передайте заявителю: механик уже едет.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.responding.any.10",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, завожу машину. Еду.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.6",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, ясно.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.7",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, записал.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.ack.any.8",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Есть.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.6",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не закончил ещё. Напарник несёт инструмент снизу, ждём.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.7",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Меняю предохранитель. Минут десять, потом проверю.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.status_working.any.8",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё ещё тут. В машинном нет света, работаю с фонарём.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.enroute.any.5",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сворачиваю во двор, подъезд уже вижу.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.enroute.any.6",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Только выехал, дорога свободная.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.6",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаюсь: во дворе всё перекопано, ищу объезд.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.7",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезд нашёл, а домофон не работает. Жду, пока кто-нибудь выйдет.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.delay.any.8",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Машина не заводится. Беру такси с инструментом, это минут пятнадцать.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.clarify.any.9",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Лифтов тут два. Заявка на какой, левый или правый?",
+      "facts": [],
+      "asks": "which_lift"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.10",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "В кабине кому-то плохо? Скорую заранее вызывать?",
+      "facts": [],
+      "asks": "victims"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.11",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Свет в доме есть? Если отключение, лифт я не запущу.",
+      "facts": [],
+      "asks": "power"
+    },
+    {
+      "id": "MOSLIFT.clarify.any.12",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как во двор заехать? Кругом заборы, въезда не вижу.",
+      "facts": [],
+      "asks": "landmark"
+    },
+    {
+      "id": "MOSLIFT.completed.any.5",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Сделал. Лифт ходит, жильцам акт оставил.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.any.6",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работы закончены. Лифт выведен из работы до замены детали, подъезд предупредил.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.refused.any.5",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Отбой. Заявитель трубку не берёт, дверь никто не открывает, лифт ходит.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "MOSLIFT.refused.any.6",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работ не было: дом отключали от света, лифт встал вместе со всем подъездом. Свет дали — поехал.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "MOSLIFT.briefing_ask.any.1",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не понял. Адрес и что с лифтом?",
+      "asks": "both"
+    },
+    {
+      "id": "MOSLIFT.briefing_ask.any.2",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес повторите, пожалуйста: улица и дом.",
+      "asks": "address"
+    },
+    {
+      "id": "MOSLIFT.briefing_ask.any.3",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес принял. Что с лифтом: застряли или не работает?",
+      "asks": "what"
+    },
+    {
+      "id": "MOSLIFT.refusal_busy.any.1",
+      "slot": "refusal_busy",
+      "incidents": [
+        "*"
+      ],
+      "text": "Я на другом лифте, тут люди в кабине. Пока не освобожусь."
+    },
+    {
+      "id": "MOSLIFT.refusal_not_assigned.any.1",
+      "slot": "refusal_not_assigned",
+      "incidents": [
+        "*"
+      ],
+      "text": "Эта заявка не на меня. Проверьте, какого механика назначили."
+    },
+    {
+      "id": "MOSLIFT.responding.lift_ill.1",
+      "slot": "responding",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Заявка принята, механик выехал.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.8",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Механик на месте, связь с кабиной установлена, пассажирка в сознании.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.working.lift_ill.8",
+      "slot": "working",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Лифт обесточен, опускаем кабину до этажа, выводим пассажирку.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.7",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Пассажирка выведена и передана скорой, лифт отключён до ремонта, работы завершены.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.arrived.lift_ill.9",
+      "slot": "arrived",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Механик на месте, осматриваем машинное помещение.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.4",
+      "slot": "refused",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Этот лифт обслуживает другая организация, ключей у нас нет, работы не проводили, информацию передали её диспетчеру.",
+      "facts": []
+    },
+    {
+      "id": "MOSLIFT.completed.lift_ill.8",
+      "slot": "completed",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Женщину вывел, посадил на лавочку у подъезда, соседи с ней. Врачей пока нет. Лифт отключил до ремонта.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.request_service.lift_ill.1",
+      "slot": "request_service",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Диспетчер, скорая будет? Женщине в кабине совсем плохо, а мне её не достать.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.5",
+      "slot": "refused",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Лифт чужой, ключей у меня нет, их механику передал. Женщина так и сидит в кабине, скорой нет. Работ не проводил.",
+      "facts": [
+        "blocked",
+        "other_org",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.1",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, скорую ждём, пассажира успокаиваю.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.2",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, скорая едет — ждём у лифта.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.3",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно, врачей встречу.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.4",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, пожарных ждём.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.5",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, пожарные едут — к шахте не подхожу.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.6",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, спасателей ждём, кабину не трогаю.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.7",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Понял, наряд ждём.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "MOSLIFT.service_coming.any.8",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принял, полицию дождусь.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.1",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая подъехала. Хорошо, конечно, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.2",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Скорая на месте. Сказали бы — я бы их у подъезда встретил.",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.3",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, врачи уже тут. А меня предупредить?",
+      "facts": [],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.4",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарные подъехали. Хорошо, но предупреждать надо.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.5",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пожарные уже здесь. Сказали бы, что вызвали.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.6",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Спасатели приехали. Спасибо, но могли бы и сказать.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.7",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Наряд подъехал. Хорошо, но сказали бы, что вызвали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "MOSLIFT.service_surprise.any.8",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Полиция на месте. Нам бы передали, что едут.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.6",
+      "slot": "refused",
+      "incidents": [
+        "lift_ill"
+      ],
+      "text": "Лифт обслуживает другая организация, работ не проводил. Скорая приехала, врачи говорят с пассажиркой через двери, ждём их механика.",
+      "facts": [
+        "blocked",
+        "other_org",
+        "victim_female"
+      ],
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.update.wrong_briefing.1",
+      "slot": "update",
+      "requires": [
+        "wrong_briefing"
+      ],
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "facts": [],
+      "when": "Только после выезда по полной вводной с неверным поводом; не случайная обстановка сценария."
+    }
+  ]
+}

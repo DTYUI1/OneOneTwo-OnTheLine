@@ -6,6 +6,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -22,7 +23,6 @@ import {
   DESCRIPTION_LIMIT,
   OPERATOR_SETTINGS,
   activeTags,
-  addressLine,
   autoServices,
   barServices,
   descriptionCounter,
@@ -50,7 +50,7 @@ import {
 import { createTones } from "../arm/softphone/tones";
 import styles from "./OperatorPage.module.css";
 import { Talk } from "./Talk";
-import { useTalkWindow } from "./useTalkWindow";
+import { useFloatingWindow } from "../shared/useFloatingWindow";
 import {
   cardAnswer,
   cardType,
@@ -63,6 +63,9 @@ import {
   DIALOG_ORDER,
   TYPE_GROUPS,
 } from "./presentation";
+
+/** Место и размер окна разговора — тот же ключ, что до переноса геометрии в shared (GP-09). */
+const TALK_WINDOW_KEY = "operator-talk-window";
 const SERVICES = displayServices(data.services);
 const DIALOG_SERVICES = [...SERVICES].sort(
   (a, b) => DIALOG_ORDER.indexOf(a.id) - DIALOG_ORDER.indexOf(b.id),
@@ -73,7 +76,18 @@ import { Review } from "./Review";
 import { GuideBubble } from "./GuideBubble";
 import { nextTip, tipForCollapsed } from "./guide";
 import { OPERATOR_GUIDE } from "./help/topics";
-import { EMPTY_JOURNAL, closeJournal, type CallJournal } from "./journal";
+import {
+  EMPTY_JOURNAL,
+  closeJournal,
+  mergeTalkJournal,
+  notifySenior,
+  type CallJournal,
+} from "./journal";
+import { BUTTON_EXPLANATIONS, type ExplanationKey } from "./buttons";
+import { ButtonPanel, ButtonExplanation, CallRecordings } from "./ButtonPanel";
+import { AddressLookup } from "./AddressLookup";
+import { useOperatorShortcuts } from "./shortcuts";
+import { maskPhone, phoneIncomplete } from "./phone";
 import {
   cardInput,
   fetchAttempts,
@@ -102,22 +116,44 @@ function Phone({
   value,
   onChange,
   onAon,
+  onExplain,
+  shortcut,
+  invalid,
 }: {
   label: string;
   value: string;
   onChange?: (value: string) => void;
   onAon?: () => void;
+  onExplain: (anchor: HTMLElement) => void;
+  shortcut: string;
+  /** Неполный номер после попытки сохранить. */
+  invalid?: boolean;
 }) {
+  const inputId = useId();
   return (
-    <div className={styles.phone}>
-      <span className={styles.phoneIcon}>
+    <div
+      className={styles.phone}
+      data-shortcut={shortcut}
+      data-shortcut-label={`Alt+${shortcut}`}
+    >
+      <button
+        type="button"
+        className={styles.phoneIcon}
+        aria-label={`Действия телефона: ${label}`}
+        onClick={(event) => onExplain(event.currentTarget)}
+      >
         <PhoneIcon />
         <SmsIcon />
-      </span>
-      <label className={onChange ? styles.phoneField : styles.phoneMain}>
+      </button>
+      <div className={onChange ? styles.phoneField : styles.phoneMain}>
         <span className={styles.phoneLabel}>
-          {label}
-          <span className={styles.phoneMarks} aria-hidden="true">
+          <label htmlFor={inputId}>{label}</label>
+          <button
+            type="button"
+            className={styles.phoneMarks}
+            aria-label={`Сведения о номере: ${label}`}
+            onClick={(event) => onExplain(event.currentTarget)}
+          >
             {!onChange && (
               <>
                 <QuestionIcon />
@@ -125,15 +161,20 @@ function Phone({
               </>
             )}
             <GlobeIcon />
-          </span>
+          </button>
         </span>
         <input
+          id={inputId}
           value={value}
           placeholder="+7 (   )    -  -"
           readOnly={!onChange}
-          onChange={(event) => onChange?.(event.target.value)}
+          inputMode={onChange ? "tel" : undefined}
+          aria-invalid={invalid || undefined}
+          data-phone={onChange ? label : undefined}
+          // Маска АРМ: в поле только цифры номера, «8» перед полным номером — код страны.
+          onChange={(event) => onChange?.(maskPhone(event.target.value))}
         />
-      </label>
+      </div>
       {onAon && (
         <button type="button" className={styles.aon} onClick={onAon}>
           АОН
@@ -221,11 +262,13 @@ function Toggle({
   onClick,
   className,
   children,
+  shortcut,
 }: {
   pressed: boolean;
   onClick: () => void;
   className: string;
   children: ReactNode;
+  shortcut?: string;
 }) {
   return (
     <button
@@ -233,6 +276,10 @@ function Toggle({
       className={className}
       aria-pressed={pressed}
       onClick={onClick}
+      data-shortcut={shortcut}
+      data-shortcut-label={
+        shortcut ? `Alt+${shortcut.replace("Key", "")}` : undefined
+      }
     >
       {children}
     </button>
@@ -305,10 +352,6 @@ function ServicesDialog({
     </div>
   );
 }
-
-// Элементы со скриншотов card_112 без действия в тренажёре: видны для сходства, но
-// неактивны и честно подписаны (разбор 29.09, п. 4).
-const UNUSED = "В тренажёре не используется";
 
 // Крестик внизу справа закрывает карточку — возврат туда, откуда пришли.
 function formatCreated(time: number): string {
@@ -469,6 +512,7 @@ function CallScreen({
   onRestart: () => void;
 }) {
   const { user } = useSession();
+  const screen = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   // Пока открыта справка «?», проводник молчит: у экрана одно объяснение за раз (прототип).
   const help = useHelpState();
@@ -495,12 +539,13 @@ function CallScreen({
   const [provided, setProvided] = useState("");
   const [onSite, setOnSite] = useState("");
   const [caller, setCaller] = useState("");
+  const [callerStatus, setCallerStatus] = useState("");
   const [address, setAddress] = useState<Address>(EMPTY_ADDRESS);
   const [description, setDescription] = useState("");
   const [flags, setFlags] = useState<ReadonlySet<string>>(new Set());
   const [query, setQuery] = useState("");
   const [typeFocused, setTypeFocused] = useState(false);
-  const talkWindow = useTalkWindow();
+  const talkWindow = useFloatingWindow(TALK_WINDOW_KEY);
   const talkCollapsed = talkWindow.collapsed;
   const serviceStrip = useRef<HTMLUListElement>(null);
   const [servicesOverflow, setServicesOverflow] = useState(false);
@@ -509,6 +554,17 @@ function CallScreen({
   const [added, setAdded] = useState<ReadonlySet<string>>(new Set());
   const [removed, setRemoved] = useState<ReadonlySet<string>>(new Set());
   const [dialog, setDialog] = useState(false);
+  const [buttonPanel, setButtonPanel] = useState<{
+    anchor: HTMLElement;
+    key: ExplanationKey | "recordings";
+    message?: string;
+  } | null>(null);
+  const closeButtonPanel = useCallback(() => setButtonPanel(null), []);
+  const explain = (
+    key: ExplanationKey,
+    anchor: HTMLElement,
+    message?: string,
+  ) => setButtonPanel({ key, anchor, message });
   // «нет контакта» и «срыв звонка» заканчивают разговор насовсем.
   const [ended, setEnded] = useState<string | null>(null);
   const [dialogState, setDialogState] = useState<CallerState>(() =>
@@ -516,14 +572,33 @@ function CallScreen({
   );
   const [progress, setProgress] = useState<Progress>(START_PROGRESS);
   const [journal, setJournal] = useState<CallJournal>(EMPTY_JOURNAL);
+  const onTalkJournal = useCallback(
+    (talk: CallJournal) =>
+      setJournal((current) => mergeTalkJournal(current, talk)),
+    [],
+  );
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // Неполный номер подсвечивается после попытки сохранить, а не на первой цифре.
+  const [phoneChecked, setPhoneChecked] = useState(false);
   const [result, setResult] = useState<AttemptResult | null>(null);
   const [attempts, setAttempts] = useState<AttemptSummary[]>([]);
   const onTalkState = useCallback((state: CallerState, next: Progress) => {
     setDialogState(state);
     setProgress(next);
   }, []);
+  const shortcutsHeld = useOperatorShortcuts(
+    screen,
+    accepted && !buttonPanel && !help.open,
+    () => {
+      if (dialog) setDialog(false);
+      else if (result) setResult(null);
+      else if (typeFocused) setTypeFocused(false);
+      else if (!document.activeElement?.closest('[data-help="operator-talk"]'))
+        navigate(RESULTS_PATH);
+    },
+    dialog || result !== null || saving,
+  );
 
   const type =
     choice?.kind === "type"
@@ -563,6 +638,23 @@ function CallScreen({
     setTypeFocused(false);
   };
   const handleSave = async () => {
+    const unfinished = (
+      [
+        ["предоставленный", provided],
+        ["телефон на место", onSite],
+      ] as const
+    ).find(([, phone]) => phoneIncomplete(phone));
+    if (unfinished) {
+      // Как маска АРМ: неполный номер не уходит в карточку, оператор видит, какое поле дописать.
+      setPhoneChecked(true);
+      setSaveError(
+        `Телефон «${unfinished[0]}»: нужно 10 цифр после +7. Допишите номер или очистите поле.`,
+      );
+      screen.current
+        ?.querySelector<HTMLInputElement>(`[data-phone="${unfinished[0]}"]`)
+        ?.focus();
+      return;
+    }
     setSaving(true);
     setSaveError(null);
     try {
@@ -573,6 +665,7 @@ function CallScreen({
         address,
         description,
         callerName: caller,
+        callerStatus,
         phoneProvided: provided,
         phoneScene: onSite,
         offSite: flags.has("off_site"),
@@ -629,7 +722,12 @@ function CallScreen({
   const shownTip = tipForCollapsed(tip, talkCollapsed);
 
   return (
-    <div className={styles.page} data-collapsed={talkCollapsed}>
+    <div
+      ref={screen}
+      className={styles.page}
+      data-collapsed={talkCollapsed}
+      data-shortcuts={shortcutsHeld}
+    >
       <header className={styles.top} data-help="operator-header">
         <div className={styles.hangup}>
           <span className={styles.hangupIcon} aria-hidden="true">
@@ -637,30 +735,59 @@ function CallScreen({
           </span>
           <div>
             <p>Отключение</p>
-            <button type="button" disabled title={UNUSED}>
+            <button
+              type="button"
+              onClick={(event) =>
+                setButtonPanel({
+                  key: "recordings",
+                  anchor: event.currentTarget,
+                })
+              }
+            >
               записи звонков
             </button>
-            <button type="button" disabled title={UNUSED}>
+            <button
+              type="button"
+              onClick={(event) => explain("sms", event.currentTarget)}
+            >
               список SMS
             </button>
           </div>
         </div>
-        <Phone label="АОН" value={aon} />
+        <Phone
+          label="АОН"
+          value={aon}
+          shortcut="F1"
+          onExplain={(anchor) => explain("phones", anchor)}
+        />
         <Phone
           label="предоставленный"
+          shortcut="F2"
           value={provided}
+          invalid={phoneChecked && phoneIncomplete(provided)}
           onChange={setProvided}
           onAon={() => setProvided(aon)}
+          onExplain={(anchor) => explain("phones", anchor)}
         />
         <Phone
           label="телефон на место"
+          shortcut="F3"
           value={onSite}
+          invalid={phoneChecked && phoneIncomplete(onSite)}
           onChange={setOnSite}
           onAon={() => setOnSite(aon)}
+          onExplain={(anchor) => explain("phones", anchor)}
         />
         <div className={styles.incident}>
           <h1>Происшествие {number}</h1>
           <p>Сохр. {formatCreated(createdAt)}</p>
+          <p
+            className={styles.traineeName}
+            aria-label="Обучаемый"
+            title={user.full_name?.trim() || user.login}
+          >
+            {user.full_name?.trim() || user.login}
+          </p>
           <p>Опер., АРМ {user.workstation_number ?? 4}, УМЦ 0 п</p>
         </div>
         <div
@@ -681,7 +808,12 @@ function CallScreen({
       </header>
 
       <section className={styles.left}>
-        <div className={styles.caller} data-help="operator-caller">
+        <div
+          className={styles.caller}
+          data-help="operator-caller"
+          data-shortcut="KeyQ"
+          data-shortcut-label="Alt+Q"
+        >
           <input
             placeholder="Фамилия и имя заявителя"
             aria-label="Фамилия и имя заявителя"
@@ -690,49 +822,63 @@ function CallScreen({
           />
           <select
             aria-label="Статус заявителя"
-            defaultValue=""
-            disabled
-            title={UNUSED}
+            value={callerStatus}
+            onChange={(event) => setCallerStatus(event.target.value)}
           >
-            <option value="" disabled>
-              выберите статус
-            </option>
+            <option value="">выберите статус</option>
+            {[
+              "очевидец",
+              "пострадавший",
+              "родственник",
+              "знакомый",
+              "ребенок",
+              "участник",
+            ].map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
           </select>
-          <select
+          <button
+            type="button"
+            className={styles.inactiveSelect}
             aria-label="Язык заявителя"
-            defaultValue=""
-            disabled
-            title={UNUSED}
-          >
-            <option value="" />
-          </select>
-          <select
+            onClick={(event) => explain("language", event.currentTarget)}
+          />
+          <button
+            type="button"
+            className={styles.inactiveSelect}
             aria-label="Категория заявителя"
-            defaultValue=""
-            disabled
-            title={UNUSED}
-          >
-            <option value="" />
-          </select>
+            onClick={(event) => explain("category", event.currentTarget)}
+          />
           <button
             type="button"
             className={styles.translate}
             aria-label="Переводчик"
-            disabled
-            title={UNUSED}
+            onClick={(event) => explain("translator", event.currentTarget)}
           >
             <TranslateIcon />
           </button>
         </div>
-        <div className={styles.address} data-help="operator-address">
+        <div
+          className={styles.address}
+          data-help="operator-address"
+          data-shortcut="KeyA"
+          data-shortcut-label="Alt+A"
+        >
           <div className={styles.addressLine}>
             <span className={styles.addressLabel}>
               Адрес:{" "}
-              <span title={UNUSED} aria-disabled="true">
+              <button
+                type="button"
+                className={styles.mapButton}
+                aria-label="Карта происшествия"
+                onClick={(event) => explain("map", event.currentTarget)}
+              >
                 <MapIcon />
-              </span>
+              </button>
             </span>
-            <p>{addressLine(address)}</p>
+            <AddressLookup address={address} onChange={setAddress} />
             <button
               type="button"
               aria-label="Очистить строку адреса"
@@ -777,6 +923,8 @@ function CallScreen({
           className={styles.description}
           data-help="operator-description"
           data-guide="description"
+          data-shortcut="KeyO"
+          data-shortcut-label="Alt+O"
         >
           <span>Описание со слов заявителя</span>
           <textarea
@@ -798,6 +946,7 @@ function CallScreen({
             <Toggle
               className={styles.quickButton}
               pressed={tags.has("victims")}
+              shortcut="KeyP"
               onClick={() => setAnswers((a) => toggleTag(a, "victims"))}
             >
               Пострадавшие
@@ -825,6 +974,7 @@ function CallScreen({
             <Toggle
               className={choice ? styles.alertFaded : styles.alertButton}
               pressed={flags.has("no_contact")}
+              shortcut="KeyN"
               onClick={flag("no_contact")}
             >
               нет контакта
@@ -843,6 +993,8 @@ function CallScreen({
           className={styles.types}
           data-help="operator-type"
           data-chosen={Boolean(choice)}
+          data-shortcut="KeyT KeyR"
+          data-shortcut-label="Alt+T / Alt+R"
         >
           <label className={styles.typeSearch} data-guide="type">
             {!choice && <span>Введите тип происшествия</span>}
@@ -949,6 +1101,8 @@ function CallScreen({
             className={styles.chosen}
             data-help="operator-card"
             data-guide="card"
+            data-shortcut="Digit1"
+            data-shortcut-label="Alt+1"
           >
             <div className={styles.chips}>
               <button
@@ -1045,7 +1199,7 @@ function CallScreen({
         ended={ended}
         address={address}
         onStateChange={onTalkState}
-        onJournalChange={setJournal}
+        onJournalChange={onTalkJournal}
       />
 
       <footer className={styles.bar} data-help="operator-services">
@@ -1104,6 +1258,8 @@ function CallScreen({
           className={styles.barAdd}
           aria-label="Добавить службы"
           onClick={() => setDialog(true)}
+          data-shortcut="KeyZ"
+          data-shortcut-label="Alt+Z"
         >
           +
         </button>
@@ -1112,21 +1268,83 @@ function CallScreen({
           className={styles.save}
           disabled={saving}
           data-guide="save"
+          data-shortcut="KeyS"
+          data-shortcut-label="Alt+S"
+          data-shortcut-action="click"
           onClick={() => void handleSave()}
         >
           {saving ? "сохраняю…" : "сохранить"}
         </button>
-        <span className={styles.barTools} aria-hidden="true">
-          {[
-            UnlinkIcon,
-            StopwatchIcon,
-            HandIcon,
-            BellIcon,
-            AlertMessageIcon,
-          ].map((Icon, index) => (
-            <span key={index} title={UNUSED}>
+        <span className={styles.barTools} data-help="operator-shortcuts">
+          {(
+            [
+              ["link", UnlinkIcon],
+              ["reminder", StopwatchIcon],
+              ["hand", HandIcon],
+              ["bell", BellIcon],
+              ["problem", AlertMessageIcon],
+            ] as const
+          ).map(([key, Icon]) => (
+            <button
+              type="button"
+              key={key}
+              aria-label={BUTTON_EXPLANATIONS[key].title}
+              data-shortcut={
+                (
+                  {
+                    link: "KeyW",
+                    reminder: "KeyB",
+                    bell: "KeyV",
+                    problem: "KeyM",
+                    hand: "",
+                  } as const
+                )[key]
+              }
+              data-shortcut-label={
+                (
+                  {
+                    link: "Alt+W",
+                    reminder: "Alt+B",
+                    bell: "Alt+V",
+                    problem: "Alt+M",
+                    hand: "",
+                  } as const
+                )[key]
+              }
+              data-shortcut-action="click"
+              onClick={(event) => {
+                if (key !== "bell") {
+                  explain(key, event.currentTarget);
+                  return;
+                }
+                if (!accepted || ended) {
+                  explain(
+                    key,
+                    event.currentTarget,
+                    "Оповещение доступно во время звонка.",
+                  );
+                  return;
+                }
+                const already = journal.events.some(
+                  (item) => item.action === "senior_called",
+                );
+                setJournal((current) =>
+                  notifySenior(
+                    current,
+                    Math.floor((Date.now() - startedAt) / 1000),
+                  ),
+                );
+                explain(
+                  key,
+                  event.currentTarget,
+                  already
+                    ? "Уже оповещён"
+                    : `Главный специалист оповещён. АРМ ${user.workstation_number ?? 4}, ${user.full_name?.trim() || user.login}.`,
+                );
+              }}
+            >
               <Icon />
-            </span>
+            </button>
           ))}
         </span>
         <button
@@ -1138,8 +1356,37 @@ function CallScreen({
         >
           <CloseIcon />
         </button>
-        {saveError && <p className={styles.saveError}>{saveError}</p>}
+        {saveError && (
+          <p className={styles.saveError} role="alert">
+            {saveError}
+          </p>
+        )}
       </footer>
+
+      {buttonPanel && (
+        <ButtonPanel
+          anchor={buttonPanel.anchor}
+          title={
+            buttonPanel.key === "recordings"
+              ? "Записи звонков"
+              : BUTTON_EXPLANATIONS[buttonPanel.key].title
+          }
+          onClose={closeButtonPanel}
+        >
+          {buttonPanel.key === "recordings" ? (
+            <CallRecordings journal={journal} />
+          ) : (
+            <ButtonExplanation
+              item={buttonPanel.key}
+              message={buttonPanel.message}
+              onHelp={(topic) => {
+                closeButtonPanel();
+                help.openTopic(topic);
+              }}
+            />
+          )}
+        </ButtonPanel>
+      )}
 
       {dialog && (
         <ServicesDialog
@@ -1164,7 +1411,7 @@ function CallScreen({
         />
       )}
 
-      {shownTip && !dialog && !help.open && (
+      {shownTip && !dialog && !buttonPanel && !help.open && (
         <GuideBubble tip={shownTip} onHide={onGuideOff} />
       )}
     </div>

@@ -1,0 +1,51 @@
+.voice {
+  padding: 12px;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid #9aa3a8;
+}
+.src {
+  font-weight: bold;
+}
+.voice p {
+  margin: 8px 0;
+}
+.btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.btn {
+  composes: btn from "./Trainer.module.css";
+  font: inherit;
+  cursor: pointer;
+}
+.main {
+  composes: main from "./Trainer.module.css";
+  font: inherit;
+  cursor: pointer;
+}
+.btn:disabled,
+.main:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.note {
+  color: #555;
+}
+.message {
+  margin: 8px 0;
+  border-left: 4px solid var(--color-active);
+}
+.level {
+  height: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+  background: #d2d2d2;
+}
+.levelFill {
+  height: 100%;
+  background: var(--color-active);
+  transition: width 80ms linear;
+}

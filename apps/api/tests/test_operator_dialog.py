@@ -1,7 +1,12 @@
+import pytest
+
 from .test_lifecycle import login
 
 SCENARIO = "fire_apartment_smoke"
 CARD = "fire_apartment"
+
+pytestmark = pytest.mark.usefixtures("operator_module_on")
+
 CALM = {"panic": 1, "asked": [], "facts": []}
 
 

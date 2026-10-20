@@ -42,9 +42,10 @@ from app.core.models import (
     Session,
     TeacherOverride,
 )
+from app.core.scored_criteria import applied_critical_flags, applied_scores, criterion_weight
 
 # Версия способа сборки разбора: меняется при изменении правил слоёв/счётчиков.
-METHODOLOGY_VERSION = "c06-analysis-1"
+METHODOLOGY_VERSION = "c06-analysis-2"
 # AI-оценка обязательна по ТЗ: без выполненного LLM-слоя оценка остаётся partial.
 REQUIRED_LAYERS = ["rules", "llm"]
 TIMING_KINDS = {"deliver": "deliver", "open": "open", "redirect": "redirect"}
@@ -139,8 +140,11 @@ async def timing_input(db: AsyncSession, row: Any, lesson: Session) -> dict[str,
                 {"message_id": str(delivery.id), "started_at": iso(start), "ended_at": iso(end)}
             )
     # Бригада ещё работает (доклад не готов) или готова, но диспетчер не ответил.
-    for report in await report_schedule(db, card):
+    for report in await report_schedule(db, card, observed):
         if report.issued or report.waiting_started_at is None or report.ready_at is None:
+            continue
+        # Реплика мира (событие бригады, DT-10) звучит сразу — ожидания бригады в ней нет.
+        if report.ready_at <= report.waiting_started_at:
             continue
         if report.waiting_started_at >= observed:
             continue
@@ -183,11 +187,24 @@ async def card_timing(db: AsyncSession, card: Card, lesson: Session) -> TimingRe
     return calculate_timing(value)
 
 
+def no_report_completion(evaluation: Evaluation) -> bool:
+    """Окончательный ноль за отсутствие докладов не требует оценки текста моделью."""
+    info = evaluation.model_info or {}
+    return (
+        evaluation.status == "complete"
+        and evaluation.total == 0
+        and info.get("llm") == "rule:no-reports"
+        and info.get("report_completion_factor") == "0.0"
+    )
+
+
 def layers(evaluation: Evaluation, has_information: bool) -> list[dict[str, Any]]:
     """Слои I-EVAL по сохранённой оценке; невыполненный слой не выдаётся за done."""
     explanations = evaluation.explanation if isinstance(evaluation.explanation, dict) else {}
     rules_done = bool(evaluation.rules_scores)
+    scores = applied_scores(evaluation.rules_scores, explanations)
     llm_done = isinstance(evaluation.llm_scores, dict) and bool(evaluation.llm_scores)
+    llm_not_applicable = no_report_completion(evaluation)
     info = evaluation.model_info or {}
     result = [
         {
@@ -195,29 +212,34 @@ def layers(evaluation: Evaluation, has_information: bool) -> list[dict[str, Any]
             "status": "done" if rules_done else "unavailable",
             "version": str(info.get("rules")) if rules_done else None,
             "reason": None if rules_done else "Детерминированные критерии не рассчитаны.",
-            "evidence": [
-                f"{key}: {float(score):.2f}"
-                for key, score in sorted(evaluation.rules_scores.items())
-            ],
+            "evidence": [f"{key}: {float(score):.2f}" for key, score in sorted(scores.items())],
             "explanation": "Детерминированные критерии evalcore по событиям попытки."
             if rules_done
             else str(explanations.get("rules", "Оценка по правилам недоступна.")),
         },
         {
             "layer": "llm",
-            "status": "done" if llm_done else "pending",
+            "status": "not_applicable"
+            if llm_not_applicable
+            else ("done" if llm_done else "pending"),
             "version": str(info.get("llm")) if llm_done else None,
-            "reason": None if llm_done else "Локальный ИИ-судья ещё не вернул проверенный ответ.",
+            "reason": "Итог 0 %: не принят ни один требуемый доклад бригады."
+            if llm_not_applicable
+            else (None if llm_done else "Локальный ИИ-судья ещё не вернул проверенный ответ."),
             "evidence": [
                 f"{key}: {float(score):.2f}"
                 for key, score in sorted((evaluation.llm_scores or {}).items())
             ],
-            "explanation": "Оценка свободного текста локальной моделью."
-            if llm_done
-            else "ИИ-оценка комментария не выполнена; итог — по правилам.",
+            "explanation": "Оценка текста не применяется: карточка закрыта без принятых докладов."
+            if llm_not_applicable
+            else (
+                "Оценка свободного текста локальной моделью."
+                if llm_done
+                else "ИИ-оценка комментария не выполнена; итог — по правилам."
+            ),
         },
     ]
-    address_done = rules_done and "address" in evaluation.rules_scores
+    address_done = "address" in scores
     result.append(
         {
             "layer": "address",
@@ -227,14 +249,16 @@ def layers(evaluation: Evaluation, has_information: bool) -> list[dict[str, Any]
             "evidence": [f"address: {float(evaluation.rules_scores['address']):.2f}"]
             if address_done
             else [],
-            # V-02: ручной адрес из current.address, сокращения нормализуются.
-            "explanation": "Ручной адрес диспетчера сравнён с эталоном по компонентам "
-            "(«ул.» = «улица», регистр, «ё»); похожая другая улица не засчитывается."
+            # DT-14 (08.10): адрес ДДС проверяется в комментариях к статусам, а не в поле
+            # ввода; ручной current.address старых попыток сравнивается по полям, как раньше.
+            "explanation": "Адрес проверен в комментариях диспетчера: верный адрес карточки "
+            "можно не повторять, уточнённый — обязателен; похожая другая улица "
+            "(«Дубининская» вместо «Дубнинская») — ошибка."
             if address_done
             else "Проверка адреса недоступна: оценка по правилам не рассчитана.",
         }
     )
-    grammar_done = rules_done and "spelling" in evaluation.rules_scores
+    grammar_done = "spelling" in scores
     grammar_errors = spelling_errors(evaluation)
     result.append(
         {
@@ -257,6 +281,12 @@ def layers(evaluation: Evaluation, has_information: bool) -> list[dict[str, Any]
             else "Грамотность не проверялась: в настройках занятия нет её веса.",
         }
     )
+    # Слой был рассчитан, но не применялся: это не ошибка и не недоступный проверяющий.
+    for layer, key in (("address", "address"), ("grammar", "spelling")):
+        if key in evaluation.rules_scores and key not in scores:
+            text, evidence = unpack_explanation(explanations[key])
+            item = next(item for item in result if item["layer"] == layer)
+            item.update(status="not_applicable", reason=text, explanation=text, evidence=evidence)
     for layer, reason in (("semantic", "Семантическое сравнение с эталоном не подключено."),):
         result.append(
             {
@@ -287,7 +317,11 @@ def layers(evaluation: Evaluation, has_information: bool) -> list[dict[str, Any]
 
 def spelling_errors(evaluation: Evaluation | None) -> int | None:
     """Число ошибок критерия грамотности (evalcore/comment.py) или None — не проверялась."""
-    if evaluation is None or "spelling" not in evaluation.rules_scores:
+    if (
+        evaluation is None
+        or "spelling" not in evaluation.rules_scores
+        or criterion_weight(evaluation.explanation, "spelling") == 0
+    ):
         return None
     _, evidence = unpack_explanation(evaluation.explanation.get("spelling", ""))
     found = re.search(r"ошибок: (\d+)", evidence[0]) if evidence else None
@@ -296,12 +330,23 @@ def spelling_errors(evaluation: Evaluation | None) -> int | None:
 
 def error_counts(evaluation: Evaluation | None, timing: dict[str, Any]) -> dict[str, int | None]:
     """ErrorCounts: null — слой не проверен, 0 — проверен без ошибок (I-EVAL)."""
-    scores = evaluation.rules_scores if evaluation is not None else {}
+    scores = (
+        applied_scores(evaluation.rules_scores, evaluation.explanation)
+        if evaluation is not None
+        else {}
+    )
 
     def failed(key: str) -> int | None:
         return None if key not in scores else int(float(scores[key]) < 1)
 
-    overdue = [timing["reaction_overdue"], timing["handling_overdue"]]
+    overdue = [
+        timing[field]
+        for key, field in (
+            ("reaction_time", "reaction_overdue"),
+            ("handling_time", "handling_overdue"),
+        )
+        if evaluation is None or criterion_weight(evaluation.explanation, key) != 0
+    ]
     address, grammar = failed("address"), spelling_errors(evaluation)
     return {
         # input = адрес + грамотность; неизвестен, пока не проверен хоть один подслой (I-EVAL).
@@ -310,7 +355,7 @@ def error_counts(evaluation: Evaluation | None, timing: dict[str, Any]) -> dict[
         "grammar": grammar,
         "routing": failed("routing"),
         "status_flow": failed("status_flow"),
-        "timing": None if None in overdue else sum(bool(item) for item in overdue),
+        "timing": None if not overdue or None in overdue else sum(bool(item) for item in overdue),
         "call": failed("call"),
     }
 
@@ -327,8 +372,9 @@ def evaluation_analysis(
         else automatic
     )
     items = layers(evaluation, has_information)
+    required_layers = ["rules"] if no_report_completion(evaluation) else REQUIRED_LAYERS
     missing = [
-        item for item in items if item["layer"] in REQUIRED_LAYERS and item["status"] != "done"
+        item for item in items if item["layer"] in required_layers and item["status"] != "done"
     ]
     complete = evaluation.status == "complete" and not missing
     return {
@@ -347,7 +393,7 @@ def evaluation_analysis(
             "teacher_comment": override.teacher_comment,
             "created_at": iso(override.created_at),
         },
-        "required_layers": REQUIRED_LAYERS,
+        "required_layers": required_layers,
         "layers": items,
         "partial_reasons": []
         if complete
@@ -382,19 +428,26 @@ def prediction_observation(prediction: Prediction, closed_at: datetime | None) -
     }
 
 
-async def build_attempt(db: AsyncSession, row: Any) -> dict[str, Any]:
+async def build_attempt(
+    db: AsyncSession,
+    row: Any,
+    *,
+    evaluation_override: Evaluation | None = None,
+) -> dict[str, Any]:
     card = row["Card"]
     lesson = await db.get(Session, row["session_id"])
     assignment = await db.get(Assignment, card.assignment_id)
     if lesson is None or assignment is None:
         raise HTTPException(404, "Карточка не найдена.")
     timing = asdict(await card_timing(db, card, lesson))
-    evaluation = await db.scalar(
-        select(Evaluation)
-        .where(Evaluation.card_id == card.id)
-        .order_by(Evaluation.version.desc())
-        .limit(1)
-    )
+    evaluation = evaluation_override
+    if evaluation is None:
+        evaluation = await db.scalar(
+            select(Evaluation)
+            .where(Evaluation.card_id == card.id)
+            .order_by(Evaluation.version.desc())
+            .limit(1)
+        )
     has_information = (
         await db.scalar(
             select(MessageDelivery.id).where(MessageDelivery.card_id == card.id).limit(1)
@@ -537,14 +590,15 @@ async def get_session_analytics(request: Request, session_id: UUID) -> SessionAn
         ).tuples()
     }
     flags: dict[str, list[Any]] = {}
-    for card_id, flagged in (
+    for card_id, flagged, explanation in (
         await db.execute(
-            select(Evaluation.card_id, Evaluation.critical_flags)
+            select(Evaluation.card_id, Evaluation.critical_flags, Evaluation.explanation)
             .where(Evaluation.card_id.in_([row["Card"].id for row in rows]))
             .order_by(Evaluation.card_id, Evaluation.version)
         )
     ).tuples():
-        flags[str(card_id)] = list(flagged or [])  # последняя версия перезаписывает прежние
+        # Последняя версия перезаписывает прежние, audit-флаги в БД не меняем.
+        flags[str(card_id)] = applied_critical_flags(flagged or [], explanation)
     participants = (
         await db.scalars(select(Participant).where(Participant.session_id == session_id))
     ).all()

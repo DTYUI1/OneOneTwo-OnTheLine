@@ -63,6 +63,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
         env: {SCARF_ANALYTICS: 'false'}
       - run: pnpm exec playwright install --with-deps chromium firefox
+      - name: Подготовить и проверить аудиовыход Firefox
+        run: bash scripts/ci/start-audio.sh && node scripts/ci/check-audio.mjs
       - run: docker compose up --build --wait --wait-timeout 300
       - run: pnpm test:e2e
         env: {E2E_BASE_URL: 'https://localhost:8443'}
@@ -75,7 +77,9 @@ jobs:
         with: {name: playwright-results, path: qa/results}
   database-e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Весь набор (около 290 тестов, один поток) идёт дважды — на свежей БД и на сохранённой
+    # истории: около 70 минут. С 20 минутами он обрывался на середине первого прогона.
+    timeout-minutes: 90
     env:
       COMPOSE_PROJECT_NAME: arm112-ci-database
       API_MODE: database
@@ -93,6 +97,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
         env: {SCARF_ANALYTICS: 'false'}
       - run: pnpm exec playwright install --with-deps chromium firefox
+      - name: Подготовить и проверить аудиовыход Firefox
+        run: bash scripts/ci/start-audio.sh && node scripts/ci/check-audio.mjs
       - name: Собрать свежие образы и подготовить отдельную БД
         run: |
           docker compose build api web

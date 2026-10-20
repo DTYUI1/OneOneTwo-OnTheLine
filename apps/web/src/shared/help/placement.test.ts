@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { MARKER_SIZE, placeMarkers, type Box } from "./placement";
+import { bubbleCorner, MARKER_SIZE, placeMarkers, type Box } from "./placement";
 
 const viewport = { width: 1600, height: 900 };
 const box = (left: number, top: number, width: number, height: number) => ({
@@ -54,4 +54,30 @@ it("без свободного места номер остаётся внут�
   const part = box(100, 100, 300, 50);
   const [place] = placeMarkers([part], [box(0, 0, 1600, 900)], viewport);
   expect(place).toEqual({ left: 102, top: 102 });
+});
+
+const bubble = { width: 360, height: 420 };
+
+it("панель объяснения остаётся в правом нижнем углу, если там нет выбранной части", () => {
+  expect(bubbleCorner(box(100, 100, 300, 50), bubble, viewport, 16)).toBe(
+    "bottom-right",
+  );
+});
+
+it("панель уходит влево с окна телефона, прижатого к правому нижнему углу", () => {
+  // Окно телефона ДДС открывается в правом нижнем углу; объясняется его верхняя полоса.
+  const frame = box(1100, 500, 480, 28);
+  expect(bubbleCorner(frame, bubble, viewport, 16)).toBe("bottom-left");
+});
+
+it("панель следует за окном, перенесённым в любое место экрана", () => {
+  const leftBottom = box(16, 600, 480, 280);
+  expect(bubbleCorner(leftBottom, bubble, viewport, 16)).toBe("bottom-right");
+  const everywhereBelow = box(0, 400, 1600, 500);
+  expect(bubbleCorner(everywhereBelow, bubble, viewport, 16)).toBe("top-right");
+});
+
+it("часть на весь экран: панель там, где закрывает её меньше", () => {
+  const part = box(0, 0, 1200, 900);
+  expect(bubbleCorner(part, bubble, viewport, 16)).toBe("bottom-right");
 });

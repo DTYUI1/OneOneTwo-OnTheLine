@@ -6,9 +6,10 @@ type Card = components["schemas"]["Card"];
 type Session = components["schemas"]["Session"];
 type Service = components["schemas"]["Service"];
 
-// Шаг «Принять решение» в тренировке с подсказчиком: взгляд уводится с рамки
-// адреса на плитку своей службы, пока не поставлена «Принята».
-test("Тренировка: плитка своей службы выделена до «Принята»", async ({
+// «Тренировка» без этапа — «Сам», тест (решение 17.10): тренажёр молчит. Ни подсказки у
+// элемента, ни «Подсказать», ни подсказки застрявшему — даже после 15 с без действий; в
+// журнал карточки подсказки не пишутся. Поверх АРМ ни пузыря, ни рамки.
+test("Тренировка «Сам»: от тренажёра на экране ничего, и застрявшему тоже", async ({
   page,
 }) => {
   test.skip(
@@ -48,29 +49,39 @@ test("Тренировка: плитка своей службы выделен�
     const name = services.find(
       (item) => item.id === practice!.participants[0].dds_service_id,
     )!.name;
-    const plate = page.getByRole("button", { name: new RegExp(`^${name}`) });
-    await expect(plate).toHaveClass(/manualNeeded/);
-    // Акцент виден глазом: контур вокруг плашки, а не только имя класса.
+    // Плитка своей службы — та, на которой карандаш (макет B).
+    const pencil = page.getByRole("button", {
+      name: "Изменить статус",
+      exact: true,
+    });
+    const plate = pencil.locator("..");
+    await expect(plate).toContainText(name);
+    const coach = page.getByRole("region", { name: "Подсказка тренажёра" });
+    await expect(coach).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Подсказать", exact: true }),
+    ).toHaveCount(0);
+    // Прежний порог «застрял» — 15 с без действий: на тесте подсказка не приходит.
+    await page.waitForTimeout(17_000);
+    await expect(coach).toHaveCount(0);
+    await expect(page.getByText("«Принята» ждёт")).toHaveCount(0);
     expect(
       await plate.evaluate((node) => getComputedStyle(node).outlineStyle),
-    ).not.toBe("none");
-    await plate.click();
+    ).toBe("none");
     await page.getByLabel("Статус", { exact: true }).selectOption("accepted");
     await page
       .getByLabel("Комментарий", { exact: true })
       .fill("Принята, направляю бригаду.");
     await page.keyboard.press("Enter");
-    const accepted = page.getByRole("button", {
-      name: new RegExp(`^${name}.*Принята`),
-    });
-    await expect(accepted).not.toHaveClass(/manualNeeded/);
-    await accepted.blur();
-    expect(
-      await accepted.evaluate((node) => getComputedStyle(node).outlineStyle),
-    ).toBe("none");
+    await expect(plate).toContainText("Принята");
+    await expect(coach).toHaveCount(0);
+    const events: { type: string; payload: { hint_id?: string } }[] = await (
+      await page.request.get(`/api/cards/${id}/events`)
+    ).json();
+    expect(events.filter((event) => event.type === "hint_open")).toEqual([]);
   } finally {
     if (practiceId) {
-      // Тренировка включает подсказки: не оставляем её идущей для других проверок.
+      // Не оставляем тренировку идущей для других проверок.
       // Завершает её сам обучаемый: администратор в учебный процесс не вмешивается.
       await page.request.post("/api/auth/login", {
         data: {

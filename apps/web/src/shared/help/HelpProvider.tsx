@@ -10,7 +10,13 @@ import {
   type ReactNode,
 } from "react";
 import type { HelpGuide } from "./types";
-import { placeMarkers, type Box, type Point } from "./placement";
+import {
+  bubbleCorner,
+  placeMarkers,
+  type Box,
+  type Corner,
+  type Point,
+} from "./placement";
 import styles from "./Help.module.css";
 
 const HelpContext = createContext<{
@@ -18,12 +24,19 @@ const HelpContext = createContext<{
   guide: HelpGuide | null;
   open: boolean;
   toggle: () => void;
-}>({ register: () => {}, guide: null, open: false, toggle: () => {} });
+  openTopic: (topic: string) => void;
+}>({
+  register: () => {},
+  guide: null,
+  open: false,
+  toggle: () => {},
+  openTopic: () => {},
+});
 
 /** Есть ли у экрана объяснение (кнопка «?» в шапке) и открыто ли оно сейчас. */
-export function useHelpState(): { available: boolean; open: boolean } {
-  const { guide, open } = useContext(HelpContext);
-  return { available: guide !== null, open };
+export function useHelpState() {
+  const { guide, open, openTopic } = useContext(HelpContext);
+  return { available: guide !== null, open, openTopic };
 }
 
 export function useHelpGuide(guide: HelpGuide | null, onOpen?: () => void) {
@@ -65,6 +78,11 @@ function visibleParts(guide: HelpGuide): Part[] {
       top = Math.max(0, rect.top);
     let right = Math.min(innerWidth, rect.right),
       bottom = Math.min(innerHeight, rect.bottom);
+    const own = getComputedStyle(element);
+    if (own.visibility === "hidden") return [];
+    // Окно с position: fixed (телефон ДДС) прокрутка страницы не обрезает: рамки
+    // предков выше него не сужают часть, иначе рамка уезжала бы с окна.
+    let escaped = own.position === "fixed";
     for (
       let parent = element.parentElement;
       parent;
@@ -72,15 +90,18 @@ function visibleParts(guide: HelpGuide): Part[] {
     ) {
       const css = getComputedStyle(parent);
       if (css.visibility === "hidden") return [];
-      const bounds = parent.getBoundingClientRect();
-      if (/(auto|scroll|hidden|clip)/.test(css.overflowX)) {
-        left = Math.max(left, bounds.left);
-        right = Math.min(right, bounds.right);
+      if (!escaped) {
+        const bounds = parent.getBoundingClientRect();
+        if (/(auto|scroll|hidden|clip)/.test(css.overflowX)) {
+          left = Math.max(left, bounds.left);
+          right = Math.min(right, bounds.right);
+        }
+        if (/(auto|scroll|hidden|clip)/.test(css.overflowY)) {
+          top = Math.max(top, bounds.top);
+          bottom = Math.min(bottom, bounds.bottom);
+        }
       }
-      if (/(auto|scroll|hidden|clip)/.test(css.overflowY)) {
-        top = Math.max(top, bounds.top);
-        bottom = Math.min(bottom, bounds.bottom);
-      }
+      if (css.position === "fixed") escaped = true;
     }
     if (right - left < 12 || bottom - top < 12) return [];
     const points = [
@@ -98,6 +119,27 @@ function visibleParts(guide: HelpGuide): Part[] {
       ? [{ key, left, top, width: right - left, height: bottom - top }]
       : [];
   });
+}
+
+/** Слепок мест частей, панели и окна: сравнивается каждый кадр, поэтому без обхода DOM. */
+function layoutKey(guide: HelpGuide): string {
+  const boxes = guide.order.map((key) =>
+    document.querySelector(`[data-help="${key}"]`)?.getBoundingClientRect(),
+  );
+  boxes.push(
+    document
+      .querySelector("[data-help-ui] [role=region]")
+      ?.getBoundingClientRect(),
+  );
+  return [
+    innerWidth,
+    innerHeight,
+    ...boxes.map((box) =>
+      box
+        ? [box.left, box.top, box.width, box.height].map(Math.round).join(",")
+        : "",
+    ),
+  ].join(";");
 }
 
 const CONTROLS = "input, select, textarea, button, img, svg, canvas";
@@ -141,6 +183,9 @@ function obstacles(): Box[] {
   return boxes;
 }
 
+/** Отступ панели от края экрана, px: var(--space-3) в Help.module.css. */
+const BUBBLE_MARGIN = 16;
+
 function withMarkers(parts: Part[]): Part[] {
   const places = placeMarkers(parts, obstacles(), {
     width: document.documentElement.clientWidth,
@@ -152,16 +197,34 @@ function withMarkers(parts: Part[]): Part[] {
 function HelpOverlay({
   guide,
   onClose,
+  initialTopic,
 }: {
   guide: HelpGuide;
   onClose: () => void;
+  initialTopic: string | null;
 }) {
   const [parts, setParts] = useState<Part[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(initialTopic);
   const panel = useRef<HTMLElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const topicId = useId();
   const active = parts.find((part) => part.key === selected) ?? parts[0];
+  const [corner, setCorner] = useState<Corner>("bottom-right");
+  useLayoutEffect(() => {
+    const box = panel.current?.getBoundingClientRect();
+    if (!active || !box) return;
+    setCorner(
+      bubbleCorner(
+        active,
+        box,
+        {
+          width: document.documentElement.clientWidth,
+          height: document.documentElement.clientHeight,
+        },
+        BUBBLE_MARGIN,
+      ),
+    );
+  }, [active]);
   useLayoutEffect(() => {
     // Новое объяснение читается с начала, даже если предыдущее прокрутили до конца.
     // Фокус остаётся на выбранной кнопке перехода.
@@ -181,14 +244,29 @@ function HelpOverlay({
   }, []);
   useEffect(() => {
     let frame = 0;
+    let watch = 0;
+    let last = "";
+    const measure = () => {
+      const next = withMarkers(visibleParts(guide));
+      setParts((old) =>
+        JSON.stringify(old) === JSON.stringify(next) ? old : next,
+      );
+    };
     const update = () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const next = withMarkers(visibleParts(guide));
-        setParts((old) =>
-          JSON.stringify(old) === JSON.stringify(next) ? old : next,
-        );
-      });
+      frame = requestAnimationFrame(measure);
+    };
+    // Плавающие окна (телефон ДДС) двигаются стилем left/top: перетаскивание, возврат
+    // в угол при открытии, сворачивание. Ни MutationObserver по data-help/hidden, ни
+    // ResizeObserver этого не видят — рамка и номер оставались на старом месте. Поэтому
+    // каждый кадр сверяем дешёвый слепок мест частей и панели, полный пересчёт — по изменению.
+    const follow = () => {
+      const now = layoutKey(guide);
+      if (now !== last) {
+        last = now;
+        measure();
+      }
+      watch = requestAnimationFrame(follow);
     };
     const observer = new MutationObserver(update);
     observer.observe(document.body, {
@@ -197,12 +275,7 @@ function HelpOverlay({
       attributes: true,
       attributeFilter: ["data-help", "hidden"],
     });
-    const resize = new ResizeObserver(update);
-    document
-      .querySelectorAll("[data-help]")
-      .forEach((el) => resize.observe(el));
-    window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
+    watch = requestAnimationFrame(follow);
     const hover = (event: PointerEvent) => {
       const region =
         event.target instanceof Element
@@ -237,10 +310,8 @@ function HelpOverlay({
     update();
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(watch);
       observer.disconnect();
-      resize.disconnect();
-      window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
       document.removeEventListener("pointermove", hover);
       document.removeEventListener("keydown", escape, true);
       document.removeEventListener("click", explain, true);
@@ -281,6 +352,7 @@ function HelpOverlay({
         ref={panel}
         tabIndex={-1}
         className={styles.bubble}
+        data-corner={corner}
         role="region"
         aria-label={guide.title}
       >
@@ -294,6 +366,21 @@ function HelpOverlay({
             ✕
           </button>
         </div>
+        {/* Повтор обучения с наставником — первым под заголовком, крупно: аудитория
+            45–65 лет, кнопку должно быть видно сразу. */}
+        {guide.tour && (
+          <button
+            type="button"
+            className={styles.tour}
+            onClick={() => {
+              onClose();
+              guide.tour!.start();
+            }}
+          >
+            {guide.tour.icon && <img src={guide.tour.icon} alt="" />}
+            {guide.tour.label}
+          </button>
+        )}
         <div
           ref={content}
           className={styles.content}
@@ -308,6 +395,33 @@ function HelpOverlay({
                 {index + 1}. {guide.topics[active.key].title}
               </h2>
               <p>{guide.topics[active.key].text}</p>
+              {guide.topics[active.key].memo && (
+                <p className={styles.memo}>{guide.topics[active.key].memo}</p>
+              )}
+              {guide.topics[active.key].table && (
+                <table>
+                  <thead>
+                    <tr>
+                      {guide.topics[active.key].table!.headings.map(
+                        (heading) => (
+                          <th key={heading} scope="col">
+                            {heading}
+                          </th>
+                        ),
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {guide.topics[active.key].table!.rows.map((row, index) => (
+                      <tr key={index}>
+                        {row.map((cell, column) => (
+                          <td key={column}>{cell}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </>
           ) : (
             <p id={topicId}>Прокрутите страницу до нужной части.</p>
@@ -346,12 +460,14 @@ function HelpOverlay({
 export function HelpProvider({ children }: { children: ReactNode }) {
   const [guide, setGuide] = useState<HelpGuide | null>(null);
   const [open, setOpen] = useState(false);
+  const [topic, setTopic] = useState<string | null>(null);
   const onOpen = useRef<(() => void) | undefined>();
   const register = useCallback(
     (next: HelpGuide | null, callback?: () => void) => {
       onOpen.current = callback;
       setGuide(next);
       setOpen(false);
+      setTopic(null);
     },
     [],
   );
@@ -360,11 +476,28 @@ export function HelpProvider({ children }: { children: ReactNode }) {
     if (!guide) return;
     if (!open) onOpen.current?.();
     setOpen(!open);
+    setTopic(null);
   }, [guide, open]);
+  const openTopic = useCallback(
+    (key: string) => {
+      if (!guide?.topics[key]) return;
+      onOpen.current?.();
+      setTopic(key);
+      setOpen(true);
+    },
+    [guide],
+  );
   useEffect(() => {
     if (!guide) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== "F1") return;
+      if (
+        event.key !== "F1" ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey
+      )
+        return;
       event.preventDefault();
       toggle();
     };
@@ -378,10 +511,18 @@ export function HelpProvider({ children }: { children: ReactNode }) {
         guide,
         open,
         toggle,
+        openTopic,
       }}
     >
       {children}
-      {open && guide && <HelpOverlay guide={guide} onClose={close} />}
+      {open && guide && (
+        <HelpOverlay
+          key={topic}
+          guide={guide}
+          onClose={close}
+          initialTopic={topic}
+        />
+      )}
     </HelpContext.Provider>
   );
 }

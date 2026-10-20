@@ -2,6 +2,17 @@
   flex: 0 0 36px;
   font-weight: bold;
 }
+.content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.content th,
+.content td {
+  padding: 4px;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
 .marker {
   position: fixed;
   z-index: 1001;
@@ -44,6 +55,15 @@
   font-size: var(--font-size);
   line-height: 1.5;
 }
+/* Панель уходит в угол, где не закрывает выбранную часть (bubbleCorner, placement.ts). */
+.bubble[data-corner$="left"] {
+  right: auto;
+  left: var(--space-3);
+}
+.bubble[data-corner^="top"] {
+  bottom: auto;
+  top: var(--space-3);
+}
 .heading,
 .bubble nav {
   display: flex;
@@ -73,4 +93,43 @@
 .bubble button[aria-disabled="true"] {
   opacity: 0.55;
   cursor: default;
+}
+/* Ссылка на страницу памятки — отдельной строкой под текстом части (GP-23). */
+.bubble p.memo {
+  margin-top: calc(-1 * var(--space-1));
+  font-style: italic;
+}
+
+/* «Пройти с наставником» (arm/tour) — первым под заголовком, крупная синяя кнопка с портретом
+   наставника: повтор обучения по интерфейсу, который он обещает в конце. Аудитория 45–65 лет —
+   кнопку должно быть видно сразу, не мельче 16 px. Специфичность выше `.bubble button`. */
+.bubble .tour {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 var(--space-2);
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border: 2px solid var(--color-active);
+  cursor: pointer;
+}
+.bubble .tour:hover {
+  filter: brightness(1.1);
+}
+.bubble .tour:focus-visible {
+  outline: 3px solid var(--color-header);
+  outline-offset: 2px;
+}
+.bubble .tour img {
+  width: 36px;
+  height: 36px;
+  background: #e9e6e1;
+  border: 2px solid var(--color-on-dark);
+  border-radius: 50%;
 }

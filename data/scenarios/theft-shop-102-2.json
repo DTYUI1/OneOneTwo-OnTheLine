@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "theft-shop-102-2",
+  "version": 1,
+  "title": "Охрана магазина удерживает подозреваемого в краже",
+  "service_id": "102",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "15050300",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Люплинская улица, 100». После прибытия передать телефон администратора через поле карточки. На неверные ответы без номера наряд ищет заявителя сам. Охрана держит подозреваемого; заявление и доставление в отдел.",
+  "outcome": {
+    "people": "В магазине на первом этаже дома охрана удерживает мужчину, который пытался вынести товар под курткой без оплаты. Сопротивления не оказывает, пострадавших нет. Заявитель — администратор магазина; находится в служебном помещении, доступен по телефону карточки. Наряд принял заявление и составил список похищенного. Подозреваемый доставлен в отдел, наряд свободен.",
+    "late": "Карточку приняли позже норматива. В магазине на первом этаже дома охрана удерживает мужчину, который пытался вынести товар под курткой без оплаты. Сопротивления не оказывает, пострадавших нет. Заявитель — администратор магазина; находится в служебном помещении, доступен по телефону карточки."
+  },
+  "card": {
+    "caller_name": "Калинин Тимур Геннадьевич",
+    "phone_aon": "+79000000875",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "В магазине на первом этаже дома охрана удерживает мужчину, который пытался вынести товар под курткой без оплаты. Сопротивления не оказывает, пострадавших нет. Заявитель — администратор магазина; находится в служебном помещении, доступен по телефону карточки.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Кража",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70008515",
+    "incident_type_code": "15050300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮВАО",
+      "district": "Люблино",
+      "street": "Люблинская улица",
+      "house": "100",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "В магазине на первом этаже дома охрана удерживает мужчину, который пытался вынести товар под курткой без оплаты. Сопротивления не оказывает, пострадавших нет. Заявитель — администратор магазина; находится в служебном помещении, доступен по телефону карточки. Наряд принял заявление и составил список похищенного. Подозреваемый доставлен в отдел, наряд свободен."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Мы тут рядом, через пару минут будем.",
+        "audio": "bank-v1/102/102.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли в магазин. Охрана держит одного, вынес товар под курткой.",
+        "audio": "bank-v1/102/102.arrived.theft.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Принимаем заявление, составляем список похищенного.",
+        "audio": "bank-v1/102/102.working.theft.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Подозреваемый доставлен в отдел, заявление принято. Свободны.",
+        "audio": "bank-v1/102/102.completed.theft.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Люплинская улица, 100.",
+        "audio": "bank-v6/102/102.readback.3ebe2795.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, понял. Перестраиваемся, это рядом.",
+            "audio": "bank-v1/102/102.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/102/102.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/102/102.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "caller_phone",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "arrival",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, дайте телефон заявителя, не можем его найти.",
+        "audio": "bank-v1/102/102.clarify.any.4.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Телефон заявителя: {caller_phone}"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните на месте"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, будем искать сами, это займёт время.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/102/102.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, дайте телефон заявителя, не можем его найти.",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

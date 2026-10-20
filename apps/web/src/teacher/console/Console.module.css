@@ -152,6 +152,8 @@
 }
 
 .sideFoot {
+  display: grid;
+  gap: var(--space-2);
   margin-top: auto;
   padding-top: var(--space-3);
   border-top: 1px solid #ffffff4d;
@@ -307,6 +309,57 @@
   padding: var(--space-3) 0 0;
 }
 
+/* Отчёт читают на расстоянии от монитора: текст и цели нажатия крупнее
+   плотного рабочего реестра, при этом остальные вкладки не меняются. */
+.reportReadable {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.reportReadable .panelTitle {
+  font-size: 18px;
+}
+
+.reportReadable .hint,
+.reportReadable .muted,
+.reportReadable .note,
+.reportReadable .tileLabel,
+.reportReadable .criteriaList,
+.reportReadable .verdictWho,
+.reportReadable .chartTitle {
+  font-size: 14px;
+}
+
+.reportReadable .warning {
+  font-size: 16px;
+}
+
+.reportReadable .table,
+.reportReadable .table th,
+.reportReadable .table td {
+  font-size: 14px;
+}
+
+.reportReadable .plain,
+.reportReadable .primary,
+.reportReadable .link {
+  min-height: 36px;
+  font-size: 14px;
+}
+
+.reportReadable .chip {
+  font-size: 14px;
+}
+
+.reportReadable .scroll {
+  max-height: none;
+}
+
+.personFocus:focus-visible {
+  outline: 3px solid var(--color-active);
+  outline-offset: 3px;
+}
+
 /* ——— Панели содержимого ——— */
 .panel {
   min-width: 0;
@@ -362,6 +415,30 @@
   font-weight: bold;
   white-space: nowrap;
   background: #dde2e5;
+}
+
+/* ИИ проверяет комментарий: метка цвета активного элемента и мигает, пока идёт проверка. */
+.chipBusy {
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  animation: busy 1.2s ease-in-out infinite alternate;
+}
+
+.chipFailed {
+  color: var(--color-on-dark);
+  background: var(--color-danger);
+}
+
+@keyframes busy {
+  to {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipBusy {
+    animation: none;
+  }
 }
 
 /* ——— Таблицы: заголовки мелкие и серые, как колонки реестра ——— */
@@ -469,6 +546,28 @@
   width: 90px;
 }
 
+/* Норматив — своей строкой над задержками выдачи; подсказка справа, ряд не растягивает. */
+.normativeField {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  align-items: flex-end;
+  margin: var(--space-2) 0;
+}
+
+.normativeHint {
+  max-width: 420px;
+  margin: 0;
+  padding-bottom: 5px;
+  color: #5c6771;
+  font-size: 12px;
+}
+
+.normativeField [role="alert"] {
+  flex-basis: 100%;
+  margin: 0;
+}
+
 .wide {
   width: min(100%, 480px);
 }
@@ -507,6 +606,47 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.verdictReadable {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.verdictReadable .verdictWho,
+.verdictReadable .table,
+.verdictReadable .table th,
+.verdictReadable .table td,
+.verdictReadable .field,
+.verdictReadable .field input,
+.verdictReadable .field select {
+  font-size: 15px;
+}
+
+.verdictReadable .note,
+.verdictReadable .evidence,
+.verdictReadable .chip {
+  font-size: 14px;
+}
+
+.verdictReadable .warning {
+  font-size: 16px;
+}
+
+.verdictReadable button {
+  min-height: 40px;
+  font-size: 15px;
+}
+
+.verdictReadable .field input,
+.verdictReadable .field select {
+  min-height: 40px;
+}
+
+.verdictReadable input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
 }
 
 .verdict {
@@ -573,6 +713,28 @@
   gap: var(--space-1) var(--space-3);
   align-items: center;
   font-size: 13px;
+}
+
+.seatScenario {
+  width: 100%;
+}
+
+.deliveryNote {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.assignmentControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.assignmentDelay {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
 }
 
 /* Неверная доставка — не ошибка, а выбор преподавателя: видно, но не красным. */
@@ -693,5 +855,121 @@
 }
 
 .attemptDetails {
+  margin: var(--space-2) 0;
+}
+
+/* Итоги занятия (TC-13): строка ученика раскрывается, печать раскрывает все. */
+.reviewRow {
+  margin: var(--space-2) 0;
+  padding: var(--space-2);
+  background: var(--color-on-dark);
+  border: 1px solid var(--color-border);
+}
+
+.reviewRow summary {
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.reviewRow textarea {
+  width: 100%;
+  min-width: 320px;
+}
+
+.studioHeading {
+  gap: 4px;
+  display: flex;
+  align-items: stretch;
+}
+.studioHeading > button:first-child {
+  flex: 1;
+}
+.studioHeading > button:last-child {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  padding: 0;
+  border: 0;
+}
+.studioHeading > button:last-child[aria-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+.studioSections {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 var(--space-2);
+  padding: 0 0 0 var(--space-3);
+  list-style: none;
+}
+.studioSections [aria-current="page"] {
+  background: #526671;
+  border-left: 4px solid var(--color-accent, #1684b4);
+  color: white;
+}
+
+.traineeChoice {
+  position: relative;
+  min-width: 220px;
+}
+.traineeOptions {
+  position: fixed;
+  z-index: 1300;
+  max-height: 220px;
+  overflow: auto;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  background: white;
+  color: var(--color-text);
+  border: 1px solid #77858f;
+  box-shadow: 0 3px 8px #0003;
+}
+.traineeOptions > li {
+  padding: 10px;
+  cursor: pointer;
+}
+.traineeOptions > li:hover,
+.traineeOptions > li[aria-selected="true"] {
+  background: #dcecf5;
+}
+.levelHint {
+  max-width: 270px;
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+.sessionGroups {
+  display: grid;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: var(--space-2);
+  min-height: 0;
+  overflow-y: auto;
+}
+.sessionGroupToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ffffff4d;
+  background: #ffffff0d;
+  color: var(--color-on-dark);
+  font: inherit;
+  font-weight: bold;
+  text-align: left;
+}
+.sessionGroupToggle:hover {
+  background: #ffffff1f;
+}
+.sessionGroups .sessionList {
+  grid-auto-rows: max-content;
+  align-content: start;
+  overflow: visible;
+  max-height: none;
+}
+.sessionGroups .sessionSearch {
   margin: var(--space-2) 0;
 }

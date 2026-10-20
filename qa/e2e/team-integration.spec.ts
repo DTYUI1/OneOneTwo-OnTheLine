@@ -2,6 +2,9 @@ import { randomUUID } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
 import type { components } from "../../apps/web/src/api-client/schema";
 import { passWelcome } from "./captain-fixture";
+import { registrationNumber, reportByParts } from "./report-parts";
+import { backToContacts, closePhone, dialTyped, expectEnded } from "./phone";
+import { confirmAgain } from "./trainer";
 
 type Scenario = components["schemas"]["Scenario"];
 type Card = components["schemas"]["Card"];
@@ -30,6 +33,8 @@ test("Связка команды: занятие → АРМ/телефон → 
   test.setTimeout(120_000);
   page.setDefaultTimeout(15_000);
   const health = await (await page.request.get("/api/health")).json();
+  const workerTimeout = health.ai_provider === "local" ? 180_000 : 5_000;
+  test.setTimeout(workerTimeout + 120_000);
   expect(health).toMatchObject({
     mode: "database",
     database: "ok",
@@ -62,8 +67,6 @@ test("Связка команды: занятие → АРМ/телефон → 
   const templates: Scenario[] = await (
     await page.request.get("/api/scenarios")
   ).json();
-  const services = await (await page.request.get("/api/services")).json();
-  const service = services.find((item: { id: string }) => item.id === "102");
   const source = templates.find(
     (item) => item.id === "00000000-0000-4000-8000-000000000100",
   )!;
@@ -105,6 +108,14 @@ test("Связка команды: занятие → АРМ/телефон → 
       .getByRole("button", { name: "+ Новое занятие", exact: true })
       .click();
     await page.getByLabel("Название", { exact: true }).fill(title);
+    const classSettings = await (
+      await page.request.get("/api/settings")
+    ).json();
+    const penalty = testInfo.project.name === "chromium" ? 70 : 20;
+    await page.getByText(/^Нормативы и оценка занятия ·/).click();
+    await page
+      .getByLabel("Штраф за доклад вариантом, %", { exact: true })
+      .fill(String(penalty));
     await page.getByRole("button", { name: "Добавить рабочее место" }).click();
     // Обучаемый — поле с подсказками (28.09): точный логин выбирает учётку.
     await page.getByLabel("Обучаемый", { exact: true }).fill(trainee.login);
@@ -121,6 +132,13 @@ test("Связка команды: занятие → АРМ/телефон → 
     const created = await creation;
     expect(created.status()).toBe(201);
     const lesson = await created.json();
+    // Штраф выбирает преподаватель для занятия, а настройки класса остаются прежними.
+    expect(lesson.settings_snapshot.report_choice_factor).toBeCloseTo(
+      (100 - penalty) / 100,
+    );
+    expect(await (await page.request.get("/api/settings")).json()).toEqual(
+      classSettings,
+    );
     sessions.push(lesson.id);
     const detail = page.locator('section[aria-labelledby="session-title"]');
     // С C-03 пульт выдаёт задания одной пачкой (D-01); прежняя раздача — только при 501.
@@ -131,7 +149,7 @@ test("Связка команды: занятие → АРМ/телефон → 
       .selectOption({
         label: `№ ${scenario.card.number} · ${title} · ур. ${scenario.level}`,
       });
-    await detail.getByRole("button", { name: "Выдать пачкой (1)" }).click();
+    await detail.getByRole("button", { name: "Выдать задания (1)" }).click();
     await expect(detail.getByText(/^Выдано заданий: 1\./)).toBeVisible();
     await detail.getByRole("button", { name: "Начать занятие" }).click();
     await expect(detail.getByText("Занятие запущено.")).toBeVisible();
@@ -189,18 +207,21 @@ test("Связка команды: занятие → АРМ/телефон → 
     const arm = await traineeContext.newPage();
     arm.setDefaultTimeout(15_000);
     await login(arm, trainee.login);
-    await arm.getByRole("button", { name: "Диспетчер служб" }).click();
+    await arm
+      .getByRole("button", { name: /^(Диспетчер служб|Перейти в тренажёр)$/ })
+      .click();
     await arm.getByRole("row").filter({ hasText: title }).click();
     const cardView = arm.getByRole("region", {
       name: `Происшествие ${scenario.card.number}`,
       exact: true,
     });
     await expect(cardView).toBeVisible();
+    // Рабочее место — в синем окне истории над своей плиткой: «оп. 23».
     await cardView
-      .getByRole("button", { name: `Развернуть ${service.name}`, exact: true })
+      .getByRole("button", { name: "История статусов", exact: true })
       .click();
-    await expect(cardView.getByText("АРМ 23", { exact: true })).toBeVisible();
-    async function status(state: string) {
+    await expect(cardView.getByText("оп. 23").first()).toBeVisible();
+    async function status(state: string, extra = "") {
       await cardView
         .getByRole("button", { name: "Изменить статус", exact: true })
         .click();
@@ -211,42 +232,43 @@ test("Связка команды: занятие → АРМ/телефон → 
       // «Интеграция», имя браузера проверка орфографии сочла бы ошибкой.
       await cardView
         .getByLabel("Комментарий", { exact: true })
-        .fill(`Интеграция. ${source.reference.expected_comment}`);
+        .fill(`Интеграция. ${source.reference.expected_comment}${extra}`);
       await cardView
         .getByRole("button", { name: "Подтвердить", exact: true })
         .click();
       if (state === "completed") {
-        await expect(cardView.getByText(/Нажмите ✓ ещё раз/)).toBeVisible();
+        // Необратимый статус — вторым ✓: у ✓ подпись «Нажмите ✓ или Enter ещё раз» (17.10).
+        await expect(confirmAgain(arm)).toBeVisible();
         await cardView
           .getByRole("button", { name: "Подтвердить", exact: true })
           .click();
       }
-      // Форма видна, пока карточка открыта: после завершающего статуса она
-      // исчезает, после остальных — остаётся с пустым выбором статуса.
-      if (state === "completed")
+      // Строка статуса всегда на виду (DT-19): после сохранения она очищена, а после
+      // завершающего статуса её нет — карточка закрыта.
+      if (state === "completed" || state === "refused")
         await expect(
           cardView.getByRole("group", { name: "Действие по карточке" }),
         ).toHaveCount(0);
       else
         await expect(
-          cardView.getByLabel("Статус", { exact: true }),
+          cardView.getByLabel("Комментарий", { exact: true }),
         ).toHaveValue("");
     }
     await status("accepted");
     await status("responding");
-    await arm.getByRole("button", { name: "Телефон", exact: true }).click();
-    await arm.getByRole("button", { name: /^102.*ваша служба/ }).click();
-    await expect(
-      arm.getByRole("button", { name: "Разговор", exact: true }),
-    ).toBeVisible({ timeout: 15_000 });
-    await arm.getByRole("button", { name: "Положить трубку" }).click();
-    await expect(
-      arm.getByRole("button", { name: "Звонок завершён", exact: true }),
-    ).toBeVisible();
-    await arm
-      .getByRole("button", { name: "Звонок завершён", exact: true })
-      .click();
-    await status("completed");
+    // Связь службы — окно телефона ДДС (GP-09): своя служба 102 набирается вручную.
+    const talk = await dialTyped(arm, "102");
+    // Доклад службе — по частям (запасной путь к голосу, DT-05, GP-06): служба
+    // принимает и кладёт трубку.
+    await reportByParts(talk);
+    await expectEnded(talk);
+    await backToContacts(talk);
+    await closePhone(arm);
+    // TC-03: дежурный 102 назвал номер регистрации — он уходит в комментарий карточки.
+    const mine: Card[] = await (await arm.request.get("/api/cards")).json();
+    const mineId = mine.find((item) => item.session_id === lesson.id)!.id;
+    const registration = await registrationNumber(arm.request, mineId);
+    await status("completed", ` Номер регистрации ${registration}.`);
 
     const cards: Card[] = await (await page.request.get("/api/cards")).json();
     const card = cards.find((item) => item.session_id === lesson.id)!;
@@ -261,8 +283,19 @@ test("Связка команды: занятие → АРМ/телефон → 
     expect(
       evaluation.criteria.every((item) => item.evidence.length > 0),
     ).toBeTruthy();
-    expect(evaluation.total).toBe(1);
-    // Ждём именно пересчёт worker, а не только мгновенную оценку API.
+    // Доклад сделан вариантом, а не голосом (DT-05): звонок оценивается ниже, остальное — полно.
+    const call = evaluation.criteria.find((item) => item.key === "call")!;
+    expect(call.score).toBeLessThan(1);
+    expect(call.evidence).toContain(
+      "Доклад службе 102: полный, ответ вариантом",
+    );
+    expect(
+      evaluation.criteria
+        .filter((item) => item.key !== "call")
+        .every((item) => item.score === 1),
+    ).toBeTruthy();
+    // Ждём реальный пересчёт worker. Локальный судья использует CPU и прежний
+    // таймаут 120 с; пяти секунд режима off для него недостаточно.
     await expect
       .poll(
         async () =>
@@ -271,12 +304,18 @@ test("Связка команды: занятие → АРМ/телефон → 
               await page.request.get(`/api/evaluations/${evaluation.id}`)
             ).json()
           ).model_info.embeddings,
+        { timeout: workerTimeout, intervals: [1000] },
       )
       .toBe("off");
+    const judged: Evaluation = await (
+      await page.request.get(`/api/evaluations/${evaluation.id}`)
+    ).json();
     await detail.getByRole("tab", { name: /Вердикты/ }).click();
     const feed = page.getByRole("list", { name: "Вердикты ИИ" });
     await expect(
-      feed.getByText("100 %", { exact: true }).first(),
+      feed
+        .getByText(`${Math.round(judged.total * 100)} %`, { exact: true })
+        .first(),
     ).toBeVisible();
     await expect(
       feed.getByText(evaluation.criteria[0].evidence[0], { exact: true }),

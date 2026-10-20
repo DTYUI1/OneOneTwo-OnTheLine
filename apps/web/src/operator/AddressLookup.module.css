@@ -1,0 +1,37 @@
+.lookup {
+  grid-row: 2;
+  grid-column: 1;
+  position: relative;
+  min-width: 0;
+  color: var(--color-text);
+}
+.lookup input {
+  width: 100%;
+  padding: 2px 0;
+  font-size: 16px;
+}
+.lookup ul {
+  position: absolute;
+  z-index: 9;
+  left: 0;
+  right: 0;
+  max-height: 170px;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--color-border);
+  background: var(--color-on-dark);
+}
+.lookup li {
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.lookup li[aria-selected="true"] {
+  color: var(--color-on-dark);
+  background: var(--color-active);
+}
+.lookup span,
+.lookup small {
+  display: block;
+}

@@ -1,4 +1,6 @@
-// Адресная выдача: у каждого места своя очередь — сценарий, задержка от старта,
+import { AssignmentScenarioPicker } from "./AssignmentScenarioPicker";
+import { FieldCaption } from "../../shared/FieldHelp";
+// Задания по рабочим местам: у каждого места своя очередь — сценарий, задержка от старта,
 // режим доставки. Уходит одной пачкой; пока сервер пачки не принимает (501),
 // честно говорим об этом и не имитируем её серией одиночных запросов.
 import { useRef, useState } from "react";
@@ -9,7 +11,6 @@ import {
   addItem,
   formatDelay,
   issuesFromServer,
-  matchesService,
   planIssues,
   requestIdFor,
   suggestPlan,
@@ -17,20 +18,34 @@ import {
   type BatchIssue,
   type PlanItem,
 } from "./handoutModel";
-import { assignableScenarios, scenarioServiceIds, type Session } from "./model";
+import { scenarioServiceIds, type Session } from "./model";
+import { catalogScenarios } from "./handoutCatalog";
 import {
   useBatchAvailability,
   useIssuedAssignments,
+  useHandoutCatalog,
+  usePlayableScenarios,
   useScenarios,
   useServices,
   useUsers,
 } from "./useConsoleData";
 import styles from "./Console.module.css";
+import { SessionNorms } from "./SessionNorms";
+import { StartButton, StartStatus, type StartControl } from "./StartLesson";
 
-export function AddressedHandout({ session }: { session: Session }) {
+export function AddressedHandout({
+  session,
+  start,
+}: {
+  session: Session;
+  /** «Начать занятие» — рядом с «Выдать задания». */
+  start?: StartControl;
+}) {
   const queries = useQueryClient();
   const assignments = useIssuedAssignments(session.id);
   const scenarios = useScenarios();
+  const catalog = useHandoutCatalog();
+  const playable = usePlayableScenarios();
   const users = useUsers();
   const { serviceName } = useServices();
   const [plan, setPlan] = useState<PlanItem[]>([]);
@@ -45,10 +60,23 @@ export function AddressedHandout({ session }: { session: Session }) {
   const capability = useBatchAvailability(session.id);
   const available = capability.available;
 
-  const approved = assignableScenarios(scenarios.data ?? []);
+  const approved = catalogScenarios(catalog.data ?? [], scenarios.data ?? []);
   const scenarioById = (id: string) => approved.find((item) => item.id === id);
+  const catalogPending = catalog.isPending || scenarios.isPending;
+  const catalogError = catalog.error ?? scenarios.error;
+  const catalogBlocked =
+    catalogPending ||
+    Boolean(catalogError) ||
+    catalog.isFetching ||
+    scenarios.isFetching;
+  // Выбранное не удаляем при обновлении каталога: преподаватель решает сам.
+  const unavailablePlan = plan.some((item) => !scenarioById(item.scenarioId));
   const fullName = (id: string) =>
     users.data?.find((user) => user.id === id)?.full_name ?? "…";
+  // Подпись места — про план; выданное уже не в плане, но «нет заданий» о нём неправда.
+  const issuedTo = (id: string) =>
+    (assignments.data ?? []).filter((item) => item.participant_id === id)
+      .length;
   const localIssues = planIssues(plan);
   const issuesFor = (key: string) => [
     ...(localIssues.get(key) ?? []),
@@ -64,6 +92,11 @@ export function AddressedHandout({ session }: { session: Session }) {
 
   const send = useMutation({
     mutationFn: async () => {
+      if (catalogBlocked || unavailablePlan)
+        throw Object.assign(
+          new Error("Проверьте доступность выбранных сценариев."),
+          { status: 422 },
+        );
       const { items } = toBatch(plan, assignments.data ?? [], "");
       const body = { items };
       const attempt = requestIdFor(body, lastAttempt.current, () =>
@@ -83,7 +116,7 @@ export function AddressedHandout({ session }: { session: Session }) {
           details?: { items?: BatchIssue[] };
         };
         throw Object.assign(
-          new Error(failure?.message ?? "Пачка не принята."),
+          new Error(failure?.message ?? "Не удалось выдать задания."),
           {
             status: result.response.status,
             items: failure?.details?.items ?? [],
@@ -109,12 +142,12 @@ export function AddressedHandout({ session }: { session: Session }) {
     onError: (cause: Error & { status?: number; items?: BatchIssue[] }) => {
       if (cause.status === 422 && cause.items?.length) {
         setServerIssues(issuesFromServer(plan, cause.items));
-        setError("Пачка не принята целиком: исправьте отмеченные строки.");
+        setError("Задания не выданы: исправьте отмеченные строки.");
         return;
       }
       setError(
         cause.status === undefined
-          ? "Ответ сервера не дошёл. Нажмите «Выдать пачкой» ещё раз. Повторная отправка не создаст дубликатов заданий."
+          ? "Ответ сервера не дошёл. Нажмите «Выдать задания» ещё раз. Повторная отправка не создаст дубликатов заданий."
           : cause.status === 409
             ? `${cause.message} Обновите страницу, чтобы увидеть уже выданное.`
             : cause.message,
@@ -126,10 +159,10 @@ export function AddressedHandout({ session }: { session: Session }) {
   if (!available)
     return (
       <div className={styles.panel}>
-        <h3 className={styles.panelTitle}>Адресная выдача</h3>
+        <h3 className={styles.panelTitle}>Задания по рабочим местам</h3>
         <p className={styles.hint}>
-          Разные задания и задержки каждому месту одной пачкой — сервер пока эту
-          выдачу не принимает. До её включения работает раздача по службам ниже.
+          Выдача отдельных заданий каждому рабочему месту пока недоступна.
+          Используйте раздачу по службам ниже.
         </p>
       </div>
     );
@@ -138,16 +171,53 @@ export function AddressedHandout({ session }: { session: Session }) {
 
   return (
     <div className={styles.panel}>
-      <h3 className={styles.panelTitle}>Адресная выдача</h3>
+      <h3 className={styles.panelTitle}>Задания по рабочим местам</h3>
       <p className={styles.hint}>
         У каждого места своя очередь. Задержка считается от старта занятия.
         Задание чужой службы уходит только как отмеченное упражнение на неверную
         доставку.
       </p>
+      <SessionNorms key={session.id} session={session} />
+      {catalogPending && <p role="status">Загружаем сценарии…</p>}
+      {catalogError && (
+        <div role="alert">
+          <p>{catalogError.message}</p>
+          <button
+            type="button"
+            className={styles.plain}
+            disabled={catalog.isFetching || scenarios.isFetching}
+            onClick={() => {
+              void catalog.refetch();
+              void scenarios.refetch();
+            }}
+          >
+            Повторить загрузку сценариев
+          </button>
+        </div>
+      )}
+      {!catalogBlocked && approved.length === 0 && (
+        <p>В общем каталоге нет доступных сценариев.</p>
+      )}
+      {!catalogBlocked && unavailablePlan && (
+        <p role="alert">
+          Часть выбранных сценариев недоступна. Уберите эти задания из плана или
+          повторите загрузку позже.
+        </p>
+      )}
+      {playable.isError && (
+        <p role="alert">
+          Автоматический подбор недоступен: {playable.error.message} Добавьте
+          задания вручную.
+        </p>
+      )}
       <div className={styles.actions}>
         <label className={styles.field}>
-          Первое через, с
+          <FieldCaption
+            label="Первое через, с"
+            help="Через сколько секунд от начала занятия появится первое задание. Задержки остальных заданий можно изменить ниже."
+          />
           <input
+            aria-label="Первое через, с"
             type="number"
             min={0}
             value={timing.firstDelayS}
@@ -158,8 +228,12 @@ export function AddressedHandout({ session }: { session: Session }) {
           />
         </label>
         <label className={styles.field}>
-          Интервал, с
+          <FieldCaption
+            label="Интервал, с"
+            help="Промежуток между заданиями одного рабочего места при автоматическом подборе, в секундах."
+          />
           <input
+            aria-label="Интервал, с"
             type="number"
             min={0}
             value={timing.intervalS}
@@ -172,13 +246,27 @@ export function AddressedHandout({ session }: { session: Session }) {
         <button
           type="button"
           className={styles.plain}
-          onClick={() =>
-            change(
-              suggestPlan(session.participants, approved, timing, () =>
-                crypto.randomUUID(),
-              ),
-            )
+          // Пока список не пришёл, подбор молча дал бы пустой план.
+          disabled={
+            catalogBlocked ||
+            playable.isPending ||
+            playable.isError ||
+            playable.isFetching
           }
+          onClick={() => {
+            const next = suggestPlan(
+              session.participants,
+              approved,
+              playable.data ?? new Set(),
+              timing,
+              () => crypto.randomUUID(),
+            );
+            change(next);
+            if (next.length === 0)
+              setNotice(
+                "Готовых сценариев службы и уровня этих мест нет. Добавьте задания вручную.",
+              );
+          }}
         >
           Подобрать по службе и уровню
         </button>
@@ -209,7 +297,9 @@ export function AddressedHandout({ session }: { session: Session }) {
               <span className={styles.muted}>
                 {queue.length
                   ? `${queue.length} зад.: ${queue.map((item) => formatDelay(item.delayS)).join(", ")}`
-                  : "нет заданий"}
+                  : issuedTo(participant.user_id)
+                    ? `выдано: ${issuedTo(participant.user_id)}`
+                    : "нет заданий"}
               </span>
             </div>
             {queue.length > 0 && (
@@ -221,7 +311,7 @@ export function AddressedHandout({ session }: { session: Session }) {
                     return (
                       <tr key={item.key}>
                         <td className={styles.seat}>{index + 1}</td>
-                        <td>
+                        <td className={styles.seatScenario}>
                           <span className={styles.chip}>
                             {scenario
                               ? scenarioServiceIds(scenario)
@@ -230,9 +320,23 @@ export function AddressedHandout({ session }: { session: Session }) {
                               : "—"}
                           </span>{" "}
                           {scenario
-                            ? `№ ${scenario.card.number} · ${scenario.card.incident_class}`
+                            ? scenario.displayTitle
                             : "сценарий недоступен"}{" "}
                           · ур. {scenario?.level}
+                          {scenario?.specifics && (
+                            <span className={styles.deliveryNote}>
+                              {scenario.specifics}
+                            </span>
+                          )}
+                          <span className={styles.deliveryNote}>
+                            {item.mode === "profile" ? (
+                              <span className={styles.muted}>своя служба</span>
+                            ) : (
+                              <span className={styles.exercise}>
+                                упражнение: чужая служба
+                              </span>
+                            )}
+                          </span>
                           {problems.length > 0 && (
                             <ul className={styles.problems} role="alert">
                               {problems.map((message) => (
@@ -240,38 +344,32 @@ export function AddressedHandout({ session }: { session: Session }) {
                               ))}
                             </ul>
                           )}
-                        </td>
-                        <td>
-                          <label className={styles.field}>
-                            через, с
-                            <input
-                              type="number"
-                              min={0}
-                              value={item.delayS}
-                              className={styles.number}
-                              onChange={(event) =>
-                                change(
-                                  plan.map((row) =>
-                                    row.key === item.key
-                                      ? {
-                                          ...row,
-                                          delayS: Number(event.target.value),
-                                        }
-                                      : row,
-                                  ),
-                                )
-                              }
-                            />
-                          </label>
-                        </td>
-                        <td>
-                          {item.mode === "profile" ? (
-                            <span className={styles.muted}>своя служба</span>
-                          ) : (
-                            <span className={styles.exercise}>
-                              упражнение: чужая служба
-                            </span>
-                          )}
+                          <div className={styles.assignmentControls}>
+                            <label
+                              className={`${styles.field} ${styles.assignmentDelay}`}
+                            >
+                              через
+                              <input
+                                type="number"
+                                min={0}
+                                value={item.delayS}
+                                className={styles.number}
+                                onChange={(event) =>
+                                  change(
+                                    plan.map((row) =>
+                                      row.key === item.key
+                                        ? {
+                                            ...row,
+                                            delayS: Number(event.target.value),
+                                          }
+                                        : row,
+                                    ),
+                                  )
+                                }
+                              />
+                              сек
+                            </label>
+                          </div>
                         </td>
                         <td>
                           <button
@@ -291,53 +389,23 @@ export function AddressedHandout({ session }: { session: Session }) {
                 </tbody>
               </table>
             )}
-            <label className={styles.field}>
-              Добавить задание
-              <select
-                value=""
-                onChange={(event) => {
-                  const scenario = scenarioById(event.target.value);
-                  if (scenario)
-                    change(
-                      addItem(
-                        plan,
-                        participant,
-                        scenario,
-                        timing,
-                        crypto.randomUUID(),
-                      ),
-                    );
-                }}
-              >
-                <option value="">— выберите сценарий —</option>
-                <optgroup label="Своя служба">
-                  {approved
-                    .filter((scenario) => matchesService(scenario, participant))
-                    .map((scenario) => (
-                      <option key={scenario.id} value={scenario.id}>
-                        № {scenario.card.number} ·{" "}
-                        {scenario.card.incident_class}
-                        {" · ур. "}
-                        {scenario.level}
-                      </option>
-                    ))}
-                </optgroup>
-                <optgroup label="Чужая служба — упражнение на неверную доставку">
-                  {approved
-                    .filter(
-                      (scenario) => !matchesService(scenario, participant),
-                    )
-                    .map((scenario) => (
-                      <option key={scenario.id} value={scenario.id}>
-                        № {scenario.card.number} ·{" "}
-                        {scenario.card.incident_class} ·{" "}
-                        {serviceName(scenario.target_service_id)} · ур.{" "}
-                        {scenario.level}
-                      </option>
-                    ))}
-                </optgroup>
-              </select>
-            </label>
+            <AssignmentScenarioPicker
+              scenarios={approved}
+              disabled={catalogBlocked}
+              participant={participant}
+              serviceName={serviceName}
+              onChoose={(scenario) =>
+                change(
+                  addItem(
+                    plan,
+                    participant,
+                    scenario,
+                    timing,
+                    crypto.randomUUID(),
+                  ),
+                )
+              }
+            />
           </div>
         );
       })}
@@ -352,18 +420,22 @@ export function AddressedHandout({ session }: { session: Session }) {
             plan.length === 0 ||
             plan.length > MAX_BATCH ||
             hasProblems ||
+            catalogBlocked ||
+            unavailablePlan ||
             send.isPending
           }
           onClick={() => send.mutate()}
         >
-          {send.isPending ? "Отправляем…" : `Выдать пачкой (${plan.length})`}
+          {send.isPending ? "Отправляем…" : `Выдать задания (${plan.length})`}
         </button>
+        {start && <StartButton start={start} />}
         {plan.length > MAX_BATCH && (
           <span className={styles.hint}>
-            В одной пачке не больше {MAX_BATCH} заданий.
+            За один раз можно выдать не больше {MAX_BATCH} заданий.
           </span>
         )}
       </div>
+      {start && <StartStatus start={start} />}
     </div>
   );
 }

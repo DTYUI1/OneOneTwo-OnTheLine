@@ -1,0 +1,4721 @@
+{
+  "service": "103",
+  "speaker": "brigade",
+  "gender": "female",
+  "incidents": {
+    "heart": "Плохо с сердцем",
+    "injury": "Травма в драке",
+    "traffic": "Авария, пострадавшие",
+    "lift": "Плохо пассажиру в застрявшем лифте",
+    "smoke": "Отравление дымом при пожаре",
+    "fall": "Падение, травма на улице или дома",
+    "unconscious": "Человек без сознания на улице",
+    "child": "Ребёнку плохо: температура, травма",
+    "stroke": "Подозрение на инсульт",
+    "elderly_home": "Пожилой дома один, не открывает"
+  },
+  "phrases": [
+    {
+      "id": "103.answer.any.1",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Бригада, слушаю.",
+      "facts": []
+    },
+    {
+      "id": "103.answer.any.2",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, скорая на связи.",
+      "facts": []
+    },
+    {
+      "id": "103.answer.any.3",
+      "slot": "answer",
+      "incidents": [
+        "*"
+      ],
+      "text": "Слушаю, диспетчер.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.1",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.2",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, адрес записала. Выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.3",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла. Едем с сиреной.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.4",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Выезжаем. Диспетчер, если заявитель перезвонит — сообщите, что с больным.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.5",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла. Мы как раз освободились неподалёку, выезжаем.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.6",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла, выдвигаемся. Носилки берём сразу.",
+      "facts": []
+    },
+    {
+      "id": "103.enroute.any.1",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем, минут через пять будем.",
+      "facts": []
+    },
+    {
+      "id": "103.enroute.any.2",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "В пути. На выезде пробка, объезжаем дворами.",
+      "facts": []
+    },
+    {
+      "id": "103.enroute.any.3",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже на подъезде. Пусть нас кто-нибудь встретит.",
+      "facts": []
+    },
+    {
+      "id": "103.enroute.any.4",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем. Приедем — доложу.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.1",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, стоим в пробке, не пропускают. Будем позже.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.2",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Двор заставлен машинами, не проехать. Идём пешком с носилками.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.3",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Шлагбаум закрыт, охраны нет. Ищем, кто откроет.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.4",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаемся: улицу перекрыли, едем в объезд.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.5",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пробили колесо. Меняем, будем с задержкой.",
+      "facts": []
+    },
+    {
+      "id": "103.wrong_place.any.1",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, мы на месте, а тут скорую никто не вызывал. Проверьте адрес!",
+      "facts": []
+    },
+    {
+      "id": "103.wrong_place.any.2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "По этому адресу вызова нет, открыли, все здоровы. Уточните адрес!",
+      "facts": []
+    },
+    {
+      "id": "103.wrong_place.any.3",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, тут никого. Мы точно туда приехали? Проверьте адрес.",
+      "facts": []
+    },
+    {
+      "id": "103.readback_fixed.any.1",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла поправку, разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "103.readback_fixed.any.2",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Так, записала правильный адрес. Едем.",
+      "facts": []
+    },
+    {
+      "id": "103.readback_fixed.any.3",
+      "slot": "readback_fixed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла поправку. Хорошо, что сказали, мы уже туда сворачивали.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.1",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.2",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.3",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да, поняла.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.4",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, приняла.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.5",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ясно.",
+      "facts": []
+    },
+    {
+      "id": "103.not_understood.any.1",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не поняла, повторите.",
+      "facts": []
+    },
+    {
+      "id": "103.not_understood.any.2",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, плохо слышно. Ещё раз.",
+      "facts": []
+    },
+    {
+      "id": "103.not_understood.any.3",
+      "slot": "not_understood",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторите, сирена перебивает.",
+      "facts": []
+    },
+    {
+      "id": "103.end_call.any.1",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла, конец связи.",
+      "facts": []
+    },
+    {
+      "id": "103.end_call.any.2",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, отключаюсь.",
+      "facts": []
+    },
+    {
+      "id": "103.end_call.any.3",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла. До связи.",
+      "facts": []
+    },
+    {
+      "id": "103.end_call.any.4",
+      "slot": "end_call",
+      "incidents": [
+        "*"
+      ],
+      "text": "Конец связи, работаем.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.1",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Работаем, оказываем помощь. Закончим — доложу.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.2",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пока на месте. Давление меряем, состояние стабильное.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.3",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё работаем. Готовим к транспортировке.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.4",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, руки заняты, работаем с пациентом. Перезвоню.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.5",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Состояние без изменений, наблюдаем. Решаем, везти или нет.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.1",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "floor",
+      "text": "Диспетчер, какой этаж, не подскажете?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.2",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "entrance",
+      "text": "Диспетчер, какой подъезд? Их тут много, все одинаковые.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.3",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "intercom",
+      "text": "Домофон не отвечает. Диспетчер, код есть?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.4",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "caller_phone",
+      "text": "Диспетчер, дайте телефон заявителя, нас никто не встречает.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.5",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "access",
+      "text": "Дверь закрыта, никто не открывает. Ключи есть у кого-нибудь?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.6",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "landmark",
+      "text": "Мы на месте, но человека не видим. Где именно он? Есть ориентир?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.7",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "patient_age",
+      "text": "Диспетчер, сколько лет пациенту? В карточке не указано.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.8",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "meds",
+      "text": "Диспетчер, до нас что-нибудь из лекарств давали? Заявитель не говорил?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.9",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "caller",
+      "text": "Кто вызывал — родственник или прохожий? Тут никто не признаётся.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_ok.any.1",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, поднимаемся.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_ok.any.2",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Спасибо, нашли.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_ok.any.3",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, идём.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_ok.any.4",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, вижу. Спасибо.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_unknown.any.1",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, будем искать сами, это займёт время.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_unknown.any.2",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ладно, разберёмся на месте.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_unknown.any.3",
+      "slot": "clarify_unknown",
+      "incidents": [
+        "*"
+      ],
+      "text": "Плохо. Будем стучать во все двери, задержимся.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_late.any.1",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Уже нашли сами.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_late.any.2",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поздно, мы уже внутри.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify_late.any.3",
+      "slot": "clarify_late",
+      "incidents": [
+        "*"
+      ],
+      "text": "Спасибо, но уже разобрались.",
+      "facts": []
+    },
+    {
+      "id": "103.request_service.any.1",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "102",
+      "text": "Диспетчер, нужна полиция! Родственники буйные, работать не дают.",
+      "facts": []
+    },
+    {
+      "id": "103.request_service.any.2",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "102",
+      "text": "Вызовите полицию: у пострадавшего ножевое, это криминал.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.request_service.any.3",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "102",
+      "text": "Нужен наряд, пациент агрессивный, кидается на нас.",
+      "facts": []
+    },
+    {
+      "id": "103.request_service.any.4",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "101",
+      "text": "Дверь заперта, за дверью кто-то стонет. Нужны спасатели вскрыть!",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.request_service.any.5",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "101",
+      "text": "Человека зажало, сами не достанем. Нужны пожарные, срочно!",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.request_service.any.6",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "101",
+      "text": "Диспетчер, в квартире дым. Без пожарных не зайдём.",
+      "facts": [
+        "fire",
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.request_service.any.7",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "104",
+      "text": "Диспетчер, в подъезде сильно пахнет газом. Нужна газовая служба!",
+      "facts": [
+        "gas"
+      ]
+    },
+    {
+      "id": "103.request_service.any.8",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "104",
+      "text": "Вызовите газовиков: у пациента голова болит, тошнит, а на кухне пахнет газом.",
+      "facts": [
+        "gas",
+        "victims"
+      ]
+    },
+    {
+      "id": "103.request_service.any.9",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "MOSLIFT",
+      "text": "Лифт не работает, а нести на носилках высоко. Нужен механик лифта.",
+      "facts": []
+    },
+    {
+      "id": "103.request_service.any.10",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "MOSLIFT",
+      "text": "Кабина стоит между этажами, человеку плохо. Срочно Мослифт!",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.request_service.any.11",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "needs": "MOSLIFT",
+      "text": "Мослифт ещё не выехал? Ждём под кабиной, больному хуже.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.alarm.any.1",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[shouting]",
+      "text": "Тревога! На бригаду напали, водителя ударили! Нужна полиция!",
+      "facts": []
+    },
+    {
+      "id": "103.alarm.any.2",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[whispering]",
+      "text": "Тревога. Пациент с ножом, мы заперлись в машине. Срочно полицию.",
+      "facts": []
+    },
+    {
+      "id": "103.alarm.any.3",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[out of breath]",
+      "text": "Диспетчер, тревога! Фельдшер упала на лестнице, похоже, перелом руки.",
+      "facts": []
+    },
+    {
+      "id": "103.alarm.any.4",
+      "slot": "alarm",
+      "incidents": [
+        "*"
+      ],
+      "tone": "[panicked]",
+      "text": "Тревога! Собака покусала фельдшера, кровь, нужна помощь!",
+      "facts": []
+    },
+    {
+      "id": "103.alarm_ack.any.1",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, ждём полицию. Из машины не выходим.",
+      "facts": []
+    },
+    {
+      "id": "103.alarm_ack.any.2",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла, держимся. Больного не бросаем.",
+      "facts": []
+    },
+    {
+      "id": "103.alarm_ack.any.3",
+      "slot": "alarm_ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, ждём подмогу.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.any.1",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Помощь оказана, состояние стабильное. Бригада свободна.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.any.2",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пациента госпитализируем, едем в больницу.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.any.3",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Отказ от госпитализации оформлен, рекомендации дали. Свободны.",
+      "facts": [
+        "victims",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.any.4",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Доставили в приёмное, передали врачам. Бригада свободна.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.refused.any.1",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вызов ложный: никто не вызывал, все здоровы. Бригада свободна.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.refused.any.2",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Больного на месте нет, ушли до нас. Очевидцы не видели.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "103.refused.any.3",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дверь никто не открыл, соседи говорят — уехали на дачу. Работ нет.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.refused.any.4",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Говорят, уже полегчало. От осмотра отказались, бригада свободна.",
+      "facts": [
+        "self_resolved"
+      ]
+    },
+    {
+      "id": "103.arrived.heart.1",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "На месте. Мужчина, жалуется на боль за грудиной, бледный, весь в поту.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.heart.2",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Прибыли. Бабушка сидит, держится за сердце, задыхается.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.heart.3",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Бригада на месте. Пациент в сознании, говорит, давит в груди с утра.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.heart.1",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Снимаем кардиограмму. Похоже на инфаркт, готовим к перевозке.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.heart.2",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Давление высокое, сбиваем. Дали таблетку под язык, ждём.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.heart.3",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Пульс неровный, частит. Ставим капельницу.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.update.heart.1",
+      "slot": "update",
+      "incidents": [
+        "heart"
+      ],
+      "tone": "[urgent]",
+      "text": "Диспетчер, хуже стало: потерял сознание. Начинаем реанимацию!",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.update.heart.2",
+      "slot": "update",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Отпустило. Боль меньше, давление выровнялось.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.heart.1",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Госпитализируем в кардиологию, выносим на носилках.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.heart.2",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Давление сбили, боль прошла. От госпитализации отказалась, отказ подписан.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.heart.3",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Приступ сняли на месте. Оставили под присмотром родных.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.refused.heart.1",
+      "slot": "refused",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Мужчины на месте нет. Говорят, полегчало, встал и ушёл сам. Свободны.",
+      "facts": [
+        "gone",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.injury.1",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "На месте. Мужчина, рассечена бровь, кровь, в сознании, выпивший.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.injury.2",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Прибыли. Пострадавший сидит на лавке, держится за бок, говорит, били ногами.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.injury.3",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Бригада на месте. Пострадавший лежит, вокруг толпа, кричат. Работать тяжело.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.injury.1",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Обрабатываем рану на голове, бинтуем. Подозрение на сотрясение.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.injury.2",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Похоже, рёбра сломаны, дышит тяжело. Фиксируем.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.injury.3",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Порез на руке глубокий. Кровь остановили, накладываем повязку.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.update.injury.1",
+      "slot": "update",
+      "incidents": [
+        "injury"
+      ],
+      "tone": "[urgent]",
+      "text": "Диспетчер, сняли куртку — а там ножевое. Везём срочно!",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.injury.1",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "С сотрясением госпитализируем, везём в травму.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.injury.2",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Рану обработали. От госпитализации отказался, расписался в отказе.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.injury.3",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Ссадины обработали на месте, в больницу не нужно. Передали полиции для опроса.",
+      "facts": [
+        "victims",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "103.refused.injury.1",
+      "slot": "refused",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Драка закончилась, все разбежались. Пострадавших нет, бригада свободна.",
+      "facts": [
+        "gone",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.arrived.traffic.1",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "На месте. Водителя зажало в машине, в сознании, жалуется на ноги.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.traffic.2",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Прибыли. Пешеход лежит на дороге без сознания, машина рядом.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.traffic.3",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Бригада на месте. Машины побиты сильно, пострадавшие сидят на обочине, ходят сами.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.traffic.1",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Надели воротник на шею, перекладываем на щит.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.traffic.2",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Подозрение на перелом бедра. Обезболили, шинируем.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.traffic.3",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пассажирку достали, вся в порезах от стекла. Обрабатываем.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.update.traffic.1",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "tone": "[urgent]",
+      "text": "Диспетчер, на заднем сиденье ещё ребёнок! Нужна вторая бригада!",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.update.traffic.2",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель пришёл в себя, разговаривает. Уже легче.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.1",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пострадавших госпитализируем, везём в травматологию.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.2",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Осмотрели, серьёзных травм нет. От госпитализации отказались.",
+      "facts": [
+        "victims",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.3",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пешехода везём в реанимацию, состояние тяжёлое.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.refused.traffic.1",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Участников осмотрели, никто не пострадал. Помощь не нужна, свободны.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.refused.traffic.2",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Машины уже разъехались, на месте никого. Бригада свободна.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "103.arrived.lift.1",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Прибыли. Кабина стоит между этажами, механика пока нет.",
+      "facts": [
+        "blocked",
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.arrived.lift.2",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "На месте. Женщина в кабине, говорит, задыхается, у неё паника.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.lift.3",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бригада на месте, кабину уже открыли. Пожилой мужчина сидит на полу.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.lift.1",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Говорим с ней через двери, успокаиваем. Пусть дышит медленно.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.working.lift.2",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Вывели. Давление высокое, снимаем кардиограмму.",
+      "facts": [
+        "blocked",
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.lift.3",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Голова кружится, долго стоял в духоте. Даём воды, меряем сахар.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.update.lift.1",
+      "slot": "update",
+      "incidents": [
+        "lift"
+      ],
+      "tone": "[urgent]",
+      "text": "Диспетчер, она перестала отвечать! Где механик? Срочно открывать!",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.completed.lift.1",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Давление снизили. От госпитализации отказалась, ушла домой.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.lift.2",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Госпитализируем: сердце неспокойное, надо обследовать.",
+      "facts": [
+        "blocked",
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.lift.3",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Помощь оказана. Просто испугался, сейчас уже всё хорошо.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.refused.lift.1",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механик открыл кабину раньше нас, пассажир ушёл домой. Бригада свободна.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "103.arrived.smoke.1",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Прибыли. Пожарные вывели жильца: кашляет, лицо в копоти.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "evacuated",
+        "fire"
+      ]
+    },
+    {
+      "id": "103.arrived.smoke.2",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "На месте, в подъезде дым. Ждём, пока пожарные выведут людей.",
+      "facts": [
+        "fire"
+      ]
+    },
+    {
+      "id": "103.arrived.smoke.3",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Бригада на месте. Пожилая женщина на площадке, вялая, жалуется на голову.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.smoke.1",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Даём кислород, дышит тяжело.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.smoke.2",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ожог на руке, обрабатываем. В лёгких хрипы.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.smoke.3",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Осматриваем всех, кого вывели. У ребёнка кашель, остальные в порядке.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "103.update.smoke.1",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "tone": "[urgent]",
+      "text": "Диспетчер, вынесли ещё одного, без сознания. Нужна вторая бригада!",
+      "facts": [
+        "victims",
+        "fire"
+      ]
+    },
+    {
+      "id": "103.completed.smoke.1",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Отравление дымом, госпитализируем в токсикологию.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.smoke.2",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Подышал кислородом, порозовел. От госпитализации отказался.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.smoke.1",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяина осмотрели, отравления нет, в помощи не нуждается.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.refused.smoke.2",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожар потушили, пострадавших нет. Бригада свободна.",
+      "facts": [
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.arrived.fall.1",
+      "slot": "arrived",
+      "incidents": [
+        "fall"
+      ],
+      "text": "На месте. Женщина поскользнулась, сидит на тротуаре, нога вывернута.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.fall.2",
+      "slot": "arrived",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Прибыли. Дедушка упал в ванной, встать не может.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.fall.3",
+      "slot": "arrived",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Бригада на месте. Упал со стремянки, разбил затылок, в сознании.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.fall.1",
+      "slot": "working",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Подозрение на перелом шейки бедра. Обезболиваем, перекладываем на носилки.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.fall.2",
+      "slot": "working",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Запястье опухло, похоже на перелом. Накладываем шину.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.fall.3",
+      "slot": "working",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Голова разбита, была рвота. Похоже на сотрясение.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.update.fall.1",
+      "slot": "update",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Прояснилось: упала не сама, закружилась голова. Проверяем сахар и давление.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.completed.fall.1",
+      "slot": "completed",
+      "incidents": [
+        "fall"
+      ],
+      "text": "С переломом госпитализируем в травматологию.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.fall.2",
+      "slot": "completed",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Ушиб, перелома нет. Повязку наложили, от больницы отказалась.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.fall.3",
+      "slot": "completed",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Шить не нужно, рану обработали. Помощь оказана на месте.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.refused.fall.1",
+      "slot": "refused",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Пострадавшего нет. Прохожие говорят, встал и ушёл сам.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "103.arrived.unconscious.1",
+      "slot": "arrived",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "На месте. Мужчина лежит у остановки, дышит, на голос не реагирует.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.unconscious.2",
+      "slot": "arrived",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Прибыли. Человек на лавке, пахнет алкоголем, в себя приходит с трудом.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.unconscious.3",
+      "slot": "arrived",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Бригада на месте. Женщина без сознания в подземном переходе, пульс слабый.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.working.unconscious.1",
+      "slot": "working",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Сахар очень низкий. Колем глюкозу.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.unconscious.2",
+      "slot": "working",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Дыхание есть, давление низкое. Ставим капельницу.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.unconscious.3",
+      "slot": "working",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Документов при нём нет, кто такой — неизвестно. Ищем травмы.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.update.unconscious.1",
+      "slot": "update",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Диспетчер, пришёл в себя. Говорит, просто стало плохо в духоте.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.update.unconscious.2",
+      "slot": "update",
+      "incidents": [
+        "unconscious"
+      ],
+      "tone": "[urgent]",
+      "text": "Перестал дышать! Начинаем реанимацию!",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.completed.unconscious.1",
+      "slot": "completed",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Госпитализируем как неизвестного, без документов. Сообщите в полицию.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.unconscious.2",
+      "slot": "completed",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Очнулся, от госпитализации отказался. Ушёл с другом.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.unconscious.3",
+      "slot": "completed",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Сахар подняли, стало лучше. Родственники забрали домой.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.refused.unconscious.1",
+      "slot": "refused",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Никого нет. Прохожие говорят, мужчина поднялся и ушёл.",
+      "facts": [
+        "gone",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.refused.unconscious.2",
+      "slot": "refused",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Человек просто спал на лавке, трезвый и здоровый. От осмотра отказался.",
+      "facts": [
+        "false_call",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.child.1",
+      "slot": "arrived",
+      "incidents": [
+        "child"
+      ],
+      "text": "На месте. Девочка, температура высокая, вялая, мама в панике.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.child.2",
+      "slot": "arrived",
+      "incidents": [
+        "child"
+      ],
+      "text": "Прибыли. Мальчик упал с качелей, плачет, за руку держится.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.child.3",
+      "slot": "arrived",
+      "incidents": [
+        "child"
+      ],
+      "text": "Бригада на месте. Малыш горячий, были судороги, сейчас прошли.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.working.child.1",
+      "slot": "working",
+      "incidents": [
+        "child"
+      ],
+      "text": "Сбиваем температуру, обтираем. Ребёнок в сознании.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.working.child.2",
+      "slot": "working",
+      "incidents": [
+        "child"
+      ],
+      "text": "Рука, похоже, сломана. Фиксируем, мама поедет с нами.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.working.child.3",
+      "slot": "working",
+      "incidents": [
+        "child"
+      ],
+      "text": "Слушаем лёгкие — хрипы. Подозрение на воспаление.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.update.child.1",
+      "slot": "update",
+      "incidents": [
+        "child"
+      ],
+      "text": "Температура спала, ребёнок уже играет. Мама успокоилась.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.completed.child.1",
+      "slot": "completed",
+      "incidents": [
+        "child"
+      ],
+      "text": "Госпитализируем вместе с мамой в детскую больницу.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.child.2",
+      "slot": "completed",
+      "incidents": [
+        "child"
+      ],
+      "text": "Температуру сбили, родители от госпитализации отказались. Завтра пусть вызывают педиатра.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.child.3",
+      "slot": "completed",
+      "incidents": [
+        "child"
+      ],
+      "text": "Ушиб, без перелома. Помощь оказали, ребёнок остаётся дома.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.refused.child.1",
+      "slot": "refused",
+      "incidents": [
+        "child"
+      ],
+      "text": "Ребёнка дома нет, родители сами повезли в больницу.",
+      "facts": [
+        "gone",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.arrived.stroke.1",
+      "slot": "arrived",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "На месте. Мужчина, лицо перекошено, рука не слушается, речь смазанная.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.stroke.2",
+      "slot": "arrived",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Прибыли. Пожилая женщина говорит невнятно, руку поднять не может.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.stroke.3",
+      "slot": "arrived",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Бригада на месте. Пациент сидит в кресле, на вопросы отвечает невпопад.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.stroke.1",
+      "slot": "working",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Похоже на инсульт. Давление очень высокое, готовим к перевозке.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.stroke.2",
+      "slot": "working",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Сахар в норме, значит, не он. Инсульт, торопимся.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.stroke.3",
+      "slot": "working",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Родные говорят, началось час назад. Это важно, везём сразу.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.update.stroke.1",
+      "slot": "update",
+      "incidents": [
+        "stroke"
+      ],
+      "tone": "[urgent]",
+      "text": "Диспетчер, ей хуже, совсем перестала говорить.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.completed.stroke.1",
+      "slot": "completed",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Госпитализируем в сосудистый центр. Предупредили, нас ждут.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.stroke.2",
+      "slot": "completed",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Довезли, передали неврологам. Бригада свободна.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.stroke.3",
+      "slot": "completed",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "От госпитализации отказался, про последствия предупредили. Отказ подписан.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.stroke.1",
+      "slot": "refused",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Не подтвердилось: выпил лишнего, речь от этого. Помощь не нужна.",
+      "facts": [
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.elderly_home.1",
+      "slot": "arrived",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "На месте. Дверь закрыта, за дверью тишина. Соседи её давно не видели.",
+      "facts": [
+        "no_access",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.elderly_home.2",
+      "slot": "arrived",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Прибыли. Бабушка открыла сама, еле дошла до двери, слабость.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.elderly_home.3",
+      "slot": "arrived",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Бригада на месте. Из квартиры слышен стон, дверь не открывают.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.working.elderly_home.1",
+      "slot": "working",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Зашли. Лежит на полу, видимо, давно упал. Обезвожен.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.elderly_home.2",
+      "slot": "working",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Давление низкое, сахар высокий. Лекарства, похоже, не пьёт.",
+      "facts": [
+        "victims",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.elderly_home.3",
+      "slot": "working",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Ждём, пока вскроют дверь. Соседка ищет запасные ключи.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.update.elderly_home.1",
+      "slot": "update",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Диспетчер, дверь вскрыли. Дедушка живой, в сознании.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.update.elderly_home.2",
+      "slot": "update",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Соседка нашла ключи, заходим.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.elderly_home.1",
+      "slot": "completed",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Госпитализируем, одного оставлять нельзя. Сообщите родственникам.",
+      "facts": [
+        "victims",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.elderly_home.2",
+      "slot": "completed",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Помощь оказали, приехала дочь, останется с ней. От больницы отказались.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.elderly_home.1",
+      "slot": "refused",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Открыл сам: спал и не слышал телефон. Помощь не нужна.",
+      "facts": [
+        "false_call",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.refused.elderly_home.2",
+      "slot": "refused",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Соседи говорят, хозяйка уже неделю в больнице. В квартире никого.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "103.intro.any.1",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Фельдшер скорой на связи.",
+      "facts": []
+    },
+    {
+      "id": "103.intro.any.2",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Это скорая, врач бригады. Докладываю.",
+      "facts": []
+    },
+    {
+      "id": "103.intro.any.3",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Бригада скорой помощи, примите доклад.",
+      "facts": []
+    },
+    {
+      "id": "103.intro.any.4",
+      "slot": "intro",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, это дежурная? Скорая, старшая бригады.",
+      "facts": []
+    },
+    {
+      "id": "103.no_reply.any.1",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, слышите меня?",
+      "facts": []
+    },
+    {
+      "id": "103.no_reply.any.2",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло? Вас не слышно.",
+      "facts": []
+    },
+    {
+      "id": "103.no_reply.any.3",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Алло, есть кто на линии? Скорая докладывает.",
+      "facts": []
+    },
+    {
+      "id": "103.no_reply.any.4",
+      "slot": "no_reply",
+      "incidents": [
+        "*"
+      ],
+      "text": "Да ответьте же! У меня больной, ждать некогда.",
+      "facts": []
+    },
+    {
+      "id": "103.confirm_request.any.1",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Как приняли?",
+      "facts": []
+    },
+    {
+      "id": "103.confirm_request.any.2",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняли, диспетчер?",
+      "facts": []
+    },
+    {
+      "id": "103.confirm_request.any.3",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записали? Подтвердите.",
+      "facts": []
+    },
+    {
+      "id": "103.confirm_request.any.4",
+      "slot": "confirm_request",
+      "incidents": [
+        "*"
+      ],
+      "text": "Всё, доклад окончен. Как поняли?",
+      "facts": []
+    },
+    {
+      "id": "103.repeat_report.any.1",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю.",
+      "facts": []
+    },
+    {
+      "id": "103.repeat_report.any.2",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё раз, записывайте.",
+      "facts": []
+    },
+    {
+      "id": "103.repeat_report.any.3",
+      "slot": "repeat_report",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, повторяю медленно.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.7",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла. Мы на другом конце района, но едем.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.8",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Едем. Заявителю скажите: пусть откроет дверь и уберёт собаку.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.9",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Приняла. Только сдали больного в приёмном, разворачиваемся.",
+      "facts": []
+    },
+    {
+      "id": "103.responding.any.10",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Выехали. Станет хуже до нашего приезда — сразу звоните.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.6",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Принято.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.7",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записала.",
+      "facts": []
+    },
+    {
+      "id": "103.ack.any.8",
+      "slot": "ack",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ага, услышала.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.6",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Ещё на месте. Ждём, когда подействует укол.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.7",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Выносим к машине, минут через десять освободимся.",
+      "facts": []
+    },
+    {
+      "id": "103.status_working.any.8",
+      "slot": "status_working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Состояние тяжёлое, стабилизируем. Пока не до разговоров.",
+      "facts": []
+    },
+    {
+      "id": "103.enroute.any.5",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Подъезжаем, уже вижу дом.",
+      "facts": []
+    },
+    {
+      "id": "103.enroute.any.6",
+      "slot": "enroute",
+      "incidents": [
+        "*"
+      ],
+      "text": "Дорога свободная, идём быстро. Скоро будем.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.6",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Навигатор завёл не туда, тут стройка. Ищем подъезд к дому.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.7",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Лифт в доме не работает, поднимаемся пешком с оборудованием. Чуть задержимся.",
+      "facts": []
+    },
+    {
+      "id": "103.delay.any.8",
+      "slot": "delay",
+      "incidents": [
+        "*"
+      ],
+      "text": "Задерживаемся: по пути остановили прохожие, человеку плохо на улице. Поможем и сразу едем.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.10",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "conscious",
+      "text": "Больной в сознании? Что заявитель говорил — дышит, разговаривает?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.11",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "history",
+      "text": "Хронические болезни у пациента есть? Сердце, диабет — не сказали?",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.12",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "patient_sex",
+      "text": "К кому едем — мужчина или женщина? В карточке непонятно.",
+      "facts": []
+    },
+    {
+      "id": "103.clarify.any.13",
+      "slot": "clarify",
+      "incidents": [
+        "*"
+      ],
+      "asks": "approach",
+      "text": "Как к дому подъехать? С этой стороны забор, проезда не видим.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.any.5",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Передали актив в поликлинику, завтра придёт врач. Бригада свободна.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.any.6",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Помощь оказали, пострадавшего передали полиции. Мы свободны.",
+      "facts": [
+        "victims",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "103.refused.any.5",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Вызывали не скорую, а участкового: соседи шумят. Не наш вызов, уезжаем.",
+      "facts": [
+        "other_org",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.refused.any.6",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Опередили: больного уже забрала другая бригада. Мы свободны.",
+      "facts": [
+        "gone"
+      ]
+    },
+    {
+      "id": "103.arrived.heart.4",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Женщина средних лет, сердце колотится, началось внезапно. В сознании.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.heart.5",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Так, мы на месте. Дедушка лежит, губы синие, сильная одышка.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.heart.6",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Молодой парень, после тренировки прихватило сердце. Сидит бледный, пульс частит.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.heart.4",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Кардиограмма плохая. Обезболили, вводим препараты, связываемся с кардиологами.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.heart.5",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Ей полегче, но давление скачет. Наблюдаем ещё немного.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.working.heart.6",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Аритмия. Дефибриллятор держим наготове.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.heart.4",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Дедушку госпитализируем, сын поедет с ним.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.heart.5",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Довезли до кардиологии, сразу забрали на операцию. Бригада свободна.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.heart.6",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Приступ сняли. Ехать отказался, передали актив участковому врачу.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.heart.2",
+      "slot": "refused",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Хозяйка выпила свои таблетки, отпустило. От осмотра отказалась.",
+      "facts": [
+        "self_resolved",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.update.heart.3",
+      "slot": "update",
+      "incidents": [
+        "heart"
+      ],
+      "tone": "[urgent]",
+      "text": "Остановка сердца! Качаем, дефибриллятор готов.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.injury.4",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Зашли. Девушка, лицо разбито, плачет. Говорит, ударил знакомый.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.injury.5",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Подросток, избили после школы, нос в крови. Ходит сам.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.injury.6",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Полиция уже здесь. Пострадавший в сознании, губа разбита, зубы шатаются.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.injury.4",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Синяки по всему телу, живот мягкий. Внутреннего кровотечения вроде нет.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.injury.5",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Нос сломан, кровь не останавливается. Тампонируем.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.injury.6",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Она в шоке, трясёт. Укрыли, успокаиваем, ссадины обработали.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.completed.injury.4",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Подростка госпитализируем, мама поедет с ним.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.injury.5",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Перелом носа, везём в больницу. Полиция поедет следом.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.injury.6",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Девушке помощь оказали на месте. Будет писать заявление, передали её полиции.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "103.refused.injury.2",
+      "slot": "refused",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Побитый мужчина от помощи отказался и ушёл. Догонять не стали.",
+      "facts": [
+        "gone",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.update.injury.2",
+      "slot": "update",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Полиция задержала того, кто бил. Пострадавший держится, в сознании.",
+      "facts": [
+        "victims",
+        "detained"
+      ]
+    },
+    {
+      "id": "103.arrived.traffic.4",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Мотоциклист лежит на асфальте, шлем не снимали, стонет.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.traffic.5",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Прибыли. Бабушку сбили на переходе, в сознании, жалуется на бедро.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.traffic.6",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Машина в кювете, водитель выбрался сам. Лицо в крови, на ногах держится.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.traffic.4",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Шлем снимаем осторожно, вдвоём, шею держим.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.traffic.5",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Таз, похоже, повреждён. Обезболили, кладём на вакуумный матрас.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.traffic.6",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "У мальчика ушиб груди от ремня, дышит нормально. Смотрим дальше.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.4",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Мотоциклиста госпитализируем, подозрение на перелом позвоночника.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.5",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителю ссадины обработали. В больницу ехать отказался, передали инспекторам.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.6",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Бабушку везём в травматологию, внучка поедет с ней.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.refused.traffic.3",
+      "slot": "refused",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Вызов ложный: никакой аварии нет, машины просто стоят на обочине.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.update.traffic.3",
+      "slot": "update",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пешеход заговорил, ногами шевелит. Позвоночник, похоже, цел.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.lift.4",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Подъезд нашли. В кабине мама с ребёнком, малыш плачет.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.arrived.lift.5",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Мужчина в кабине, говорит, диабетик, сахар падает. Говорим через двери.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.lift.6",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Механик уже открыл, вывели всех. Пожилая женщина бледная, сидит на ступеньках.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.lift.4",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Сахар у него низкий, просовываем сладкое в щель дверей.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.lift.5",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Ребёнка вынесли, осматриваем. Испугался, но цел.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.lift.6",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бабушке дали успокоительное, давление снижаем.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.completed.lift.4",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Ребёнок в порядке, мама забрала домой. В больницу не нужно.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.completed.lift.5",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бабушку госпитализируем, давление не снижается.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.lift.6",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Сахар подняли, мужчина в норме. Везти отказался, ушёл сам.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.lift.2",
+      "slot": "refused",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Ложный вызов: лифт стоит пустой, в кабине никого.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.update.lift.2",
+      "slot": "update",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Мослифт подъехал, кабину сейчас откроют. Больная отвечает, держится.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.smoke.4",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарные вынесли женщину: без сознания, дышит.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "evacuated",
+        "fire"
+      ]
+    },
+    {
+      "id": "103.arrived.smoke.5",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Жильцов вывели во двор. Мальчик кашляет, глаза слезятся.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "103.arrived.smoke.6",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дедушка вышел сам, надышался. Жалуется на тошноту.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.smoke.4",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ожог лица и рук. Охлаждаем, обезболиваем.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.smoke.5",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ребёнку маску с кислородом, мама рядом, тоже кашляет.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.working.smoke.6",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Голова болит, тошнит — похоже, угарный газ. Даём кислород.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.smoke.3",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Женщину госпитализируем в ожоговый центр.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.smoke.4",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ребёнка с мамой везём в детскую больницу, надышался дыма.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.smoke.5",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дедушке помощь оказали, полегчало. Остаётся у соседей.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.refused.smoke.3",
+      "slot": "refused",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дыма уже нет, жильцы вышли сами, все здоровы. Помощь не потребовалась.",
+      "facts": [
+        "no_victims",
+        "evacuated"
+      ]
+    },
+    {
+      "id": "103.update.smoke.2",
+      "slot": "update",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Выводят ещё одного, ребёнка. Готовим кислород.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "evacuated",
+        "fire"
+      ]
+    },
+    {
+      "id": "103.arrived.fall.4",
+      "slot": "arrived",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Прибыли. Мальчик упал с гаража, ноги не чувствует.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.fall.5",
+      "slot": "arrived",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Бабушка оступилась на лестнице в подъезде, лежит, встать не может.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.fall.6",
+      "slot": "arrived",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Мужчина сорвался с турника, держится за спину. В сознании.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.fall.4",
+      "slot": "working",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Спину фиксируем на щите, двигать нельзя.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.fall.5",
+      "slot": "working",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Ключица, похоже, сломана. Фиксируем повязкой.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.fall.6",
+      "slot": "working",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Пролежала долго, замёрзла. Согреваем, меряем давление.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.completed.fall.4",
+      "slot": "completed",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Мальчика госпитализируем в детскую травматологию, мама с нами.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.fall.5",
+      "slot": "completed",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Бабушку везём в больницу, подозрение на перелом бедра.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.fall.6",
+      "slot": "completed",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Ушиб спины, ходит сам. В больницу ехать отказался, отказ подписан.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.fall.2",
+      "slot": "refused",
+      "incidents": [
+        "fall"
+      ],
+      "text": "Не травма: человек просто пьяный, лежит и ругается. Передали полиции.",
+      "facts": [
+        "no_victims",
+        "handed_102"
+      ]
+    },
+    {
+      "id": "103.update.fall.2",
+      "slot": "update",
+      "incidents": [
+        "fall"
+      ],
+      "tone": "[urgent]",
+      "text": "Стало хуже: рвота, путается в словах. Похоже, не просто ушиб головы.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.arrived.unconscious.4",
+      "slot": "arrived",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Пожилая женщина лежит у магазина, продавщица держит ей голову.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.unconscious.5",
+      "slot": "arrived",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Подросток в парке без сознания, рядом бутылка.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.arrived.unconscious.6",
+      "slot": "arrived",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Так, мужчина у подъезда. Глаза открыл, но не понимает, где он.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.unconscious.4",
+      "slot": "working",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Зрачки узкие, дыхание редкое. Похоже на отравление, вводим антидот.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.unconscious.5",
+      "slot": "working",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Бабушка приходит в себя, давление низкое. Капаем.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.unconscious.6",
+      "slot": "working",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Подростка рвёт, переворачиваем на бок, чтобы не захлебнулся.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.completed.unconscious.4",
+      "slot": "completed",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Бабушку госпитализируем. Документы при ней, родственникам позвонили.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.unconscious.5",
+      "slot": "completed",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Подростка везём в токсикологию, родителям сообщили.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.unconscious.6",
+      "slot": "completed",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Пришла в себя, от больницы отказалась. Муж приехал и забрал.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.unconscious.3",
+      "slot": "refused",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Пусто. Охранник говорит, полиция увезла его ещё до нас.",
+      "facts": [
+        "gone",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.update.unconscious.3",
+      "slot": "update",
+      "incidents": [
+        "unconscious"
+      ],
+      "text": "Пришла в себя, говорит, не ела со вчерашнего дня. Сахар поднимаем.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.child.4",
+      "slot": "arrived",
+      "incidents": [
+        "child"
+      ],
+      "text": "Малышка проглотила что-то мелкое. Кашляет, но дышит.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.child.5",
+      "slot": "arrived",
+      "incidents": [
+        "child"
+      ],
+      "text": "Мальчик обварился чаем, рука красная, кричит.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.child.6",
+      "slot": "arrived",
+      "incidents": [
+        "child"
+      ],
+      "text": "Ребёнок вялый, рвота с утра, губы сухие.",
+      "facts": [
+        "victims",
+        "victim_child"
+      ]
+    },
+    {
+      "id": "103.working.child.4",
+      "slot": "working",
+      "incidents": [
+        "child"
+      ],
+      "text": "Ожог охлаждаем, обезболили. Мальчик успокаивается.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.working.child.5",
+      "slot": "working",
+      "incidents": [
+        "child"
+      ],
+      "text": "Отпаиваем понемногу, капельницу поставят в больнице.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.working.child.6",
+      "slot": "working",
+      "incidents": [
+        "child"
+      ],
+      "text": "Девочку перевернули, постучали по спине — вышло. Дышит свободно.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.completed.child.4",
+      "slot": "completed",
+      "incidents": [
+        "child"
+      ],
+      "text": "Мальчика с ожогом госпитализируем, мама едет с нами.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.child.5",
+      "slot": "completed",
+      "incidents": [
+        "child"
+      ],
+      "text": "Девочку посмотрели, дыхание чистое. Остаётся дома.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.completed.child.6",
+      "slot": "completed",
+      "incidents": [
+        "child"
+      ],
+      "text": "Ребёнок обезвожен, но родители от больницы отказались. Отказ подписали.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.child.2",
+      "slot": "refused",
+      "incidents": [
+        "child"
+      ],
+      "text": "Ложный вызов: дети баловались телефоном, дома все здоровы.",
+      "facts": [
+        "false_call",
+        "no_victims"
+      ]
+    },
+    {
+      "id": "103.update.child.2",
+      "slot": "update",
+      "incidents": [
+        "child"
+      ],
+      "tone": "[urgent]",
+      "text": "Ребёнок посинел, задыхается! Срочно везём.",
+      "facts": [
+        "victims",
+        "victim_child",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.arrived.stroke.4",
+      "slot": "arrived",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Дедушка упал на кухне: правая сторона не работает, говорить не может.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.stroke.5",
+      "slot": "arrived",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Молодая женщина, резкая головная боль, рвота, свет режет глаза.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.arrived.stroke.6",
+      "slot": "arrived",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Пациентка в сознании, но улыбка кривая, рука слабая.",
+      "facts": [
+        "victims",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.working.stroke.4",
+      "slot": "working",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Когда началось, неизвестно: нашли утром уже таким. Готовим к перевозке.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.stroke.5",
+      "slot": "working",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Давление сбиваем осторожно, резко нельзя.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.working.stroke.6",
+      "slot": "working",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Ей лучше: рука поднимается, речь возвращается. Всё равно везём.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.stroke.4",
+      "slot": "completed",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Дедушку госпитализируем, жена собирает документы, едет с нами.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.stroke.5",
+      "slot": "completed",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Женщину везём в нейрохирургию, подозрение на кровоизлияние.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.stroke.6",
+      "slot": "completed",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Симптомы прошли сами. От госпитализации отказалась, про опасность предупредили.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.refused.stroke.2",
+      "slot": "refused",
+      "incidents": [
+        "stroke"
+      ],
+      "text": "Больной на месте нет, родственники сами увезли её в больницу.",
+      "facts": [
+        "gone",
+        "victim_female"
+      ]
+    },
+    {
+      "id": "103.update.stroke.2",
+      "slot": "update",
+      "incidents": [
+        "stroke"
+      ],
+      "tone": "[urgent]",
+      "text": "Перестал говорить, засыпает. Торопимся!",
+      "facts": [
+        "victims",
+        "victim_male"
+      ]
+    },
+    {
+      "id": "103.arrived.elderly_home.4",
+      "slot": "arrived",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Соседка открыла своими ключами. Дедушка в кровати, слабый, отвечает с трудом.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.arrived.elderly_home.5",
+      "slot": "arrived",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Полиция и спасатели уже тут, вскрывают дверь.",
+      "facts": [
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.arrived.elderly_home.6",
+      "slot": "arrived",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Бабушка отвечает через дверь: упала, встать не может.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.working.elderly_home.4",
+      "slot": "working",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Зашли. Бабушка в сознании, ушиб бедра, лежит со вчерашнего дня.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.elderly_home.5",
+      "slot": "working",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "В квартире холодно, батареи не греют. Согреваем, меряем сахар.",
+      "facts": [
+        "victims",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.working.elderly_home.6",
+      "slot": "working",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Дедушка путается, не помнит, какие таблетки пил. Лекарства берём с собой.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.elderly_home.3",
+      "slot": "completed",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Бабушку госпитализируем, ключи оставили соседке.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.completed.elderly_home.4",
+      "slot": "completed",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Помощь оказали на месте. Дедушка ехать отказался, соседка за ним присмотрит.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "victim_elderly",
+        "refused_hospital"
+      ]
+    },
+    {
+      "id": "103.completed.elderly_home.5",
+      "slot": "completed",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Бабушку подняли: ушиб, перелома нет. Внук уже едет, остаётся дома.",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.refused.elderly_home.3",
+      "slot": "refused",
+      "incidents": [
+        "elderly_home"
+      ],
+      "text": "Тревога ложная: дедушка ходил в магазин, а телефон оставил дома. Здоров.",
+      "facts": [
+        "false_call",
+        "victim_male",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.update.elderly_home.3",
+      "slot": "update",
+      "incidents": [
+        "elderly_home"
+      ],
+      "tone": "[urgent]",
+      "text": "Дверь открыли — бабушка без сознания, дышит слабо!",
+      "facts": [
+        "victims",
+        "victim_female",
+        "victim_elderly"
+      ]
+    },
+    {
+      "id": "103.briefing_ask.any.1",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Не поняла. Назовите адрес и что с больным.",
+      "asks": "both"
+    },
+    {
+      "id": "103.briefing_ask.any.2",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес не расслышала. Улицу и дом повторите.",
+      "asks": "address"
+    },
+    {
+      "id": "103.briefing_ask.any.3",
+      "slot": "briefing_ask",
+      "incidents": [
+        "*"
+      ],
+      "text": "Адрес приняла. Что случилось, кому плохо?",
+      "asks": "what"
+    },
+    {
+      "id": "103.refusal_busy.any.1",
+      "slot": "refusal_busy",
+      "incidents": [
+        "*"
+      ],
+      "text": "Бригада на другом вызове, у нас пациент. Направьте другую бригаду."
+    },
+    {
+      "id": "103.refusal_not_assigned.any.1",
+      "slot": "refusal_not_assigned",
+      "incidents": [
+        "*"
+      ],
+      "text": "Нам этот вызов не назначен. Проверьте, какую бригаду ставили."
+    },
+    {
+      "id": "103.responding.injury.1",
+      "slot": "responding",
+      "incidents": [
+        "injury",
+        "heart",
+        "lift",
+        "smoke",
+        "traffic"
+      ],
+      "text": "Вызов принят, бригада выехала.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.injury.7",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Бригада на месте, пострадавший мужчина с травмой головы, в сознании.",
+      "facts": []
+    },
+    {
+      "id": "103.working.injury.7",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Обрабатываем рану, подозрение на сотрясение мозга.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.injury.7",
+      "slot": "completed",
+      "incidents": [
+        "injury",
+        "smoke"
+      ],
+      "text": "Пострадавший госпитализирован, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.injury.8",
+      "slot": "arrived",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Бригада на месте, осматриваем пострадавшего.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.injury.8",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Пострадавший от госпитализации отказался, отказ оформлен, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.heart.7",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Бригада на месте, мужчина в сознании, снимаем кардиограмму.",
+      "facts": []
+    },
+    {
+      "id": "103.working.heart.7",
+      "slot": "working",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Подозрение на инфаркт, оказываем помощь, готовим к госпитализации.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.heart.7",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Пациент госпитализирован в кардиологию, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.heart.8",
+      "slot": "arrived",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Бригада на месте, ищем мужчину на остановке.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.heart.8",
+      "slot": "completed",
+      "incidents": [
+        "heart"
+      ],
+      "text": "Мужчины на остановке нет, ушёл до нашего прибытия, очевидцы его не видели, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.lift.7",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бригада на месте, ждём, когда откроют кабину.",
+      "facts": []
+    },
+    {
+      "id": "103.working.lift.7",
+      "slot": "working",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Женщина выведена, давление высокое, снимаем кардиограмму, оказываем помощь.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.lift.7",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Состояние стабильное, от госпитализации отказалась, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.lift.8",
+      "slot": "arrived",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Бригада на месте, поднимаемся к лифту.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.lift.8",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Женщину вывели, на боль больше не жалуется, от осмотра отказалась, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.smoke.7",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Бригада на месте, ждём, пока пожарные выведут жильца.",
+      "facts": []
+    },
+    {
+      "id": "103.working.smoke.7",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Мужчина семидесяти лет, отравление дымом, оказываем помощь.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.smoke.8",
+      "slot": "arrived",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Бригада на месте, поднимаемся к квартире.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.smoke.6",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Хозяин квартиры осмотрен, отравления нет, в помощи не нуждается, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.traffic.7",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Бригада на месте, двое пострадавших, водитель ещё в машине.",
+      "facts": []
+    },
+    {
+      "id": "103.working.traffic.7",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителя извлекли, подозрение на перелом бедра, пассажирке наложили шину на шею.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.traffic.7",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Двое пострадавших госпитализированы, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.arrived.traffic.8",
+      "slot": "arrived",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Бригада на месте, осматриваем участников.",
+      "facts": []
+    },
+    {
+      "id": "103.completed.traffic.8",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Участники осмотрены, травм нет, от помощи отказались, бригада свободна.",
+      "facts": []
+    },
+    {
+      "id": "103.request_service.any.12",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, полиции до сих пор нет. Он вырывается, перевязать не даёт.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "103.request_service.any.13",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, травма криминальная, его избили. Сообщите в полицию.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "103.request_service.any.14",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Полицию так и не вызвали? Он уходить собрался, а опросить его некому.",
+      "facts": [
+        "victims",
+        "victim_male"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "103.request_service.any.15",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Кабина между этажами, ей всё хуже. Нужны спасатели, пусть вскрывают двери!",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "no_access"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.request_service.any.16",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, спасателей так и нет? Она за дверями еле отвечает.",
+      "facts": [
+        "blocked",
+        "victims",
+        "victim_female",
+        "no_access"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.request_service.any.17",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарных так и нет? Из-под двери валит дым, за дверью тихо.",
+      "facts": [
+        "fire",
+        "no_access"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.request_service.any.18",
+      "slot": "request_service",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пожарные будут? Водитель зажат, а из-под капота парит всё сильнее.",
+      "facts": [
+        "victims",
+        "blocked"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.working.injury.8",
+      "slot": "working",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Кое-как перевязали, всё время вырывался. Голову толком не осмотрели.",
+      "facts": [
+        "victims"
+      ]
+    },
+    {
+      "id": "103.completed.injury.9",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "В больницу ехать не дал: вырвался и ушёл с приятелями. Бригада свободна.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "gone"
+      ]
+    },
+    {
+      "id": "103.completed.injury.10",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "От госпитализации отказался и ушёл, полиция его так и не опросила. Бригада свободна.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital",
+        "gone"
+      ]
+    },
+    {
+      "id": "103.working.smoke.8",
+      "slot": "working",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Ждём у двери, внутрь не попасть. Дым идёт, хозяин не откликается.",
+      "facts": [
+        "fire",
+        "no_access"
+      ]
+    },
+    {
+      "id": "103.completed.smoke.7",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Дверь вскрыли поздно, мужчина без сознания. Везём в реанимацию, состояние тяжёлое.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.working.traffic.8",
+      "slot": "working",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водитель так и зажат. Обезболили через окно, держим ему шею.",
+      "facts": [
+        "victims",
+        "blocked"
+      ]
+    },
+    {
+      "id": "103.completed.traffic.9",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Водителя достали поздно, крови потерял много. Везём в реанимацию, пассажирку тоже забираем.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ]
+    },
+    {
+      "id": "103.clarify_ok.any.5",
+      "slot": "clarify_ok",
+      "incidents": [
+        "*"
+      ],
+      "text": "Записала номер, сейчас наберём.",
+      "facts": []
+    },
+    {
+      "id": "103.service_coming.any.1",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, ждём пожарных.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "103.service_coming.any.2",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, пожарных ждём, без них не лезем.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "103.service_coming.any.3",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, спасателей ждём, пациента пока держим.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "103.service_coming.any.4",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, наряд ждём, пока в машине.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "103.service_coming.any.5",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, полицию ждём, сами не подходим.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "103.service_coming.any.6",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, газовую службу ждём.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "103.service_coming.any.7",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, Мосгаз дождёмся, в подъезде не задерживаемся.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "103.service_coming.any.8",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Поняла, механика ждём.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "103.service_coming.any.9",
+      "slot": "service_coming",
+      "incidents": [
+        "*"
+      ],
+      "text": "Хорошо, лифтёры едут — ждём у шахты.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "103.service_surprise.any.1",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Пожарные подъехали. Хорошо, конечно, но могли бы и сказать, что вызвали.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "103.service_surprise.any.2",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, пожарные уже тут. А нас предупредить никак?",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "103.service_surprise.any.3",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Спасатели приехали. Спасибо, но сказали бы, что вызвали, — я бы не нервничала.",
+      "facts": [],
+      "needs": "101"
+    },
+    {
+      "id": "103.service_surprise.any.4",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Полиция подъехала. Хорошо, но предупреждать надо, что вызвали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "103.service_surprise.any.5",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, наряд подъехал. Сказали бы — мы бы спокойнее ждали.",
+      "facts": [],
+      "needs": "102"
+    },
+    {
+      "id": "103.service_surprise.any.6",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Газовая служба приехала. Спасибо, но могли бы и сказать.",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "103.service_surprise.any.7",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Мосгаз на месте. А нам передать, что едут, забыли?",
+      "facts": [],
+      "needs": "104"
+    },
+    {
+      "id": "103.service_surprise.any.8",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Механик пришёл. Хорошо, но предупредили бы, что вызвали.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "103.service_surprise.any.9",
+      "slot": "service_surprise",
+      "incidents": [
+        "*"
+      ],
+      "text": "Лифтёры на месте. Сказали бы раньше — мы бы человека успокоили.",
+      "facts": [],
+      "needs": "MOSLIFT"
+    },
+    {
+      "id": "103.completed.injury.11",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Полиция приехала, его опросили. От госпитализации отказался, отказ оформили, бригада свободна.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "refused_hospital"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "103.completed.injury.12",
+      "slot": "completed",
+      "incidents": [
+        "injury"
+      ],
+      "text": "Полиция приехала, помогли погрузить его в машину. С сотрясением госпитализируем, везём в травму.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ],
+      "needs": "102"
+    },
+    {
+      "id": "103.completed.lift.9",
+      "slot": "completed",
+      "incidents": [
+        "lift"
+      ],
+      "text": "Спасатели открыли двери, вывели её. Давление снизили, от госпитализации отказалась, бригада свободна.",
+      "facts": [
+        "blocked",
+        "victim_female",
+        "refused_hospital"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.completed.smoke.8",
+      "slot": "completed",
+      "incidents": [
+        "smoke"
+      ],
+      "text": "Пожарные помогли спустить его к машине. Пострадавший госпитализирован, бригада свободна.",
+      "facts": [
+        "victims",
+        "victim_male",
+        "hospitalized"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.completed.traffic.10",
+      "slot": "completed",
+      "incidents": [
+        "traffic"
+      ],
+      "text": "Пожарные помогли переложить водителя на носилки. Обоих пострадавших госпитализировали, бригада свободна.",
+      "facts": [
+        "victims",
+        "hospitalized"
+      ],
+      "needs": "101"
+    },
+    {
+      "id": "103.update.wrong_briefing.1",
+      "slot": "update",
+      "requires": [
+        "wrong_briefing"
+      ],
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "facts": [],
+      "when": "Только после выезда по полной вводной с неверным поводом; не случайная обстановка сценария."
+    }
+  ]
+}

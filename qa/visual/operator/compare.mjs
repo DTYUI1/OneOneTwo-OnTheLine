@@ -6,7 +6,7 @@ import { resolve } from "node:path";
 const out = resolve(process.env.OPERATOR_VISUAL_OUT ?? "docs/operator_112_review/stage4");
 mkdirSync(`${out}/overlay`, { recursive: true });
 const browser = await chromium.launch({ args: ["--disable-features=OverlayScrollbar,FluentOverlayScrollbar"] });
-const page = await browser.newPage({ viewport: { width: 2133, height: 1070 }, deviceScaleFactor: 0.9 });
+const page = await browser.newPage({ viewport: { width: 2133, height: 1070 }, deviceScaleFactor: 0.9, ignoreHTTPSErrors: true });
 page.setDefaultTimeout(15000);
 await page.addInitScript(() => {
   localStorage.setItem("arm112:welcome:v1:00000000-0000-0000-0000-000000000001", "seen");

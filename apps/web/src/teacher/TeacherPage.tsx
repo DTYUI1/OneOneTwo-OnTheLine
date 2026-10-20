@@ -3,6 +3,8 @@
 // светлая шапка с крупным заголовком, слева стальное поле со списком занятий,
 // справа выбранное занятие с тёмной полосой заголовка и вкладками-плитками.
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useOperatorModule } from "../shared/features";
 import { SessionForm } from "./console/SessionForm";
 import { SessionList, type ConsoleView } from "./console/SessionList";
 import { SessionView } from "./console/SessionView";
@@ -11,14 +13,19 @@ import { FinishPrompt } from "./console/FinishPrompt";
 import { latestRunning } from "./console/lessonClock";
 import { useSessions } from "./console/useConsoleData";
 import { useTeacherUpdates } from "./console/useTeacherUpdates";
+import type { StudioSection } from "./studio/sections";
 import { ScenarioStudio } from "./studio/ScenarioStudio";
+import { TraineeAdvice } from "./console/TraineeAdvice";
 import { MaterialsPanel } from "./materials/MaterialsPanel";
+import { STUDIO_KEY, studioSectionKey, removeKey, readJSON } from "./persist";
 import { useViewHistory } from "./viewHistory";
 import { useHelpGuide } from "../shared/help/HelpProvider";
 import { TEACHER_GUIDE } from "./help/topics";
 import styles from "./TeacherPage.module.css";
 
 export function TeacherPage() {
+  const navigate = useNavigate();
+  const operatorModule = useOperatorModule();
   useTeacherUpdates();
   const sessions = useSessions();
   // Открытый раздел переживает перезагрузку страницы.
@@ -31,6 +38,7 @@ export function TeacherPage() {
     chosen ??
     (running ? { kind: "session", id: running.id } : { kind: "empty" });
 
+  const [studioVisit, setStudioVisit] = useState(0);
   const [prefill, setPrefill] = useState<LessonPrefill | null>(null);
 
   // Новый раздел открываем с начала: после длинного отчёта не остаёмся внизу.
@@ -58,6 +66,11 @@ export function TeacherPage() {
             Вперёд
           </button>
           <button onClick={() => open({ kind: "empty" })}>На главную</button>
+          {operatorModule && (
+            <button onClick={() => navigate("/operator/results")}>
+              Оператор 112: попытки
+            </button>
+          )}
         </nav>
         <p className={styles.summary} data-help="teacher-summary">
           {sessions.data
@@ -67,7 +80,24 @@ export function TeacherPage() {
       </header>
 
       <div className={styles.layout}>
-        <SessionList view={view} onSelect={open} />
+        <SessionList
+          view={view}
+          onSelect={(next) => {
+            if (
+              next.kind === "catalog" &&
+              view.kind === "catalog" &&
+              next.section &&
+              next.section === (view.section ?? "active")
+            ) {
+              removeKey(studioSectionKey(next.section));
+              setStudioVisit((visit) => visit + 1);
+            }
+            if (next.kind === "catalog" && !next.section) {
+              const stored = readJSON<{ section?: StudioSection }>(STUDIO_KEY);
+              open({ ...next, section: stored?.section ?? "active" });
+            } else open(next);
+          }}
+        />
         <div className={styles.content}>
           {view.kind === "empty" && (
             <div className={styles.empty} data-help="teacher-empty">
@@ -79,6 +109,7 @@ export function TeacherPage() {
               </p>
             </div>
           )}
+          {view.kind === "empty" && <TraineeAdvice />}
           {view.kind === "new" && (
             <div data-help="teacher-new">
               <SessionForm
@@ -90,7 +121,12 @@ export function TeacherPage() {
               />
             </div>
           )}
-          {view.kind === "catalog" && <ScenarioStudio />}
+          {view.kind === "catalog" && (
+            <ScenarioStudio
+              key={`${studioVisit}-${view.section ?? "active"}`}
+              filter={view.section ?? "active"}
+            />
+          )}
           {view.kind === "materials" && (
             <div data-help="teacher-materials">
               <MaterialsPanel />

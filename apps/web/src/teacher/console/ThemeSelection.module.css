@@ -1,0 +1,27 @@
+.themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px solid #9aa3a8;
+  color: #5c6771;
+  font-size: 12px;
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: pointer;
+}
+
+.option input {
+  margin: 0;
+}
+
+.explanation {
+  flex-basis: 100%;
+  margin: 0;
+}

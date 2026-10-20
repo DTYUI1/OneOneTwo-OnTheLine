@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lesson-start-request",
+  "title": "Серверный запрос отложенного старта занятия",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "job_ids",
+    "requested_at",
+    "error"
+  ],
+  "properties": {
+    "request_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "job_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "requested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

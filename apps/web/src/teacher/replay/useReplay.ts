@@ -85,6 +85,7 @@ export function useReplay(cardId: string): ReplayView {
         messages: (training.data?.messages ?? []) as InformationEvidence[],
         targets: (targets?.data ?? []) as CallTarget[],
         callbacks: training.data?.callbacks ?? [],
+        control: training.data?.control ?? null,
       };
     },
   });
@@ -102,6 +103,7 @@ export function useReplay(cardId: string): ReplayView {
             messages: query.data.messages,
             targets: query.data.targets,
             callbacks: query.data.callbacks,
+            control: query.data.control,
           }
         : null,
     [query.data],

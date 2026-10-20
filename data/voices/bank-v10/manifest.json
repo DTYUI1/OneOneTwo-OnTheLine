@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "note": "Шесть реплик о неверном поводе во вводной. ElevenLabs, прежние голоса бригад и eleven_v4; телефонная обработка scripts/voices/phone.py. Синтез выполнен с разрешения владельца. Набор неизменяем.",
+  "messages": [
+    {
+      "id": "101.update.wrong_briefing.1",
+      "service_id": "101",
+      "slot": "update",
+      "path": "bank-v10/101/101.update.wrong_briefing.1.ogg",
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "voice": "elevenlabs eleven_v4 sRk0zCqhS2Cmv0bzx5wA (Феликс)",
+      "duration_ms": 6340,
+      "sha256": "f95a220fb76c7dccf6bf76e27a6051f88ec8c315b398f0c7086728e9ce912d59",
+      "media_type": "audio/ogg"
+    },
+    {
+      "id": "102.update.wrong_briefing.1",
+      "service_id": "102",
+      "slot": "update",
+      "path": "bank-v10/102/102.update.wrong_briefing.1.ogg",
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "voice": "elevenlabs eleven_v4 rQOBu7YxCDxGiFdTm28w (Артём)",
+      "duration_ms": 6420,
+      "sha256": "157e5d3db6afaf7c2e26cc11f006ba02446e7f9e6848a2c5e98ba05600956c9f",
+      "media_type": "audio/ogg"
+    },
+    {
+      "id": "103.update.wrong_briefing.1",
+      "service_id": "103",
+      "slot": "update",
+      "path": "bank-v10/103/103.update.wrong_briefing.1.ogg",
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "voice": "elevenlabs eleven_v4 d60rsXo2p0OwikDR5bS7 (Ольга)",
+      "duration_ms": 6500,
+      "sha256": "0b6f9f8141e6a9a878a3d494b68f305355ab805dc0d706cd0e3dd66176ebf4bf",
+      "media_type": "audio/ogg"
+    },
+    {
+      "id": "104.update.wrong_briefing.1",
+      "service_id": "104",
+      "slot": "update",
+      "path": "bank-v10/104/104.update.wrong_briefing.1.ogg",
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "voice": "elevenlabs eleven_v4 9AjtU6o19uipv7QL8dLL (Алексей)",
+      "duration_ms": 6180,
+      "sha256": "fbc7e4a21ffac1b0ca69933d31fb3ec9f5ee8d5d1efd8534e313656fa608d0a3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "id": "GKH.update.wrong_briefing.1",
+      "service_id": "GKH",
+      "slot": "update",
+      "path": "bank-v10/GKH/GKH.update.wrong_briefing.1.ogg",
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "voice": "elevenlabs eleven_v4 srULqtwUV9XZPg1ZCO5w (Кирилл)",
+      "duration_ms": 6020,
+      "sha256": "1aaafe38613a446a1d3a68208e7a60001ce48b7826f5882d6cf775c2a69f87dd",
+      "media_type": "audio/ogg"
+    },
+    {
+      "id": "MOSLIFT.update.wrong_briefing.1",
+      "service_id": "MOSLIFT",
+      "slot": "update",
+      "path": "bank-v10/MOSLIFT/MOSLIFT.update.wrong_briefing.1.ogg",
+      "text": "Диспетчер, вводная не совпала с обстановкой на месте. Уточнили, работаем по факту.",
+      "voice": "elevenlabs eleven_v4 m2gtxNsYBaIRqPBA5vU5 (Олег)",
+      "duration_ms": 6660,
+      "sha256": "5a9aa15cb997b05cb3ddb737acb33f314d6c0284e6e47cd37c439a590ce34f5c",
+      "media_type": "audio/ogg"
+    }
+  ]
+}

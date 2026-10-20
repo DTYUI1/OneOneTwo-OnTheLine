@@ -1,0 +1,393 @@
+{
+  "format": 2,
+  "code": "lift-stuck-101-1",
+  "version": 4,
+  "replaces": [
+    "a0164f8b-b332-5ea3-b393-605fa30ca8b9"
+  ],
+  "title": "Застревание в лифте, плохо пассажирке",
+  "service_id": "101",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "14100101",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: застревание в лифте, плохо пассажирке, Профсоюзная улица, 98, корпус 2. Расчёт спрашивает подъезд (он есть в карточке), просит скорую женщине — в карточке скорой нет, звонок в 103 или 112 за диспетчером; затем молчит на работах. Не вызвали скорую — расчёт перезванивает, женщину увозят через своих. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Кабина встала во втором подъезде между седьмым и восьмым этажами. Расчёт раскрыл двери и вывел женщину на площадку. У неё болело сердце — по просьбе расчёта вызвали скорую, и женщину передали врачам.",
+    "late": "Карточку приняли позже норматива. Женщине шестьдесят пять лет, у неё боль в сердце, а выйти из кабины сама она не могла: каждая минута ожидания ей тяжела."
+  },
+  "card": {
+    "caller_name": "Рябов Андрей Сергеевич",
+    "phone_aon": "+79000000712",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "description": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (требуется медицинская помощь)",
+    "service_ids": [
+      "101",
+      "MOSLIFT"
+    ],
+    "number": "70005201",
+    "incident_type_code": "14100101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть. Женщина выведена и передана скорой помощи, расчёт возвращается."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, расчёт выехал.",
+        "audio": "bank-v2/101/101.responding.lift.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли, стоим у дома. Сейчас найдём кабину и доложу.",
+        "audio": "bank-v3/101/101.arrived.lift.9.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Двери кабины раскрыты, выводим женщину на площадку.",
+        "audio": "bank-v2/101/101.working.lift.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Женщина выведена и передана скорой помощи, расчёт возвращается.",
+        "audio": "bank-v2/101/101.completed.lift.7.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Какой подъезд? Их тут много, табличек нет.",
+        "audio": "bank-v1/101/101.clarify.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "second",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "second",
+          "label": "Второй подъезд"
+        },
+        {
+          "key": "first",
+          "label": "Первый подъезд"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, ищите сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, идём туда.",
+            "audio": "bank-v1/101/101.clarify_ok.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ясно. Ищем сами, это займёт время.",
+            "audio": "bank-v1/101/101.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/101/101.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт спросил подъезд — он был в описании карточки",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Нужна скорая. Пожилая женщина, плохо с сердцем, давление.",
+        "audio": "bank-v1/101/101.request_service.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял вас.",
+            "audio": "bank-v1/101/101.ack.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Работаем. Доложу, как закончим.",
+            "audio": "bank-v1/101/101.status_working.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 20
+            }
+          ]
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, скорая едет? Женщине хуже, за сердце держится.",
+            "audio": "bank-v3/101/101.request_service.lift.2.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Женщину вывели. Скорую не дождались, вызывали через своих, увезли с приступом. Возвращаемся.",
+                "audio": "bank-v3/101/101.completed.lift.8.ogg"
+              }
+            },
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт попросил скорую женщине — в карточке её нет",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Работаем на месте, обстановка под контролем.",
+            "audio": "bank-v1/101/101.status_working.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Заканчиваем, осталось всё проверить и свернуться.",
+            "audio": "bank-v1/101/101.status_working.any.8.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт долго работал без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 101",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Профсоюзная улица, 98, корпус 2",
+        "correct": true
+      },
+      {
+        "text": "Профсоюзная улица, 89, корпус 2",
+        "correct": false
+      },
+      {
+        "text": "Профсоюзная улица, 98, корпус 1",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Застряла в лифте, плохо с сердцем",
+        "correct": true
+      },
+      {
+        "text": "Пожар в лифтовой шахте",
+        "correct": false
+      },
+      {
+        "text": "Задымление в подъезде",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Женщина шестидесяти пяти лет",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Ребёнок в кабине",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю расчёт",
+        "correct": true
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      }
+    ]
+  }
+}

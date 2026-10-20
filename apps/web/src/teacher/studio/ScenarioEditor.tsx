@@ -1,5 +1,7 @@
+import { FieldCaption } from "../../shared/FieldHelp";
 // Редактор сценария без JSON: происшествие, карточка, адрес, эталон, звонок.
 // Ошибки — у своих разделов; 409 предлагает выход (копия или свежая версия).
+import { DeleteDraftButton } from "../../shared/DeleteDraftButton";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, csrfToken } from "../../shared/api";
@@ -15,6 +17,7 @@ import {
   formFromScenario,
   hasErrors,
   scenarioFromForm,
+  scenarioError,
   sectionForServerError,
   serviceForType,
   suggestComment,
@@ -27,12 +30,16 @@ import {
   type ScenarioForm,
   type Service,
 } from "./studioModel";
+import { CoherenceBadge, CoherenceWarning } from "./CoherenceWarning";
+import { ScenarioCourse } from "./ScenarioCourse";
 import { ScenarioPreview } from "./ScenarioPreview";
 import { ConstructorPanel } from "./ConstructorPanel";
 import { draftKey, readJSON, removeKey, writeJSON } from "../persist";
 import kit from "../console/Console.module.css";
+import { CorrectionPanel } from "./CorrectionPanel";
 import { ScenarioSource } from "./ScenarioSource";
 import styles from "./Studio.module.css";
+import { isDdsService } from "../../shared/services";
 
 type Address = ScenarioForm["address"];
 const ADDRESS_FIELDS: [keyof Address, string][] = [
@@ -62,11 +69,18 @@ export function ScenarioEditor({
 }) {
   const queries = useQueryClient();
   const [form, setForm] = useState(initial);
+  const [correctionBusy, setCorrectionBusy] = useState(false);
+  // Старый локальный черновик не должен снимать пометку, пришедшую от сервера.
+  const coherenceUnchecked = Boolean(
+    (form.id === initial.id && initial.coherenceUnchecked) ||
+      form.coherenceUnchecked,
+  );
   const [creating, setCreating] = useState(isNew);
   const [serverErrors, setServerErrors] = useState<FormErrors>({});
   const [conflict, setConflict] = useState<"assigned" | "stale" | null>(null);
   const [notice, setNotice] = useState("");
   const [triedApprove, setTriedApprove] = useState(false);
+  const [coherenceWarning, setCoherenceWarning] = useState(false);
 
   // Несохранённые правки переживают перезагрузку: пишем их в sessionStorage,
   // пока форма отличается от последней сохранённой версии.
@@ -169,7 +183,7 @@ export function ScenarioEditor({
           });
       if (!result.data) {
         const status = result.response.status;
-        const message = result.error?.message ?? `Ошибка ${status}.`;
+        const message = scenarioError(result.error, status);
         throw Object.assign(new Error(message), { status });
       }
       return result.data;
@@ -200,10 +214,18 @@ export function ScenarioEditor({
     },
   });
 
-  const submit = (status: "draft" | "approved") => {
+  const unchanged = !creating && JSON.stringify(form) === baseline.current;
+  const alreadyApproved = unchanged && form.status === "approved";
+
+  const submit = (status: "draft" | "approved", confirmed = false) => {
+    if (save.isPending || (unchanged && status === form.status)) return;
     const intent = status === "approved" ? "approve" : "draft";
     setTriedApprove(intent === "approve");
     if (hasErrors(validateForm(form, intent))) return;
+    if (status === "approved" && coherenceUnchecked && !confirmed) {
+      setCoherenceWarning(true);
+      return;
+    }
     save.mutate(status);
   };
 
@@ -233,6 +255,14 @@ export function ScenarioEditor({
 
   return (
     <section className={kit.view} aria-labelledby="editor-title">
+      {coherenceWarning && (
+        <CoherenceWarning
+          onChoose={(confirmed) => {
+            setCoherenceWarning(false);
+            if (confirmed) submit("approved", true);
+          }}
+        />
+      )}
       <header className={kit.titleBar}>
         <div>
           <h2 id="editor-title">
@@ -241,17 +271,33 @@ export function ScenarioEditor({
           <span className={styles[`st_${form.status}`]}>
             {STATUS_LABELS[form.status]}
           </span>
+          {form.variantLabel && (
+            <span className={styles.meta}>Вариант: {form.variantLabel}</span>
+          )}
+          <CoherenceBadge unchecked={coherenceUnchecked} />
           <span className={styles.meta}>
             версия {form.version} · источник: {ORIGIN_LABELS[form.origin]}
           </span>
         </div>
         <div className={kit.titleActions}>
+          {!creating && form.status === "draft" && (
+            <DeleteDraftButton
+              id={form.id}
+              kind="scenario"
+              onDeleted={() => onClose("Черновик удалён.")}
+            />
+          )}
+
           {!readOnly && (
             <>
               <button
                 type="button"
                 className={kit.plain}
-                disabled={save.isPending}
+                disabled={
+                  save.isPending ||
+                  correctionBusy ||
+                  (unchanged && form.status === "draft")
+                }
                 onClick={() => submit("draft")}
               >
                 Сохранить черновик
@@ -259,16 +305,16 @@ export function ScenarioEditor({
               <button
                 type="button"
                 className={kit.primary}
-                disabled={save.isPending}
+                disabled={save.isPending || correctionBusy || alreadyApproved}
                 onClick={() => submit("approved")}
               >
-                Утвердить
+                {alreadyApproved ? "Уже утверждено" : "Утвердить"}
               </button>
             </>
           )}
           <button
             type="button"
-            className={kit.dark}
+            className={kit.plain}
             onClick={() => onClose(notice || undefined)}
           >
             К списку
@@ -277,7 +323,37 @@ export function ScenarioEditor({
       </header>
 
       {!creating && (
-        <ScenarioSource scenarioId={form.id} className={styles.meta} />
+        <ScenarioSource scenarioId={form.id} className={styles.source} />
+      )}
+
+      {!creating && form.status === "draft" && (
+        <CorrectionPanel
+          key={form.id}
+          scenarioId={form.id}
+          disabled={
+            save.isPending ||
+            Boolean(pendingDraft) ||
+            JSON.stringify(form) !== baseline.current
+          }
+          onBusy={setCorrectionBusy}
+          onReplaced={async (id) => {
+            const { data, error } = await api.GET("/scenarios/{id}", {
+              params: { path: { id } },
+            });
+            if (!data)
+              throw new Error(error?.message ?? "Новый сценарий не найден.");
+            removeKey(draftKey(form.id));
+            const next = formFromScenario(data);
+            baseline.current = JSON.stringify(next);
+            setForm(next);
+            setTypeQuery(typeLabel(next.incidentTypeCode));
+            setPendingDraft(null);
+            setServerErrors({});
+            setNotice(
+              "Сценарий пересоздан по замечанию. Проверьте новый черновик.",
+            );
+          }}
+        />
       )}
 
       {pendingDraft && (
@@ -345,7 +421,10 @@ export function ScenarioEditor({
       <Errors list={errorsFor("general")} />
 
       <div className={styles.split}>
-        <fieldset className={styles.form} disabled={readOnly || save.isPending}>
+        <fieldset
+          className={styles.form}
+          disabled={readOnly || save.isPending || correctionBusy}
+        >
           <Section title="Происшествие" errors={errorsFor("incident")}>
             <label className={kit.field}>
               Тип по классификатору
@@ -366,13 +445,17 @@ export function ScenarioEditor({
             </label>
             <div className={kit.actions}>
               <label className={kit.field}>
-                Служба-адресат
+                <FieldCaption
+                  label="Служба-адресат"
+                  help="Служба, которой предназначена карточка происшествия."
+                />
                 <select
+                  aria-label="Служба-адресат"
                   value={form.targetServiceId}
                   onChange={(event) => setTarget(event.target.value)}
                 >
                   <option value="">— выберите —</option>
-                  {services.map((service) => (
+                  {services.filter(isDdsService).map((service) => (
                     <option key={service.id} value={service.id}>
                       {service.name}
                       {!service.is_active && " — выключена"}
@@ -381,8 +464,12 @@ export function ScenarioEditor({
                 </select>
               </label>
               <label className={kit.field}>
-                Уровень
+                <FieldCaption
+                  label="Уровень"
+                  help="Сложность задания: от 1 (простое) до 4 (особо сложное)."
+                />
                 <select
+                  aria-label="Уровень"
                   value={form.level}
                   onChange={(event) =>
                     set({ level: Number(event.target.value) })
@@ -401,8 +488,12 @@ export function ScenarioEditor({
                 </select>
               </label>
               <label className={kit.field}>
-                Вес 1…10
+                <FieldCaption
+                  label="Вес 1…10"
+                  help="Насколько сложное задание внутри своего уровня: 1 — легче, 10 — труднее. Вес учитывается при подборе заданий."
+                />
                 <input
+                  aria-label="Вес 1…10"
                   type="number"
                   min={1}
                   max={10}
@@ -423,7 +514,7 @@ export function ScenarioEditor({
               )}
             <ConstructorPanel
               form={form}
-              disabled={readOnly || save.isPending}
+              disabled={readOnly || save.isPending || correctionBusy}
               onApply={(next) => {
                 setServerErrors({});
                 setForm(next);
@@ -568,7 +659,7 @@ export function ScenarioEditor({
             </label>
             <p className={kit.hint}>Службы, которые должны быть привлечены:</p>
             <div className={styles.checks}>
-              {services.map((service) => (
+              {services.filter(isDdsService).map((service) => (
                 <label key={service.id}>
                   <input
                     type="checkbox"
@@ -737,7 +828,10 @@ export function ScenarioEditor({
           </Section>
         </fieldset>
 
-        <ScenarioPreview form={form} serviceName={serviceName} />
+        <div>
+          <ScenarioCourse form={form} creating={creating} />
+          <ScenarioPreview form={form} serviceName={serviceName} />
+        </div>
       </div>
     </section>
   );

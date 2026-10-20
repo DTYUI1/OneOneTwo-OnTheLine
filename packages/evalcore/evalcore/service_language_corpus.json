@@ -1,0 +1,912 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "text": "Не пожарных, скорую вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Полицию не вызвал, скорую вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Медицинская бригада уже в пути",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Вызванная скорая помощь",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Медики уже едут",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Скорую еще не вызвал нет уже вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Скорую ещё не вызвал, нет, уже вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Вызванные врачи едут",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Вызов приняли, машина в пути",
+      "exts": [
+        "103"
+      ],
+      "named": false,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Вызов приняли, машина в пути",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Да, уже вызвали",
+      "exts": [
+        "103"
+      ],
+      "named": false,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Да, уже вызвали",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "скорую вызвали?",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Уточните, скорую уже вызвали",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Когда приедет скорая?",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Не удалось вызвать скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Вызванная скорая помощь не приедет",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвал, нет, ещё не вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвал нет еще не вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Нужно вызвать скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Если скорую вызвали",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Я пока не вызывал скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую не совсем вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Вызов скорой",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Не вызываю скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Сейчас вызову скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": "calling",
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Вызываю скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": "calling",
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Буду вызывать скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": "calling",
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Пожарную охрану уже вызвали",
+      "exts": [
+        "101"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "101"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Сотрудников полиции направили",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Газовую аварийную службу вызвали",
+      "exts": [
+        "104"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "104"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Слесари уже выехали",
+      "exts": [
+        "105"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "105"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Лифтовые механики направлены",
+      "exts": [
+        "106"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "106"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Лифтёры вызваны",
+      "exts": [
+        "106"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "106"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Аварийка выехала",
+      "exts": [
+        "105"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "105"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Полицию вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": false,
+      "called": false,
+      "option": null,
+      "services": [
+        "102"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "скорую не вызвал, пожарные едут",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [
+        "101"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвали? Пожарные едут.",
+      "exts": [
+        "101"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "101"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Уточните, скорую вызвали. Пожарные едут.",
+      "exts": [
+        "101"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "101"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Полицию не вызвал, а скорую вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Лифтовые механики направлены",
+      "exts": [
+        "MOSLIFT"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "106"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Слесари выехали",
+      "exts": [
+        "GKH"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "105"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Уже вызвали",
+      "exts": [
+        "101",
+        "103"
+      ],
+      "named": false,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": true
+    },
+    {
+      "text": "Служба вызвана",
+      "exts": [
+        "101",
+        "103"
+      ],
+      "named": false,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": true
+    },
+    {
+      "text": "Полицию вызвал, едут",
+      "exts": [
+        "103"
+      ],
+      "named": false,
+      "called": false,
+      "option": null,
+      "services": [
+        "102"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Скорую и полицию вызвал",
+      "exts": [
+        "103",
+        "102"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102",
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Скорую вызвал, пожарных не вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Пожарных не вызвал. Скорую вызвал.",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Скорое решение передал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Быстрее и скоро будет",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Вызвал не пожарных, а скорую",
+      "exts": [
+        "101"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Вызвал не пожарных, а скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Вызвал не пожарных а скорую",
+      "exts": [
+        "101"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Вызвал не пожарных а скорую",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвал, но вызов отменил",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвал, но отменил",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвал но отменил",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Скорую вызвал, но вызов не отменял",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Скорую вызвал, не отменил",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Участкового вызвал",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Участкового вызвал",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Участковый уже едет",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Участковый уже едет",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Участковые вызваны",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Участковые вызваны",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "102"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Участковый врач вызван",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Участковый врач вызван",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Участкового врача вызвал",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Участкового врача вызвал",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Участковому врачу позвонил",
+      "exts": [
+        "102"
+      ],
+      "named": true,
+      "called": false,
+      "option": null,
+      "services": [
+        "103"
+      ],
+      "named_called": false
+    },
+    {
+      "text": "Участковому врачу позвонил",
+      "exts": [
+        "103"
+      ],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [
+        "103"
+      ],
+      "named_called": true
+    },
+    {
+      "text": "Скорейшую вызвал",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Наискорейшую вызвал",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Слесарил и позвонил",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [],
+      "named_called": false
+    },
+    {
+      "text": "Слесарящую вызвал",
+      "exts": [],
+      "named": true,
+      "called": true,
+      "option": "already",
+      "services": [],
+      "named_called": false
+    }
+  ]
+}

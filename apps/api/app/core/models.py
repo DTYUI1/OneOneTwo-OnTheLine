@@ -17,7 +17,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 # Голова Alembic, которую ждёт этот код: health сообщает об ошибке при другой ревизии БД.
-SCHEMA_REVISION = "0015"
+SCHEMA_REVISION = "0030"
 
 
 class Base(DeclarativeBase):
@@ -43,6 +43,7 @@ class Service(Base):
     code: Mapped[str] = mapped_column(unique=True)
     name: Mapped[str]
     phone_ext: Mapped[str] = mapped_column(unique=True)
+    phone: Mapped[str | None] = mapped_column(unique=True)
     voice_profile: Mapped[str]
     category: Mapped[str]
     is_active: Mapped[bool] = mapped_column(default=True)
@@ -136,9 +137,14 @@ class Scenario(Identified, Created, Base):
     status: Mapped[str]
     author_id: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"))
     teacher_comment: Mapped[str]
+    deleted_at: Mapped[datetime | None] = mapped_column(default=None)
+    deleted_by: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), default=None)
+    # Только новые сгенерированные сценарии; история и ручные черновики не меняются.
+    generation_metadata: Mapped[dict[str, Any] | None] = mapped_column(JSONB, default=None)
 
 
 class ScenarioPack(Identified, Base):
+    created_at: Mapped[datetime | None] = mapped_column(server_default=func.now())
     __tablename__ = "scenario_packs"
     __table_args__ = (CheckConstraint("status IN ('draft', 'approved', 'retired')"),)
     title: Mapped[str]
@@ -161,6 +167,8 @@ class Session(Identified, Base):
         CheckConstraint("status IN ('draft', 'running', 'finished')"),
         CheckConstraint("kind IN ('lesson', 'practice')", name="ck_sessions_kind"),
     )
+    deleted_at: Mapped[datetime | None] = mapped_column(default=None)
+    deleted_by: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"), default=None)
     # У тренировки (kind="practice") владелец — сам обучаемый: преподаватели её не видят.
     teacher_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
     title: Mapped[str]
@@ -171,6 +179,11 @@ class Session(Identified, Base):
     settings_snapshot: Mapped[dict[str, Any]]
     # Снимок I-TIME (contracts/c01.schema.json#TimingPolicy); NULL — legacy v1 старых занятий.
     timing_policy: Mapped[dict[str, Any] | None]
+    # Пауза занятия (TC-12, contracts/live-lesson.md): новые карточки не выдаются.
+    paused_at: Mapped[datetime | None]
+    # Только занятие преподавателя: снимок подбора и серверный прогресс подготовки.
+    ai_preparation: Mapped[dict[str, Any] | None] = mapped_column(JSONB, default=None)
+    start_request: Mapped[dict[str, Any] | None] = mapped_column(JSONB, default=None)
     participants: Mapped[list["Participant"]] = relationship(lazy="raise")
 
 
@@ -188,6 +201,8 @@ class Participant(Identified, Base):
     dds_service_id: Mapped[str] = mapped_column(ForeignKey("services.id"))
     level: Mapped[int]
     rating_at_start: Mapped[float]
+    # Пауза одного ученика (TC-12).
+    paused_at: Mapped[datetime | None]
 
 
 class Assignment(Identified, Base):
@@ -465,7 +480,7 @@ class AuditLog(Identified, Base):
 class Job(Identified, Base):
     __tablename__ = "jobs"
     __table_args__ = (
-        CheckConstraint("status IN ('pending', 'running', 'done', 'failed')"),
+        CheckConstraint("status IN ('pending', 'running', 'done', 'failed', 'cancelled')"),
         CheckConstraint("kind IN ('generate', 'evaluate', 'insights', 'transcribe', 'tts')"),
         CheckConstraint("attempts >= 0"),
         Index("ix_jobs_status_run_after", "status", "run_after"),
@@ -584,6 +599,68 @@ class MessageDelivery(Identified, Base):
     ready_at: Mapped[datetime | None]
 
 
+class LegacyBrigadeDispatch(Base):
+    """Подтверждённая отправка по старому правилу, снимок миграции GP-05.
+
+    Это не вводная: текст, правильность адреса и способ ответа не выдумываются.
+    """
+
+    __tablename__ = "legacy_brigade_dispatches"
+    card_id: Mapped[UUID] = mapped_column(ForeignKey("cards.id"), primary_key=True)
+    brigade_id: Mapped[UUID] = mapped_column(ForeignKey("brigades.id"), primary_key=True)
+    dispatched_at: Mapped[datetime]
+
+
+class BrigadeBriefing(Identified, Base):
+    """Вводная бригаде (GP-05): что бригада поняла из разговора с диспетчером.
+
+    Append-only. Бригада выезжает по первой полной вводной (`complete`) — по адресу, который
+    услышала (`heard_address`); оценка — `evalcore.briefing` один раз при приёме события.
+    """
+
+    __tablename__ = "brigade_briefings"
+    __table_args__ = (
+        CheckConstraint("mode IN ('voice', 'parts')", name="ck_brigade_briefings_mode"),
+        CheckConstraint(
+            "address IN ('ok', 'wrong', 'missing')", name="ck_brigade_briefings_address"
+        ),
+        Index("ix_brigade_briefings_card", "card_id", "briefed_at"),
+    )
+    card_id: Mapped[UUID] = mapped_column(ForeignKey("cards.id"))
+    call_id: Mapped[UUID] = mapped_column(ForeignKey("calls.id"))
+    brigade_id: Mapped[UUID] = mapped_column(ForeignKey("brigades.id"))
+    briefed_at: Mapped[datetime]
+    mode: Mapped[str]
+    text: Mapped[str]
+    address: Mapped[str]
+    heard_address: Mapped[str | None]
+    incident: Mapped[bool]
+    complete: Mapped[bool]
+
+
+class ScenarioEventFiring(Identified, Base):
+    """Срабатывание события бригады на карточке (DT-10): по плану или вводной (DT-06).
+
+    Append-only. Исход события не хранится — его считает evalcore из журнала карточки.
+    """
+
+    __tablename__ = "scenario_event_firings"
+    __table_args__ = (
+        UniqueConstraint("card_id", "event_id", name="uq_scenario_event_firings_card_event"),
+        CheckConstraint("source IN ('plan', 'inject')", name="ck_scenario_event_firings_source"),
+        CheckConstraint(
+            "(source = 'inject') = (injected_by IS NOT NULL)",
+            name="ck_scenario_event_firings_injected_by",
+        ),
+    )
+    card_id: Mapped[UUID] = mapped_column(ForeignKey("cards.id"))
+    event_id: Mapped[UUID]
+    event_version: Mapped[int]
+    source: Mapped[str]
+    injected_by: Mapped[UUID | None] = mapped_column(ForeignKey("users.id"))
+    fired_at: Mapped[datetime]
+
+
 class MessagePresentation(Identified, Base):
     __tablename__ = "message_presentations"
     __table_args__ = (
@@ -620,3 +697,80 @@ class ProblemReport(Identified, Created, Base):
     category: Mapped[str]
     text: Mapped[str]
     page: Mapped[str]
+
+
+class WarmupResult(Identified, Created, Base):
+    """Результат разминки (DT-09): упражнение на один навык между занятиями.
+
+    «Найди отличие в адресе» и «Кого направить»; ошибки сохраняются, чтобы вернуть эти
+    задания в следующую разминку. Пишет обучаемый, читают он сам и преподаватель.
+    """
+
+    __tablename__ = "warmup_results"
+    __table_args__ = (
+        CheckConstraint("kind IN ('address', 'routing')", name="ck_warmup_results_kind"),
+        CheckConstraint(
+            "total BETWEEN 1 AND 100 AND correct BETWEEN 0 AND total",
+            name="ck_warmup_results_score",
+        ),
+        CheckConstraint("duration_ms BETWEEN 0 AND 3600000", name="ck_warmup_results_duration"),
+        Index("ix_warmup_results_trainee_created", "trainee_id", "created_at"),
+    )
+    trainee_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    kind: Mapped[str]
+    correct: Mapped[int]
+    total: Mapped[int]
+    duration_ms: Mapped[int]
+    mistakes: Mapped[list[Any]] = mapped_column(JSONB, default=list)
+
+
+class TeacherMessage(Identified, Base):
+    """Сообщение ученику из хода занятия (TC-12, contracts/live-lesson.md)."""
+
+    __tablename__ = "teacher_messages"
+    __table_args__ = (
+        CheckConstraint("char_length(text) BETWEEN 1 AND 500", name="ck_teacher_messages_text"),
+        Index("ix_teacher_messages_user_sent", "user_id", "sent_at"),
+        Index("ix_teacher_messages_session_sent", "session_id", "sent_at"),
+    )
+    session_id: Mapped[UUID] = mapped_column(ForeignKey("sessions.id"))
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    teacher_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    text: Mapped[str]
+    sent_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    read_at: Mapped[datetime | None]
+
+
+class LessonFeedback(Identified, Base):
+    """Отзыв ученику по итогам занятия (TC-13, contracts/lesson-review.md)."""
+
+    __tablename__ = "lesson_feedback"
+    __table_args__ = (UniqueConstraint("session_id", "user_id"),)
+    session_id: Mapped[UUID] = mapped_column(ForeignKey("sessions.id"))
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+    draft: Mapped[str]
+    text: Mapped[str | None]
+    released_at: Mapped[datetime | None]
+
+
+class JobCancellation(Base):
+    """Отметка без FK на jobs: stop не ждёт FOR UPDATE текущей порции."""
+
+    __tablename__ = "job_cancellations"
+    job_id: Mapped[UUID] = mapped_column(primary_key=True)
+    requested_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    requested_by: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
+
+
+class JobErrorRead(Base):
+    """Прочитан конкретный сбой: новая попытка снова требует внимания."""
+
+    __tablename__ = "job_error_reads"
+    job_id: Mapped[UUID] = mapped_column(
+        ForeignKey("jobs.id", ondelete="CASCADE"), primary_key=True
+    )
+    attempts: Mapped[int]
+    run_after: Mapped[datetime]
+    error: Mapped[str | None]
+    read_at: Mapped[datetime]
+    read_by: Mapped[UUID] = mapped_column(ForeignKey("users.id"))

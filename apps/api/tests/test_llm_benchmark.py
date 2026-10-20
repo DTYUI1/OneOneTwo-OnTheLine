@@ -118,7 +118,8 @@ def test_generate_one_uses_llamacpp_json_schema_format() -> None:
     def handler(request: httpx.Request) -> httpx.Response:
         request_body = json.loads(request.content)
         assert request.url.path == "/v1/chat/completions"
-        assert request_body["response_format"] == {"type": "json_schema", "schema": schema}
+        assert "response_format" not in request_body
+        assert request_body["json_schema"] == schema
         assert request_body["cache_prompt"] is True
         return httpx.Response(
             200,

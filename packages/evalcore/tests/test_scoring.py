@@ -14,7 +14,7 @@ from evalcore.criteria import (
     register,
     registered_criteria,
 )
-from evalcore.defaults import CRITERIA
+from evalcore.defaults import CRITERIA, REPORT_CHOICE_FACTOR
 from evalcore.models import CriterionResult, EvalContext, Json
 from evalcore.scoring import aggregate, configured_weights, evaluate
 from evalcore.timing import calculate_timing
@@ -56,6 +56,39 @@ def test_aggregate_applies_cap_and_reports_critical_keys():
 
     assert evaluation.total == 0.5
     assert evaluation.critical_flags == ["address"]
+
+
+def test_critical_score_distinguishes_one_error_from_broken_card():
+    one_missed_call = aggregate(
+        [result("call", 0, critical=True), result("routing"), result("status_flow")],
+        critical_cap=0.5,
+    )
+    multiple_errors = aggregate(
+        [
+            result("call", 0, critical=True),
+            result("routing", 0, critical=True),
+            result("status_flow", 0),
+        ],
+        critical_cap=0.5,
+    )
+    abandoned_work = aggregate(
+        [result("call", 0, critical=True), result("routing"), result("status_flow", 0)],
+        critical_cap=0.5,
+    )
+    assert one_missed_call.total == pytest.approx(1 / 3)
+    assert abandoned_work.total == pytest.approx(1 / 6)
+    assert multiple_errors.total == 0
+    assert one_missed_call.total > abandoned_work.total > multiple_errors.total
+
+
+def test_zero_weight_critical_criterion_cannot_cap_other_scores():
+    evaluation = aggregate(
+        [result("call", 0, weight=0, critical=True), result("routing", 1)],
+        critical_cap=0.5,
+    )
+
+    assert evaluation.total == 1
+    assert evaluation.critical_flags == []
 
 
 @pytest.mark.parametrize(
@@ -453,16 +486,67 @@ def test_required_fields_scores_filled_fraction():
     assert not evaluated.critical
 
 
+def test_required_fields_names_empty_field():
+    _, ctx = load_golden_context()
+    ctx.current["service_number"] = " "
+
+    evaluated = RequiredFieldsCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(0.5)
+    assert evaluated.evidence[0] == "Не заполнен номер наряда"
+    assert evaluated.explanation == "Не заполнен номер наряда."
+
+
+@pytest.mark.parametrize("value", ["201", "№ 201", "бригада 2 0 1", "201, 203", "203"])
+def test_required_fields_accepts_brigade_number_by_digits(value: str):
+    _, ctx = load_golden_context()
+    ctx = replace(ctx, brigade_numbers=("201", "203"))
+    ctx.current["service_number"] = value
+
+    assert RequiredFieldsCriterion().evaluate(ctx).score == 1
+
+
+def test_required_fields_rejects_number_of_other_brigade():
+    _, ctx = load_golden_context()
+    ctx = replace(ctx, brigade_numbers=("201",))
+    ctx.current["service_number"] = "1"
+
+    evaluated = RequiredFieldsCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(0.5)
+    assert evaluated.evidence == [
+        "Номер наряда 1 не совпадает с номером бригады: 201",
+        "Заполнено 1 из 2 обязательных полей",
+    ]
+
+
+def test_required_fields_without_brigades_checks_only_filled():
+    _, ctx = load_golden_context()
+    ctx.current["service_number"] = "1"
+
+    assert RequiredFieldsCriterion().evaluate(ctx).score == 1
+
+
+def write_comment(ctx: EvalContext, comment: str) -> None:
+    """Один и тот же комментарий во всех статусах: адрес ищется во всех комментариях."""
+    ctx.current["comment"] = comment
+    for event in ctx.events:
+        payload = event.get("payload")
+        if isinstance(payload, dict) and "comment" in payload:
+            payload["comment"] = comment
+
+
 def test_wrong_street_is_critical_and_caps_total():
     _, ctx = load_golden_context()
-    ctx.current["comment"] = "Москва, Тверская улица, дом 1. Направлен экипаж."
+    # Опечатка в улице карточки (ревью DT-14): другая улица целиком — не искажение адреса.
+    write_comment(ctx, "Москва, Дубининская улица, дом 1. Направлен экипаж.")
 
     address = AddressCriterion().evaluate(ctx)
     evaluation = evaluate(ctx)
 
     assert address.score == pytest.approx(2 / 3)
     assert address.critical
-    assert evaluation.total == 0.5
+    assert evaluation.total == pytest.approx(10 / 21)
     assert evaluation.critical_flags == ["address"]
 
 
@@ -641,3 +725,287 @@ def test_status_flow_names_missing_state_and_refusal():
     assert "Не хватает: Отказ от выполнения работ." in closed.explanation
     assert "Лишние: Работы завершены." in closed.explanation
     assert "закрывают «Отказ от выполнения работ»" in closed.explanation
+
+
+def test_status_flow_reminds_ambulance_has_no_refusal():
+    """GP-08: скорая «Отказ от выполнения работ» не ставит (памятка ДДС, стр. 23)."""
+    _, ctx = load_golden_context()
+    ctx.scenario["target_service_id"] = "103"
+    for event in ctx.events:
+        payload = event.get("payload")
+        if event.get("type") == "status_change" and isinstance(payload, dict):
+            if payload.get("state") == "completed":
+                payload["state"] = "refused"
+    result = StatusFlowCriterion().evaluate(ctx)
+    assert result.score < 1
+    assert "Лишние: Отказ от выполнения работ." in result.explanation
+    assert (
+        "Служба 103 не ставит «Не принята» и «Отказ от выполнения работ»: по памятке ДДС "
+        "(стр. 23) вместо них — «Работы завершены: завершение работ без бригады»"
+    ) in result.explanation
+    # Другой службе отказ не запрещён — о скорой разбор не говорит.
+    ctx.scenario["target_service_id"] = "102"
+    assert "Служба 103" not in StatusFlowCriterion().evaluate(ctx).explanation
+
+
+def _hangup_with_report(
+    ctx: EvalContext,
+    choices: list[str],
+    modes: list[str] | None = None,
+    voice_failures: int | None = None,
+    parts: list[list[str]] | None = None,
+    loudness: list[str | None] | None = None,
+) -> None:
+    """Отбой звонка службе с докладом: виды по порядку и как сказан каждый (DT-05)."""
+    call = ctx.calls[0]
+    payload: dict[str, Json] = {"call_id": call["id"], "report_choices": list(choices)}
+    if modes is not None:
+        payload["report_modes"] = list(modes)
+    if voice_failures is not None:
+        payload["voice_failures"] = voice_failures
+    if parts is not None:
+        payload["report_parts"] = [list(item) for item in parts]
+    if loudness is not None:
+        payload["report_loudness"] = list(loudness)
+    ctx.events.append(
+        {
+            "client_event_id": "00000000-0000-4000-8000-00000000f001",
+            "client_ts": call["ended_at"] or call["started_at"],
+            "type": "call_hangup",
+            "payload": payload,
+        }
+    )
+
+
+def test_full_voice_report_keeps_call_score_and_is_noted():
+    _, ctx = load_golden_context()
+    correct = CallCriterion().evaluate(ctx)
+    _hangup_with_report(ctx, ["full"], ["voice"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(correct.score)
+    assert evaluated.evidence[-2] == "Доклад службе 102: полный, голосом"
+
+
+def test_hangup_before_report_is_recorded_as_missing_report():
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, [], [])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(2 / 3)
+    assert evaluated.critical
+    assert "трубка положена до доклада" in evaluated.evidence[-1]
+    assert evaluated.explanation == "Звонок прерван до доклада."
+
+
+def test_voice_loudness_is_noted_without_changing_score():
+    _, ctx = load_golden_context()
+    correct = CallCriterion().evaluate(ctx)
+    _hangup_with_report(ctx, ["no_who", "full"], ["voice", "voice"], loudness=["quiet", "ok"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(correct.score)
+    assert "громкость голоса: слишком тихо (1 из 2)" in evaluated.evidence[-2]
+
+
+def test_loudness_in_norm_and_options_without_measure():
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["full"], ["voice"], loudness=["ok"])
+    assert CallCriterion().evaluate(ctx).evidence[-2].endswith("громкость голоса в норме")
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["full"], ["option"], loudness=[None])
+    assert "громкост" not in CallCriterion().evaluate(ctx).evidence[-2]
+
+
+def test_full_report_by_choice_scores_lower_than_voice():
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["full"], ["option"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    # Доля доклада вариантом по умолчанию — 0,5: (0,5 + адресат 1 + время 1) / 3.
+    assert evaluated.score == pytest.approx((REPORT_CHOICE_FACTOR + 2) / 3)
+    assert not evaluated.critical
+    assert evaluated.evidence[-2] == "Доклад службе 102: полный, ответ вариантом"
+    assert "вариантом ответа" in evaluated.explanation
+
+
+def test_report_without_modes_counts_as_choice():
+    """Отбой части 1 (до голосового ввода): виды без report_modes — это варианты ответа."""
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["full"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx((REPORT_CHOICE_FACTOR + 2) / 3)
+    assert evaluated.evidence[-2] == "Доклад службе 102: полный, ответ вариантом"
+
+
+def test_teacher_sets_choice_factor():
+    _, ctx = load_golden_context()
+    correct = CallCriterion().evaluate(ctx)
+    _hangup_with_report(ctx, ["full"], ["option"])
+
+    same = replace(ctx, settings={**ctx.settings, "report_choice_factor": 1})
+    none = replace(ctx, settings={**ctx.settings, "report_choice_factor": 0})
+    quarter = replace(ctx, settings={**ctx.settings, "report_choice_factor": 0.25})
+
+    assert CallCriterion().evaluate(same).score == pytest.approx(correct.score)
+    assert CallCriterion().evaluate(none).score == pytest.approx(2 / 3)
+    assert CallCriterion().evaluate(quarter).score == pytest.approx(2.25 / 3)
+    with pytest.raises(ValueError, match="report_choice_factor"):
+        CallCriterion().evaluate(replace(ctx, settings={**ctx.settings, "report_choice_factor": 2}))
+
+
+def test_full_report_after_clarification_is_a_remark_not_a_penalty():
+    _, ctx = load_golden_context()
+    correct = CallCriterion().evaluate(ctx)
+    _hangup_with_report(ctx, ["no_address", "full"], ["voice", "voice"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(correct.score)
+    assert evaluated.evidence[-2] == (
+        "Доклад службе 102: полный, голосом, после уточнения; сначала — без адреса и повода"
+    )
+
+
+def test_voice_failures_and_offered_choices_are_noted():
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["full"], ["option"], voice_failures=2)
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.evidence[-2] == (
+        "Доклад службе 102: полный, ответ вариантом; голос не распознан: 2, "
+        "предложены варианты ответа"
+    )
+
+
+def test_legacy_incomplete_report_costs_the_conversation_part_but_is_not_critical():
+    """Вид до порядка памятки (журналы до 08.10.2026) читается как раньше."""
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["no_victims"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(2 / 3)
+    assert not evaluated.critical
+    assert evaluated.evidence[0] == "Звонок отвечен: да"
+    assert evaluated.evidence[-2] == (
+        "Доклад службе 102: полного доклада нет — без сведений о пострадавших и силах"
+    )
+    assert evaluated.explanation == "Звонок выполнен с нарушениями."
+    assert evaluated.evidence[-1].endswith("что изменилось ✗")
+
+
+def test_report_with_extra_details_is_not_full():
+    _, ctx = load_golden_context()
+    correct = CallCriterion().evaluate(ctx)
+    _hangup_with_report(ctx, ["extra"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(2 / 3)
+    assert evaluated.evidence[-2] == (
+        "Доклад службе 102: полного доклада нет — с лишними сведениями: догадки, оценки, просьбы"
+    )
+
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["extra", "full"], ["option", "voice"])
+    assert CallCriterion().evaluate(ctx).score == pytest.approx(correct.score)
+
+
+# Звонок службе 102, не в 112: карточку памятка ДДС, с. 32, в нём не требует — её нет в строке.
+ALL_SAID = "кто вы ✓, адрес и повод ✓, что изменилось ✓"
+
+
+def test_full_report_lists_memo_parts():
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["full"], ["voice"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.evidence[-1] == f"Части доклада службе 102 по памятке ДДС, с. 32: {ALL_SAID}"
+
+
+@pytest.mark.parametrize(
+    ("choice", "gap", "marks"),
+    [
+        ("no_who", "не представился", "кто вы ✗, адрес и повод ✓, что изменилось ✓"),
+        (
+            "no_address",
+            "без адреса и повода",
+            "кто вы ✓, адрес и повод ✗, что изменилось ✓",
+        ),
+        # Журнал до правила «карточка — только в 112»: вид читается, в строке частей её нет.
+        ("no_card", "без карточки", "кто вы ✓, адрес и повод ✓, что изменилось ✓"),
+        (
+            "no_change",
+            "без того, что изменилось",
+            "кто вы ✓, адрес и повод ✓, что изменилось ✗",
+        ),
+    ],
+)
+def test_incomplete_report_names_missing_memo_part(choice, gap, marks):
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, [choice], ["option"])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(2 / 3)
+    assert evaluated.evidence[-2] == f"Доклад службе 102: полного доклада нет — {gap}"
+    assert evaluated.evidence[-1] == f"Части доклада службе 102 по памятке ДДС, с. 32: {marks}"
+
+
+def test_voice_parts_show_every_missing_part():
+    """Голосом может не хватать нескольких частей: report_parts называет все."""
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, ["no_who", "full"], ["voice", "voice"], parts=[["address"], []])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.evidence[-2] == (
+        "Доклад службе 102: полный, голосом, после уточнения; сначала — не представился"
+    )
+    assert evaluated.evidence[-1] == (
+        "Части первого доклада службе 102 по памятке ДДС, с. 32: "
+        "кто вы ✗, адрес и повод ✓, что изменилось ✗"
+    )
+
+
+def test_hangup_before_report_is_noted():
+    _, ctx = load_golden_context()
+    _hangup_with_report(ctx, [])
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(2 / 3)
+    assert "не сделан" in evaluated.evidence[-1]
+
+
+def test_report_of_other_call_is_marked_and_repeated_gaps_are_counted():
+    """Разбор 12.10: балл по звонку бригаде, а «доклад не сделан» — из звонка в 102."""
+    _, ctx = load_golden_context()
+    service_call = ctx.calls[0]
+    brigade_call = {
+        **service_call,
+        "id": "00000000-0000-4000-8000-0000000000b1",
+        "phone_ext": "203",
+        "brigade_id": "00000000-0000-4000-8000-000000000203",
+    }
+    ctx.calls.insert(0, brigade_call)
+    _hangup_with_report(ctx, ["no_who", "no_card", "no_change", "no_change", "no_change"])
+    ctx.events[-1]["payload"]["call_id"] = service_call["id"]
+
+    evaluated = CallCriterion().evaluate(ctx)
+
+    assert evaluated.score == pytest.approx(1)
+    assert "(бригада службы): верно" in evaluated.evidence[1]
+    assert evaluated.evidence[3] == (
+        "Другой звонок — Доклад службе 102: полного доклада нет — не представился; "
+        "без карточки; без того, что изменилось (3 раза)"
+    )

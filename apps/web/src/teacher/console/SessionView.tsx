@@ -1,7 +1,12 @@
 // Выбранное занятие: тёмная полоса заголовка с управлением, как «Происшествие 101»
 // в карточке АРМ, и вкладки-плитки, как панель служб внизу карточки.
+// «Начать занятие» — не в шапке, а рядом с кнопкой выдачи (docs/dds_gameplay.md §9).
 import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useIsMutating,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { api, csrfToken } from "../../shared/api";
 import {
   SESSION_STATUS_LABELS,
@@ -21,13 +26,15 @@ import { LiveTab } from "./LiveTab";
 import { ReportTab, type LessonPrefill } from "./ReportTab";
 import { VerdictFeed } from "./VerdictFeed";
 import { SessionClock } from "./SessionClock";
+import { AIResourceDialog } from "./AIResourceDialog";
 import { onTabListKey } from "../tabKeys";
+import { DeleteDraftButton } from "../../shared/DeleteDraftButton";
 import styles from "./Console.module.css";
 
 const TAB_LABELS: Record<SessionTab, string> = {
   handout: "Состав и раздача",
   live: "Ход занятия",
-  verdicts: "Вердикты",
+  verdicts: "Оценки",
   report: "Отчёт",
 };
 
@@ -44,29 +51,56 @@ export function SessionView({
   onNewLesson?: (prefill: LessonPrefill) => void;
 }) {
   const queries = useQueryClient();
+  const savingNorms = useIsMutating({
+    mutationKey: ["session-norms", sessionId],
+  });
   const session = useSession(sessionId);
   const assignments = useIssuedAssignments(sessionId);
   const cards = useCards();
   const evaluations = useEvaluations();
   const [error, setError] = useState("");
+  const [deleted, setDeleted] = useState(false);
   const [notice, setNotice] = useState("");
+  const [warning, setWarning] = useState(false);
+  const [checking, setChecking] = useState(false);
 
   // При переходе к другому занятию сообщения прошлого не показываем.
   useEffect(() => {
     setError("");
     setNotice("");
+    setDeleted(false);
   }, [sessionId]);
+  useEffect(() => {
+    if (session.data?.ai_preparation?.state === "ready") {
+      void queries.invalidateQueries({
+        queryKey: ["assignment-batches", sessionId],
+      });
+      void queries.invalidateQueries({ queryKey: ["scenarios"] });
+    }
+  }, [session.data?.ai_preparation?.state, sessionId, queries]);
 
   const control = useMutation({
-    mutationFn: async (action: "start" | "finish") => {
-      const path =
-        action === "start" ? "/sessions/{id}/start" : "/sessions/{id}/finish";
-      const { data, error } = await api.POST(path, {
+    mutationFn: async ({
+      action,
+      mode,
+    }: {
+      action: "start" | "finish";
+      mode?: "now" | "wait" | "cancel";
+    }) => {
+      const options = {
         params: {
           path: { id: sessionId },
           header: { "X-CSRF-Token": csrfToken() },
         },
-      });
+      };
+      const { data, error } =
+        action === "start"
+          ? await api.POST("/sessions/{id}/start", {
+              ...options,
+              body: mode ? { mode } : undefined,
+            })
+          : await api.POST("/sessions/{id}/finish", options);
+      if (error?.code === "ai_generation_busy") setWarning(true);
       if (!data) throw new Error(error?.message ?? "Действие не выполнено.");
       return data;
     },
@@ -75,7 +109,11 @@ export function SessionView({
       setNotice(
         updated.status === "running"
           ? "Занятие запущено."
-          : "Занятие завершено.",
+          : updated.status === "finished"
+            ? "Занятие завершено."
+            : updated.start_pending
+              ? "Ожидаем готовности генерации. Занятие ещё не началось."
+              : "Ожидание запуска отменено.",
       );
       onTab(defaultTab(updated.status));
       await queries.invalidateQueries({ queryKey: ["session", sessionId] });
@@ -84,6 +122,26 @@ export function SessionView({
     },
     onError: (cause: Error) => setError(cause.message),
   });
+
+  async function requestStart() {
+    setChecking(true);
+    setError("");
+    try {
+      const { data, error } = await api.GET("/ai/resource");
+      if (!data)
+        throw new Error(error?.message ?? "Не удалось проверить состояние ИИ.");
+      if (data.local_ai && data.generation_running) setWarning(true);
+      else control.mutate({ action: "start" });
+    } catch (cause) {
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "Не удалось проверить состояние ИИ.",
+      );
+    } finally {
+      setChecking(false);
+    }
+  }
 
   async function downloadCsv() {
     // CSV формирует backend: пересчитывать оценки в браузере нельзя (ответ капитана §2).
@@ -125,6 +183,11 @@ export function SessionView({
       </p>
     );
 
+  if (deleted)
+    return (
+      <p role="status">Черновик удалён. Выберите другое занятие в списке.</p>
+    );
+
   const status = session.data.status;
   const current = tab ?? defaultTab(status);
   const blockers =
@@ -139,32 +202,44 @@ export function SessionView({
 
   return (
     <section className={styles.view} aria-labelledby="session-title">
+      {warning && (
+        <AIResourceDialog
+          action="start"
+          onChoose={(choice) => {
+            setWarning(false);
+            if (choice !== "cancel")
+              control.mutate({ action: "start", mode: choice });
+          }}
+        />
+      )}
       <header className={styles.titleBar} data-help="teacher-session">
         <div>
           <h2 id="session-title">{session.data.title}</h2>
           <span className={styles[`status_${status}`]}>
-            {SESSION_STATUS_LABELS[status]}
+            {status === "draft" && session.data.ai_preparation
+              ? session.data.ai_preparation.state === "ready"
+                ? "Готово к началу"
+                : session.data.ai_preparation.state === "cancelled"
+                  ? "Подбор остановлен"
+                  : "Подготовка"
+              : SESSION_STATUS_LABELS[status]}
           </span>
           <SessionClock session={session.data} className={styles.clock} />
         </div>
         <div className={styles.titleActions}>
           {status === "draft" && (
-            <button
-              type="button"
-              className={styles.primary}
-              disabled={blockers.length > 0 || control.isPending}
-              title={blockers.join(" ")}
-              onClick={() => control.mutate("start")}
-            >
-              Начать занятие
-            </button>
+            <DeleteDraftButton
+              id={sessionId}
+              kind="session"
+              onDeleted={() => setDeleted(true)}
+            />
           )}
           {status === "running" && (
             <button
               type="button"
               className={styles.dark}
               disabled={control.isPending}
-              onClick={() => control.mutate("finish")}
+              onClick={() => control.mutate({ action: "finish" })}
             >
               Завершить
             </button>
@@ -181,13 +256,6 @@ export function SessionView({
         </div>
       </header>
 
-      {blockers.length > 0 && (
-        <ul className={styles.blockers} role="status">
-          {blockers.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      )}
       {error && (
         <p role="alert" className={styles.message}>
           {error}
@@ -196,6 +264,25 @@ export function SessionView({
       {notice && (
         <p role="status" className={styles.message}>
           {notice}
+        </p>
+      )}
+      {session.data.start_pending && (
+        <p role="status" className={styles.message}>
+          Ожидаем готовности генерации. Занятие ещё не началось; нормативы не
+          идут. Запуск продолжится без открытой вкладки.{" "}
+          <button
+            type="button"
+            className={styles.plain}
+            disabled={control.isPending}
+            onClick={() => control.mutate({ action: "start", mode: "cancel" })}
+          >
+            Отменить ожидание
+          </button>
+        </p>
+      )}
+      {session.data.start_error && (
+        <p role="alert" className={styles.message}>
+          {session.data.start_error}
         </p>
       )}
 
@@ -228,11 +315,33 @@ export function SessionView({
         role="tabpanel"
         data-help={`teacher-${current}`}
       >
-        {current === "handout" && <HandoutTab session={session.data} />}
+        {current === "handout" && (
+          <HandoutTab
+            session={session.data}
+            start={
+              status === "draft"
+                ? {
+                    blockers,
+                    pending:
+                      control.isPending ||
+                      savingNorms > 0 ||
+                      checking ||
+                      warning ||
+                      Boolean(session.data.start_pending),
+                    onStart: () => void requestStart(),
+                  }
+                : undefined
+            }
+          />
+        )}
         {current === "live" && <LiveTab session={session.data} />}
         {current === "verdicts" && <VerdictFeed session={session.data} />}
         {current === "report" && (
-          <ReportTab session={session.data} onNewLesson={onNewLesson} />
+          <ReportTab
+            key={sessionId}
+            session={session.data}
+            onNewLesson={onNewLesson}
+          />
         )}
       </div>
     </section>

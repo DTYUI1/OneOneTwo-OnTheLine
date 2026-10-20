@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "gas-street-well-104-2",
+  "version": 1,
+  "title": "Запах газа у колодца возле подъезда",
+  "service_id": "104",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "13010500",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Бараклавский проспект, 12» на Балаклавский проспект, 12. Уточнить первый подъезд как ориентир колодца. При отсутствии сведений бригада ищет место сама. Утечка подтверждена и устранена, другой службы не требуется.",
+  "outcome": {
+    "people": "На газоне возле первого подъезда из колодца чувствуется сильный запах газа. Заявитель, житель дома, находится в стороне от колодца и ждёт аварийную бригаду. Пострадавших нет. Бригада подтвердила утечку прибором, огородила колодец, отвела людей и вскрыла крышку. Колодец загерметизирован, замер вокруг чистый, работы завершены.",
+    "late": "Карточку приняли позже норматива. На газоне возле первого подъезда из колодца чувствуется сильный запах газа. Заявитель, житель дома, находится в стороне от колодца и ждёт аварийную бригаду. Пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Бородин Руслан Акимович",
+    "phone_aon": "+79000000885",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Зюзино",
+      "street": "Балаклавский проспект",
+      "house": "12",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "На газоне возле первого подъезда из колодца чувствуется сильный запах газа. Заявитель, житель дома, находится в стороне от колодца и ждёт аварийную бригаду. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Запах бытовогогаза от колодца",
+    "service_ids": [
+      "104"
+    ],
+    "number": "70008525",
+    "incident_type_code": "13010500"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Зюзино",
+      "street": "Балаклавский проспект",
+      "house": "12",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "На газоне возле первого подъезда из колодца чувствуется сильный запах газа. Заявитель, житель дома, находится в стороне от колодца и ждёт аварийную бригаду. Пострадавших нет. Бригада подтвердила утечку прибором, огородила колодец, отвела людей и вскрыла крышку. Колодец загерметизирован, замер вокруг чистый, работы завершены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял заявку, выезжаем, прибор с собой.",
+        "audio": "bank-v1/104/104.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли, диспетчер. Пахнет у колодца на газоне, прибор показывает.",
+        "audio": "bank-v1/104/104.arrived.gas_street.3.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Утечка в колодце. Огородили, людей отвели, вскрываем крышку.",
+        "audio": "bank-v1/104/104.working.gas_street.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Колодец загерметизировали, замер вокруг чистый. Закончили, уезжаем.",
+        "audio": "bank-v1/104/104.completed.gas_street.2.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Бараклавский проспект, 12.",
+        "audio": "bank-v6/104/104.readback.b5485872.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял поправку, спасибо, чуть не уехали не туда.",
+            "audio": "bank-v1/104/104.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/104/104.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/104/104.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Подъезд какой? Дом длинный, не угадаем.",
+        "audio": "bank-v1/104/104.clarify.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Первый подъезд, колодец на газоне рядом"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните на месте"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, теперь найдём.",
+            "audio": "bank-v1/104/104.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, будем искать сами, это займёт время.",
+            "audio": "bank-v1/104/104.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/104/104.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Подъезд какой? Дом длинный, не угадаем.",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

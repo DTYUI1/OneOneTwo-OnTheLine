@@ -2,6 +2,7 @@
 // делит один ответ между компонентами и не дёргает сервер повторно.
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../shared/api";
+import { checksPending } from "../../shared/aiProgress";
 
 export function useSessions() {
   return useQuery({
@@ -23,6 +24,14 @@ export function useSession(sessionId: string) {
       });
       if (!data) throw new Error(error?.message ?? "Занятие недоступно.");
       return data;
+    },
+    refetchInterval: (query) => {
+      const preparation = query.state.data?.ai_preparation;
+      return query.state.data?.start_pending ||
+        (preparation &&
+          !["ready", "failed", "cancelled"].includes(preparation.state))
+        ? 1500
+        : false;
     },
   });
 }
@@ -79,6 +88,32 @@ export function useScenarios() {
   });
 }
 
+/** Общий с обучаемым ассортимент. Полный список студии и истории не ограничиваем. */
+export function useHandoutCatalog() {
+  return useQuery({
+    queryKey: ["scenarios", "practice-catalog"],
+    queryFn: async () => {
+      const { data, error } = await api.GET("/practice/catalog");
+      if (!data)
+        throw new Error(error?.message ?? "Каталог сценариев недоступен.");
+      return data;
+    },
+  });
+}
+
+/** Сценарии, у которых бригада докладывает до завершающего статуса. */
+export function usePlayableScenarios() {
+  return useQuery({
+    // Под ключом сценариев: правка или утверждение сценария обновляет и этот список.
+    queryKey: ["scenarios", "playable"],
+    queryFn: async () => {
+      const { data, error } = await api.GET("/scenarios/playable");
+      if (!data) throw new Error(error?.message ?? "Сценарии недоступны.");
+      return new Set(data.scenario_ids);
+    },
+  });
+}
+
 export function useCards() {
   return useQuery({
     queryKey: ["cards"],
@@ -97,10 +132,12 @@ export function useEvaluations() {
     queryKey: ["evaluations"],
     queryFn: async () => {
       const { data, error } = await api.GET("/evaluations");
-      if (!data) throw new Error(error?.message ?? "Вердикты недоступны.");
+      if (!data) throw new Error(error?.message ?? "Оценки недоступны.");
       return data;
     },
-    refetchInterval: 15_000,
+    // ИИ-проверка начинается без события — пока она идёт или ждёт, опрашиваем чаще.
+    refetchInterval: (query) =>
+      checksPending(query.state.data) ? 3_000 : 15_000,
   });
 }
 
@@ -113,18 +150,26 @@ export function useBatchAvailability(sessionId: string) {
   const batches = useQuery({
     queryKey: ["assignment-batches", sessionId],
     queryFn: async () => {
-      const { data, response } = await api.GET(
+      const { data, error, response } = await api.GET(
         "/sessions/{id}/assignment-batches",
         {
           params: { path: { id: sessionId } },
         },
       );
+      // 501 — старый сервер без адресных пачек. Любой иной сбой нельзя
+      // превращать в пустой список: отчёт тогда покажет ложный ноль заданий.
+      if (response.status !== 200 && response.status !== 501)
+        throw new Error(error?.message ?? "Пачки заданий недоступны.");
+      if (response.status === 200 && !data)
+        throw new Error("Список пачек заданий не получен.");
       return { status: response.status, batches: data ?? [] };
     },
     retry: false,
   });
   return {
     pending: batches.isPending,
+    isError: batches.isError,
+    refetch: batches.refetch,
     available: batches.data?.status === 200,
     batches: batches.data?.batches ?? [],
   };
@@ -178,5 +223,12 @@ export function useIssuedAssignments(sessionId: string) {
       })),
     ),
   ];
-  return { data, isPending: single.isPending || batch.pending };
+  return {
+    data,
+    isPending: single.isPending || batch.pending,
+    isError: single.isError || batch.isError,
+    refetch: async () => {
+      await Promise.all([single.refetch(), batch.refetch()]);
+    },
+  };
 }

@@ -23,6 +23,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.c01 import C01Input
+from app.api.notifications import notify
 from app.core.models import (
     Material,
     MaterialAssignmentReceipt,
@@ -38,11 +39,16 @@ EXTENSIONS = {
     "application/json": ".json",
     "application/xml": ".xml",
     "text/csv": ".csv",
+    "text/plain": ".txt",
 }
 
 
 class MaterialView(C01Input):
     contract_name = "Material"
+
+
+class SessionMaterialsView(C01Input):
+    contract_name = "SessionMaterials"
 
 
 class MaterialMetadata(C01Input):
@@ -68,7 +74,7 @@ def view(row: Material) -> MaterialView:
     )
 
 
-def detect(content: bytes) -> str | None:
+def detect(content: bytes, declared: str | None = None) -> str | None:
     """Фактический тип по содержимому; неизвестная/опасная структура — None."""
     if content.startswith(b"%PDF-"):
         return "application/pdf"
@@ -88,6 +94,8 @@ def detect(content: bytes) -> str | None:
         return None
     if "\x00" in text:
         return None
+    if declared == "text/plain":
+        return "text/plain"
     stripped = text.lstrip()
     if stripped.startswith("<"):
         # XML не исполняется: DOCTYPE/ENTITY отклоняются (XXE, «billion laughs»).
@@ -136,9 +144,14 @@ async def upload(request: Request, file: UploadFile, metadata: str) -> MaterialV
     meta = parse_metadata(metadata)
     declared = (file.content_type or "").split(";", 1)[0].strip().lower()
     content = await read_upload(file)
-    actual = detect(content)
+    actual = detect(content, declared)
     if declared not in EXTENSIONS or actual != declared:
-        raise HTTPException(415, "Поддерживаются PDF, DOCX, JSON, XML и CSV; тип не совпал.")
+        raise HTTPException(
+            415,
+            "Не удалось прочитать файл в указанном формате. "
+            "Допустимые форматы: PDF, DOCX, TXT, JSON, XML и CSV. "
+            "Текстовые файлы сохраняйте в кодировке UTF-8.",
+        )
     db: AsyncSession = request.state.db
     teacher = request.state.user.id
     previous_id, previous_version = meta["previous_id"], meta["previous_version"]
@@ -196,9 +209,63 @@ async def visible_to_trainee(db: AsyncSession, user_id: UUID):  # type: ignore[n
             & (SessionMaterial.version == Material.version),
         )
         .join(Participant, Participant.session_id == SessionMaterial.session_id)
-        .where(Participant.user_id == user_id, Material.purpose == "reference")
+        .join(Session, Session.id == SessionMaterial.session_id)
+        .where(
+            Participant.user_id == user_id,
+            Material.purpose == "reference",
+            Session.deleted_at.is_(None),
+        )
         .distinct()
     )
+
+
+async def list_session_materials(request: Request) -> list[SessionMaterialsView]:
+    db: AsyncSession = request.state.db
+    user = request.state.user
+    lessons_query = select(Session).where(Session.deleted_at.is_(None), Session.kind == "lesson")
+    if user.role == "teacher":
+        lessons_query = lessons_query.where(Session.teacher_id == user.id)
+    else:
+        lessons_query = lessons_query.join(Participant, Participant.session_id == Session.id).where(
+            Participant.user_id == user.id, Session.status.in_(("running", "finished"))
+        )
+    lessons = (
+        await db.scalars(lessons_query.order_by(Session.started_at.desc(), Session.id))
+    ).all()
+    if not lessons:
+        return []
+    assigned = (
+        await db.execute(
+            select(SessionMaterial.session_id, Material)
+            .join(
+                Material,
+                (Material.id == SessionMaterial.material_id)
+                & (Material.version == SessionMaterial.version),
+            )
+            .where(
+                SessionMaterial.session_id.in_([lesson.id for lesson in lessons]),
+                Material.purpose == "reference",
+            )
+            .order_by(Material.title, Material.id, Material.version)
+        )
+    ).all()
+    grouped: dict[UUID, list[dict[str, Any]]] = {}
+    for session_id, material in assigned:
+        grouped.setdefault(session_id, []).append(view(material).root)
+    return [
+        SessionMaterialsView(
+            {
+                "session_id": str(lesson.id),
+                "title": lesson.title,
+                "date": date.isoformat()
+                if (date := lesson.started_at or lesson.finished_at) is not None
+                else None,
+                "is_current": lesson.status == "running",
+                "materials": grouped.get(lesson.id, []),
+            }
+        )
+        for lesson in lessons
+    ]
 
 
 async def list_materials(request: Request) -> list[MaterialView]:
@@ -258,14 +325,14 @@ async def assign(
     )
     receipt = await db.get(MaterialAssignmentReceipt, (teacher, request_id))
     lesson = await db.get(Session, session_id, with_for_update=True)
-    if lesson is None or lesson.teacher_id != teacher:
+    if lesson is None or lesson.deleted_at is not None or lesson.teacher_id != teacher:
         raise HTTPException(404, "Занятие не найдено.")
     if receipt is not None:
         if receipt.session_id != session_id or receipt.body != value:
             raise HTTPException(409, "request_id уже использован для другого назначения.")
         return [MaterialView(item) for item in receipt.response]
-    if lesson.status != "draft":
-        raise HTTPException(409, "Материалы назначаются только до начала занятия.")
+    if lesson.status not in {"draft", "running"}:
+        raise HTTPException(409, "Занятие завершено: добавить материалы уже нельзя.")
     rows: list[Material] = []
     for item in value["materials"]:
         row = await db.scalar(
@@ -280,10 +347,14 @@ async def assign(
         if row.purpose != "reference":
             raise HTTPException(422, "Ученику назначается только справочный материал.")
         rows.append(row)
+    added = False
     for row in rows:
         exists = await db.get(SessionMaterial, (session_id, row.id, row.version))
         if exists is None:
+            added = True
             db.add(SessionMaterial(session_id=session_id, material_id=row.id, version=row.version))
+    if added and lesson.status == "running":
+        await notify(db, "session.materials_changed", session_id)
     response = [view(row) for row in rows]
     db.add(
         MaterialAssignmentReceipt(

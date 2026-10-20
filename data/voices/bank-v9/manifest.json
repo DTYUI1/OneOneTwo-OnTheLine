@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "note": "Банк фраз ДДС (scripts/voices/bank): ElevenLabs, голоса — scripts/voices/casting/voices.json, голос по телефону с подложкой (scripts/voices/phone.py). Набор неизменяем, следующая партия — следующий набор bank-vN. Пути относительно data/voices.",
+  "messages": [
+    {
+      "id": "101.refused.lift.6",
+      "service_id": "101",
+      "slot": "refused",
+      "path": "bank-v9/101/101.refused.lift.6.ogg",
+      "text": "Механик вывел женщину до нас, её забрала скорая. Наши работы не потребовались, расчёт возвращается.",
+      "voice": "elevenlabs eleven_v4 sRk0zCqhS2Cmv0bzx5wA (Феликс)",
+      "duration_ms": 7380,
+      "sha256": "236c4d513151f857dfb6ef6faa07e11a9b214c113ae5834a1805a39ea7f63386",
+      "media_type": "audio/ogg",
+      "needs": "103"
+    },
+    {
+      "id": "101.completed.smoke.8",
+      "service_id": "101",
+      "slot": "completed",
+      "path": "bank-v9/101/101.completed.smoke.8.ogg",
+      "text": "Очаг потушили, квартиру проветрили. Мужчину передали скорой, расчёт возвращается.",
+      "voice": "elevenlabs eleven_v4 sRk0zCqhS2Cmv0bzx5wA (Феликс)",
+      "duration_ms": 6420,
+      "sha256": "3dd73791b4c3390df56e2b33453a02ce2fc2c7cd99f534d273d7dadf2e8d62a7",
+      "media_type": "audio/ogg",
+      "needs": "103"
+    },
+    {
+      "id": "101.refused.traffic.6",
+      "service_id": "101",
+      "slot": "refused",
+      "path": "bank-v9/101/101.refused.traffic.6.ogg",
+      "text": "Водитель выбрался из машины сам, деблокировать никого не пришлось. Пассажирку забрала скорая, наши работы не потребовались.",
+      "voice": "elevenlabs eleven_v4 sRk0zCqhS2Cmv0bzx5wA (Феликс)",
+      "duration_ms": 8260,
+      "sha256": "5a72d19351516fff58f4623d768114dedaa210f000ce98e77928b2858d2e763a",
+      "media_type": "audio/ogg",
+      "needs": "103"
+    },
+    {
+      "id": "102.working.traffic.9",
+      "service_id": "102",
+      "slot": "working",
+      "path": "bank-v9/102/102.working.traffic.9.ogg",
+      "text": "Спасатели деблокировали водителя, дверь срезали. Регулируем движение вручную.",
+      "voice": "elevenlabs eleven_v4 rQOBu7YxCDxGiFdTm28w (Артём)",
+      "duration_ms": 5940,
+      "sha256": "7762a0f40866276824949cd7088b942ae8e44867ca6e27bf96dba7fa3474992c",
+      "media_type": "audio/ogg",
+      "needs": "101"
+    },
+    {
+      "id": "103.completed.injury.11",
+      "service_id": "103",
+      "slot": "completed",
+      "path": "bank-v9/103/103.completed.injury.11.ogg",
+      "text": "Полиция приехала, его опросили. От госпитализации отказался, отказ оформили, бригада свободна.",
+      "voice": "elevenlabs eleven_v4 d60rsXo2p0OwikDR5bS7 (Ольга)",
+      "duration_ms": 7780,
+      "sha256": "9c0812d28eaae4380652d64e823c3d122cecf7a98925f06da6c2998eaa864fe0",
+      "media_type": "audio/ogg",
+      "needs": "102"
+    },
+    {
+      "id": "103.completed.injury.12",
+      "service_id": "103",
+      "slot": "completed",
+      "path": "bank-v9/103/103.completed.injury.12.ogg",
+      "text": "Полиция приехала, помогли погрузить его в машину. С сотрясением госпитализируем, везём в травму.",
+      "voice": "elevenlabs eleven_v4 d60rsXo2p0OwikDR5bS7 (Ольга)",
+      "duration_ms": 7060,
+      "sha256": "60579a954da18326cee515ecff8547362c6a1186d2be21edc01c0581ef7ced62",
+      "media_type": "audio/ogg",
+      "needs": "102"
+    },
+    {
+      "id": "103.completed.lift.9",
+      "service_id": "103",
+      "slot": "completed",
+      "path": "bank-v9/103/103.completed.lift.9.ogg",
+      "text": "Спасатели открыли двери, вывели её. Давление снизили, от госпитализации отказалась, бригада свободна.",
+      "voice": "elevenlabs eleven_v4 d60rsXo2p0OwikDR5bS7 (Ольга)",
+      "duration_ms": 8180,
+      "sha256": "e5a2946ea61adfee5993a6551fb0ddeba4ab360ea3ba2686a432aabf8b9c9cc4",
+      "media_type": "audio/ogg",
+      "needs": "101"
+    },
+    {
+      "id": "103.completed.smoke.8",
+      "service_id": "103",
+      "slot": "completed",
+      "path": "bank-v9/103/103.completed.smoke.8.ogg",
+      "text": "Пожарные помогли спустить его к машине. Пострадавший госпитализирован, бригада свободна.",
+      "voice": "elevenlabs eleven_v4 d60rsXo2p0OwikDR5bS7 (Ольга)",
+      "duration_ms": 6500,
+      "sha256": "e0d76ac9584874f7f67b6a24ff059f6514ce93714d151e3b692d88269fd4cbe6",
+      "media_type": "audio/ogg",
+      "needs": "101"
+    },
+    {
+      "id": "103.completed.traffic.10",
+      "service_id": "103",
+      "slot": "completed",
+      "path": "bank-v9/103/103.completed.traffic.10.ogg",
+      "text": "Пожарные помогли переложить водителя на носилки. Обоих пострадавших госпитализировали, бригада свободна.",
+      "voice": "elevenlabs eleven_v4 d60rsXo2p0OwikDR5bS7 (Ольга)",
+      "duration_ms": 7460,
+      "sha256": "a1ca37f199bbc74d946c18173b17f14784c1bb71adcf7ff4b635ac5c07e02c42",
+      "media_type": "audio/ogg",
+      "needs": "101"
+    },
+    {
+      "id": "104.completed.gas_flat.9",
+      "service_id": "104",
+      "slot": "completed",
+      "path": "bank-v9/104/104.completed.gas_flat.9.ogg",
+      "text": "Пожарные вывели жильцов из подъезда. Утечку мы устранили, замер чистый, газ вернули.",
+      "voice": "elevenlabs eleven_v4 9AjtU6o19uipv7QL8dLL (Алексей)",
+      "duration_ms": 6740,
+      "sha256": "c3c422758f61b1eb5aacdfe31e6bc6437d30e164d4a69f47a484550e6b4d9dc0",
+      "media_type": "audio/ogg",
+      "needs": "101"
+    },
+    {
+      "id": "104.completed.pipe_basement.9",
+      "service_id": "104",
+      "slot": "completed",
+      "path": "bank-v9/104/104.completed.pipe_basement.9.ogg",
+      "text": "Наряд оцепил двор, людей к подвалу не пускают. Утечку на вводе устранили, газ в дом подали. Закончили.",
+      "voice": "elevenlabs eleven_v4 9AjtU6o19uipv7QL8dLL (Алексей)",
+      "duration_ms": 7940,
+      "sha256": "36563c13e73cf92f4676b5eae279471f2a22d206e6db012bb0710d1efa68450d",
+      "media_type": "audio/ogg",
+      "needs": "102"
+    },
+    {
+      "id": "104.completed.gas_flat.10",
+      "service_id": "104",
+      "slot": "completed",
+      "path": "bank-v9/104/104.completed.gas_flat.10.ogg",
+      "text": "Шланг заменили, газ подали, работы завершены. Напарника забрала скорая.",
+      "voice": "elevenlabs eleven_v4 9AjtU6o19uipv7QL8dLL (Алексей)",
+      "duration_ms": 6100,
+      "sha256": "06f9d774185a41aab197e10aea1efbeb74958636b4adf7f0c978c9e0be6e6e73",
+      "media_type": "audio/ogg",
+      "needs": "103"
+    },
+    {
+      "id": "MOSLIFT.refused.lift_ill.6",
+      "service_id": "MOSLIFT",
+      "slot": "refused",
+      "path": "bank-v9/MOSLIFT/MOSLIFT.refused.lift_ill.6.ogg",
+      "text": "Лифт обслуживает другая организация, работ не проводил. Скорая приехала, врачи говорят с пассажиркой через двери, ждём их механика.",
+      "voice": "elevenlabs eleven_v4 m2gtxNsYBaIRqPBA5vU5 (Олег)",
+      "duration_ms": 9380,
+      "sha256": "87a52d677162f4ca7f6676328e7253deb7ac59dbd5fea76a0630d0f51e7470cb",
+      "media_type": "audio/ogg",
+      "needs": "103"
+    }
+  ]
+}

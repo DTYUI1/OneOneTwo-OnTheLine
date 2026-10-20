@@ -1,0 +1,25 @@
+{
+  "service": "OFFICIAL_103",
+  "speaker": "official",
+  "gender": "female",
+  "character": "старший диспетчер Ковалёва, служба 103",
+  "incidents": {},
+  "about": "Новые редакции разговорных фраз дежурного (HQ-037, «скорая — больше формальности»): служба, должность, «Информация принята», «Уточните…», «Повторите, пожалуйста…». `replaces` — старая фраза книги phrases/, её запись остаётся; окно телефона (scripts/voices/bank/web.py) берёт новую вместо старой, когда у новой есть запись в наборах data/voices/bank-v*.",
+  "phrases": [
+    {"id": "OFFICIAL_103.accepted.any.7", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, бригаду назначаем.", "replaces": "OFFICIAL_103.accepted.any.1"},
+    {"id": "OFFICIAL_103.accepted.any.8", "slot": "accepted", "incidents": ["*"], "text": "Принято, вызов в работе.", "replaces": "OFFICIAL_103.accepted.any.3"},
+    {"id": "OFFICIAL_103.accepted.any.9", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, бригаду предупрежу.", "replaces": "OFFICIAL_103.accepted.any.4"},
+    {"id": "OFFICIAL_103.registered.any.7", "slot": "registered", "incidents": ["*"], "text": "Вызов принят, номер пятьдесят восемь.", "number": "58", "replaces": "OFFICIAL_103.registered.any.2"},
+    {"id": "OFFICIAL_103.registered.any.8", "slot": "registered", "incidents": ["*"], "text": "Вызов принят, бригаду назначаем. Номер регистрации триста девяносто.", "number": "390", "replaces": "OFFICIAL_103.registered.any.3"},
+    {"id": "OFFICIAL_103.ask_who.any.4", "slot": "ask_who", "incidents": ["*"], "text": "Уточните, какая служба передаёт вызов.", "replaces": "OFFICIAL_103.ask_who.any.3"},
+    {"id": "OFFICIAL_103.ask_address.any.5", "slot": "ask_address", "incidents": ["*"], "text": "Уточните подъезд, этаж и код домофона.", "replaces": "OFFICIAL_103.ask_address.any.2"},
+    {"id": "OFFICIAL_103.ask_what.any.4", "slot": "ask_what", "incidents": ["*"], "text": "Уточните повод к вызову.", "replaces": "OFFICIAL_103.ask_what.any.2"},
+    {"id": "OFFICIAL_103.ask_card.any.4", "slot": "ask_card", "incidents": ["*"], "text": "Продиктуйте номер карточки.", "replaces": "OFFICIAL_103.ask_card.any.1"},
+    {"id": "OFFICIAL_103.ask_victims.any.4", "slot": "ask_victims", "incidents": ["*"], "text": "Есть ли пострадавшие?", "replaces": "OFFICIAL_103.ask_victims.any.1"},
+    {"id": "OFFICIAL_103.ask_victims.any.5", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните состояние людей.", "replaces": "OFFICIAL_103.ask_victims.any.3"},
+    {"id": "OFFICIAL_103.end_call.any.5", "slot": "end_call", "incidents": ["*"], "text": "Принято. До свидания.", "replaces": "OFFICIAL_103.end_call.any.1"},
+    {"id": "OFFICIAL_103.end_call.any.6", "slot": "end_call", "incidents": ["*"], "text": "Спасибо, на связи.", "replaces": "OFFICIAL_103.end_call.any.3"},
+    {"id": "OFFICIAL_103.ask_address.any.6", "slot": "ask_address", "incidents": ["*"], "text": "Уточните, где находится человек: улица, дом.", "replaces": "OFFICIAL_103.ask_address.any.4"},
+    {"id": "OFFICIAL_103.ask_what.any.5", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, что случилось с человеком.", "replaces": "OFFICIAL_103.ask_what.any.1"}
+  ]
+}

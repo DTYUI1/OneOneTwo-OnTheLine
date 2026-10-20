@@ -11,9 +11,12 @@
     "address": 1,
     "call": 1,
     "spelling": 0.5,
-    "comment_keywords": 1
+    "comment_keywords": 1,
+    "brigade_work": 1
   },
   "parallel_cards": 1,
   "hints_level": 0,
-  "spelling_hints": false
+  "spelling_hints": false,
+  "voice_only": false,
+  "report_choice_factor": 0.5
 }

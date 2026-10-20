@@ -1,0 +1,90 @@
+{
+  "service": "GKH",
+  "speaker": "brigade",
+  "gender": "male",
+  "phrases": [
+    {
+      "id": "GKH.arrived.c04.arrival",
+      "slot": "arrived",
+      "incidents": [
+        "*"
+      ],
+      "text": "Бригада на месте, определяем место повреждения."
+    },
+    {
+      "id": "GKH.completed.c04.completion",
+      "slot": "completed",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повреждение устранено, подача восстановлена, работы завершены."
+    },
+    {
+      "id": "GKH.readback.06a34d84",
+      "slot": "readback",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю: Гировоградская улица, 224.",
+      "say": "Повторяю: Гировоградская улица, двести двадцать четыре."
+    },
+    {
+      "id": "GKH.readback.8c1e0e0e",
+      "slot": "readback",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю: Кировоградская улица, 22.",
+      "say": "Повторяю: Кировоградская улица, двадцать два."
+    },
+    {
+      "id": "GKH.readback.c0600990",
+      "slot": "readback",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повторяю: Киловоградская улица, 22.",
+      "say": "Повторяю: Киловоградская улица, двадцать два."
+    },
+    {
+      "id": "GKH.refused.c04.complication",
+      "slot": "refused",
+      "incidents": [
+        "*"
+      ],
+      "text": "Повреждение вне зоны ответственности бригады, работы прекращаем."
+    },
+    {
+      "id": "GKH.responding.c04.departure",
+      "slot": "responding",
+      "incidents": [
+        "*"
+      ],
+      "text": "Заявка принята, аварийная бригада направлена."
+    },
+    {
+      "id": "GKH.working.c04.works",
+      "slot": "working",
+      "incidents": [
+        "*"
+      ],
+      "text": "Участок отключён, ведём аварийные работы."
+    },
+    {
+      "id": "GKH.wrong_place.moved",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время."
+    },
+    {
+      "id": "GKH.wrong_place.moved2",
+      "slot": "wrong_place",
+      "incidents": [
+        "*"
+      ],
+      "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли."
+    }
+  ]
+}

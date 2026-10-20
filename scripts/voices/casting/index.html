@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Голоса ДДС</title>
+<style>
+  :root { --bg: #f6f5f2; --card: #fff; --ink: #1d1d1b; --muted: #77756f; --line: #e3e1db; --accent: #2f5d8a; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #171716; --card: #21211f; --ink: #ecebe6; --muted: #9a988f; --line: #33322f; --accent: #8fb5dc; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 20px; }
+  .line { display: flex; gap: 8px; align-items: center; margin-bottom: 28px; color: var(--muted); }
+  .line button { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 6px 12px; font: inherit; cursor: pointer; }
+  .line button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+  section { margin-bottom: 36px; }
+  h2 { font-size: 20px; margin: 0; }
+  .who { color: var(--muted); margin: 2px 0 12px; }
+  .voice { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .voice.chosen { border-color: var(--accent); }
+  .head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .name { font-weight: 600; }
+  .note { color: var(--muted); }
+  .head label { color: var(--muted); white-space: nowrap; cursor: pointer; }
+  .phrases { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+  .phrases button { text-align: left; border: 0; background: none; color: var(--ink); font: inherit; padding: 4px 0; cursor: pointer; }
+  .phrases button::before { content: "▶"; color: var(--accent); margin-right: 10px; font-size: 12px; }
+  .phrases button.playing { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; }
+  .empty { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Голоса ДДС</h1>
+  <p class="lead">Кто докладывает диспетчеру. Послушайте, отметьте один голос на службу — внизу соберётся строка для сборки озвучки.</p>
+  <div class="line">Слушать
+    <button id="phone" aria-pressed="true">в трубке</button>
+    <button id="clean" aria-pressed="false">чисто</button>
+  </div>
+  <div id="roles"><p class="empty">Загружаю…</p></div>
+  <section>
+    <h2>Выбор</h2>
+    <p class="who">Вставить в окружение перед <code>scenario_generate.sh</code>.</p>
+    <pre id="env"></pre>
+  </section>
+</main>
+<script>
+const STORE = "casting-choice";
+let choice = {};
+try { choice = JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) {}
+let model = "", roles = [], phone = true, ctx, current;
+
+// Телефонная полоса, как в phone.py: 300–3400 Гц и сжатие.
+function route(audio) {
+  ctx = ctx || new AudioContext();
+  const source = ctx.createMediaElementSource(audio);
+  const high = new BiquadFilterNode(ctx, { type: "highpass", frequency: 300 });
+  const low = new BiquadFilterNode(ctx, { type: "lowpass", frequency: 3400 });
+  const squeeze = new DynamicsCompressorNode(ctx, { threshold: -24, ratio: 6 });
+  source.connect(high).connect(low).connect(squeeze).connect(ctx.destination);
+}
+
+function play(button, src) {
+  if (current) { current.pause(); document.querySelectorAll(".playing").forEach(b => b.classList.remove("playing")); }
+  const audio = new Audio(src);
+  if (phone) route(audio);
+  current = audio;
+  button.classList.add("playing");
+  audio.onended = () => button.classList.remove("playing");
+  if (ctx) ctx.resume();
+  audio.play();
+}
+
+function render() {
+  const box = document.getElementById("roles");
+  box.replaceChildren();
+  for (const role of roles) {
+    const section = document.createElement("section");
+    section.innerHTML = `<h2></h2><p class="who"></p>`;
+    section.querySelector("h2").textContent = role.title;
+    section.querySelector(".who").textContent = role.who;
+    for (const voice of role.voices) {
+      const card = document.createElement("div");
+      card.className = "voice" + (choice[role.key] === voice.voice_id ? " chosen" : "");
+      card.innerHTML = `<div class="head"><div><span class="name"></span> <span class="note"></span></div>
+        <label><input type="radio"> беру</label></div><div class="phrases"></div>`;
+      card.querySelector(".name").textContent = voice.name;
+      card.querySelector(".note").textContent = voice.note ? "— " + voice.note : "";
+      const radio = card.querySelector("input");
+      radio.name = role.key;
+      radio.checked = choice[role.key] === voice.voice_id;
+      radio.onchange = () => {
+        choice[role.key] = voice.voice_id;
+        try { localStorage.setItem(STORE, JSON.stringify(choice)); } catch (e) {}
+        render();
+      };
+      for (const clip of voice.clips) {
+        const b = document.createElement("button");
+        b.textContent = clip.text;
+        b.onclick = () => play(b, clip.src);
+        card.querySelector(".phrases").append(b);
+      }
+      section.append(card);
+    }
+    box.append(section);
+  }
+  const lines = [`ELEVENLABS_MODEL=${model}`];
+  for (const role of roles) {
+    const voice = role.voices.find(v => v.voice_id === choice[role.key]);
+    if (!voice) lines.push(`# ${role.title}: не выбран`);
+    else if (role.env) lines.push(`ELEVENLABS_VOICE_${role.env}=${voice.voice_id}  # ${voice.name}`);
+    else lines.push(`# ${role.title}: ${voice.voice_id} (${voice.name}) — сборка их пока не берёт`);
+  }
+  document.getElementById("env").textContent = lines.join("\n");
+}
+
+function mode(on) {
+  phone = on;
+  document.getElementById("phone").setAttribute("aria-pressed", on);
+  document.getElementById("clean").setAttribute("aria-pressed", !on);
+}
+document.getElementById("phone").onclick = () => mode(true);
+document.getElementById("clean").onclick = () => mode(false);
+
+fetch("out/manifest.json")
+  .then(r => r.json())
+  .then(m => { model = m.model; roles = m.roles; render(); })
+  .catch(() => {
+    document.getElementById("roles").innerHTML =
+      '<p class="empty">Записей пока нет: python3 scripts/voices/casting/casting.py synth --go, затем serve.</p>';
+  });
+</script>
+</body>
+</html>

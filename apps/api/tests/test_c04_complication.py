@@ -1,24 +1,23 @@
 """VAR-01: доклад-осложнение уровня 3 — обосновывает статус «Отказ от выполнения работ»."""
 
 import asyncio
-import os
-import subprocess
-import sys
 from datetime import timedelta
 from types import SimpleNamespace
-from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
+from uuid import UUID, uuid4
 
 import pytest
 from app.api.database import create_database_app
+from app.api.sessions.practice import audio_scenario_id
 from app.api.training.content import store_plan
-from app.core.config import ROOT
 from app.core.db import Database
-from app.core.models import Call, Evaluation, Scenario, User
+from app.core.models import BrigadeBriefing, Call, Evaluation, Scenario, User
 from app.worker.training import TrainingScheduler
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
 from . import test_c03_sessions as c03
+from .briefing_helpers import briefing_payload
+from .test_c04_completion import seed_training
 from .test_c04_training import event, playback
 from .test_lifecycle import login, run_db
 
@@ -34,29 +33,11 @@ REPORTS = [
 FULL_FLOW = ["received", "accepted", "responding", "arrived", "working", "refused"]
 
 
-def seed_training(database_url: str) -> None:
-    env = {
-        **os.environ,
-        "DATABASE_URL": database_url,
-        "API_MODE": "mock",
-        "PYTHONIOENCODING": "utf-8",
-    }
-    result = subprocess.run(
-        [sys.executable, "-m", "app.seed.training"],
-        cwd=ROOT,
-        env=env,
-        capture_output=True,
-        encoding="utf-8",
-        timeout=30,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-
-
 def test_audio_demo_v3_is_level_three_with_refused_expected_flow(database_url):
     seed_training(database_url)
 
     async def check(db):
-        scenario = await db.get(Scenario, uuid5(NAMESPACE_URL, "arm112:c04:audio-demo-v3:102"))
+        scenario = await db.get(Scenario, audio_scenario_id("audio-demo-v3", "102"))
         assert scenario is not None
         assert scenario.level == 3
         assert scenario.reference["expected_flow"] == FULL_FLOW
@@ -80,6 +61,7 @@ def call_brigade(case):
         {"call_id": call_id, "call_target_id": case.target["id"], "brigade_id": case.brigade["id"]},
     )
     send(case, "call_answer", {"call_id": call_id})
+    send(case, "brigade_briefing", briefing_payload(case.card, call_id))
     return call_id
 
 
@@ -155,7 +137,11 @@ def deliver_until(case, call_id, seconds):
     """Выдать доклады, чей срок наступил за `seconds` с ответа бригады."""
 
     async def answered(db):
-        return (await db.get(Call, UUID(call_id))).answered_at
+        # Отсчёт докладов — от вводной бригаде в этом разговоре (GP-05).
+        briefed = await db.scalar(
+            select(BrigadeBriefing.briefed_at).where(BrigadeBriefing.call_id == UUID(call_id))
+        )
+        return briefed or (await db.get(Call, UUID(call_id))).answered_at
 
     answered_at = run_db(case.url, answered)
 

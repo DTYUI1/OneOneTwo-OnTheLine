@@ -1,10 +1,16 @@
 // Лента вердиктов ИИ с разбором по критериям и решением преподавателя.
 // Приоритет преподавателя над ИИ — требование заказчика (Q&A Q3, Q13):
 // «согласен» фиксируется так же, как «не согласен», и обе записи идут в журнал.
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, csrfToken } from "../../shared/api";
 import { Replay } from "../replay";
+import { checkLabel } from "../../shared/aiProgress";
+import { analysisRevision, useAttemptAnalysis } from "../../arm/useAnalysis";
+import {
+  criterionScoreLabel,
+  scoreSourceLabel,
+} from "../../arm/results/debrief";
 import {
   criterionLabel,
   evaluationNote,
@@ -19,21 +25,14 @@ import {
   type Session,
 } from "./model";
 import { useCards, useEvaluations, useUsers } from "./useConsoleData";
+import {
+  AGREE_REASON,
+  REASONS,
+  overrideDraft,
+  type Decision,
+  type ReasonChoice,
+} from "./overrideDraft";
 import styles from "./Console.module.css";
-
-/**
- * Решение — одно из двух, причина несогласия — отдельно. Раньше причина («согласен» /
- * «не согласен») и кнопки «Согласен» / «Не согласен» дублировали друг друга и могли
- * противоречить. «Другое» открывает поле для своего текста.
- */
-const AGREE_REASON = "Согласен с оценкой системы";
-const REASONS = {
-  disagree: "Не согласен с системой",
-  miscalculated: "Система неверно рассчитала",
-  other: "Другое",
-} as const;
-type ReasonChoice = keyof typeof REASONS;
-type Decision = "agree" | "disagree";
 
 function VerdictCard({
   evaluation,
@@ -54,6 +53,37 @@ function VerdictCard({
   const [done, setDone] = useState("");
   const [replaying, setReplaying] = useState(false);
   const note = evaluationNote(evaluation);
+  const analysis = useAttemptAnalysis({
+    cardId: evaluation.card_id,
+    evaluationId: evaluation.id,
+    evaluationVersion: evaluation.version,
+    evaluationRevision: analysisRevision(evaluation),
+    effectiveTotal: evaluation.total,
+  });
+  const details =
+    analysis.isFetching || analysis.isError ? null : analysis.data?.evaluation;
+  const current =
+    details?.evaluation_id === evaluation.id &&
+    details.evaluation_version === evaluation.version &&
+    Math.abs(details.effective_total - evaluation.total) <= 0.00001
+      ? details
+      : null;
+  const hydratedOverrideId = useRef<string | null>(null);
+  useEffect(() => {
+    const saved = current?.effective_override;
+    if (!saved || hydratedOverrideId.current === saved.override_id) return;
+    hydratedOverrideId.current = saved.override_id;
+    const draft = overrideDraft(saved);
+    setDecision(draft.decision);
+    setChoice(draft.choice);
+    setOtherReason(draft.otherReason);
+    setComment(draft.comment);
+    setNewTotal(draft.newTotal);
+  }, [current]);
+  const formReady =
+    current !== null &&
+    (!current.effective_override ||
+      hydratedOverrideId.current === current.effective_override.override_id);
 
   const override = useMutation({
     mutationFn: async () => {
@@ -92,6 +122,10 @@ function VerdictCard({
       );
       await queries.invalidateQueries({ queryKey: ["evaluations"] });
       await queries.invalidateQueries({ queryKey: ["report"] });
+      await queries.invalidateQueries({ queryKey: ["analytics"] });
+      await queries.invalidateQueries({
+        queryKey: ["analysis", evaluation.card_id],
+      });
       await queries.invalidateQueries({
         queryKey: ["replay", evaluation.card_id],
       });
@@ -115,13 +149,55 @@ function VerdictCard({
               : `карточка ${evaluation.card_id.slice(0, 8)}`}
           </span>
         </div>
-        <span className={styles.chip}>
-          {evaluation.status === "complete"
-            ? "оценка готова"
-            : "предварительно"}
+        <span
+          className={[
+            styles.chip,
+            evaluation.ai_check?.state === "running" ? styles.chipBusy : "",
+            evaluation.ai_check?.state === "failed" ? styles.chipFailed : "",
+          ].join(" ")}
+        >
+          {checkLabel(evaluation)}
         </span>
       </div>
       {note && <p className={styles.note}>{note}</p>}
+      {current ? (
+        <div className={styles.note}>
+          <strong>Откуда балл:</strong>{" "}
+          {scoreSourceLabel(
+            current.automatic_total,
+            current.effective_total,
+            current.effective_override?.decision ?? null,
+          )}
+          {current.effective_override?.reason && (
+            <p>
+              <strong>Причина решения:</strong>{" "}
+              {current.effective_override.reason}
+            </p>
+          )}
+        </div>
+      ) : (
+        <p className={styles.note}>
+          Источник балла и решение преподавателя загружаются.
+          {analysis.isError && (
+            <>
+              {" "}
+              <button
+                type="button"
+                className={styles.plain}
+                onClick={() => void analysis.refetch()}
+              >
+                Повторить
+              </button>
+            </>
+          )}
+        </p>
+      )}
+      {current?.status === "partial" && (
+        <p className={styles.warning}>
+          Проверка ещё не закончена. Если подтвердить балл сейчас, после
+          завершения ИИ-проверки решение нужно будет пересмотреть.
+        </p>
+      )}
 
       {weakestFirst(evaluation).length === 0 ? (
         <p>Разбора по критериям нет: оценщик не вернул ни одного критерия.</p>
@@ -139,11 +215,19 @@ function VerdictCard({
             {weakestFirst(evaluation).map((criterion) => (
               <tr
                 key={criterion.key}
-                className={criterion.critical ? styles.critical : undefined}
+                className={
+                  criterion.weight !== 0 && criterion.critical
+                    ? styles.critical
+                    : undefined
+                }
               >
                 <td>{criterionLabel(criterion.key)}</td>
                 <td>
-                  {hasScore(evaluation) ? formatScore(criterion.score) : "—"}
+                  {hasScore(evaluation)
+                    ? criterion.weight === 0
+                      ? criterionScoreLabel(criterion)
+                      : formatScore(criterion.score)
+                    : "—"}
                 </td>
                 <td>{criterion.weight}</td>
                 <td>
@@ -238,10 +322,12 @@ function VerdictCard({
         <button
           type="button"
           className={styles.primary}
-          disabled={override.isPending}
+          disabled={override.isPending || !formReady}
           onClick={() => override.mutate()}
         >
-          Сохранить решение
+          {current?.effective_override
+            ? "Обновить решение"
+            : "Сохранить решение"}
         </button>
       </div>
       {error && <p role="alert">{error}</p>}
@@ -274,18 +360,19 @@ export function VerdictFeed({ session }: { session: Session }) {
     return seat ? `АРМ ${seat} · ${name}` : name;
   };
 
-  if (evaluations.isPending || cards.isPending)
-    return <p className={styles.placeholder}>Загружаем вердикты…</p>;
-  if (evaluations.isError || cards.isError)
+  if (evaluations.isPending || cards.isPending || users.isPending)
+    return <p className={styles.placeholder}>Загружаем оценки…</p>;
+  if (evaluations.isError || cards.isError || users.isError)
     return (
       <p role="alert" className={styles.placeholder}>
-        Не удалось загрузить вердикты.{" "}
+        Не удалось загрузить оценки.{" "}
         <button
           type="button"
           className={styles.plain}
           onClick={() => {
             void evaluations.refetch();
             void cards.refetch();
+            void users.refetch();
           }}
         >
           Повторить
@@ -295,13 +382,16 @@ export function VerdictFeed({ session }: { session: Session }) {
   if (rows.length === 0)
     return (
       <p className={styles.placeholder}>
-        Вердиктов по этому занятию пока нет: они появляются, когда обучаемый
+        Оценок по этому занятию пока нет: они появляются, когда обучаемый
         закрывает карточку.
       </p>
     );
 
   return (
-    <ul className={styles.verdicts} aria-label="Вердикты ИИ">
+    <ul
+      className={`${styles.verdicts} ${styles.verdictReadable}`}
+      aria-label="Оценки и решения преподавателя"
+    >
       {rows.map(({ evaluation, card }) => (
         <VerdictCard
           key={evaluation.id}

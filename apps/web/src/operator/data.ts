@@ -39,7 +39,11 @@ export interface Distractor {
 export interface CallScenario {
   readonly id: string;
   readonly title: string;
-  readonly caller: { readonly name: string; readonly phone: string };
+  readonly caller: {
+    readonly name: string;
+    readonly phone: string;
+    readonly status: string;
+  };
   /** Первая реплика заявителя — звучит сама, когда вызов принят. */
   readonly opening?: string;
   /** Лишние вопросы среди вариантов шагов; ответ на них знает сервер. */
@@ -179,7 +183,11 @@ export function compactData(
       }) => ({
         id,
         title,
-        caller: { name: caller.name, phone: caller.phone },
+        caller: {
+          name: caller.name,
+          phone: caller.phone,
+          status: caller.status,
+        },
         ...(opening ? { opening } : {}),
         questionnaire_id,
         distractors: distractors.map(({ key, step, text }) => ({

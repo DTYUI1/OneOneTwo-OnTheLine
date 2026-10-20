@@ -484,6 +484,18 @@
           "items": {
             "type": "string"
           }
+        },
+        "remarks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CriterionRemark"
+          },
+          "description": "Замечания разбора (TC-10); нет поля — оценка записана до TC-10."
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Фактический вес критерия; 0 — без вклада в итог. При отсутствии используется вес из настроек занятия."
         }
       },
       "required": [
@@ -543,6 +555,13 @@
             },
             "seed": {
               "type": "integer"
+            },
+            "generation_policy": {
+              "type": "string",
+              "enum": [
+                "after_lessons",
+                "now"
+              ]
             }
           },
           "required": [
@@ -612,6 +631,9 @@
             "voice_profile",
             "phrase_id"
           ]
+        },
+        {
+          "$ref": "#/$defs/AIPreparationJobPayload"
         }
       ]
     },
@@ -627,6 +649,13 @@
                 "type": "string",
                 "format": "uuid"
               }
+            },
+            "fallback_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "complete": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -873,6 +902,285 @@
         "scenario_ids",
         "pack_id",
         "warnings"
+      ]
+    },
+    "StatusDeniedPayload": {
+      "description": "payload служебной записи журнала card_events с type `status_denied` (GP-26): статус без доклада бригады, который сервер отклонил 409 report_required. Пишет только сервер, POST /cards/{id}/events такой тип не принимает (его нет в card-event.schema.json).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "rejected",
+            "responding",
+            "arrived",
+            "working",
+            "refused",
+            "completed"
+          ],
+          "description": "Статус, который пытался поставить обучаемый."
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "report_required"
+          ],
+          "description": "Код отказа сервера."
+        },
+        "message": {
+          "type": "string",
+          "description": "Причина отказа, как её получил обучаемый."
+        },
+        "denied_event_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "client_event_id отклонённого status_change."
+        }
+      },
+      "required": [
+        "state",
+        "code",
+        "message",
+        "denied_event_id"
+      ]
+    },
+    "AIPreparationJobPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pack_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "level": {
+          "type": "integer"
+        },
+        "service_id": {
+          "type": "string"
+        },
+        "seed": {
+          "type": "integer"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "auto_admit": {
+          "const": true
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 92,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "participant_id",
+              "service_id",
+              "level",
+              "weight",
+              "seed",
+              "order"
+            ],
+            "properties": {
+              "participant_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "service_id": {
+                "type": "string"
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              },
+              "weight": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              },
+              "seed": {
+                "type": "integer"
+              },
+              "order": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              }
+            }
+          }
+        },
+        "generation_policy": {
+          "type": "string",
+          "enum": [
+            "after_lessons",
+            "now"
+          ]
+        }
+      },
+      "required": [
+        "pack_id",
+        "count",
+        "level",
+        "service_id",
+        "seed",
+        "session_id",
+        "auto_admit",
+        "items"
+      ]
+    },
+    "CriterionRemark": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Замечание разбора (TC-10, contracts/evalcore.md «Замечания разбора»): что не так, цитата обучаемого, последствие в мире вместо минуса, страница памятки ДДС и готовое «Повторите: …». Тексты — по-русски, для обучаемого.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Что не так — одной фразой."
+        },
+        "quote": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Фрагмент сказанного или написанного обучаемым (комментарий к статусу, ответ бригаде голосом, распознанный доклад): ±45 символов вокруг найденного, поиск без регистра, «ё» и латинских двойников; null — цитаты нет."
+        },
+        "consequence": {
+          "type": "string",
+          "description": "Последствие в мире вместо минуса: «Служба не оповещена — фактически не выехала»."
+        },
+        "memo_page": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Страница памятки ДДС «Работа на АРМ-112», где это правило."
+        },
+        "repeat": {
+          "type": "string",
+          "description": "Что сделать в следующий раз — готовое «Повторите: …»."
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "error",
+            "notice",
+            "data"
+          ],
+          "description": "error — ошибка, снижает балл; notice — замечание без снижения балла (статусы подряд быстрее порога — «карточку не читали»); data — вопрос к данным: ошибка в данных сценария, обучаемому не вменяется и балл не снижает."
+        }
+      },
+      "required": [
+        "text",
+        "quote",
+        "consequence",
+        "memo_page",
+        "repeat",
+        "kind"
+      ]
+    },
+    "MemoryCheckPayload": {
+      "description": "payload служебной записи журнала card_events с type `memory_check` (HQ-033): проверка памяти финальной смены показана. Пишет только сервер (POST /sessions/{id}/memory-check) в журнал первой карточки смены; верные ответы — на момент показа. Обучаемому журнал карточки (GET /cards/{id}/events) отдаёт запись без `answer` и `why` в вопросах, пока нет записи `memory_check_answer`. POST /cards/{id}/events такой тип не принимает (его нет в card-event.schema.json).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "questions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Вопрос проверки памяти: варианты ответа; при `multiple` — выбрать все верные.",
+            "properties": {
+              "key": {
+                "type": "string",
+                "enum": [
+                  "free_brigades",
+                  "on_scene",
+                  "unreported"
+                ],
+                "description": "free_brigades — сколько бригад своей службы свободно; on_scene — какие бригады на месте (доклад о прибытии или о работах услышан, о завершении — нет); unreported — по каким карточкам услышанный доклад бригады ещё не отмечен статусом."
+              },
+              "text": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "multiple": {
+                "type": "boolean"
+              },
+              "answer": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Верные варианты на момент показа."
+              },
+              "why": {
+                "type": "string",
+                "description": "Пояснение после ответа: откуда верный ответ."
+              }
+            },
+            "required": [
+              "key",
+              "text",
+              "options",
+              "multiple",
+              "answer",
+              "why"
+            ]
+          }
+        }
+      },
+      "required": [
+        "questions"
+      ]
+    },
+    "MemoryCheckAnswerPayload": {
+      "description": "payload служебной записи журнала card_events с type `memory_check_answer` (HQ-033): ответы на проверку памяти и сколько верно. Пишет только сервер (POST /sessions/{id}/memory-check/answers) в журнал той же карточки, что `memory_check`; разбор и лента преподавателя показывают «Проверка памяти: N из 3».",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "answers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "answers",
+        "score",
+        "total"
       ]
     }
   }

@@ -1,0 +1,290 @@
+{
+  "format": 2,
+  "code": "pipe-basement-104-2",
+  "version": 3,
+  "replaces": [
+    "1c1d0b46-eeb1-5126-a3c2-5d751948d375"
+  ],
+  "title": "Прорыв трубы в подвале газифицированного дома",
+  "service_id": "104",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "14020300",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: прорыв трубы в подвале газифицированного дома, улица Пришвина, 17. Бригада повторяет адрес с ошибкой («Пришвина, семь») — поправить; по пути спрашивает подъезд — вход в подвал указан в карточке. На месте газопровод не задет, работ нет: «Отказ от выполнения работ» с причиной. Течь при этом осталась, а по карточке выезжал только Мосгаз — о том, что нужна служба водоканала, сообщить в 112 (памятка ДДС, с. 32). Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Бригада приехала на улицу Пришвина, 17: подвал залит по колено, стоит пар. Газопровод проходит в другой части подвала, вода его не касается — работ для Мосгаза не было. Течь — дело аварийной службы водоканала; по карточке выезжал только Мосгаз, поэтому о ней сообщили в 112.",
+    "late": "Карточку приняли позже норматива. Пока не ясно, задета ли газовая труба, кипяток в подвале — риск для газопровода, а вода всё это время заливала подвал.",
+    "status": "Работ у газовой бригады не было: карточку закрывают «Отказом от выполнения работ» с причиной. Течь при этом осталась — о том, что нужна служба водоканала, сообщают в 112 (памятка ДДС, с. 32)."
+  },
+  "card": {
+    "caller_name": "Кузнецов Павел Николаевич",
+    "phone_aon": "+79000000715",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "В подвале жилого дома прорвало трубу горячей воды, подвал заливает, идёт пар. В подвале проходит газовая труба. Дом газифицирован. Вход в подвал со двора, у четвёртого подъезда.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Течь (прорыв трубы) в квартире (подъезде подвале)",
+    "service_ids": [
+      "104"
+    ],
+    "number": "70005502",
+    "incident_type_code": "14020300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "refused"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "СВАО",
+      "district": "Бибирево",
+      "street": "улица Пришвина",
+      "house": "17",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "В подвале жилого дома прорвало трубу горячей воды, подвал заливает, идёт пар. В подвале проходит газовая труба. Дом газифицирован. Вход в подвал со двора, у четвёртого подъезда. Газопровод проходит в другой части подвала, вода его не касается, работы не проводили, нужна аварийная служба водоканала."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Понял, бригада выехала.",
+        "audio": "bank-v1/104/104.responding.any.2.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. Подвал залит по колено, пар стоит, газовую трубу не видно.",
+        "audio": "bank-v1/104/104.arrived.pipe_basement.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Газопровод проходит в другой части подвала, вода его не касается, работы не проводили, нужна аварийная служба водоканала.",
+        "audio": "bank-v2/104/104.refused.pipe_basement.4.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "refused",
+      "task_change": {
+        "kind": "other_service",
+        "label": "Течь — не газ, нужна аварийная служба водоканала, а по карточке выезжал только Мосгаз: сообщить в 112 (памятка ДДС, с. 32)",
+        "expected_call": {
+          "required": true,
+          "service_id": "112",
+          "phone_ext": "112",
+          "within_s": 60
+        },
+        "expected_comment": "В подвале жилого дома прорвало трубу горячей воды, подвал заливает, идёт пар. В подвале проходит газовая труба. Дом газифицирован. Вход в подвал со двора, у четвёртого подъезда. Газопровод проходит в другой части подвала, вода его не касается, работы не проводили, нужна аварийная служба водоканала — сообщено в 112.",
+        "comment_keywords": [
+          "водоканал / ЖКХ",
+          "112"
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Улица Пришвина, семь, выезжаем!",
+        "audio": "bank-v4/104/104.readback_trap.f2436f20.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: улица Пришвина, 17"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял поправку, разворачиваемся.",
+            "audio": "bank-v1/104/104.readback_fixed.any.1.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/104/104.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/104/104.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 8,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Подъезд какой? Дом длинный, не угадаем.",
+        "audio": "bank-v1/104/104.clarify.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "fourth",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fourth",
+          "label": "Вход в подвал у четвёртого подъезда"
+        },
+        {
+          "key": "first",
+          "label": "У первого подъезда"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, найдёте на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, так быстрее.",
+            "audio": "bank-v1/104/104.clarify_ok.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, будем искать сами, это займёт время.",
+            "audio": "bank-v1/104/104.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/104/104.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада спросила подъезд — вход в подвал указан в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

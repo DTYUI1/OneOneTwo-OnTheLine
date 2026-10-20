@@ -1,0 +1,379 @@
+{
+  "format": 2,
+  "code": "traffic-blocked-102-1",
+  "version": 9,
+  "replaces": [
+    "a794e67e-b037-5129-8341-026ca6f8384b"
+  ],
+  "title": "ДТП, водитель зажат в машине",
+  "service_id": "102",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "2021700",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: ДТП с зажатым водителем, Каширское шоссе, 26; карточка пришла только в 102. По пути экипаж просит телефон заявителя — он в карточке. На месте водитель зажат — экипаж просит спасателей; на работах водителю хуже — экипаж просит скорую. Обе службы вызывает диспетчер (101, 103 или 112). Вводная преподавателя — тревога: сотрудника сбила машина. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Экипаж прибыл на Каширское шоссе, 26: водителя зажало в салоне, дверь заклинило. По просьбе экипажа вызвали спасателей и скорую. Пострадавшего увезла скорая, виновника доставили на освидетельствование; пока шли работы, экипаж регулировал движение.",
+    "late": "Карточку приняли позже норматива, и экипаж выехал позже. Всё это время водитель оставался зажатым в машине, а из-под капота шёл пар."
+  },
+  "card": {
+    "caller_name": "Тимофеев Олег Викторович",
+    "phone_aon": "+79000000713",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "ДТП с заблокированными",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70005311",
+    "incident_type_code": "2021700"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Москворечье-Сабурово",
+      "street": "Каширское шоссе",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Столкнулись два легковых автомобиля. В одном зажат водитель, в сознании, выйти не может. Пассажирка второго автомобиля жалуется на боль в шее. Из-под капота идёт пар. Пострадавшего увезла скорая, виновника доставили на освидетельствование. Освободились."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, экипаж ДПС направлен.",
+        "audio": "bank-v2/102/102.responding.traffic.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Водителя зажало в салоне, дверь заклинило. Говорит, болит нога.",
+        "audio": "bank-v1/102/102.arrived.traffic.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Спасатели деблокировали водителя, дверь срезали. Регулируем движение вручную.",
+        "audio": "bank-v9/102/102.working.traffic.9.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пострадавшего увезла скорая, виновника доставили на освидетельствование. Освободились.",
+        "audio": "bank-v1/102/102.completed.traffic.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "caller",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 8,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Заявитель нас встретит? Тут сам чёрт ногу сломит.",
+        "audio": "bank-v1/102/102.clarify.any.12.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "phone",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "phone",
+          "label": "Телефон заявителя: {caller_phone}"
+        },
+        {
+          "key": "gone",
+          "label": "Заявитель уехал, ищите сами"
+        },
+        {
+          "key": "none",
+          "label": "Телефона в карточке нет"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял, будем искать сами, это займёт время.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 20
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/102/102.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 20
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Экипаж попросил связь с заявителем — телефон был в карточке",
+        "critical": false
+      }
+    },
+    {
+      "key": "rescue",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, водителя самим не достать, дверь заклинило. Нужны спасатели с инструментом!",
+        "audio": "bank-v3/102/102.request_service.traffic.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "101",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Так, принял.",
+            "audio": "bank-v1/102/102.ack.any.5.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Добро.",
+            "audio": "bank-v1/102/102.ack.any.7.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Спасатели едут? Водитель всё ещё зажат, из-под капота уже дымит.",
+            "audio": "bank-v3/102/102.request_service.traffic.2.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Спасателей нет. Отжимаем дверь монтировкой сами, водитель стонет.",
+                "audio": "bank-v3/102/102.working.traffic.8.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 20
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Экипаж попросил спасателей: водитель зажат в машине",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Срочно скорую, человек без сознания, дышит плохо.",
+        "audio": "bank-v1/102/102.request_service.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Есть.",
+            "audio": "bank-v1/102/102.ack.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Записал.",
+            "audio": "bank-v1/102/102.ack.any.8.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, скорая где? Водитель совсем плохой, еле дышит.",
+            "audio": "bank-v3/102/102.request_service.traffic.3.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Скорой так и не было, водителя повезли в больницу на попутке. Движение открыли, мы свободны.",
+                "audio": "bank-v3/102/102.completed.traffic.7.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Экипаж попросил скорую водителю",
+        "critical": false
+      }
+    },
+    {
+      "key": "alarm",
+      "kind": "alarm",
+      "priority": "alarm",
+      "trigger": {
+        "on": "inject",
+        "requires_state": "arrived"
+      },
+      "line": {
+        "text": "Тревога! Сотрудника сбила машина, лежит, не встаёт! Скорую срочно!",
+        "audio": "bank-v1/102/102.alarm.any.3.ogg"
+      },
+      "expect": [
+        {
+          "action": "answer_call",
+          "within_s": 15,
+          "weight": 0.1
+        },
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 60,
+          "weight": 0.9,
+          "critical": true
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, ждём скорую.",
+            "audio": "bank-v1/102/102.alarm_ack.any.1.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Понял. Руку перетянули, ждём.",
+            "audio": "bank-v1/102/102.alarm_ack.any.3.ogg"
+          },
+          "effects": []
+        }
+      },
+      "review": {
+        "label": "Тревога: сотрудника сбила машина",
+        "critical": false
+      },
+      "injectable": true
+    }
+  ]
+}

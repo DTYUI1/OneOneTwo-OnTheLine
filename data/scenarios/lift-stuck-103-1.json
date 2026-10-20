@@ -1,0 +1,340 @@
+{
+  "format": 2,
+  "code": "lift-stuck-103-1",
+  "version": 7,
+  "replaces": [
+    "2702023d-b0e4-5868-8ed9-1877b75948d8"
+  ],
+  "title": "Застревание в лифте, плохо пассажирке",
+  "service_id": "103",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "14100101",
+  "complications": [],
+  "teacher_comment": "Застревание в лифте, Профсоюзная улица, 98, корпус 2: женщине шестидесяти пяти лет плохо с сердцем, карточка только в 103. Бригада спрашивает подъезд (в карточке — второй), на месте просит спасателей вскрыть кабину (101 или 112). Не вызвали — женщина дольше заперта и попадает в больницу. На работах бригада молчит — нужно позвонить ей самому.",
+  "outcome": {
+    "people": "Кабина встала во втором подъезде дома 98, корпус 2 на Профсоюзной улице. Женщина в ней задыхалась и паниковала — по просьбе бригады скорой вызвали спасателей, кабину вскрыли. Давление было высоким, помощь оказали на месте, от госпитализации женщина отказалась.",
+    "late": "Карточку приняли позже норматива. Женщине с болью в сердце в застрявшей кабине никто не поможет, пока её не откроют, и каждая минута ожидания даётся ей тяжело."
+  },
+  "card": {
+    "caller_name": "Рябов Андрей Сергеевич",
+    "phone_aon": "+79000000712",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "description": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (требуется медицинская помощь)",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70005211",
+    "incident_type_code": "14100101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть. По просьбе бригады вызваны спасатели, кабину вскрыли. Состояние стабильное, от госпитализации отказалась, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Поняла, адрес записала. Выезжаем.",
+        "audio": "bank-v1/103/103.responding.any.2.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "На месте. Женщина в кабине, говорит, задыхается, у неё паника.",
+        "audio": "bank-v1/103/103.arrived.lift.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Женщина выведена, давление высокое, снимаем кардиограмму, оказываем помощь.",
+        "audio": "bank-v2/103/103.working.lift.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Спасатели открыли двери, вывели её. Давление снизили, от госпитализации отказалась, бригада свободна.",
+        "audio": "bank-v9/103/103.completed.lift.9.ogg"
+      },
+      "after_s": 35,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, какой подъезд? Их тут много, все одинаковые.",
+        "audio": "bank-v1/103/103.clarify.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "second",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "second",
+          "label": "Второй подъезд"
+        },
+        {
+          "key": "first",
+          "label": "Первый подъезд"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, ищите на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Поняла, идём.",
+            "audio": "bank-v1/103/103.clarify_ok.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Поняла, будем искать сами, это займёт время.",
+            "audio": "bank-v1/103/103.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Поздно, мы уже внутри.",
+            "audio": "bank-v1/103/103.clarify_late.any.2.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада спросила подъезд — он был в описании карточки",
+        "critical": false
+      }
+    },
+    {
+      "key": "rescue",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Кабина между этажами, ей всё хуже. Нужны спасатели, пусть вскрывают двери!",
+        "audio": "bank-v3/103/103.request_service.any.15.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "101",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Хорошо, приняла.",
+            "audio": "bank-v1/103/103.ack.any.4.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ясно.",
+            "audio": "bank-v1/103/103.ack.any.5.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, спасателей так и нет? Она за дверями еле отвечает.",
+            "audio": "bank-v3/103/103.request_service.any.16.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Говорим с ней через двери, успокаиваем. Пусть дышит медленно.",
+                "audio": "bank-v1/103/103.working.lift.1.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 20
+            },
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Бабушку госпитализируем, давление не снижается.",
+                "audio": "bank-v1/103/103.completed.lift.5.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада попросила спасателей вскрыть кабину",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Диспетчер, руки заняты, работаем с пациентом. Перезвоню.",
+            "audio": "bank-v1/103/103.status_working.any.4.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Состояние без изменений, наблюдаем. Решаем, везти или нет.",
+            "audio": "bank-v1/103/103.status_working.any.5.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": []
+}

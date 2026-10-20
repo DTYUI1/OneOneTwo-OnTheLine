@@ -11,7 +11,7 @@
   {
     "id": "00000000-0000-4000-8000-000000000002",
     "login": "teacher",
-    "full_name": "Преподаватель",
+    "full_name": "Соколов Андрей Викторович",
     "role": "teacher",
     "workstation_number": null,
     "dds_service_id": null,
@@ -20,7 +20,7 @@
   {
     "id": "00000000-0000-4000-8000-000000000001",
     "login": "trainee01",
-    "full_name": "Обучаемый 01",
+    "full_name": "Иванов Дмитрий Сергеевич",
     "role": "trainee",
     "workstation_number": 1,
     "dds_service_id": "102",
@@ -29,7 +29,7 @@
   {
     "id": "00000000-0000-4000-8000-000000000004",
     "login": "trainee02",
-    "full_name": "Обучаемый 02",
+    "full_name": "Смирнова Анна Алексеевна",
     "role": "trainee",
     "workstation_number": 2,
     "dds_service_id": "101",
@@ -38,7 +38,7 @@
   {
     "id": "00000000-0000-4000-8000-000000000005",
     "login": "trainee03",
-    "full_name": "Обучаемый 03",
+    "full_name": "Кузнецов Максим Андреевич",
     "role": "trainee",
     "workstation_number": 3,
     "dds_service_id": "102",
@@ -47,7 +47,7 @@
   {
     "id": "00000000-0000-4000-8000-000000000006",
     "login": "trainee04",
-    "full_name": "Обучаемый 04",
+    "full_name": "Попова Елена Викторовна",
     "role": "trainee",
     "workstation_number": 4,
     "dds_service_id": "103",
@@ -56,7 +56,7 @@
   {
     "id": "00000000-0000-4000-8000-000000000007",
     "login": "trainee05",
-    "full_name": "Обучаемый 05",
+    "full_name": "Васильев Артём Николаевич",
     "role": "trainee",
     "workstation_number": 5,
     "dds_service_id": "104",

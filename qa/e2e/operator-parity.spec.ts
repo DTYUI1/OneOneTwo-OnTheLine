@@ -1,5 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { openCall, talk } from "./operator-call";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 test.skip(process.env.E2E_DATABASE !== "1", "Нужен отдельный стенд с БД");
 test.use({ viewport: { width: 1536, height: 864 } });

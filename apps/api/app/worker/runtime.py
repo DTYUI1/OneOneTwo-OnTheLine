@@ -8,13 +8,16 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.dialects.postgresql import insert
 
 from app.api.foundation.trash import purge_due
+from app.core.ai_resource import EXECUTION_LOCK
 from app.core.config import ROOT, Settings
 from app.core.db import Database
 from app.core.models import Job, WorkerHeartbeat
+from app.worker.deferred_start import start_waiting
+from app.worker.generators.validation import GenerationRejected, GenerationUnavailable
 from app.worker.jobs import JobHandlers
 from app.worker.providers import (
     LocalFasterWhisperSTT,
@@ -47,6 +50,7 @@ class Worker:
             lease_seconds=config.worker_lease_seconds,
             max_attempts=config.worker_max_attempts,
             retry_base_seconds=config.worker_retry_base_seconds,
+            local_ai=config.ai_provider == "local",
         )
         self.scheduler = CardScheduler(self.database.sessions, batch_size=config.worker_batch_size)
         self.training_scheduler = TrainingScheduler(self.database.sessions)
@@ -65,11 +69,11 @@ class Worker:
             llm = LocalLlamaCpp(
                 base_url=config.llm_base_url,
                 model=config.llm_model,
-                prompt_path=ROOT / "apps/api/app/worker/prompts/scenario_narrative_system.md",
-                schema_path=ROOT / "contracts/scenario-narrative.schema.json",
-                timeout_seconds=config.llm_timeout_seconds,
+                prompt_path=ROOT / "apps/api/app/worker/prompts/scenario_generation_system.md",
+                schema_path=ROOT / "contracts/scenario-generation.schema.json",
+                timeout_seconds=config.generation_timeout_seconds,
                 temperature=config.llm_temperature,
-                max_tokens=config.llm_max_tokens,
+                max_tokens=config.generation_max_tokens,
             )
         elif config.ai_provider == "mock":
             llm = MockLLM()
@@ -108,6 +112,8 @@ class Worker:
 
     async def process(self, claimed: ClaimedJob) -> bool:
         try:
+            if not await self.queue.may_execute(claimed):
+                return False
             async with self.database.sessions.begin() as db:
                 row = await db.scalar(
                     select(Job)
@@ -120,13 +126,74 @@ class Worker:
                 )
                 if row is None:
                     return False
+                from app.worker.cancellation import (
+                    finish_stop,
+                    lock_stop,
+                    lock_stop_resources,
+                    requested,
+                )
+
+                if await requested(db, row.id):
+                    await finish_stop(db, row)
+                    return True
+                if self.config.ai_provider == "local" and row.kind in {"generate", "evaluate"}:
+                    # Межпроцессная блокировка общего llama.cpp, а не Python mutex
+                    # одного worker. Аренда job не означает владение слотом модели.
+                    owns_resource = await db.scalar(
+                        select(func.pg_try_advisory_xact_lock(EXECUTION_LOCK))
+                    )
+                    judge_waits = (
+                        row.kind == "generate"
+                        and await db.scalar(
+                            select(Job.id)
+                            .where(
+                                Job.kind == "evaluate",
+                                or_(
+                                    Job.status == "running",
+                                    and_(
+                                        Job.status == "pending",
+                                        Job.run_after <= func.now(),
+                                        Job.attempts < self.config.worker_max_attempts,
+                                    ),
+                                ),
+                            )
+                            .limit(1)
+                        )
+                        is not None
+                    )
+                    if not owns_resource or judge_waits:
+                        row.status, row.locked_by, row.locked_at = "pending", None, None
+                        row.attempts = max(0, row.attempts - 1)
+                        return False
                 row.result = await self.handlers.run(db, row.kind, row.payload)
-                row.status = "done"
+                await lock_stop_resources(db, row)
+                await lock_stop(db, row.id)
+                if await requested(db, row.id):
+                    await finish_stop(db, row)
+                    return True
+                complete = row.kind != "generate" or row.result.get("complete", True)
+                row.status = "done" if complete else "pending"
+                if not complete:
+                    # attempts ограничивает сбои одной порции, а не число успешно
+                    # сохранённых карточек большого пакета.
+                    row.attempts = 0
+                    row.run_after = (await db.execute(select(func.clock_timestamp()))).scalar_one()
                 row.error = None
                 row.locked_by = None
                 row.locked_at = None
-            logger.info("job_done", extra={"job_id": str(claimed.id), "kind": claimed.kind})
+            logger.info(
+                "job_done" if complete else "job_chunk_done",
+                extra={"job_id": str(claimed.id), "kind": claimed.kind},
+            )
             return True
+        except (GenerationRejected, GenerationUnavailable) as exc:
+            await self.queue.retry_or_fail(
+                claimed.id,
+                claimed.attempts,
+                reason=str(exc),
+                retryable=isinstance(exc, GenerationUnavailable),
+            )
+            return False
         except Exception:
             logger.exception("job_failed", extra={"job_id": str(claimed.id), "kind": claimed.kind})
             await self.queue.retry_or_fail(claimed.id, claimed.attempts)
@@ -151,18 +218,18 @@ class Worker:
     async def schedule(self) -> bool:
         """Heartbeat, выдача карточек и сведений бригад — без ожидания долгих заданий."""
         await self.heartbeat()
+        started = await start_waiting(self.database.sessions)
         cards = await self.scheduler.tick()
         messages = await self.training_scheduler.tick()
         await self.purge()
-        return cards > 0 or messages > 0
+        return started > 0 or cards > 0 or messages > 0
 
     async def work(self) -> bool:
         """Одно задание очереди; ИИ-оценка может идти до минуты."""
         claimed = await self.queue.claim()
         if claimed is None:
             return False
-        await self.process(claimed)
-        return True
+        return await self.process(claimed)
 
     async def tick(self) -> bool:
         scheduled = await self.schedule()

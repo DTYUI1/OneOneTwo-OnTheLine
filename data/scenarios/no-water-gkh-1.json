@@ -1,0 +1,206 @@
+{
+  "format": 2,
+  "code": "no-water-gkh-1",
+  "version": 1,
+  "title": "Нет воды: закрыта вводная задвижка",
+  "service_id": "GKH",
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "14010300",
+  "complications": [],
+  "teacher_comment": "ЖКХ, уровень 1. Бригада уточнила вход в подвал — он указан в карточке. На уточнение ответить сведениями из карточки. При отсутствии сведений бригада опрашивает соседей, доклад задерживается. Статусы ставятся после докладов бригады, вызов другой службы не требуется.",
+  "outcome": {
+    "people": "В квартире 36 и у соседей по подъезду нет воды, краны только шипят. Заявитель находится дома. Вход в подвал со двора, дверь открыта. Пострадавших нет. Бригада обнаружила закрытую вводную задвижку и открыла её. Воду дали, напор нормальный, подачу проверили по стоякам. Работы закончены.",
+    "late": "Карточку приняли позже норматива. До приезда бригады жильцы подъезда оставались без воды."
+  },
+  "card": {
+    "caller_name": "Трофимов Денис Леонидович",
+    "phone_aon": "+79000000864",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "36"
+    },
+    "description": "В квартире 36 и у соседей по подъезду нет воды, краны только шипят. Заявитель находится дома. Вход в подвал со двора, дверь открыта. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Отключение водоснабжения",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008504",
+    "incident_type_code": "14010300"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "36"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "GKH",
+      "phone_ext": "105",
+      "before_s": 180
+    },
+    "expected_comment": "В квартире 36 и у соседей по подъезду нет воды, краны только шипят. Заявитель находится дома. Вход в подвал со двора, дверь открыта. Пострадавших нет. Бригада обнаружила закрытую вводную задвижку и открыла её. Воду дали, напор нормальный, подачу проверили по стоякам. Работы закончены."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял, едем. Если что поменяется — сразу звоните.",
+        "audio": "bank-v1/GKH/GKH.responding.any.5.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. Краны только шипят. Идём в подвал к вводной задвижке.",
+        "audio": "bank-v1/GKH/GKH.arrived.no_water.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Вводная задвижка закрыта: кто-то перекрыл и не открыл. Открываем.",
+        "audio": "bank-v1/GKH/GKH.working.no_water.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Воду дали, напор нормальный, по стоякам проверили. Работы закончены.",
+        "audio": "bank-v1/GKH/GKH.completed.no_water.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "basement",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "arrival",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Вход в подвал откуда — со двора или из подъезда?",
+        "audio": "bank-v1/GKH/GKH.clarify.any.10.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Вход в подвал со двора, дверь открыта"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у соседей"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, поспрашиваю у соседей.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада уточнила вход в подвал — он указан в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

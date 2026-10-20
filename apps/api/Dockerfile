@@ -9,9 +9,13 @@ COPY pyproject.toml uv.lock .python-version ./
 COPY apps/api apps/api
 COPY packages/evalcore packages/evalcore
 COPY scripts scripts
+# Медленная сеть: таймаут скачивания пакетов (pymorphy3-dicts-ru, certifi) выше умолчания 30 с.
+ENV UV_HTTP_TIMEOUT=180
 RUN uv sync --frozen --no-dev --package arm112-api
 COPY contracts contracts
 COPY data data
+# Банк фраз телефона ДДС — его читает движок прохода связности (app.tools.coherence).
+COPY apps/web/src/arm/softphone/bankPhrases.json apps/web/src/arm/softphone/bankPhrases.json
 COPY deploy/certs deploy/certs
 ENV PATH="/workspace/.venv/bin:$PATH" PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 RUN useradd --uid 10001 --create-home arm112 \

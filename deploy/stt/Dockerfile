@@ -1,8 +1,12 @@
 # Необязательный образ распознавания речи (STT-01): faster-whisper, модель — в слое сборки,
 # в работе сеть не нужна. Используется только с профилем compose "stt" (STT_PROVIDER=local).
 FROM python:3.12.11-slim-bookworm
+# av закреплён: faster-whisper 1.2.1 передаёт av.open(metadata_errors=…), а PyAV 19 (проверено 06.10) этот
+# аргумент не принимает — без закрепления свежая сборка перестаёт распознавать (DT-05).
+ENV PIP_DEFAULT_TIMEOUT=120 PIP_RETRIES=8
 RUN pip install --no-cache-dir \
     faster-whisper==1.2.1 \
+    av==15.1.0 \
     fastapi==0.116.1 \
     "uvicorn[standard]==0.35.0" \
     python-multipart==0.0.20

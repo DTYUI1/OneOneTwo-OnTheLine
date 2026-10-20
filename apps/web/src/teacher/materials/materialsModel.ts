@@ -10,7 +10,7 @@ export const PURPOSE_LABELS: Record<Purpose, string> = {
   evaluation: "только для оценивания",
 };
 
-/** Типы, которые принимает сервер (materials/service.py: PDF, DOCX, JSON, XML, CSV). */
+/** Типы, которые принимает сервер (materials/service.py: PDF, DOCX, TXT, JSON, XML, CSV). */
 export const MEDIA_TYPES: Record<string, { label: string; ext: string[] }> = {
   "application/pdf": { label: "Документ для печати", ext: [".pdf"] },
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
@@ -19,6 +19,7 @@ export const MEDIA_TYPES: Record<string, { label: string; ext: string[] }> = {
   },
   "application/json": { label: "Структурированные данные", ext: [".json"] },
   "application/xml": { label: "Разметка данных", ext: [".xml"] },
+  "text/plain": { label: "Обычный текст", ext: [".txt"] },
   "text/csv": { label: "CSV", ext: [".csv"] },
 };
 
@@ -46,7 +47,7 @@ export function fileProblem(
   if (file.size > MAX_BYTES)
     return "Файл больше 10 МиБ — сервер его не примет.";
   if (!mediaTypeFor(file.name))
-    return "Тип файла не поддерживается. Выберите документ, таблицу или файл данных из списка в окне выбора файла.";
+    return "Тип файла не поддерживается. Допустимые форматы: PDF, DOCX, TXT, JSON, XML и CSV.";
   return null;
 }
 

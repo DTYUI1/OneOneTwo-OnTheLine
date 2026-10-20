@@ -1,0 +1,313 @@
+{
+  "format": 2,
+  "code": "traffic-fire-102-2",
+  "version": 3,
+  "title": "ДТП: на месте загорелась машина",
+  "service_id": "102",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "2010100",
+  "complications": [],
+  "teacher_comment": "Доклад меняет задачу (TC-05): ДТП без пострадавших, Варшавское шоссе, 87. На работах экипаж докладывает: под капотом загорелось, нужны пожарные. С этого доклада эталон другой — звонок в 112 об изменении обстановки (памятка ДДС, с. 32) в течение минуты и пожар в комментарии. Не позвонили — в разборе «Звонок» с пояснением, что задача изменилась. С 17.10 (GP-28): через 10 с после доклада экипаж спрашивает, вызваны ли пожарные (событие «Просьба о другой службе»). Вызвал и предупредил экипаж раньше — экипаж не спрашивает; вызвал, но не сказал — спрашивает, без ответа «уже едут» пожарные приезжают неожиданно (замечание); не вызвал — повторная просьба, потом экипаж тушит сам и машина выгорает.",
+  "card": {
+    "caller_name": "Самойлов Игорь Петрович",
+    "phone_aon": "+79000000714",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Северное",
+      "street": "Варшавское шоссе",
+      "house": "87",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "Столкнулись два легковых автомобиля, перегородили крайний правый ряд. Водители целы, спорят между собой. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "ДТП без пострадавших - легковой",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70005313",
+    "incident_type_code": "2010100"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Северное",
+      "street": "Варшавское шоссе",
+      "house": "87",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Столкнулись два легковых автомобиля, перегородили крайний правый ряд, пострадавших нет. Экипаж на месте, выставили знак, перекрыли полосу. Работы закончили, наряд освободился."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Понял, едем. С сиреной пойдём.",
+        "audio": "bank-v1/102/102.responding.any.4.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Экипаж на месте. Машины стоят в крайнем ряду, выставили знак, перекрываем полосу.",
+        "audio": "bank-v1/102/102.arrived.traffic.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Диспетчер, под капотом загорелось! Отводим людей, нужны пожарные.",
+        "audio": "bank-v1/102/102.update.traffic.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working",
+      "task_change": {
+        "kind": "other_service",
+        "label": "Загорелась машина — нужна пожарная охрана: сообщить в 112 (памятка ДДС, с. 32)",
+        "expected_call": {
+          "required": true,
+          "service_id": "112",
+          "phone_ext": "112",
+          "within_s": 60
+        },
+        "expected_comment": "Столкнулись два легковых автомобиля, перегородили крайний правый ряд, пострадавших нет. Экипаж на месте, выставили знак, перекрыли полосу. Под капотом загорелось, людей отвели — нужна пожарная охрана, сообщено в 112. Работы закончили, наряд освободился.",
+        "comment_keywords": [
+          "пожар / пожарные / загорелось / горит / возгорание / огонь"
+        ]
+      }
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожарные машину потушили, полосу освободили. Работы закончили, наряд освободился.",
+        "audio": "bank-v5/102/102.completed.traffic.8.ogg"
+      },
+      "after_s": 20,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "firefighters",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 10,
+        "report": "works"
+      },
+      "line": {
+        "text": "Диспетчер, пожарных вызвали? Горит сильнее, огнетушителем не сбить.",
+        "audio": "bank-v5/102/102.request_service.traffic.4.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "112",
+            "101"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Так, принял.",
+            "audio": "bank-v1/102/102.ack.any.5.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Принял.",
+            "audio": "bank-v1/102/102.ack.any.2.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 5
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Экипаж попросил пожарных: горит машина",
+        "critical": false
+      }
+    },
+    {
+      "key": "firefighters-again",
+      "kind": "request_service",
+      "trigger": {
+        "on": "event",
+        "branch": "missed",
+        "after_s": 0,
+        "event": "firefighters"
+      },
+      "line": {
+        "text": "Пожарные будут? Машина уже вся в огне, людей держим подальше.",
+        "audio": "bank-v5/102/102.request_service.traffic.5.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "112",
+            "101"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял вас.",
+            "audio": "bank-v1/102/102.ack.any.4.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Пожарных не дождались, тушили огнетушителями сами — машина выгорела. Полосу освободили, наряд свободен.",
+                "audio": "bank-v5/102/102.completed.traffic.9.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Экипаж снова спросил про пожарных",
+        "critical": false
+      }
+    }
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 102",
+        "correct": true
+      },
+      {
+        "text": "Служба 101",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Варшавское шоссе, 87",
+        "correct": true
+      },
+      {
+        "text": "Варшавский проезд, 87",
+        "correct": false
+      },
+      {
+        "text": "Варшавское шоссе, 78",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "ДТП без пострадавших",
+        "correct": true
+      },
+      {
+        "text": "Драка на улице",
+        "correct": false
+      },
+      {
+        "text": "Пожар автомобиля",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Пострадавших нет, водители целы",
+        "correct": true
+      },
+      {
+        "text": "Водитель зажат",
+        "correct": false
+      },
+      {
+        "text": "Есть пострадавшие",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Направляю экипаж ДПС",
+        "correct": true
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      },
+      {
+        "text": "Нужна только скорая",
+        "correct": false
+      }
+    ]
+  }
+}

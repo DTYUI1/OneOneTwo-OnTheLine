@@ -1,0 +1,45 @@
+/* Этапы обучения в шапке списка — одной группой, как кнопки шапки окна телефона
+   (Phone.module.css .headBtn): прозрачные, тонкая светлая рамка; кнопки встык. Не похоже
+   ни на поле, ни на кнопку АРМ — это учебная кнопка, как «Тренировка» рядом. */
+.stages {
+  display: inline-flex;
+  align-items: center;
+}
+
+.stage {
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 13px;
+  color: #fff;
+  background: transparent;
+  border: 1px solid #ffffff99;
+  cursor: pointer;
+}
+
+.stage + .stage {
+  border-left: 0;
+}
+
+.stage:hover:not(:disabled) {
+  background: #ffffff1f;
+}
+
+.stage[aria-current="step"] {
+  font-weight: bold;
+  background: #ffffff33;
+}
+
+.stage:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.stage:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+
+/* Портрет наставника — отдельно от кнопок этапов, по центру их высоты. */
+.mentor {
+  margin-left: 8px;
+}

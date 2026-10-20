@@ -6,13 +6,16 @@ from fastapi import HTTPException, Request
 from pydantic import ValidationError
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.c01 import DEFAULT_TIMING_POLICY
 from app.api.notifications import notify
 from app.api.scenarios.service import ensure_evaluable
 from app.api.sessions import repo, schemas
+from app.core.ai_resource import active_generations, lock_scheduling
 from app.core.models import (
     Assignment,
+    OperationReceipt,
     Participant,
     Scenario,
     Service,
@@ -21,6 +24,11 @@ from app.core.models import (
     User,
     Workstation,
 )
+
+
+def uses_ai_preparation(row: Session) -> bool:
+    """Отменённая подготовка остаётся в истории, но больше не владеет раздачей."""
+    return row.ai_preparation is not None and row.ai_preparation["state"] != "cancelled"
 
 
 def serialize(row: Session, *, only_user: UUID | None = None) -> schemas.Session:
@@ -44,6 +52,20 @@ def serialize(row: Session, *, only_user: UUID | None = None) -> schemas.Session
         kind=cast(Any, row.kind),
         started_at=row.started_at,
         finished_at=row.finished_at,
+        ai_preparation=(
+            schemas.AIPreparation.model_validate(row.ai_preparation)
+            if uses_ai_preparation(row) and only_user is None
+            else None
+        ),
+        start_pending=(
+            row.status == "draft"
+            and row.start_request is not None
+            and not row.start_request.get("error")
+            and only_user is None
+        ),
+        start_error=(
+            row.start_request.get("error") if row.start_request and only_user is None else None
+        ),
     )
 
 
@@ -67,12 +89,27 @@ def ensure_owner(row: Session, user: User) -> None:
 
 
 async def list_sessions(request: Request) -> list[schemas.Session]:
+    from app.api.sessions.preparation import preparation_view
+
     rows = await repo.sessions(request.state.db, request.state.user.id, request.state.user.role)
     own = request.state.user.id if request.state.user.role == "trainee" else None
-    return [serialize(row, only_user=own) for row in rows]
+    result = []
+    for row in rows:
+        value = serialize(row, only_user=own)
+        if own is None:
+            preparation = await preparation_view(
+                request.state.db, row, local_ai=request.app.state.config.ai_provider == "local"
+            )
+            value.ai_preparation = (
+                schemas.AIPreparation.model_validate(preparation) if preparation else None
+            )
+        result.append(value)
+    return result
 
 
 async def get_session(request: Request, session_id: UUID) -> schemas.Session:
+    from app.api.sessions.preparation import preparation_view
+
     row = await repo.get_session(request.state.db, session_id)
     if row is None:
         raise HTTPException(404, "Занятие не найдено.")
@@ -82,7 +119,15 @@ async def get_session(request: Request, session_id: UUID) -> schemas.Session:
     ):
         raise HTTPException(404, "Занятие не найдено.")
     own = request.state.user.id if request.state.user.role == "trainee" else None
-    return serialize(row, only_user=own)
+    result = serialize(row, only_user=own)
+    if own is None:
+        preparation = await preparation_view(
+            request.state.db, row, local_ai=request.app.state.config.ai_provider == "local"
+        )
+        result.ai_preparation = (
+            schemas.AIPreparation.model_validate(preparation) if preparation else None
+        )
+    return result
 
 
 def timing_snapshot(body: schemas.SessionInput) -> dict[str, Any] | None:
@@ -119,6 +164,32 @@ def timing_snapshot(body: schemas.SessionInput) -> dict[str, Any] | None:
 
 async def create_session(request: Request, body: schemas.SessionInput) -> schemas.Session:
     request.state.entity = "session"
+    if body.ai_selection is not None:
+        if request.state.user.role != "teacher":
+            raise HTTPException(403, "ИИ-подбор доступен только преподавателю.")
+        key = f"ai-session:{request.state.user.id}:{body.ai_selection.request_id}"
+        await request.state.db.execute(
+            select(func.pg_advisory_xact_lock(func.hashtextextended(key, 0)))
+        )
+        receipt = await request.state.db.get(
+            OperationReceipt,
+            (request.state.user.id, "createAISession", body.ai_selection.request_id),
+        )
+        if receipt is not None:
+            if receipt.body != body.model_dump(mode="json", exclude_unset=True):
+                raise HTTPException(409, "request_id уже использован для другого занятия.")
+            return await get_session(request, UUID(receipt.response["session_id"]))
+        if request.app.state.config.ai_provider != "local":
+            raise HTTPException(
+                503,
+                {
+                    "code": "ai_unavailable",
+                    "message": (
+                        "Локальный ИИ выключен. Создайте обычное занятие на готовых сценариях."
+                    ),
+                    "details": {},
+                },
+            )
     if not body.participants:
         raise HTTPException(422, "Добавьте хотя бы одного участника.")
     user_ids = [item.user_id for item in body.participants]
@@ -186,19 +257,113 @@ async def create_session(request: Request, body: schemas.SessionInput) -> schema
         )
     await request.state.db.flush()
     await request.state.db.refresh(row, attribute_names=["participants"])
+    if body.ai_selection is not None:
+        from app.api.sessions.preparation import initialize_preparation
+
+        await initialize_preparation(request.state.db, row, body.ai_selection)
+        request.state.db.add(
+            OperationReceipt(
+                actor_id=request.state.user.id,
+                operation="createAISession",
+                request_id=body.ai_selection.request_id,
+                body=body.model_dump(mode="json", exclude_unset=True),
+                response={"session_id": str(row.id)},
+            )
+        )
     result = serialize(row)
     request.state.entity_id = str(row.id)
     request.state.audit_after = result.model_dump(mode="json")
     return result
 
 
-async def start_session(request: Request, session_id: UUID) -> schemas.Session:
+async def update_session_norms(
+    request: Request, session_id: UUID, body: schemas.SessionNormsInput
+) -> schemas.Session:
     request.state.entity = "session"
     request.state.entity_id = str(session_id)
     row = await repo.get_session(request.state.db, session_id, lock=True)
     if row is None:
         raise HTTPException(404, "Занятие не найдено.")
     ensure_owner(row, request.state.user)
+    if row.status != "draft":
+        raise HTTPException(409, "Норматив отработки можно менять только до начала занятия.")
+    request.state.audit_before = serialize(row).model_dump(mode="json")
+    row.settings_snapshot = {
+        **row.settings_snapshot,
+        "handling_normative_s": body.handling_normative_s,
+    }
+    # Legacy null сохраняет прежнюю методику; в ней норматив берётся из settings_snapshot.
+    if row.timing_policy is not None:
+        row.timing_policy = {
+            **row.timing_policy,
+            "handling_normative_s": body.handling_normative_s,
+        }
+    await request.state.db.flush()
+    result = serialize(row)
+    request.state.audit_after = result.model_dump(mode="json")
+    return result
+
+
+async def start_session(
+    request: Request, session_id: UUID, body: schemas.StartInput | None = None
+) -> schemas.Session:
+    request.state.entity = "session"
+    request.state.entity_id = str(session_id)
+    db = request.state.db
+    local = request.app.state.config.ai_provider == "local"
+    if local:
+        await lock_scheduling(db)
+    row = await repo.get_session(db, session_id, lock=True)
+    if row is None:
+        raise HTTPException(404, "Занятие не найдено.")
+    ensure_owner(row, request.state.user)
+    request.state.audit_before = serialize(row).model_dump(mode="json")
+    if body is not None and body.mode == "cancel":
+        row.start_request = None
+        result = serialize(row)
+        request.state.audit_after = result.model_dump(mode="json")
+        return result
+    assignments = await validate_start(db, row)
+    busy = await active_generations(db) if local else []
+    if busy and (body is None or body.mode != "now"):
+        if body is None or body.mode != "wait":
+            raise HTTPException(
+                409,
+                {
+                    "code": "ai_generation_busy",
+                    "message": (
+                        "Идёт генерация. Она может задержать ИИ-проверку работ обучаемых. "
+                        "Выберите, начать сейчас или дождаться готовности."
+                    ),
+                    "details": {},
+                },
+            )
+        if row.start_request is None or row.start_request.get("error"):
+            row.start_request = {
+                "request_id": str(body.request_id) if body.request_id else None,
+                "job_ids": [str(job_id) for job_id in busy],
+                "requested_at": datetime.now(UTC).isoformat(),
+                "error": None,
+            }
+        result = serialize(row)
+    else:
+        result = await apply_start(db, row, assignments)
+    request.state.audit_after = result.model_dump(mode="json")
+    return result
+
+
+async def validate_start(db: AsyncSession, row: Session) -> list[Assignment]:
+    if row.status != "draft":
+        raise HTTPException(409, "Запустить можно только черновик занятия.")
+    if row.ai_preparation is not None and row.ai_preparation["state"] not in {"ready", "cancelled"}:
+        raise HTTPException(
+            409,
+            {
+                "code": "ai_preparing",
+                "message": "Весь набор ИИ-заданий ещё не подготовлен. Дождитесь готовности.",
+                "details": {},
+            },
+        )
     try:
         schemas.Settings.model_validate(row.settings_snapshot)
     except ValidationError as exc:
@@ -207,9 +372,10 @@ async def start_session(request: Request, session_id: UUID) -> schemas.Session:
         ) from exc
     assignments = list(
         (
-            await request.state.db.scalars(
+            await db.scalars(
                 select(Assignment)
-                .where(Assignment.session_id == row.id)
+                # Отменённое (сценарий сняли до начала занятия) не выдаётся и не мешает старту.
+                .where(Assignment.session_id == row.id, Assignment.cancelled_at.is_(None))
                 .order_by(Assignment.id)
                 .with_for_update()
             )
@@ -218,7 +384,7 @@ async def start_session(request: Request, session_id: UUID) -> schemas.Session:
     scenarios = {
         scenario.id: scenario
         for scenario in (
-            await request.state.db.scalars(
+            await db.scalars(
                 select(Scenario)
                 .where(Scenario.id.in_([a.scenario_id for a in assignments]))
                 .order_by(Scenario.id)
@@ -235,26 +401,29 @@ async def start_session(request: Request, session_id: UUID) -> schemas.Session:
         ):
             raise HTTPException(409, "Версия назначенного сценария изменилась.")
         ensure_evaluable(scenario.status, scenario.reference)
-    request.state.audit_before = serialize(row).model_dump(mode="json")
-    now = datetime.now(UTC)
-    if row.status != "draft":
-        raise HTTPException(409, "Запустить можно только черновик занятия.")
-    count = await request.state.db.scalar(
+    count = await db.scalar(
         select(func.count(func.distinct(Assignment.participant_id))).where(
-            Assignment.session_id == row.id
+            Assignment.session_id == row.id, Assignment.cancelled_at.is_(None)
         )
     )
     if not row.participants or count != len(row.participants):
         raise HTTPException(409, "Каждому участнику нужно назначить хотя бы один сценарий.")
+    return assignments
+
+
+async def apply_start(
+    db: AsyncSession, row: Session, assignments: list[Assignment]
+) -> schemas.Session:
+    now = datetime.now(UTC)
     row.status, row.started_at = "running", now
+    row.start_request = None
     for assignment in assignments:
         if assignment.delay_from_start_s is not None:
             assignment.due_at = now + timedelta(seconds=assignment.delay_from_start_s)
     event_type = "session.started"
-    await request.state.db.flush()
+    await db.flush()
     result = serialize(row)
-    request.state.audit_after = result.model_dump(mode="json")
-    await notify(request.state.db, event_type, row.id)
+    await notify(db, event_type, row.id)
     return result
 
 
@@ -280,6 +449,8 @@ async def create_assignment(
     ensure_owner(row, request.state.user)
     if row.status != "draft":
         raise HTTPException(409, "Назначения можно менять только в черновике занятия.")
+    if uses_ai_preparation(row):
+        raise HTTPException(409, "В ИИ-режиме назначения создаются автоматически.")
     participant = await request.state.db.scalar(
         select(Participant).where(
             Participant.session_id == session_id, Participant.user_id == body.participant_id

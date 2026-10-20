@@ -1,0 +1,340 @@
+{
+  "format": 2,
+  "code": "lift-stuck-101-2",
+  "version": 7,
+  "replaces": [
+    "f034b715-c68b-5d59-8fe4-28ec99b67b88"
+  ],
+  "title": "Застревание в лифте, плохо пассажирке",
+  "service_id": "101",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "14100101",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: застревание в лифте, плохо пассажирке, Профсоюзная улица, 98, корпус 2. Расчёт повторяет адрес с ошибкой (дом 89) и просит скорую женщине — в карточке скорой нет, звонок в 103 или 112 за диспетчером. Осложнение: женщину до расчёта вывел механик Мослифта — «Отказ от выполнения работ». Не вызвали скорую — женщину везут соседи.",
+  "outcome": {
+    "people": "Механик Мослифта вывел женщину из кабины до приезда расчёта, работ у пожарных не было. Сердце у неё болело и после — по просьбе расчёта вызвали скорую.",
+    "late": "Карточку приняли позже норматива. Заранее не известно, что механик успеет: женщине шестьдесят пять лет, у неё боль в сердце, а выйти из кабины сама она не могла.",
+    "status": "Работ у расчёта на месте не было: такую карточку закрывают «Отказом от выполнения работ» с причиной, а не статусом «Работы завершены»."
+  },
+  "card": {
+    "caller_name": "Рябов Андрей Сергеевич",
+    "phone_aon": "+79000000712",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "description": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (требуется медицинская помощь)",
+    "service_ids": [
+      "101",
+      "MOSLIFT"
+    ],
+    "number": "70005202",
+    "incident_type_code": "14100101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "refused"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "2",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "В лифте второго подъезда между седьмым и восьмым этажами застряла женщина шестидесяти пяти лет, жалуется на боль в сердце. Связь с кабиной через переговорное устройство есть. Механик Мослифта уже вывел женщину, наши работы не потребовались, расчёт возвращается."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, расчёт выехал.",
+        "audio": "bank-v2/101/101.responding.lift.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Расчёт на месте, поднимаемся к кабине.",
+        "audio": "bank-v2/101/101.arrived.lift.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "outcome",
+      "brigade": "b1",
+      "line": {
+        "text": "Механик вывел женщину до нас, её забрала скорая. Наши работы не потребовались, расчёт возвращается.",
+        "audio": "bank-v9/101/101.refused.lift.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "refused"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Профсоюзная, восемьдесят девять, корпус два, выезжаем!",
+        "audio": "bank-v4/101/101.readback_trap.7f13b713.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: Профсоюзная улица, 98, корпус 2"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, ошибся. Едем по верному адресу.",
+            "audio": "bank-v1/101/101.readback_fixed.any.1.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/101/101.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/101/101.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт повторил адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 5,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Нужна скорая. Пожилая женщина, плохо с сердцем, давление.",
+        "audio": "bank-v1/101/101.request_service.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял вас.",
+            "audio": "bank-v1/101/101.ack.any.3.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Так, принял, записал.",
+            "audio": "bank-v1/101/101.ack.any.5.ogg"
+          },
+          "effects": [
+            {
+              "delay": "outcome",
+              "by_s": 15
+            }
+          ]
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, скорая едет? Женщине хуже, за сердце держится.",
+            "audio": "bank-v3/101/101.request_service.lift.2.ogg"
+          },
+          "effects": [
+            {
+              "replace": "outcome",
+              "with": {
+                "text": "Механик вывел женщину до нас, работы для нас нет. Скорую не дождались, соседи повезли её в больницу сами.",
+                "audio": "bank-v3/101/101.refused.lift.5.ogg"
+              }
+            },
+            {
+              "delay": "outcome",
+              "by_s": 20
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт попросил скорую женщине — в карточке её нет",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 101",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Профсоюзная улица, 98, корпус 2",
+        "correct": true
+      },
+      {
+        "text": "Профсоюзная улица, 89, корпус 2",
+        "correct": false
+      },
+      {
+        "text": "Профсоюзная улица, 98, корпус 1",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Застряла в лифте, плохо с сердцем",
+        "correct": true
+      },
+      {
+        "text": "Пожар в лифтовой шахте",
+        "correct": false
+      },
+      {
+        "text": "Задымление в подъезде",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Женщина шестидесяти пяти лет",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Ребёнок в кабине",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю расчёт",
+        "correct": true
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      }
+    ]
+  }
+}

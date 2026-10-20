@@ -18,6 +18,9 @@ import {
   stepTab,
   talk,
 } from "./operator-call";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 // Этап 3 плана docs/operator_112_review/PLAN.md — методика и разбор: вопросы по шагам опроса
 // (3–4 варианта шага вместо викторины), «Сложно» — свой вопрос, повтор адреса ловит ошибку
@@ -60,7 +63,11 @@ async function followTip(page: Page, title: string) {
       });
       return page.getByLabel("Район:").fill("Западное Дегунино");
     case "Спросите ориентир":
-      return ask(page, GIRL_Q.landmark!);
+      await ask(page, GIRL_Q.landmark!);
+      return fillAddress(page, {
+        "Описательный адрес:":
+          "Напротив дома продуктовый магазин, через дорогу школа",
+      });
     case "Повторите адрес вслух":
       return confirmAddress(page);
     case "Шаг 2 — номер для связи":
@@ -79,7 +86,7 @@ async function followTip(page: Page, title: string) {
     case "Шаг 5 — детали и доступ":
       for (const key of ["floor", "access", "gas"])
         await ask(page, GIRL_Q[key]!);
-      return;
+      return fillAddress(page, { "Подъезд:": "2", "Этаж:": "5" });
     case "Отметьте опросную карту":
       // За дверью бабушка; у соседей газовая плита.
       await answer("Угроза людям", "Да");
@@ -249,11 +256,11 @@ test("«?» объясняет каждую часть экрана", async ({ p
     name: "Объяснение экрана оператора 112",
   });
   await expect(help).toBeVisible();
-  await expect(help).toContainText("1 из 10");
+  await expect(help).toContainText("1 из 11");
   const titles: string[] = [];
-  for (let part = 0; part < 10; part++) {
+  for (let part = 0; part < 11; part++) {
     titles.push(await help.getByRole("heading").innerText());
-    if (part < 9) await help.getByRole("button", { name: "Далее" }).click();
+    if (part < 10) await help.getByRole("button", { name: "Далее" }).click();
   }
   expect(titles.map((title) => title.replace(/^\d+\. /, ""))).toEqual([
     "Телефоны, номер и таймер",
@@ -266,7 +273,10 @@ test("«?» объясняет каждую часть экрана", async ({ p
     "Разговор с заявителем",
     "Шаги опроса",
     "Службы и сохранение",
+    "Горячие клавиши",
   ]);
+  await expect(help.getByRole("table")).toContainText("Alt+F1");
+  await expect(help.getByRole("table")).toContainText("Alt+Ctrl+1…9");
   await page.keyboard.press("Escape");
   await expect(help).toHaveCount(0);
 });

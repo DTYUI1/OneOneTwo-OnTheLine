@@ -7,14 +7,14 @@ export type ScenarioContent = components["schemas"]["ScenarioContent"];
 type Provenance = ScenarioContent["provenance"];
 
 export const SOURCE_KIND_LABELS: Record<Provenance["source_kind"], string> = {
-  template: "шаблон команды",
+  template: "готовый учебный шаблон",
   llm: "сгенерировано ИИ",
-  imported: "импорт",
+  imported: "загружено из файла",
   manual: "составлено вручную",
 };
 
 export const AUTHOR_KIND_LABELS: Record<Provenance["author_kind"], string> = {
-  system: "команда (встроенный набор)",
+  system: "разработчики тренажёра",
   teacher: "преподаватель",
   trainee: "обучаемый",
 };
@@ -36,11 +36,11 @@ export function provenanceLines(content: ScenarioContent): SourceLine[] {
   const lines: SourceLine[] = [
     {
       label: "Источник задания",
-      value: `${p.synthetic ? "синтетическое задание" : "билет/задача из материалов"} · ${SOURCE_KIND_LABELS[p.source_kind]}${reference ? ` (${reference})` : ""}`,
+      value: `${p.synthetic ? "учебная история" : "задание из материалов"} · ${SOURCE_KIND_LABELS[p.source_kind]}${reference ? ` (${reference})` : ""}`,
     },
     {
       label: "Эталон",
-      value: `${AUTHOR_KIND_LABELS[p.author_kind]}${p.sha256 ? ` · контрольная сумма ${p.sha256.slice(0, 12)}…` : ""}`,
+      value: AUTHOR_KIND_LABELS[p.author_kind],
     },
   ];
   const plan = content.training_plan;
@@ -51,7 +51,7 @@ export function provenanceLines(content: ScenarioContent): SourceLine[] {
     });
   lines.push({
     label: "Проверка преподавателем",
-    value: "Сервер пока не передаёт отметку — не считается проверенным",
+    value: "Нет сведений о проверке преподавателем",
   });
   return lines;
 }

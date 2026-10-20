@@ -1,0 +1,206 @@
+{
+  "format": 2,
+  "code": "lift-child-moslift-1",
+  "version": 1,
+  "title": "Ребёнок один в застрявшем лифте",
+  "service_id": "MOSLIFT",
+  "level": 1,
+  "weight": 2,
+  "incident_type_code": "14100102",
+  "complications": [],
+  "teacher_comment": "Мослифт, уровень 1. В кабине ребёнок без взрослых. Механик по пути уточняет подъезд: первый, как указано в карточке. При ответе без сведений или пропуске уточнения прибытие задерживается. Статусы ставятся после докладов; другая служба не требуется.",
+  "outcome": {
+    "people": "В пассажирском лифте первого подъезда застряла девочка восьми лет, одна без взрослых. Кабина остановилась между третьим и четвёртым этажами. Девочка отвечает через двери, на самочувствие не жалуется. Мать, жительница квартиры 24, ждёт у шахты лифта. По просьбе механика девочка нажала кнопку открытия дверей, но двери не открылись. Механик подвёл кабину вручную. Девочку вывел, мать забрала её домой. Лифт отключён до ремонта.",
+    "late": "Карточку приняли позже норматива. В пассажирском лифте первого подъезда застряла девочка восьми лет, одна без взрослых. Кабина остановилась между третьим и четвёртым этажами. Девочка отвечает через двери, на самочувствие не жалуется. Мать, жительница квартиры 24, ждёт у шахты лифта."
+  },
+  "card": {
+    "caller_name": "Крылова Вера Ильинична",
+    "phone_aon": "+79000000865",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": "24"
+    },
+    "description": "В пассажирском лифте первого подъезда застряла девочка восьми лет, одна без взрослых. Кабина остановилась между третьим и четвёртым этажами. Девочка отвечает через двери, на самочувствие не жалуется. Мать, жительница квартиры 24, ждёт у шахты лифта.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": true,
+    "emergency": false,
+    "incident_class": "Застревание в лифте (ребенок без взрослых)",
+    "service_ids": [
+      "MOSLIFT"
+    ],
+    "number": "70008505",
+    "incident_type_code": "14100102"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "MOSLIFT"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Коньково",
+      "street": "Профсоюзная улица",
+      "house": "98",
+      "building": "",
+      "apartment": "24"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "MOSLIFT",
+      "phone_ext": "106",
+      "before_s": 180
+    },
+    "expected_comment": "В пассажирском лифте первого подъезда застряла девочка восьми лет, одна без взрослых. Кабина остановилась между третьим и четвёртым этажами. Девочка отвечает через двери, на самочувствие не жалуется. Мать, жительница квартиры 24, ждёт у шахты лифта. По просьбе механика девочка нажала кнопку открытия дверей, но двери не открылись. Механик подвёл кабину вручную. Девочку вывел, мать забрала её домой. Лифт отключён до ремонта."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, еду.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыл. Девочка в кабине одна, мама внизу у шахты, нервничает больше ребёнка.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.arrived.lift_child.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Попросил девочку нажать кнопку открытия дверей — не сработало. Иду крутить вручную.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.working.lift_child.5.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Девочку вывел, мама забрала домой. Лифт отключил до ремонта.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.completed.lift_child.2.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "entrance",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, подъезд какой? Дом длинный, подъездов много.",
+        "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Первый подъезд"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните у жильцов"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, понял, этого хватит.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ладно, спрошу у жильцов.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашёл сам.",
+            "audio": "bank-v1/MOSLIFT/MOSLIFT.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Механик уточнил подъезд — он указан в карточке",
+        "critical": false
+      }
+    }
+  ],
+  "traps": []
+}

@@ -12,6 +12,10 @@ async def list_materials(request: Request) -> list[service.MaterialView]:
     return await service.list_materials(request)
 
 
+async def list_session_materials(request: Request) -> list[service.SessionMaterialsView]:
+    return await service.list_session_materials(request)
+
+
 async def upload_material(
     request: Request,
     file: Annotated[UploadFile, File()],
@@ -33,6 +37,7 @@ async def assign_materials(
 
 
 ENDPOINTS: dict[str, tuple[Callable[..., Any], Any]] = {
+    "listSessionMaterials": (list_session_materials, list[service.SessionMaterialsView]),
     "listMaterials": (list_materials, list[service.MaterialView]),
     "uploadMaterial": (upload_material, service.MaterialView),
     "downloadMaterial": (download_material, None),

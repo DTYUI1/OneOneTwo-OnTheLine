@@ -1,0 +1,907 @@
+/* Телефон ДДС (GP-09) — макет docs/dds_training_review/phone/index.html. Рамка — окно
+   разговора модуля «Оператор 112» (.talk* в operator/OperatorPage.module.css), цвета — его
+   токены --op-*. */
+.talk {
+  --op-panel: #efefef;
+  --op-border: #aeb1b3;
+  --op-line: #d2d2d2;
+  --op-blue: #157dbd;
+  --op-orange: #ec653b;
+  --op-dark: #2f353a;
+  --op-asked: #e4e7e9;
+  --op-muted: #6c6c6c;
+  --op-good: #1d6b42;
+  --op-good-bg: #e3f4ea;
+  --op-bad: #9b1c14;
+  --op-bad-bg: #fbe4e1;
+  --op-warn: #7a5600;
+  --op-warn-bg: #fcf1d6;
+  --phone: #2f8a4e;
+  position: fixed;
+  /* Над карточкой (до 30), но под окнами-подтверждениями АРМ (50): «Идёт разговор»
+     и другие вопросы не прячутся за телефоном. */
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  font:
+    14px/1.4 Arial,
+    sans-serif;
+  color: var(--color-text, #101820);
+  background: #fff;
+  border: 1px solid var(--op-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.talk[hidden] {
+  display: none;
+}
+.talk button {
+  font: inherit;
+  cursor: pointer;
+}
+.talk button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* значок телефона на панели (рекомендации, п. 8: зелёный кружок с трубкой) */
+.dial {
+  --phone: #2f8a4e;
+  --op-orange: #ec653b;
+  --op-dark: #2f353a;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #fff;
+  background: var(--phone);
+  border: 2px solid #e9f5ec;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.dial > svg {
+  width: 55%;
+  height: 55%;
+}
+/* Без открытой карточки нижней полосы нет: значок — в правом нижнем углу панели. */
+.dialFloating {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 44;
+}
+.dial[data-ring="true"] {
+  animation: pulse 1s steps(2) infinite;
+}
+.dial[data-alarm="true"] {
+  background: var(--op-orange);
+  border-color: #fde8e6;
+}
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  padding: 0 5px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #fff;
+  background: var(--op-orange);
+  border-radius: 10px;
+}
+.timer {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 3px;
+  padding: 0 5px;
+  font-size: 12px;
+  color: #fff;
+  background: var(--op-dark);
+  font-variant-numeric: tabular-nums;
+}
+@keyframes pulse {
+  50% {
+    box-shadow: 0 0 0 7px #2f8a4e66;
+  }
+}
+
+/* шапка: .talkHead модуля 112 */
+/* Длинное имя сокращается; на узком экране инструменты переходят на следующую строку,
+   но свой номер и таймер не сжимаются и не прячутся. */
+.talkHead {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 6px 2px 10px;
+  color: #fff;
+  background: #303335;
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+.talkHead > * {
+  flex: none;
+}
+.talkHead h2 {
+  display: flex;
+  flex: 1 1 140px;
+  gap: 0.3em;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  font-size: 13px;
+  font-weight: normal;
+  white-space: nowrap;
+}
+.peer {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.clock {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+/* Кнопки «переместить» и «свернуть» — одного размера, значок по центру: строчный svg
+   садился на базовую линию и уезжал вниз (стенд 18.10). */
+.headBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 20px;
+  padding: 0;
+  color: #fff;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid #ffffff66;
+}
+.headBtn svg {
+  display: block;
+}
+/* Слот шапки: заголовок и инструменты разговора выводит Softphone. */
+.headSlot {
+  display: contents;
+}
+.headSlot > :not(h2) {
+  flex: none;
+}
+.headSlot:not(:empty) + .defaultTitle {
+  display: none;
+}
+.tone {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+  font-size: 12px;
+}
+.tone i {
+  display: block;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.25);
+}
+.tone i:nth-child(1) {
+  height: 5px;
+}
+.tone i:nth-child(2) {
+  height: 8px;
+}
+.tone i:nth-child(3) {
+  height: 11px;
+}
+.tone i:nth-child(4) {
+  height: 14px;
+}
+.tone[data-speaking="true"] i {
+  background: #4cc38a;
+  animation: voice 0.5s ease-in-out infinite alternate;
+}
+.tone[data-speaking="true"] i:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.tone[data-speaking="true"] i:nth-child(3) {
+  animation-delay: 0.24s;
+}
+.tone[data-speaking="true"] i:nth-child(4) {
+  animation-delay: 0.36s;
+}
+.tone span {
+  margin-left: 6px;
+}
+@keyframes voice {
+  from {
+    transform: scaleY(0.4);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+/* Инструменты: разговорные (из слота) и окна — одной группой справа, как в макете. */
+.spacer {
+  flex: 1;
+  order: 1;
+}
+/* Свой номер всегда целиком, даже при свёрнутом или узком окне. */
+.own {
+  display: flex;
+  flex: none;
+  gap: 6px;
+  align-items: center;
+  order: 1;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.online {
+  width: 8px;
+  height: 8px;
+  background: #4cc38a;
+  border-radius: 50%;
+  animation: online 2s ease-in-out infinite;
+}
+@keyframes online {
+  50% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .online {
+    animation: none;
+  }
+}
+.talkTools {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  order: 2;
+}
+.frameTools {
+  order: 3;
+}
+.talkTools button {
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+}
+.talkTools button:hover:enabled {
+  background: rgba(255, 255, 255, 0.12);
+}
+.talkTools .soundBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 24px;
+  padding: 0;
+}
+.soundBtn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.hangup {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 34px;
+  padding: 0;
+  color: #fff;
+  border: 1px solid var(--op-orange);
+  background: var(--op-orange);
+}
+.hangup:hover:enabled {
+  filter: brightness(0.9);
+}
+.hangup:focus-visible {
+  outline: 2px solid var(--op-blue);
+  outline-offset: 2px;
+}
+.talk[data-collapsed="true"] {
+  height: auto !important;
+  box-shadow: none;
+}
+.talk[data-collapsed="true"] > :not(.talkHead),
+.talk[data-collapsed="true"] .tone {
+  display: none;
+}
+
+/* Плашка звонков (вкладки 17.10): вкладка на линию — разговор, удержанные, звонящие — и
+   «Удержать» справа. Одна строка над лентой, окно не растёт; вкладок больше, чем места, —
+   полоса прокручивается вбок. */
+.lines {
+  display: flex;
+  flex: none;
+  align-items: stretch;
+  gap: 6px;
+  padding: 4px 6px;
+  background: var(--op-panel);
+  border-bottom: 1px solid var(--op-line);
+}
+.lineTabs {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+/* Вкладки равной ширины; узкой вкладке (три и больше в окне 760) карточка не помещается —
+   «по карточке N» прячется целиком, а не обрезается до «7…»: он в подсказке вкладки. */
+.lineTab {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 150px;
+  max-width: 300px;
+  container-type: inline-size;
+  padding: 2px 10px 3px;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--color-text, #101820);
+  background: #fff;
+  border: 1px solid var(--op-line);
+}
+.lineTab b,
+.lineTab small {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lineTab b {
+  font-size: 13px;
+}
+.lineTab small {
+  font-size: 12px;
+  color: var(--op-muted);
+}
+@container (max-width: 275px) {
+  .lineCard {
+    display: none;
+  }
+}
+.lineTab:hover:not([aria-disabled="true"]) {
+  border-color: var(--op-blue);
+}
+/* Идущий разговор: зелёная черта сверху — цвет трубки на значке. */
+.lineTab[data-line="active"] {
+  border-color: var(--phone);
+  box-shadow: inset 0 3px 0 var(--phone);
+  cursor: default;
+}
+/* На удержании — жёлтая, как прежняя строка удержания, без мигания. */
+.lineTab[data-line="held"] {
+  background: var(--op-warn-bg);
+  border-color: #e2b24a;
+  box-shadow: inset 4px 0 0 var(--op-warn);
+}
+.lineTab[data-line="held"] small {
+  color: var(--op-warn);
+}
+/* Звонит — мигает цветом вызова, как значок телефона на панели. */
+.lineTab[data-line="ringing"] {
+  border-color: var(--op-orange);
+  animation: ringTab 1s step-end infinite;
+}
+.lineTab[data-line="ringing"] small {
+  color: inherit;
+}
+/* Тревога бригады — ровно горит оранжевым, не мигает (макет docs/dds_training_review/phone,
+   `.ringRow.alarm`): её видно среди обычных вызовов. */
+.lineTab[data-line="ringing"][data-alarm="true"] {
+  animation: none;
+  color: #fff;
+  background: var(--op-orange);
+}
+.lineTab[data-line="dropped"] {
+  cursor: default;
+}
+.lineTab[data-line="dropped"] b,
+.lineTab[data-line="dropped"] small {
+  color: var(--op-bad);
+}
+/* Без промежуточных цветов: белый текст на оранжевом или тёмный на светлом — читается всегда. */
+@keyframes ringTab {
+  0% {
+    color: #fff;
+    background: var(--op-orange);
+  }
+  50% {
+    color: var(--color-text, #101820);
+    background: var(--op-warn-bg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lineTab[data-line="ringing"] {
+    animation: none;
+    color: #fff;
+    background: var(--op-orange);
+  }
+}
+.holdBtn {
+  flex: none;
+  align-self: center;
+  min-height: 30px;
+  padding: 3px 14px;
+  font-weight: bold;
+  color: var(--op-warn);
+  background: #fff;
+  border: 1px solid #e2b24a;
+}
+.holdBtn:hover:enabled {
+  background: var(--op-warn-bg);
+}
+/* Строки под плашкой (TC-02): пропущенный вызов — спокойная строка с «Перезвонить», разговор
+   с отделом контроля. Звать здесь некого: действие ждёт. */
+.lineRow {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+  color: var(--color-text, #101820);
+  background: var(--op-panel);
+  border-bottom: 1px solid var(--op-line);
+}
+.lineRow[data-line="lost"] b {
+  color: var(--op-bad);
+}
+.lineRow span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lineRow button {
+  padding: 2px 12px;
+  font-weight: bold;
+  color: #fff;
+  background: var(--phone);
+  border: 0;
+}
+
+/* Тело: лента, шаги и ряд ответа выводит Softphone; без карточки — список контактов. */
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.body:empty {
+  display: none;
+}
+.body:not(:empty) + .idle {
+  display: none;
+}
+.idle {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* лента: .talkLog модуля 112 */
+.talkLog {
+  flex: 1 1 110px;
+  min-height: 60px;
+  padding: 8px 10px 6px;
+  overflow-y: auto;
+  line-height: 1.4;
+}
+.talkLog ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.talkLog li + li {
+  margin-top: 4px;
+}
+.who {
+  color: var(--op-muted);
+}
+.me {
+  color: var(--op-muted);
+}
+.sys {
+  color: var(--op-muted);
+  font-style: italic;
+}
+.replay {
+  margin-left: 4px;
+  padding: 0 4px;
+  color: var(--op-blue);
+  vertical-align: middle;
+  background: none;
+  border: 0;
+}
+.parts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.part {
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-style: normal;
+  border: 1px solid var(--op-line);
+  border-radius: 10px;
+}
+.part[data-ok="true"] {
+  color: var(--op-good);
+  background: var(--op-good-bg);
+  border-color: #b9dcc7;
+}
+.part[data-ok="false"] {
+  color: var(--op-bad);
+  background: var(--op-bad-bg);
+  border-color: #f0b8b1;
+}
+.talkStart {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  color: #444;
+  background: var(--op-panel);
+  border-left: 3px solid var(--op-border);
+}
+.talkStart[data-warn="true"] {
+  color: var(--op-warn);
+  background: var(--op-warn-bg);
+  border-left-color: #e2b24a;
+}
+
+/* контакты — в той же области, что и лента */
+.contacts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.grp {
+  padding: 6px 0 2px;
+  font-size: 12px;
+  color: var(--op-muted);
+}
+.contact {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: -1px;
+  padding: 5px 8px;
+  text-align: left;
+  color: var(--color-text, #101820);
+  background: #fff;
+  border: 1px solid var(--op-line);
+}
+.contact:hover:enabled {
+  position: relative;
+  border-color: var(--op-blue);
+}
+.contact small {
+  color: var(--op-muted);
+}
+.st {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--op-muted);
+}
+.st[data-free="true"] {
+  color: var(--op-good);
+}
+.go {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: #fff;
+  background: var(--phone);
+  border-radius: 50%;
+}
+.go svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* шаги: .steps модуля 112 */
+.steps {
+  display: flex;
+  flex: none;
+  gap: 4px 8px;
+  align-items: center;
+  min-height: 26px;
+  padding: 5px 8px 0 10px;
+  border-top: 1px solid var(--op-line);
+  font-size: 12px;
+}
+.stepList {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 3px;
+  min-width: 0;
+}
+.step {
+  padding: 1px 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  background: #fff;
+  border: 1px solid var(--op-line);
+  border-radius: 10px;
+}
+.step[data-done="true"] {
+  color: var(--op-good);
+  background: var(--op-good-bg);
+  border-color: #b9dcc7;
+}
+.step[data-current="true"] {
+  color: #fff;
+  background: var(--op-dark);
+  border-color: var(--op-dark);
+}
+
+/* Отбой — справа вне прокрутки ответов, в том числе при узком окне и длинных вариантах. */
+.callFooter {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 0;
+  padding: 6px 24px 6px 10px;
+  border-top: 1px solid var(--op-line);
+}
+.callFooter > .talkHints {
+  flex: 1;
+  min-width: 0;
+  min-height: 34px;
+  padding: 0;
+  border-top: 0;
+}
+
+/* ряд ответа: .talkHints модуля 112. GP-24: высота по содержимому — одна строка кнопок,
+   варианты в две строки — две; остальное место отдаётся ленте, окно не меняется. Справа —
+   место под кнопку размера в углу окна. */
+.talkHints {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 43px;
+  max-height: 74px;
+  padding: 6px 24px 6px 10px;
+  overflow-y: auto;
+  border-top: 1px solid var(--op-line);
+}
+/* Группы ряда ответа (реплики, части, голос) не ломают ряд: кнопки — его элементы. */
+.group {
+  display: contents;
+}
+.question {
+  min-height: 28px;
+  padding: 3px 10px;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--color-text, #101820);
+  background: #fff;
+  border: 1px solid var(--op-border);
+}
+.question:hover:enabled {
+  border-color: var(--op-blue);
+}
+.talkBtn {
+  min-width: 150px;
+  min-height: 30px;
+  padding: 3px 14px;
+  font-weight: bold;
+  color: #fff;
+  background: var(--op-blue);
+  border: 1px solid var(--op-blue);
+}
+.talkBtn[data-rec="true"] {
+  background: var(--op-orange);
+  border-color: var(--op-orange);
+}
+.partsBtn {
+  min-width: 110px;
+  min-height: 30px;
+  padding: 3px 14px;
+  font-weight: bold;
+  color: var(--op-blue);
+  background: #fff;
+  border: 1px solid var(--op-blue);
+}
+.partsBtn[aria-pressed="true"] {
+  color: #fff;
+  background: var(--op-dark);
+  border-color: var(--op-dark);
+}
+.meter {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 190px;
+}
+.meterBar {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+  height: 10px;
+}
+.meterBar i {
+  background: var(--op-asked);
+}
+.meterBar i[data-zone="true"] {
+  box-shadow: inset 0 -2px 0 #9fd0ae;
+}
+.meterBar i[data-on="true"] {
+  background: var(--op-blue);
+}
+.meterBar i[data-on="true"][data-hi="true"] {
+  background: var(--op-orange);
+}
+.meterScale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--op-muted);
+}
+.status {
+  font-size: 13px;
+  color: var(--op-muted);
+  font-variant-numeric: tabular-nums;
+}
+.spin {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: -2px;
+  border: 2px solid var(--op-line);
+  border-top-color: var(--op-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* поле правки распознанного (TC-04): на всю ширину ряда ответа, одна строка */
+.checkForm {
+  display: flex;
+  flex: 1 1 100%;
+  gap: 6px;
+  min-width: 0;
+}
+.checkForm input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 3px 6px;
+  font: inherit;
+  border: 1px solid var(--op-blue);
+}
+
+/* полоса размера: .resizeBar модуля 112 — только пока пояснение не выучено (GP-24) */
+.resizeBar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 20px;
+  padding: 1px 24px 1px 3px;
+  border-top: 1px solid var(--op-line);
+  background: var(--op-panel);
+}
+/* Список без ряда ответа доходит до низа окна: последняя строка не под кнопкой размера. */
+.idle > .talkLog:last-child {
+  padding-bottom: 20px;
+}
+.resizeHint {
+  overflow: hidden;
+  color: var(--op-muted);
+  font-size: 11px;
+  line-height: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Кнопка размера — в правом нижнем углу окна поверх содержимого: своей полосы не держит. */
+.grip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  color: var(--op-muted);
+  background: transparent;
+  border: 0;
+  cursor: nwse-resize !important;
+}
+.edge {
+  position: absolute;
+  z-index: 3;
+  touch-action: none;
+}
+.edge[data-edge="n"],
+.edge[data-edge="s"] {
+  right: 10px;
+  left: 10px;
+  height: 8px;
+  cursor: ns-resize;
+}
+.edge[data-edge="w"],
+.edge[data-edge="e"] {
+  top: 10px;
+  bottom: 10px;
+  width: 8px;
+  cursor: ew-resize;
+}
+.edge[data-edge="nw"],
+.edge[data-edge="ne"],
+.edge[data-edge="sw"],
+.edge[data-edge="se"] {
+  width: 14px;
+  height: 14px;
+}
+.edge[data-edge="n"],
+.edge[data-edge="nw"],
+.edge[data-edge="ne"] {
+  top: -5px;
+}
+.edge[data-edge="s"],
+.edge[data-edge="sw"],
+.edge[data-edge="se"] {
+  bottom: -5px;
+}
+.edge[data-edge="w"],
+.edge[data-edge="nw"],
+.edge[data-edge="sw"] {
+  left: -5px;
+}
+.edge[data-edge="e"],
+.edge[data-edge="ne"],
+.edge[data-edge="se"] {
+  right: -5px;
+}
+.edge[data-edge="nw"],
+.edge[data-edge="se"] {
+  cursor: nwse-resize;
+}
+.edge[data-edge="ne"],
+.edge[data-edge="sw"] {
+  cursor: nesw-resize;
+}
+
+/* Разговор с отделом контроля (TC-07): занимает место тела карточки, пока идёт звонок. */
+.body[hidden],
+.idle[hidden] {
+  display: none;
+}
+.control {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}

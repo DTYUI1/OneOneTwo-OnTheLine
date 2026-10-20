@@ -2,11 +2,16 @@
 // Частота и длительности — российский телефонный стандарт, поэтому сигнал
 // узнаётся на слух без объяснений: 425 Гц, КПВ 1 с сигнал / 4 с пауза.
 
+import type { CallState } from "./machine";
+
 export interface Tones {
   /** Контроль посылки вызова — «длинные гудки» в трубке. */
   ringback(): void;
   /** Щелчок снятия и укладки трубки. */
   click(): void;
+  /** Тихое шипение открытой линии (TC-09): включается и гаснет плавно. */
+  line(on: boolean): void;
+  /** Гасит гудки; шипение линии живёт своим `line`. */
   stop(): void;
   close(): void;
 }
@@ -27,11 +32,31 @@ const CLICK_S = 0.009;
 const CLICK_CUTOFF_HZ = 1800;
 /** Микро-рампы вместо мгновенных включений — иначе в наушниках щёлкает. */
 const RAMP_S = 0.005;
+/**
+ * Шипение линии — на грани слышимости: оно говорит «линия открыта», а не
+ * нагнетает. Полоса телефона, как у голосов (scripts/voices/phone.py).
+ */
+const LINE_LEVEL = 0.006;
+const LINE_LOOP_S = 3;
+const LINE_FADE_S = 0.4;
+const LINE_LOW_HZ = 300;
+const LINE_HIGH_HZ = 3400;
+
+/** Шипение звучит только в разговоре и молчит при «звук выкл.» и после занятия. */
+export function lineHiss(
+  state: CallState,
+  muted: boolean,
+  disabled: boolean,
+): boolean {
+  return state === "talking" && !muted && !disabled;
+}
 
 export function createTones(): Tones {
   let context: AudioContext | null = null;
   let oscillator: OscillatorNode | null = null;
   let gain: GainNode | null = null;
+  let lineSource: AudioBufferSourceNode | null = null;
+  let lineGain: GainNode | null = null;
 
   function audio(): AudioContext | null {
     if (context) return context;
@@ -58,6 +83,18 @@ export function createTones(): Tones {
     oscillator?.stop((context?.currentTime ?? 0) + RAMP_S * 2);
     oscillator = null;
     gain = null;
+  }
+
+  function lineOff(fadeS: number): void {
+    if (lineGain && context) {
+      const at = context.currentTime;
+      lineGain.gain.cancelScheduledValues(at);
+      lineGain.gain.setValueAtTime(lineGain.gain.value, at);
+      lineGain.gain.linearRampToValueAtTime(0, at + fadeS);
+      lineSource?.stop(at + fadeS + RAMP_S);
+    }
+    lineSource = null;
+    lineGain = null;
   }
 
   return {
@@ -107,12 +144,51 @@ export function createTones(): Tones {
       noise.start();
     },
 
+    line(on: boolean): void {
+      if (!on) {
+        lineOff(LINE_FADE_S);
+        return;
+      }
+      if (lineSource) return;
+      const ready = wake();
+      if (!ready) return;
+      const frames = Math.round(ready.sampleRate * LINE_LOOP_S);
+      const buffer = ready.createBuffer(1, frames, ready.sampleRate);
+      const samples = buffer.getChannelData(0);
+      for (let index = 0; index < frames; index++)
+        samples[index] = Math.random() * 2 - 1;
+      const noise = ready.createBufferSource();
+      const low = ready.createBiquadFilter();
+      const high = ready.createBiquadFilter();
+      const level = ready.createGain();
+      noise.buffer = buffer;
+      noise.loop = true;
+      low.type = "highpass";
+      low.frequency.value = LINE_LOW_HZ;
+      high.type = "lowpass";
+      high.frequency.value = LINE_HIGH_HZ;
+      level.gain.setValueAtTime(0, ready.currentTime);
+      level.gain.linearRampToValueAtTime(
+        LINE_LEVEL,
+        ready.currentTime + LINE_FADE_S,
+      );
+      noise
+        .connect(low)
+        .connect(high)
+        .connect(level)
+        .connect(ready.destination);
+      noise.start();
+      lineSource = noise;
+      lineGain = level;
+    },
+
     stop(): void {
       silence();
     },
 
     close(): void {
       silence();
+      lineOff(RAMP_S);
       void context?.close();
       context = null;
     },

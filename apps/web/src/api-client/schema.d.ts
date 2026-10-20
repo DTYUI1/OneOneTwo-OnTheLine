@@ -283,6 +283,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/scenarios/playable": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listPlayableScenarios
+         * @description Утверждённые сценарии, которые можно пройти без преподавателя: в учебном плане текущей версии есть доклады бригады для каждого статуса эталонного хода, который ставят по докладу («Прибытие», «Проведение работ», «Работы завершены», «Отказ от выполнения работ»). Ход, который кончается решением диспетчера («Не принята»), докладов не требует. Тот же отбор применяют самостоятельная тренировка и «Подобрать по службе и уровню» в адресной выдаче (docs/dds_gameplay.md, раздел 1.5). Доступно teacher.
+         */
+        get: operations["listPlayableScenarios"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/scenarios/{id}": {
         parameters: {
             query?: never;
@@ -298,7 +318,11 @@ export interface paths {
          */
         put: operations["updateScenario"];
         post?: never;
-        delete?: never;
+        /**
+         * deleteDraftScenario
+         * @description Мягкое удаление/восстановление черновика или остановка генерации.
+         */
+        delete: operations["deleteDraftScenario"];
         options?: never;
         head?: never;
         patch?: never;
@@ -404,7 +428,11 @@ export interface paths {
         get: operations["getSession"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * deleteDraftSession
+         * @description Мягкое удаление/восстановление черновика или остановка генерации.
+         */
+        delete: operations["deleteDraftSession"];
         options?: never;
         head?: never;
         patch?: never;
@@ -568,6 +596,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/calls/{id}/voice-report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * recognizeReport
+         * @description Доклад службе голосом (DT-05): фраза распознаётся локально (faster-whisper, без интернета и GPU) и сводится к виду доклада по ключевым сведениям — той же шкале, что варианты ответа. choice null — не расслышано, доклад повторяется; text при этом непуст, если речь есть, но уверенность ниже порога: клиент показывает его в поле правки, и поправленный текст уходит повторным запросом с полем text вместо audio (TC-04). Только идущий звонок своей карточки; ничего не сохраняет и в журнал аудита не пишется. Распознавание выключено — 503 stt_off.
+         */
+        post: operations["recognizeReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calls/{id}/voice-reply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * recognizeReply
+         * @description Ответ бригаде голосом (DT-16): фраза распознаётся локально (faster-whisper, без интернета и GPU) и сводится к одному из вариантов ответа реплики бригады (reply_options; evalcore.voice_reply). option_key null — не расслышано или не сопоставлено, бригада переспрашивает. Сопоставленный вариант клиент отправляет событием brigade_reply с mode = voice. Без delivery_id (DT-19) — фраза бригаде вне вопроса: только текст и громкость, option_key null; бригада отвечает на неё в браузере; в журнал карточки фраза попадает событием brigade_said (GP-11). Только идущий разговор своей карточки и реплика этого звонка, на которую ещё не ответили: иначе 404 (реплики нет в звонке) или 409 (звонок завершён, ответ не нужен или уже дан). Ничего не сохраняет и в журнал аудита не пишется. Распознавание выключено — 503 stt_off.
+         */
+        post: operations["recognizeReply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/calls/{id}/briefing-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * checkBriefing
+         * @description Проверка вводной бригаде (GP-05): что бригада поймёт из фразы диспетчера — адрес (ok — адрес эталона, wrong — другой, бригада поедет туда; missing — адреса или номера дома нет), прозвучал ли повод, ответ бригады (повтор адреса и «Выезжаем» или что она переспрашивает). Голос (распознанный текст voice-reply) и части проверяются одним правилом evalcore.briefing. Полную вводную клиент отправляет событием brigade_briefing — сервер проверяет её снова и только тогда отправляет бригаду. Только идущий разговор своей карточки со свободной или направленной сюда бригадой после статуса «Принята»: иначе 404 или 409. Ничего не сохраняет.
+         */
+        post: operations["checkBriefing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/evaluations": {
         parameters: {
             query?: never;
@@ -705,6 +793,26 @@ export interface paths {
          * @description contract-ready, backend pending: C-02/C-03. См. contracts/C01_INTERFACES.md.
          */
         get: operations["getSessionLifecycle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/background-cards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Фоновые отработанные карточки реестра
+         * @description TC-07, «Живая смена»: карточки прошлой смены своей службы, уже закрытые, для реестра обучаемого на старте занятия. Только для участника этого занятия: сколько — по его уровню (1 — нет, 2 — три, 3 — шесть, 4 — десять), содержание — data/background_cards.json, номер и время выводятся детерминированно из участия. Занятие не начато — пустой список. Ничего не сохраняет: фоновые карточки не входят в /cards, выдачу, оценку и прогресс.
+         */
+        get: operations["listBackgroundCards"];
         put?: never;
         post?: never;
         delete?: never;
@@ -992,7 +1100,7 @@ export interface paths {
         put?: never;
         /**
          * Назначить версии справочных материалов
-         * @description contract-ready, backend pending: C-07. См. contracts/C01_INTERFACES.md.
+         * @description Добавить справочные материалы своего занятия до начала или во время работы. Завершённое занятие изменять нельзя. Повтор request_id безопасен.
          */
         post: operations["assignMaterials"];
         delete?: never;
@@ -1055,6 +1163,26 @@ export interface paths {
          * @description Личная тренировка обучаемого: закрывает его прежнюю тренировку и запускает новую с обучающим сценарием его службы. Повторять можно сколько угодно. 409 — идёт занятие преподавателя; 422 — обучающий сценарий не загружен (seed).
          */
         post: operations["startPractice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/practice/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listPracticeCatalog
+         * @description Общий каталог сценариев обучаемого и преподавателя: одинаковые одобренные, не удалённые сценарии с событиями и ветками (ScenarioEvent), которые проходятся без преподавателя — без обучающих упражнений, параллельной смены и карточек связки 112 → ДДС. Сценарии с обязательным звонком заявителю включены; самостоятельная тренировка добавляет его в телефон ДДС. Порядок — служба, уровень, название. Эталон не отдаётся. Чтение каталога не даёт преподавателю права запускать самостоятельную тренировку; полный список студии остаётся в GET /scenarios.
+         */
+        get: operations["listPracticeCatalog"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1198,11 +1326,521 @@ export interface paths {
         };
         /**
          * listProgress
-         * @description Ступени обучения: обучаемому — свой путь, преподавателю — путь всех действующих обучаемых. Правило — evalcore/progress.py.
+         * @description Ступени обучения: обучаемому — свой путь, преподавателю — путь всех действующих обучаемых. Правило — evalcore/progress.py. Карточка параллельной смены (участнику назначено больше одной карточки, и одновременно он берёт по две и больше: min(parallel_cards занятия, уровень участника) > 1) считается только в ступень 4; одиночная — в ступень уровня своего сценария (2 — уровень 1, 3 — уровень 2).
          */
         get: operations["listProgress"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/warmups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listWarmupResults
+         * @description Свежие результаты разминки, не больше 200: обучаемому — свои, преподавателю — всех обучаемых. Администратору учебные данные не нужны (ТЗ, C-07).
+         */
+        get: operations["listWarmupResults"];
+        put?: never;
+        /**
+         * createWarmupResult
+         * @description Результат разминки (DT-09): упражнение на один навык между занятиями — «Найди отличие в адресе» или «Кого направить». Обучаемый — из сессии. Верных ответов больше, чем заданий, — 422.
+         */
+        post: operations["createWarmupResult"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/injects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listSessionInjects
+         * @description Вводные преподавателя (DT-06): какие виды событий можно подать в открытые карточки идущего занятия и сколько карточек их примут, и лента уже поданных вводных — свежие сверху. Только автор занятия.
+         */
+        get: operations["listSessionInjects"];
+        put?: never;
+        /**
+         * createSessionInject
+         * @description Подать вводную (DT-06): событие плана сценария вида `kind` с `injectable` или `trigger.on = inject` — всем местам или перечисленным. У каждого адресата сервер берёт открытую карточку, где событие ещё не срабатывало, и подаёт его (`fire_event_now`); реплика бригады уходит сразу. Неприменимо — `not_applicable` с причиной. Занятие не идёт — 409; адресат не из занятия — 422.
+         */
+        post: operations["createSessionInject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/demo-accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Учётные записи для проверки на экране входа
+         * @description Публичный. Если стенд включил показ (DEMO_ACCOUNTS_SHOWN), возвращает логины демо-ролей и общий пароль стенда (DEMO_PASSWORD); иначе enabled=false, accounts пуст, password=null. Источник: рекомендации организаторов 16.10, п. 2.
+         */
+        get: operations["demoAccounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/ai/resource": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Обезличенное состояние общего локального ИИ */
+        get: operations["getAIResourceState"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/packs/generation-jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Последние задания генерации текущего преподавателя */
+        get: operations["listGenerationJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/ai-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * getAIModels
+         * @description Модели локального ИИ (HQ-016): установленные файлы, режим процессор/видеокарта, состояние видеокарты и загрузки, замеры. По умолчанию Qwen3-4B на процессоре.
+         */
+        get: operations["getAIModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/ai-models/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * setActiveAIModel
+         * @description Сделать модель и режим основными для генерации и ИИ-проверки. Модель загружается роутером llama.cpp без перезапуска; недоступный режим (нет файла, видеокарты, памяти) — 409 с причиной; force — «всё равно использовать видеокарту», когда у сервера модели есть доступ к карте (can_force). Не загрузится на видеокарте — ИИ работает на процессоре (active.fallback).
+         */
+        put: operations["setActiveAIModel"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/ai-models/gpu-notice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * setAIGpuNotice
+         * @description «Не напоминать» о видеокарте: не предлагать перейти на неё и не предупреждать о драйвере (например, где драйвер не проверить). Одна настройка на систему; dismissed=false — снова напоминать.
+         */
+        put: operations["setAIGpuNotice"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/memory-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Показать проверку памяти финальной смены
+         * @description HQ-033, прототип A «Стоп-кадр» (решение 18.10 — без паузы, смена идёт дальше). Только участнику своей идущей финальной смены (`settings.final_shift`): три вопроса об обстановке — сколько бригад своей службы свободно, какие на месте, по каким карточкам услышанный доклад бригады не отмечен статусом. Верные ответы сервер считает по состоянию смены в момент первого запроса и пишет в журнал первой карточки смены запись `memory_check` (payload — `storage.MemoryCheckPayload`). Одна проверка на смену: повторный запрос отдаёт ту же (с итогом, если уже ответил). В оценку не входит. Не финальная смена — 409 `memory_check_unavailable`, занятие не идёт — 409, карточек ещё нет — 409 `memory_check_early`.
+         */
+        post: operations["startMemoryCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/memory-check/answers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ответить на проверку памяти
+         * @description Ответы на показанную проверку памяти (HQ-033): сервер сверяет их с верными ответами на момент показа, пишет в журнал той же карточки запись `memory_check_answer` (payload — `storage.MemoryCheckAnswerPayload`: ответы, сколько верно из скольких) и отдаёт итог с пояснениями. Вопрос верен, если выбран ровно набор верных вариантов. Повтор после ответа отдаёт прежний итог. Занятие не идёт — 409; проверки не было — 409 `memory_check_missing`; число ответов не по числу вопросов или вариант не из списка — 422.
+         */
+        post: operations["answerMemoryCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/practice/{id}/take-over": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * takeOverPractice
+         * @description Перехват показа (HQ-035, лист решений 18.10): обучаемый нажал «Беру управление» в тренировке «Смотрю» и дальше ведёт карточку сам — это попытка «Вместе». Снимает признак показа settings_snapshot.demo у этой тренировки: её карточки идут в ступень обучения и в «Мои результаты», как обычная попытка. Повторный вызов и тренировка без показа — без изменений. Перехватить можно только показ «Смотрю» (settings_snapshot.demo_mode = watch), пока курсор не закрыл ни одной его карточки: засчитывается только карточка, которую обучаемый довёл сам. Не своя тренировка или не тренировка — 404 session_not_found; тренировка закрыта — 409 session_not_running; показ опытного (expert) или показ без вида — 409 demo_not_watch; курсор уже закрыл карточку показа — 409 demo_card_closed.
+         */
+        post: operations["takeOverPractice"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/screens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listSessionScreens
+         * @description Показ экранов учеников идущего занятия (HQ-017): у кого преподаватель запросил показ и кто уже показывает. Преподаватель — автор занятия — видит всех; обучаемый — только свою строку. Состояние живёт в памяти API, в БД не пишется; сами кадры идут по WebSocket `/ws/screen` (ws-events.md).
+         */
+        get: operations["listSessionScreens"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/screens/{user_id}/request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * requestScreenShare
+         * @description Преподаватель просит обучаемого показать экран (HQ-017). У обучаемого появляется запрос; без его согласия (кнопка и разрешение браузера) кадры не идут. Повторный запрос возвращает текущее состояние. Занятие не идёт — 409; одновременно не больше 10 показов на занятие — 409; адресат не из занятия — 422. Пишется в audit_log.
+         */
+        post: operations["requestScreenShare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/screens/{user_id}/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * stopScreenShare
+         * @description Остановить показ экрана (HQ-017): преподаватель — «Перестать», обучаемый — «Остановить показ» или отказ от запроса (только свой `user_id`). Последний кадр удаляется из памяти, трансляция закрывается. Повтор безопасен. Пишется в audit_log.
+         */
+        post: operations["stopScreenShare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/norms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Изменить норматив отработки черновика занятия
+         * @description Только владелец-преподаватель и только до начала занятия. Значение в секундах (1–3600) записывается и в settings_snapshot, и в timing_policy; legacy null не меняется.
+         */
+        patch: operations["updateSessionNorms"];
+        trace?: never;
+    };
+    "/packs/generation-variety": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Число разных историй для службы и уровня */
+        get: operations["getGenerationVariety"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/packs/generation-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Темы генерации происшествий */
+        get: operations["getGenerationCategories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scenarios/{id}/regenerate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Пересоздать авторский черновик по замечанию */
+        post: operations["regenerateScenario"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/packs/generation-trainees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Поиск обучаемых по ФИО или логину для персональной генерации */
+        get: operations["searchGenerationTrainees"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/sessions/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * restoreDraftSession
+         * @description Мягкое удаление/восстановление черновика или остановка генерации.
+         */
+        post: operations["restoreDraftSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/scenarios/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * restoreDraftScenario
+         * @description Мягкое удаление/восстановление черновика или остановка генерации.
+         */
+        post: operations["restoreDraftScenario"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listDeletedDrafts
+         * @description Мягкое удаление/восстановление черновика или остановка генерации.
+         */
+        get: operations["listDeletedDrafts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/jobs/{id}/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * stopGeneration
+         * @description Мягкое удаление/восстановление черновика или остановка генерации.
+         */
+        post: operations["stopGeneration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/materials/by-session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Справочные материалы по занятиям
+         * @description Для обучаемого — только его идущие и завершённые занятия; для преподавателя — его занятия. Только справочные материалы. Идущее занятие возвращается и без материалов.
+         */
+        get: operations["listSessionMaterials"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/job-errors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listJobErrors
+         * @description Ошибки очереди, включая прочитанные. Без содержимого заданий и результатов обучаемых. Просмотр не скрывает предупреждение.
+         */
+        get: operations["listJobErrors"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/job-errors/{id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * readJobError
+         * @description Отметить конкретную версию ошибки прочитанной для всех администраторов. Статус задания не меняется. Повторный сбой требует новой отметки; устаревшая версия — 409.
+         */
+        post: operations["readJobError"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1296,6 +1934,11 @@ export interface components {
             voice_profile: string;
             /** Is Active */
             is_active: boolean;
+            /**
+             * Phone
+             * @description Городской номер службы в справочнике телефона ДДС, кроме короткого phone_ext: набранный, он соединяет с той же службой. Номера учебные.
+             */
+            phone?: string | null;
         };
         /** @example {
          *       "number": "10000001",
@@ -1343,6 +1986,12 @@ export interface components {
                 house: string;
                 building: string;
                 apartment: string;
+                object?: string;
+                structure?: string;
+                entrance?: string;
+                floor?: string;
+                code?: string;
+                descriptive?: string;
             };
             readonly description: string;
             readonly tags: string[];
@@ -1352,6 +2001,8 @@ export interface components {
             readonly emergency: boolean;
             readonly incident_class: string;
             readonly service_ids: string[];
+            /** @enum {string} */
+            readonly caller_status?: "" | "очевидец" | "пострадавший" | "родственник" | "знакомый" | "ребенок" | "участник";
         };
         /** @example {
          *       "service_number": "",
@@ -1402,7 +2053,7 @@ export interface components {
             } | {
                 /** @enum {string} */
                 field: "address";
-                /** @description Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address. */
+                /** @description Адрес, введённый обучаемым вручную; исходный адрес карточки — source.address. Не используется АРМ ДДС с 08.10 (DT-14): адрес проверяется в комментариях; поле остаётся для старых событий. */
                 value: {
                     city: string;
                     street: string;
@@ -1489,6 +2140,71 @@ export interface components {
             payload: {
                 /** Format: uuid */
                 call_id: string;
+                /** @description Виды доклада службе в порядке доклада: голосом (распознанный текст, сведённый к виду по частям памятки ДДС, с. 32) или вариантом ответа. full — все обязательные части: в звонке в 112 четыре (кто вы, адрес и повод, карточка, что изменилось), в остальных звонках три — карточку памятка требует только в звонке в 112; no_who, no_address, no_card, no_change — без этой части (первой недостающей обязательной); extra — с лишними догадками. no_victims и no_incident — виды до 08.10.2026, только в старых журналах. Нет поля — доклад не записан. */
+                report_choices?: ("full" | "no_who" | "no_address" | "no_card" | "no_change" | "extra" | "no_victims" | "no_incident")[];
+                /** @description Как сделан каждый доклад из report_choices, в том же порядке: voice — голосом, option — вариантом ответа; нет поля — все вариантом (отбой до голосового ввода). */
+                report_modes?: ("voice" | "option")[];
+                /** @description Сколько раз доклад голосом не расслышан (речи нет); после двух предлагаются варианты ответа. Фраза с низкой уверенностью, которую обучаемый проверил в поле правки, сюда не входит — переспрос не штрафуется (TC-04). */
+                voice_failures?: number;
+                /** @description Какие части памятки ДДС, с. 32, прозвучали в каждом докладе из report_choices, в том же порядке: who — кто вы, address — адрес и повод, card — карточка, change — что изменилось. Нет поля или элемента — части по виду доклада (вариант ответа или отбой до 08.10.2026). */
+                report_parts?: ("who" | "address" | "card" | "change")[][];
+                /** @description Громкость каждого доклада из report_choices, в том же порядке: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null — доклад вариантом ответа или громкость не измерена. Нет поля — отбой до 12.10.2026. */
+                report_loudness?: (("quiet" | "ok" | "loud") | null)[];
+                /** @description Номер регистрации (наряда, заявки, вызова), который назвало должностное лицо службы в этом звонке, цифрами (TC-03): фраза банка озвучки места registered (scripts/voices/bank, поле number). Диспетчер записывает его в комментарий карточки; критерий comment_keywords засчитывает только этот номер отдельным числом, чужой — нет. Нет поля — номер не назван (дежурный без персонажа, звонок бригаде, отбой до 17.10.2026). */
+                registration_number?: string;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "call_hold";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /** @description Виды доклада службе в порядке доклада: голосом (распознанный текст, сведённый к виду по частям памятки ДДС, с. 32) или вариантом ответа. full — все обязательные части: в звонке в 112 четыре (кто вы, адрес и повод, карточка, что изменилось), в остальных звонках три — карточку памятка требует только в звонке в 112; no_who, no_address, no_card, no_change — без этой части (первой недостающей обязательной); extra — с лишними догадками. no_victims и no_incident — виды до 08.10.2026, только в старых журналах. Нет поля — доклад не записан. */
+                report_choices?: ("full" | "no_who" | "no_address" | "no_card" | "no_change" | "extra" | "no_victims" | "no_incident")[];
+                /** @description Как сделан каждый доклад из report_choices, в том же порядке: voice — голосом, option — вариантом ответа; нет поля — все вариантом (отбой до голосового ввода). */
+                report_modes?: ("voice" | "option")[];
+                /** @description Сколько раз доклад голосом не расслышан (речи нет); после двух предлагаются варианты ответа. Фраза с низкой уверенностью, которую обучаемый проверил в поле правки, сюда не входит — переспрос не штрафуется (TC-04). */
+                voice_failures?: number;
+                /** @description Какие части памятки ДДС, с. 32, прозвучали в каждом докладе из report_choices, в том же порядке: who — кто вы, address — адрес и повод, card — карточка, change — что изменилось. Нет поля или элемента — части по виду доклада (вариант ответа или отбой до 08.10.2026). */
+                report_parts?: ("who" | "address" | "card" | "change")[][];
+                /** @description Громкость каждого доклада из report_choices, в том же порядке: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null — доклад вариантом ответа или громкость не измерена. Нет поля — отбой до 12.10.2026. */
+                report_loudness?: (("quiet" | "ok" | "loud") | null)[];
+                /** @description Номер регистрации (наряда, заявки, вызова), который назвало должностное лицо службы в этом звонке, цифрами (TC-03): фраза банка озвучки места registered (scripts/voices/bank, поле number). Диспетчер записывает его в комментарий карточки; критерий comment_keywords засчитывает только этот номер отдельным числом, чужой — нет. Нет поля — номер не назван (дежурный без персонажа, звонок бригаде, отбой до 17.10.2026). */
+                registration_number?: string;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "call_resume";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "caller_said";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /** @description Id фразы книги заявителя: CALLER_<характер>.<место>.<сюжет>.<n>. */
+                phrase_id: string;
             };
             /** Format: uuid */
             clock_sample_id?: string;
@@ -1567,6 +2283,107 @@ export interface components {
                 audio_version: number | null;
                 /** @enum {string} */
                 reason: "audio_unavailable" | "playback_error" | "interrupted" | "session_finished";
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "brigade_reply";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /** Format: uuid */
+                delivery_id: string;
+                option_key: string;
+                /**
+                 * @description Как дан ответ (DT-16): voice — сказан голосом и сопоставлен с вариантом (POST /calls/{id}/voice-reply), option — выбран кнопкой варианта. Нет поля — вариантом (ответы до голосового ввода).
+                 * @enum {string}
+                 */
+                mode?: "voice" | "option";
+                /** @description Распознанный текст ответа голосом (mode = voice); у ответа вариантом поля нет. */
+                text?: string;
+                /** @description Громкость ответа голосом: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом; null или нет поля — ответ вариантом или громкость не измерена. */
+                loudness?: ("quiet" | "ok" | "loud") | null;
+                /** @description Сколько фраз на эту реплику до ответа не расслышано или не сопоставлено с вариантом; после двух раскрываются варианты ответа. Нет поля — 0. */
+                voice_failures?: number;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "brigade_briefing";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /**
+                 * @description Способ вводной: voice — сказана голосом (POST /calls/{id}/voice-reply без delivery_id), parts — собрана по частям.
+                 * @enum {string}
+                 */
+                mode: "voice" | "parts";
+                /** @description Вводная — распознанная фраза или части (адрес, что случилось), склеенные в одну фразу. Адрес и повод сервер берёт из неё: POST /calls/{id}/briefing-check заранее говорит, что поймёт бригада. */
+                text: string;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "brigade_said";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /** @description Что сказал диспетчер: распознанная фраза или части вводной, склеенные в одну фразу. */
+                text: string;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "report_confirmed";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /**
+                 * Format: uuid
+                 * @description Выдача доклада (CardTraining.messages[].delivery_id), приём которого подтверждён.
+                 */
+                delivery_id: string;
+                /** @description Что сказал диспетчер: «Принял.» кнопкой или распознанная фраза. */
+                text: string;
+            };
+            /** Format: uuid */
+            clock_sample_id?: string;
+        } | {
+            /** Format: uuid */
+            client_event_id: string;
+            /** Format: date-time */
+            client_ts: string;
+            /** @enum {string} */
+            type: "control_reply";
+            payload: {
+                /** Format: uuid */
+                call_id: string;
+                /** @enum {string} */
+                mode: "voice" | "parts";
+                /** @description Что сказал диспетчер: распознанная фраза или подпись выбранного варианта. */
+                text: string;
+                /** @description Выбранный вариант (mode = parts); голосом — null. */
+                option_key?: string | null;
             };
             /** Format: uuid */
             clock_sample_id?: string;
@@ -1685,6 +2502,11 @@ export interface components {
                     service_id: string;
                     phone_ext: string;
                     before_s: number;
+                    /**
+                     * @description Доклад абоненту телефона ДДС (GP-09, рекомендации 16.10, п. 8): роль абонента из settings.phone_contacts занятия. Задана — адресат верен, если набран номер этой роли в списке ДДС; service_id — своя ДДС, phone_ext — номер по умолчанию (contracts/scenario-events.md, «Телефон ДДС»).
+                     * @enum {string}
+                     */
+                    contact_role?: "head" | "response_chief" | "crew_chief" | "crew_specialist" | "caller";
                 };
                 expected_comment: string;
                 /** @description Ключевые слова комментария сверх адреса, сути, решения и пострадавших (критерий comment_keywords): пункт найден, если есть все слова хотя бы одного варианта; варианты — через «/». */
@@ -1704,6 +2526,24 @@ export interface components {
             status: "draft" | "approved" | "retired";
             /** Teacher Comment */
             teacher_comment: string;
+            /**
+             * Coherence Unchecked
+             * @description Связность сгенерированного сценария не проверена проходом; перед утверждением показать предупреждение.
+             * @default false
+             */
+            readonly coherence_unchecked: boolean;
+            /**
+             * Variant Label
+             * @description События и исход фактически выбранного пути сценария.
+             */
+            readonly variant_label?: string;
+            /** Created At */
+            readonly created_at?: string | null;
+            /**
+             * @description Ручной сценарий: источник template или trainee без метаданных автоматической генерации.
+             * @default false
+             */
+            readonly is_manual: boolean;
         };
         /** @example {
          *       "id": "00000000-0000-4000-8000-000000000200",
@@ -1793,6 +2633,26 @@ export interface components {
             level: number;
         };
         /**
+         * PhoneContact
+         * @description Абонент телефона ДДС (GP-09): роль, подпись в списке и условный номер.
+         */
+        PhoneContact: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "head" | "response_chief" | "crew_chief" | "crew_specialist" | "caller";
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+            /**
+             * Character
+             * @description Характер заявителя на этом занятии (роль caller, HQ-019): calm — спокойная, confused — растерянная. Нет поля — характер по умолчанию из сценария.
+             */
+            character?: ("calm" | "confused") | null;
+        };
+        /**
          * Settings
          * @example {
          *       "reaction_normative_s": 30,
@@ -1811,7 +2671,9 @@ export interface components {
          *       },
          *       "parallel_cards": 1,
          *       "hints_level": 0,
-         *       "spelling_hints": false
+         *       "spelling_hints": false,
+         *       "voice_only": false,
+         *       "report_choice_factor": 0.5
          *     }
          */
         Settings: {
@@ -1823,7 +2685,7 @@ export interface components {
             critical_cap: number;
             /**
              * Weights
-             * @description Все семь весов обязательны; их сумма должна быть положительной и конечной. Веса критериев комментария spelling и comment_keywords — по желанию: без веса критерий не считается (занятия до 28.09).
+             * @description Все семь весов обязательны; их сумма должна быть положительной и конечной. Веса критериев комментария spelling и comment_keywords — по желанию: без веса критерий не считается (занятия до 28.09). Так же вес brigade_work «Работа с бригадой» (DT-10): без веса не считается (занятия до 08.10).
              */
             weights: {
                 [key: string]: number;
@@ -1852,6 +2714,42 @@ export interface components {
              * @default false
              */
             spelling_hints: boolean;
+            /**
+             * Voice Only
+             * @description Только голос: доклад службе в окне разговора — только голосом, варианты ответа не показываются (контрольное занятие, DT-05).
+             * @default false
+             */
+            voice_only: boolean;
+            /**
+             * Report Choice Factor
+             * @description Доля балла за доклад службе вариантом ответа от такого же доклада голосом: 1 — без разницы, 0 — не засчитывать.
+             * @default 0.5
+             */
+            report_choice_factor: number;
+            /**
+             * Phone Contacts
+             * @description Абоненты телефона ДДС по службе (GP-09, рекомендации 16.10, п. 8): руководитель организации, начальник отдела реагирования, начальник и специалист аварийной бригады, заявитель — не больше 10 на ДДС. Нет ключа службы — список по умолчанию (evalcore.defaults.DEFAULT_PHONE_CONTACTS), пустой список — абонентов нет. Номер вне списка не отвечает; заявитель доступен, только если он в списке.
+             */
+            phone_contacts?: {
+                [key: string]: components["schemas"]["PhoneContact"][];
+            };
+            /**
+             * Final Shift
+             * @description Финальная смена (HQ-033, ступень 5): входящий вызов бригады подписан только бригадой (номер старшего) — без «по карточке N», карточку диспетчер находит сам по номеру направленной бригады. Попытки такой смены идут в ступень 5.
+             * @default false
+             */
+            final_shift: boolean;
+            /**
+             * Demo
+             * @description Показ (HQ-034): тренировку «Смотрю» или «Как сделал бы опытный» ведёт курсор, а не обучаемый. Её карточки не идут ни в ступени обучения, ни в «Мои результаты».
+             * @default false
+             */
+            demo: boolean;
+            /**
+             * Demo Mode
+             * @description Вид показа (HQ-035): watch — «Смотрю», expert — «Как сделал бы опытный». Перехватить («Беру управление») можно только watch. Без показа — null.
+             */
+            demo_mode?: ("watch" | "expert") | null;
         };
         /** @example {
          *       "id": "00000000-0000-4000-8000-000000000400",
@@ -1911,6 +2809,10 @@ export interface components {
              * @description Когда занятие завершено; null — ещё не завершено.
              */
             finished_at?: string | null;
+            /** @description Подготовка отдельно от running. Обучаемому всегда null, эталоны не раскрываются. */
+            ai_preparation?: components["schemas"]["AIPreparation"] | null;
+            start_pending?: boolean;
+            start_error?: string | null;
         };
         /** @example {
          *       "title": "Учебное занятие",
@@ -1947,6 +2849,8 @@ export interface components {
             participants: components["schemas"]["Participant"][];
             settings_snapshot: components["schemas"]["Settings"];
             timing_policy?: components["schemas"]["TimingPolicy"] | null;
+            /** @description Только занятие преподавателя: подготовить 1–4 индивидуальных карточки каждому до запуска. */
+            ai_selection?: components["schemas"]["AISelection"] | null;
         };
         /** @example {
          *       "id": "00000000-0000-4000-8000-000000000300",
@@ -2004,6 +2908,15 @@ export interface components {
             critical: boolean;
             evidence: string[];
             explanation: string;
+            /** @description Замечания разбора (TC-10): у каждой ошибки критерия своё, ещё замечания без снижения балла и вопросы к данным. Нет поля — оценка записана до TC-10. */
+            remarks?: components["schemas"]["CriterionRemark"][];
+        };
+        /** @description Состояние ИИ-проверки одной оценки. Модель одна, проверки и генерация идут по очереди. */
+        AICheck: {
+            /** @enum {string} */
+            state: "queued" | "running" | "failed";
+            /** @description Сколько задач ИИ впереди (проверки и идущая порция генерации); у идущей проверки — 0. */
+            ahead: number;
         };
         /** @example {
          *       "id": "00000000-0000-4000-8000-000000000500",
@@ -2047,6 +2960,8 @@ export interface components {
                 [key: string]: string;
             };
             teacher_comment: string;
+            /** @description ИИ-проверка комментария: идёт, ждёт очереди к модели или не удалась. null — проверки нет или она закончена (оценка complete). */
+            ai_check?: components["schemas"]["AICheck"] | null;
         };
         /** @example {
          *       "evaluation_id": "00000000-0000-4000-8000-000000000500",
@@ -2212,6 +3127,8 @@ export interface components {
              * @enum {string}
              */
             origin: "template" | "llm" | "imported";
+            /** Created At */
+            readonly created_at?: string | null;
         };
         /** @example {
          *       "id": "00000000-0000-4000-8000-000000000900",
@@ -2225,7 +3142,7 @@ export interface components {
             /** @enum {string} */
             kind: "generate" | "evaluate" | "insights" | "transcribe" | "tts";
             /** @enum {string} */
-            status: "pending" | "running" | "done" | "failed";
+            status: "pending" | "running" | "done" | "failed" | "cancelled";
             error: string | null;
         };
         /** @example {
@@ -2238,8 +3155,20 @@ export interface components {
             count: number;
             level: number;
             service_id: string;
-            seed: number;
+            /** @description Пусто или не передано — сервер выбирает случайное число и сохраняет его. */
+            seed?: number | null;
             options?: components["schemas"]["GenerateOptions"] | null;
+            /** @enum {string} */
+            generation_policy?: "after_lessons" | "now";
+            /**
+             * Format: uuid
+             * @description Ключ повторного запуска пакета с generation_policy. Отдельный от spec-first options.request_id (C-05), который пока отклоняется через 501.
+             */
+            generation_request_id?: string | null;
+            /** Categories */
+            categories?: ("traffic" | "fire" | "gas" | "medicine" | "utilities" | "lift" | "public_order" | "animals" | "other")[];
+            /** @description Логин обучаемого для персонального подбора; без него — обычная генерация. */
+            trainee_login?: string | null;
         };
         /**
          * Health
@@ -2475,6 +3404,26 @@ export interface components {
                 /** Format: date-time */
                 client_ts: string;
             };
+        } | {
+            /** @constant */
+            schema_version: 1;
+            /** Format: uuid */
+            event_id: string;
+            /** Format: date-time */
+            server_ts: string;
+            /** @enum {string} */
+            type: "screen.state";
+            payload: components["schemas"]["ScreenShare"];
+        } | {
+            /** @constant */
+            schema_version: 1;
+            /** Format: uuid */
+            event_id: string;
+            /** Format: date-time */
+            server_ts: string;
+            /** @enum {string} */
+            type: "session.materials_changed";
+            payload: components["schemas"]["Session"];
         };
         WsClientEvent: {
             /** @enum {string} */
@@ -2831,6 +3780,7 @@ export interface components {
              * @enum {string}
              */
             requires_state?: "accepted" | "responding" | "arrived" | "working";
+            task_change?: components["schemas"]["TaskChange"];
         };
         /** @example {
          *       "version": 1,
@@ -2870,6 +3820,14 @@ export interface components {
                 message_id: string | null;
                 explanation: string;
             }[];
+            /** @description События бригады (DT-10): уточнение, просьба о другой службе, молчание, тревога. Необязательно: план без поля работает как прежде. */
+            events?: components["schemas"]["ScenarioEvent"][];
+            /** @description Звонок отдела контроля при карточке без статуса (TC-07). Необязательно. */
+            control_call?: components["schemas"]["ControlCallPlan"];
+            /** @description Исход сценария для разбора (GP-27). Необязательно: без него разбор берёт исход тренировки по номеру карточки. */
+            outcome?: components["schemas"]["ScenarioOutcome"];
+            /** @description Живой заявитель (HQ-019) — как в файле сценария. Необязательно. */
+            caller?: components["schemas"]["ScenarioCaller"];
         };
         DeliveredMessage: {
             /** Format: uuid */
@@ -2887,6 +3845,44 @@ export interface components {
             message: components["schemas"]["InformationMessage"];
             /** Format: date-time */
             delivered_at: string;
+            /** @description Варианты ответа бригаде на эту реплику (события clarify, readback_error); нет поля — отвечать не нужно. Правильный не отмечается. */
+            reply_options?: components["schemas"]["ReplyOption"][];
+            /** @description Ответ бригады на реакцию диспетчера (ветка события: «Понял, спасибо, дальше сами»), а не доклад: «Как приняли?» после него бригада не спрашивает. Нет поля — доклад или реплика события. */
+            answer?: boolean;
+            /** @description Доклад о выезде (обосновывает «Начало реагирования»). На «доложите обстановку» бригада его не повторяет: «выезжаем» в пути противоречит сказанному — до следующего доклада она обещает доложить по прибытии. Нет поля — не доклад о выезде. */
+            departure?: boolean;
+            /** @description Подтверждённое окно ручной вести по всем ожиданиям call_service: AND групп, OR номеров внутри группы, включая только 112 и произвольные трёхзначные номера. null — хотя бы одна группа не вызвана; called_at — последний необходимый набор, by — ближайший срок вести (нет by — срока пока нет). Независимо от scalar needs_service. Отсутствующее поле — старая выдача, допустим прежний fallback. */
+            service_news?: {
+                /** Format: date-time */
+                called_at: string;
+                /** Format: date-time */
+                by?: string;
+                /**
+                 * Format: date-time
+                 * @description Время своевременной вести по журналу сервера; HTTP ACK сам по себе её не подтверждает.
+                 */
+                told_at?: string;
+            } | null;
+            /**
+             * @description Реплика просит вызвать другую службу (событие request_service или тревога с ожиданием call_service, HQ-055): служба справочника из номеров ожидания, кроме 112. Вызвав её, диспетчер сам сообщает бригаде — перезвонив или вернувшись с удержания; на «уже едет», «отправил» без названия службы бригада отвечает фразой места service_coming об этой службе («Понял, ждём скорую»). Нет поля — реплика службу не просит.
+             * @enum {string}
+             */
+            needs_service?: "101" | "102" | "103" | "104" | "GKH" | "MOSLIFT";
+            /**
+             * Format: date-time
+             * @description По этой просьбе позвонили в службу needs_service — момент набора номера (HQ-055); служба вызвана заранее, до просьбы (GP-28), — момент того звонка. С него весть «уже едет», «отправил» засчитывается и бригада отвечает «Понял, ждём скорую»; раньше служба ещё не вызвана — обычный ответ на фразу. Нет поля — в службу по просьбе ещё не звонили.
+             */
+            service_called_at?: string;
+            /**
+             * Format: date-time
+             * @description Срок сообщить бригаде, что служба едет: её приезд, 20 с после отбоя звонка в службу (HQ-055); служба вызвана заранее (GP-28) — срок ответа на просьбу. После срока служба уже приехала (реплика ветки surprise) — весть не засчитывается, окно отвечает обычной фразой. Нет поля при service_called_at — звонок в службу ещё идёт, срока пока нет.
+             */
+            news_by?: string;
+            /**
+             * Format: date-time
+             * @description Срок ответа на услышанный вопрос бригады (реплика с reply_options) — срок её события: его ожиданий, кроме ответа на вызов (evalcore.brigade.expectation_deadline, HQ-058). До срока бригада, снятая с удержания, повторяет вопрос и придерживает следующую реплику до ответа; после срока — «на связи» и новость, вопрос не повторяет. Нет поля — вопрос ещё не услышан или ответа вариантом не ждут.
+             */
+            reply_by?: string;
         };
         /** @example {
          *       "delivery_id": "00000000-0000-4000-8000-000000002003",
@@ -2930,6 +3926,8 @@ export interface components {
             failed_at: string | null;
             presentation_event_id: string | null;
             failure_reason: string | null;
+            /** @description Какой вариант ответа выбран на эту реплику (brigade_reply); null — ещё не отвечали. Поле может отсутствовать у старого сервера. */
+            reply_key?: string | null;
         };
         /** @example {
          *       "card_id": "00000000-0000-4000-8000-000000000600",
@@ -2969,7 +3967,7 @@ export interface components {
          *       ]
          *     } */
         CardTraining: {
-            /** @description Доступные сейчас переходы, для которых ещё не предъявлен доклад бригады. Пустой список означает, что доклад не мешает выбору статуса. Поле может отсутствовать у старого сервера. */
+            /** @description Доступные сейчас переходы, для которых ещё не предъявлен доклад бригады. Пустой список означает, что доклад не мешает выбору статуса. Этап хода работ, о котором бригада плана не докладывает вовсе и которого нет в эталоне хода статусов, в списке всегда: такой статус сервер не принимает (409 report_required, GP-12). Поле может отсутствовать у старого сервера. */
             missing_report_states?: ("responding" | "arrived" | "working" | "completed" | "refused")[];
             /** Format: uuid */
             card_id: string;
@@ -2988,8 +3986,13 @@ export interface components {
                 call_target_id: string;
                 /** Format: date-time */
                 started_at: string;
+                /**
+                 * @description alarm — тревога бригады: свой сигнал вызова. Нет поля — normal.
+                 * @enum {string}
+                 */
+                priority?: "normal" | "alarm";
             }[];
-            /** @description История входящих вызовов бригад по карточке: когда бригада позвонила, когда диспетчер ответил (null — не ответил) и когда вызов закончился. По ней разбор показывает, сколько бригада ждала ответа; поле может отсутствовать у старого сервера. */
+            /** @description История входящих вызовов бригад по карточке: когда бригада позвонила, когда диспетчер ответил (null — не ответил) и когда вызов закончился. По ней разбор показывает, сколько бригада ждала ответа и какой доклад пропущен (`end_reason`); поле может отсутствовать у старого сервера. */
             callbacks?: {
                 /** Format: uuid */
                 call_id: string;
@@ -3001,6 +4004,8 @@ export interface components {
                 started_at: string;
                 answered_at: string | null;
                 ended_at: string | null;
+                /** @description Чем кончился вызов без разговора (TC-02): missed — диспетчер не ответил за 25 с, бригада ждёт перезвона и позвонит ещё раз через 40 с; lost — тот же доклад пропущен второй раз подряд, бригада больше не звонит с ним сама (доклад «потерян», строка разбора), услышать его можно, только позвонив бригаде; report_heard — доклад услышан в звонке диспетчера; session_finished — занятие завершено. null — вызов ещё звонит или кончился разговором. Нет поля — старый сервер. */
+                end_reason?: ("missed" | "lost" | "report_heard" | "session_finished") | null;
             }[];
             /** @description Бригады своей ДДС, которыми диспетчер располагает на этой карточке (28.09): две, с четырьмя происшествиями у обучаемого в занятии — три, с шестью — четыре. Порядок — как в справочнике. Нет поля (старый сервер) — все активные бригады службы. */
             available_brigade_ids?: string[];
@@ -3012,6 +4017,28 @@ export interface components {
                 card_id: string;
                 card_number: string;
             }[];
+            /** @description Сведения мира для табло сил (DT-10, решение 08.10): когда направленная бригада последний раз была на связи — предъявленная реплика или разговор с ней. По ним видно, сколько бригада молчит; это не подсказка. Поле может отсутствовать у старого сервера. */
+            brigade_contacts?: {
+                /** Format: uuid */
+                brigade_id: string;
+                last_contact_at: string | null;
+            }[];
+            /** @description Звонки в службы по карточке после «Принята» (исходящие, без отказа), по времени набора. По ним окно телефона знает, что служба уже вызвана (GP-28, HQ-055): весть «скорую вызвал» засчитывается только после набора номера службы — до звонка бригада отвечает на фразу обычно («Принял»), после — «Понял, ждём скорую». Звонок в 112 (service_id 112) — вызов любой службы. Поле может отсутствовать у старого сервера. */
+            service_calls?: {
+                /** @description Служба справочника, в которую звонили (Service.id: 101–104, 112, GKH, MOSLIFT…). */
+                service_id: string;
+                /**
+                 * Format: date-time
+                 * @description Момент набора номера (время сервера).
+                 */
+                started_at: string;
+            }[];
+            /** @description Звонок отдела контроля по карточке (TC-07): null — не звонил; поле может отсутствовать у старого сервера. Звонок не входит в incoming и callbacks — они только о бригадах. */
+            control?: components["schemas"]["ControlCall"] | null;
+            /** @description Исход сценария карточки (из плана). Отдаётся только после закрытия или прерывания карточки; у сценария без исхода и у старого сервера поля нет. */
+            outcome?: components["schemas"]["ScenarioOutcome"];
+            /** @description Живой заявитель сценария карточки (HQ-019): сюжет и характер по умолчанию из плана. У сценария без заявителя и у старого сервера поля нет. */
+            caller?: components["schemas"]["ScenarioCaller"];
         };
         TrainingUpdated: {
             /** Format: uuid */
@@ -3734,6 +4761,10 @@ export interface components {
             scenario_ids: string[];
             pack_id: string | null;
             warnings: string[];
+            /** @enum {string} */
+            generation_state?: "waiting" | "queued" | "generating" | "ready" | "failed" | "stopping" | "cancelled";
+            /** @description Ориентировочное время одного сценария: местный замер за сутки, иначе эталон модели и режима. */
+            estimated_item_seconds?: number | null;
         };
         /** @example {
          *       "scenario_id": "00000000-0000-4000-8000-000000000100",
@@ -3781,6 +4812,7 @@ export interface components {
             version: number;
             provenance: components["schemas"]["ContentProvenance"];
             training_plan: components["schemas"]["TrainingPlan"] | null;
+            can_regenerate?: boolean;
         };
         /** @example {
          *       "version": 1,
@@ -3897,7 +4929,7 @@ export interface components {
              */
             purpose: "reference" | "evaluation";
             /** @enum {string} */
-            media_type: "application/pdf" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/json" | "application/xml" | "text/csv";
+            media_type: "application/pdf" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/json" | "application/xml" | "text/csv" | "text/plain";
             size_bytes: number;
             sha256: string;
             /** Format: date-time */
@@ -4335,6 +5367,8 @@ export interface components {
                 pending: number;
                 running: number;
                 failed: number;
+                /** @description Ошибки, ещё не отмеченные администратором как прочитанные. */
+                failed_unread?: number;
             };
             running_sessions: number;
             machine: {
@@ -4533,6 +5567,14 @@ export interface components {
             current_step: number;
             /** Steps */
             steps: components["schemas"]["StepProgressView"][];
+            /** @description Рекомендация к дальнейшему обучению по последним оценённым карточкам (GP-14); null — оценённых карточек ещё нет. */
+            advice?: components["schemas"]["Advice"] | null;
+            /**
+             * Repeats
+             * @description Незачтённые сценарии, которые можно пройти повтором (POST /practice?scenario_id=…), и их «было → стало» (TC-11): сначала не исправленные, затем новые первыми, не больше трёх.
+             * @default []
+             */
+            repeats: components["schemas"]["ScenarioRepeat"][];
         };
         /** StepProgressView */
         StepProgressView: {
@@ -4558,6 +5600,1207 @@ export interface components {
             passed: boolean;
             /** Unlocked */
             unlocked: boolean;
+        };
+        /**
+         * VoiceReport
+         * @example {
+         *       "text": "Сто второй, ДТП на Дубнинской улице, дом 1, есть пострадавшие, бригада направлена.",
+         *       "confidence": 0.82,
+         *       "choice": "full"
+         *     }
+         */
+        VoiceReport: {
+            /**
+             * Text
+             * @description Распознанный текст фразы; пусто — речи не услышано.
+             */
+            text: string;
+            /**
+             * Confidence
+             * @description Уверенность распознавания 0…1; null — сервис её не сообщает.
+             */
+            confidence: number | null;
+            /**
+             * Choice
+             * @description Вид доклада по ключевым сведениям; null — не расслышано (пусто или уверенность ниже порога), доклад повторяется.
+             */
+            choice: ("full" | "no_who" | "no_address" | "no_card" | "no_change") | null;
+            /**
+             * Parts
+             * @description Какие части памятки ДДС, с. 32, прозвучали, в порядке памятки: who — кто вы, address — адрес и повод, card — карточка, change — что изменилось. Пусто — не расслышано или ничего не прозвучало.
+             */
+            parts?: ("who" | "address" | "card" | "change")[];
+            /**
+             * Loudness
+             * @description Громкость речи во фразе: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом. null — сервис распознавания громкость не меряет или речи не услышано.
+             */
+            loudness?: ("quiet" | "ok" | "loud") | null;
+            /**
+             * Spell Street
+             * @description Похожая улица Москвы (TC-03, data/confusable_streets.json): адрес прозвучал, а улицу карточки легко спутать с этой — дежурный службы просит повторить улицу по буквам. null — адрес не прозвучал или у улицы нет похожей.
+             */
+            spell_street?: string | null;
+            /**
+             * Address Gap
+             * @description Чего не хватило в части «адрес и повод» (служба переспрашивает одним вопросом именно это): place — адреса (улица, дом), reason — адрес есть, нет повода. null — часть прозвучала или фраза не расслышана.
+             */
+            address_gap?: ("place" | "reason") | null;
+        };
+        /**
+         * VoiceReply
+         * @example {
+         *       "text": "Нет, Бескудниковский бульвар, двадцать четыре.",
+         *       "confidence": 0.81,
+         *       "option_key": "fix",
+         *       "loudness": "ok"
+         *     }
+         */
+        VoiceReply: {
+            /**
+             * Text
+             * @description Распознанный текст фразы; пусто — речи не услышано.
+             */
+            text: string;
+            /**
+             * Confidence
+             * @description Уверенность распознавания 0…1; null — сервис её не сообщает.
+             */
+            confidence: number | null;
+            /**
+             * Option Key
+             * @description Вариант ответа реплики бригады (reply_options), к которому сводится фраза; null — не расслышано или не сопоставлено, бригада переспрашивает. Ответ уходит событием brigade_reply с этим option_key и mode = voice.
+             */
+            option_key: string | null;
+            /**
+             * Loudness
+             * @description Громкость речи во фразе: quiet — слишком тихо, ok — в норме, loud — слишком громко или с перегрузом. null — сервис распознавания громкость не меряет или речи не услышано.
+             */
+            loudness?: ("quiet" | "ok" | "loud") | null;
+            /**
+             * World Answers
+             * @description Фраза без вопроса (delivery_id не передан), которую мир засчитает поправкой повтора адреса (correct_readback, HQ-024): бригада ответит репликой ветки мира («Понял, …, едем»), окно телефона своего ответа не даёт. Фраза всё равно уходит событием brigade_said.
+             * @default false
+             */
+            world_answers: boolean;
+        };
+        /** @description Когда событие срабатывает. state — карточка дошла до статуса не ниже указанного (правило requires_state, gating.py), отсчёт after_s от позднего из моментов «бригада на связи» и «статус поставлен»; message — после первого предъявления доклада плана; no_contact — бригада молчит silent_s (нет предъявленных реплик и разговоров с ней), пока карточка не ниже state; event — страховочная реплика мира после ветки другого события; inject — только вводной преподавателя (DT-06). */
+        ScenarioEventTrigger: {
+            /** @constant */
+            on: "state";
+            /** @enum {string} */
+            state: "accepted" | "responding" | "arrived" | "working";
+            after_s: number;
+        } | {
+            /** @constant */
+            on: "message";
+            /** Format: uuid */
+            message_id: string;
+            after_s: number;
+        } | {
+            /** @constant */
+            on: "no_contact";
+            /** @enum {string} */
+            state: "accepted" | "responding" | "arrived" | "working";
+            silent_s: number;
+        } | {
+            /** @constant */
+            on: "event";
+            /** Format: uuid */
+            event_id: string;
+            /** @enum {string} */
+            branch: "met" | "wrong" | "missed";
+            after_s: number;
+        } | {
+            /** @constant */
+            on: "inject";
+            /** @enum {string} */
+            requires_state?: "accepted" | "responding" | "arrived" | "working";
+        };
+        /** @description Чего мир ждёт от обучаемого и за сколько секунд от срабатывания (within_s). reply — ответ бригаде вариантом (brigade_reply) с option_key; answer_call — ответить на вызов (реплика предъявлена); call_service — набрать один из номеров phone_exts (скорая — 103 или 112); call_brigade — позвонить бригаде события, она ответила; correct_readback — поправить расчёт, повторивший адрес с ошибкой: вариант option_key в том же разговоре или отвеченный звонок бригаде до срока (пока она в пути), другой вариант без поправки — ошибка. Необязательные weight (доля в балле события) и critical (невыполнение — критическая ошибка). Исход считает evalcore/brigade.py. */
+        ScenarioEventExpectation: {
+            /** @constant */
+            action: "reply";
+            option_key: string;
+            within_s: number;
+            /** @description Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9. */
+            weight?: number;
+            /** @description Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу. */
+            critical?: boolean;
+        } | {
+            /** @constant */
+            action: "answer_call";
+            within_s: number;
+            /** @description Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9. */
+            weight?: number;
+            /** @description Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу. */
+            critical?: boolean;
+        } | {
+            /** @constant */
+            action: "call_service";
+            phone_exts: string[];
+            within_s: number;
+            /** @description Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9. */
+            weight?: number;
+            /** @description Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу. */
+            critical?: boolean;
+        } | {
+            /** @constant */
+            action: "call_brigade";
+            within_s: number;
+            /** @description Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9. */
+            weight?: number;
+            /** @description Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу. */
+            critical?: boolean;
+        } | {
+            /** @constant */
+            action: "correct_readback";
+            option_key: string;
+            within_s: number;
+            /** @description Доля ожидания в балле события; по умолчанию 1 (все ожидания поровну). Тревога: ответ на вызов 0.1, скорая 0.9. */
+            weight?: number;
+            /** @description Ожидание не выполнено ни в срок, ни позже (в том числе реплику не услышали) — критическая ошибка brigade_work. Тревога: скорая к бойцу. */
+            critical?: boolean;
+        };
+        /** @description Вариант ответа бригаде в окне разговора; правильный не отмечается. */
+        ReplyOption: {
+            key: string;
+            label: string;
+        };
+        /** @description Что делает мир по исходу: реплика бригады в ответ (выдаётся тем же путём, что доклады) и последствия для докладов плана. delay — доклад готов позже на by_s; replace — доклад приходит с другим содержанием (version — как у доклада плана, justifies_state не меняется). Действуют последствия текущей ветки: поздняя реакция сменяет missed на late. */
+        ScenarioEventBranch: {
+            line: components["schemas"]["InformationMessage"] | null;
+            effects: ({
+                /** Format: uuid */
+                delay: string;
+                by_s: number;
+            } | {
+                /** Format: uuid */
+                replace: string;
+                with: components["schemas"]["InformationMessage"];
+            })[];
+            /** @description Ветка ждёт звонка диспетчера абоненту телефона ДДС (HQ-019): доклад плана, который держит событие, не приходит, пока диспетчер не позвонил этому абоненту, но не дольше within_s от исхода ветки. Позвонил (звонок отвечен) — последствия ветки (effects); не позвонил к сроку — вместо них otherwise. Номера абонентов задаёт занятие (settings.phone_contacts); абонента нет в списке — ветка действует без ожидания. */
+            awaits_call?: {
+                /** Format: uuid */
+                relay_event?: string;
+                /** @description Полные сведения заявителя, полученные после срабатывания события; ответ на звонок и on:first недостаточны. */
+                required_facts?: string[];
+                /** @enum {string} */
+                contact_role: "head" | "response_chief" | "crew_chief" | "crew_specialist" | "caller";
+                within_s: number;
+                otherwise: ({
+                    /** Format: uuid */
+                    delay: string;
+                    by_s: number;
+                } | {
+                    /** Format: uuid */
+                    replace: string;
+                    with: components["schemas"]["InformationMessage"];
+                })[];
+            };
+        };
+        /** @description Событие сценария (DT-10, contracts/scenario-events.md): что бригада сообщает помимо планового доклада и чего после этого ждёт. Реплика выдаётся тем же путём, что доклады (MessageDelivery → message_presented); план, ожидания и ветки обучаемому не уходят. Доклад плана, на который действуют последствия события, ждёт исхода события (не дольше within_s). */
+        ScenarioEvent: {
+            /** Format: uuid */
+            id: string;
+            version: number;
+            /** @enum {string} */
+            kind: "clarify" | "request_service" | "silence" | "alarm" | "readback_error";
+            /** @enum {string} */
+            actor: "brigade";
+            /** Format: uuid */
+            brigade_id: string;
+            /** Format: uuid */
+            call_target_id: string;
+            /** @enum {string} */
+            channel: "brigade_call";
+            /** @enum {string} */
+            priority: "normal" | "alarm";
+            trigger: components["schemas"]["ScenarioEventTrigger"];
+            line: components["schemas"]["InformationMessage"] | null;
+            expect: components["schemas"]["ScenarioEventExpectation"][];
+            reply_options?: components["schemas"]["ReplyOption"][];
+            branches: {
+                met?: components["schemas"]["ScenarioEventBranch"];
+                wrong?: components["schemas"]["ScenarioEventBranch"];
+                late?: components["schemas"]["ScenarioEventBranch"];
+                missed?: components["schemas"]["ScenarioEventBranch"];
+                already?: components["schemas"]["ScenarioEventBranch"];
+                surprise?: components["schemas"]["ScenarioEventBranch"];
+            };
+            review: {
+                label: string;
+                critical: boolean;
+            };
+            injectable: boolean;
+        };
+        /** @example {
+         *       "kind": "address",
+         *       "correct": 8,
+         *       "total": 10,
+         *       "duration_ms": 74000,
+         *       "mistakes": [
+         *         "ул. Дубнинская, д. 32 / ул. Дубининская, д. 32"
+         *       ]
+         *     } */
+        WarmupResultInput: {
+            /**
+             * @description address — «Найди отличие в адресе»; routing — «Кого направить».
+             * @enum {string}
+             */
+            kind: "address" | "routing";
+            /** @description Верных ответов; не больше total. */
+            correct: number;
+            /** @description Заданий в упражнении. */
+            total: number;
+            /** @description Время упражнения, мс. */
+            duration_ms: number;
+            /** @description Задания с неверным ответом — чтобы вернуть их в следующую разминку. */
+            mistakes: string[];
+        };
+        /** @example {
+         *       "id": "00000000-0000-4000-8000-000000000600",
+         *       "trainee_id": "00000000-0000-4000-8000-000000000001",
+         *       "trainee_name": "Обучаемый 01",
+         *       "kind": "address",
+         *       "correct": 8,
+         *       "total": 10,
+         *       "duration_ms": 74000,
+         *       "mistakes": [
+         *         "ул. Дубнинская, д. 32 / ул. Дубининская, д. 32"
+         *       ],
+         *       "created_at": "2026-10-11T10:00:00Z"
+         *     } */
+        WarmupResult: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            trainee_id: string;
+            trainee_name: string;
+            /** @enum {string} */
+            kind: "address" | "routing";
+            correct: number;
+            total: number;
+            duration_ms: number;
+            mistakes: string[];
+            /** Format: date-time */
+            created_at: string;
+        };
+        /**
+         * @description Строка каталога сценариев обучаемого (listPracticeCatalog).
+         * @example {
+         *       "id": "00000000-0000-4000-8000-000000000700",
+         *       "version": 3,
+         *       "title": "Драка на улице с пострадавшим",
+         *       "service_id": "102",
+         *       "service_name": "Служба 102",
+         *       "level": 2,
+         *       "description": "У входа в торговый центр дерутся четверо мужчин. У одного разбита голова, лежит на асфальте.",
+         *       "trains": [
+         *         "readback_error",
+         *         "clarify"
+         *       ]
+         *     }
+         */
+        PracticeScenario: {
+            /** Format: uuid */
+            id: string;
+            version: number;
+            /** @description Название сценария из файла data/scenarios; без файла — тип происшествия карточки. */
+            title: string;
+            /** @description Служба сценария: в тренировке обучаемый — её диспетчер. */
+            service_id: string;
+            service_name: string;
+            level: number;
+            /** @description Описание карточки; без него — первая фраза комментария преподавателя. */
+            description: string;
+            /** @description Чему учит: виды событий сценария (ScenarioEvent.kind — clarify, request_service, silence, alarm, readback_error) в порядке плана, без повторов. */
+            trains: string[];
+        };
+        /** @example {
+         *       "kind": "alarm",
+         *       "targets": [
+         *         "00000000-0000-4000-8000-000000000201"
+         *       ]
+         *     } */
+        InjectInput: {
+            /**
+             * @description Вид события бригады (contracts/scenario-events.md).
+             * @enum {string}
+             */
+            kind: "clarify" | "request_service" | "silence" | "alarm" | "readback_error";
+            /** @description «all» — всем местам занятия, иначе — участники (participant_id). */
+            targets: "all" | string[];
+        };
+        /** @example {
+         *       "participant_id": "00000000-0000-4000-8000-000000000201",
+         *       "workstation": 5,
+         *       "trainee_name": "Обучаемый 01",
+         *       "status": "fired",
+         *       "card_id": "00000000-0000-4000-8000-000000000700",
+         *       "card_number": "10271704",
+         *       "reason": null
+         *     } */
+        InjectResult: {
+            /** Format: uuid */
+            participant_id: string;
+            workstation: number;
+            trainee_name: string;
+            /** @enum {string} */
+            status: "fired" | "not_applicable";
+            card_id: string | null;
+            card_number: string | null;
+            /** @description Почему не подана — для преподавателя. */
+            reason: string | null;
+        };
+        /** @example {
+         *       "kind": "alarm",
+         *       "results": [
+         *         {
+         *           "participant_id": "00000000-0000-4000-8000-000000000201",
+         *           "workstation": 5,
+         *           "trainee_name": "Обучаемый 01",
+         *           "status": "fired",
+         *           "card_id": "00000000-0000-4000-8000-000000000700",
+         *           "card_number": "10271704",
+         *           "reason": null
+         *         },
+         *         {
+         *           "participant_id": "00000000-0000-4000-8000-000000000202",
+         *           "workstation": 6,
+         *           "trainee_name": "Обучаемый 02",
+         *           "status": "not_applicable",
+         *           "card_id": null,
+         *           "card_number": null,
+         *           "reason": "Рано: карточка ещё не дошла до нужного статуса."
+         *         }
+         *       ]
+         *     } */
+        InjectReceipt: {
+            /**
+             * @description Вид события бригады (contracts/scenario-events.md).
+             * @enum {string}
+             */
+            kind: "clarify" | "request_service" | "silence" | "alarm" | "readback_error";
+            results: components["schemas"]["InjectResult"][];
+        };
+        /** @example {
+         *       "kind": "alarm",
+         *       "title": "Тревога бригады",
+         *       "cards": 2
+         *     } */
+        InjectOption: {
+            /**
+             * @description Вид события бригады (contracts/scenario-events.md).
+             * @enum {string}
+             */
+            kind: "clarify" | "request_service" | "silence" | "alarm" | "readback_error";
+            title: string;
+            /** @description Сколько открытых карточек занятия примут вводную этого вида. */
+            cards: number;
+        };
+        /** @example {
+         *       "id": "00000000-0000-4000-8000-000000000800",
+         *       "kind": "alarm",
+         *       "title": "Тревога бригады",
+         *       "card_id": "00000000-0000-4000-8000-000000000700",
+         *       "card_number": "10271704",
+         *       "participant_id": "00000000-0000-4000-8000-000000000201",
+         *       "workstation": 5,
+         *       "trainee_name": "Обучаемый 01",
+         *       "fired_at": "2026-10-13T12:03:00Z"
+         *     } */
+        InjectFiring: {
+            /** Format: uuid */
+            id: string;
+            /**
+             * @description Вид события бригады (contracts/scenario-events.md).
+             * @enum {string}
+             */
+            kind: "clarify" | "request_service" | "silence" | "alarm" | "readback_error";
+            title: string;
+            /** Format: uuid */
+            card_id: string;
+            card_number: string;
+            /** Format: uuid */
+            participant_id: string;
+            workstation: number;
+            trainee_name: string;
+            /** Format: date-time */
+            fired_at: string;
+        };
+        /** @example {
+         *       "options": [
+         *         {
+         *           "kind": "alarm",
+         *           "title": "Тревога бригады",
+         *           "cards": 2
+         *         }
+         *       ],
+         *       "fired": [
+         *         {
+         *           "id": "00000000-0000-4000-8000-000000000800",
+         *           "kind": "alarm",
+         *           "title": "Тревога бригады",
+         *           "card_id": "00000000-0000-4000-8000-000000000700",
+         *           "card_number": "10271704",
+         *           "participant_id": "00000000-0000-4000-8000-000000000201",
+         *           "workstation": 5,
+         *           "trainee_name": "Обучаемый 01",
+         *           "fired_at": "2026-10-13T12:03:00Z"
+         *         }
+         *       ]
+         *     } */
+        InjectOverview: {
+            options: components["schemas"]["InjectOption"][];
+            fired: components["schemas"]["InjectFiring"][];
+        };
+        /**
+         * PlayableScenarios
+         * @description Сценарии, у которых бригада докладывает до завершающего статуса.
+         * @example {
+         *       "scenario_ids": [
+         *         "00000000-0000-4000-8000-000000000101"
+         *       ]
+         *     }
+         */
+        PlayableScenarios: {
+            /** Scenario Ids */
+            scenario_ids: string[];
+        };
+        /** DemoAccount */
+        DemoAccount: {
+            /** Login */
+            login: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "trainee" | "teacher" | "admin";
+            /** Full Name */
+            full_name: string;
+        };
+        /** DemoAccounts */
+        DemoAccounts: {
+            /** Enabled */
+            enabled: boolean;
+            /** Password */
+            password: string | null;
+            /** Accounts */
+            accounts: components["schemas"]["DemoAccount"][];
+        };
+        /** BriefingCheck */
+        BriefingCheck: {
+            /**
+             * Address
+             * @description Адрес, который поняла бригада: ok — адрес эталона (улица, её тип и дом), wrong — другой адрес (бригада поедет туда), missing — адреса или номера дома нет.
+             * @enum {string}
+             */
+            address: "ok" | "wrong" | "missing";
+            /**
+             * Heard Address
+             * @description Адрес, как его поняла бригада; null — адреса не прозвучало.
+             */
+            heard_address: string | null;
+            /**
+             * Incident
+             * @description Совпадает ли названный повод с происшествием сценария. false также при отсутствующем поводе; понятный неверный повод не мешает полной вводной.
+             */
+            incident: boolean;
+            /**
+             * Complete
+             * @description Вводная полная — адрес назван и понятный повод прозвучал, даже если адрес или повод неверны: событие brigade_briefing с этой фразой отправит бригаду.
+             */
+            complete: boolean;
+            /**
+             * Readback
+             * @description Ответ бригады на полную вводную: повтор адреса «Повторяю: …». null — вводная неполная или адрес повторит ловушка сценария (readback_error).
+             */
+            readback: string | null;
+            /**
+             * Ask Again
+             * @description Что бригада переспрашивает на неполную вводную; null — вводная полная.
+             */
+            ask_again: string | null;
+        };
+        /** BriefingCheckInput */
+        BriefingCheckInput: {
+            /**
+             * Text
+             * @description Вводная бригаде: распознанная фраза диспетчера или фраза, собранная по частям (адрес и что случилось).
+             */
+            text: string;
+        };
+        /** @description Доклад с места меняет задачу (TC-05, contracts/scenario-events.md, «Доклад меняет задачу»): после первого подтверждённого предъявления доклада (message_presented) эталон сценария для оценки этой карточки меняется — заданные поля expected_flow, expected_call и expected_comment заменяют эталонные, comment_keywords дописываются к ним. Срок нового звонка within_s отсчитывается от предъявления доклада. Доклад не предъявлен — эталон прежний. Обучаемому эталон и срок не показываются: о перемене он узнаёт из самого доклада. */
+        TaskChange: {
+            /**
+             * @description Что изменилось: more_victims — пострадавших больше, чем в карточке; rescue — нужна деблокировка или спасение людей; other_service — нужна служба, которой у ДДС нет.
+             * @enum {string}
+             */
+            kind: "more_victims" | "rescue" | "other_service";
+            /** @description Строка разбора: что изменилось и что теперь нужно, например «Загорелась машина — нужна пожарная охрана, сообщить в 112». */
+            label: string;
+            /** @description Новый эталонный ход статусов вместо reference.expected_flow. */
+            expected_flow?: ("added" | "received" | "accepted" | "rejected" | "responding" | "arrived" | "working" | "refused" | "completed" | "redirected")[];
+            /** @description Звонок, которого теперь требует обстановка, вместо reference.expected_call. Оценка (критерий call) считает норматив before_s как время от выдачи карточки до предъявления доклада плюс within_s. */
+            expected_call?: {
+                required: boolean;
+                service_id: string;
+                phone_ext: string;
+                /** @description Срок звонка в секундах от предъявления доклада. */
+                within_s: number;
+                /** @enum {string} */
+                contact_role?: "head" | "response_chief" | "crew_chief" | "crew_specialist" | "caller";
+            };
+            /** @description Новый образец комментария вместо reference.expected_comment. */
+            expected_comment?: string;
+            /** @description Ключевые слова комментария, которые дописываются к reference.comment_keywords (критерий comment_keywords), варианты — через «/». */
+            comment_keywords?: string[];
+        };
+        /** @description Звонок отдела контроля реагирования (TC-07; памятка ДДС, с. 26–28): если у карточки дольше after_s с её появления нет статуса реагирования («Принята» или «Не принята»), отдел контроля звонит диспетчеру и просит пояснить причину. Не больше одного звонка на карточку. Ответ — голосом или вариантом из reply_options (событие control_reply); на оценку не влияет, попадает в разбор. Необязательная часть плана: без неё отдел контроля не звонит. */
+        ControlCallPlan: {
+            /** @description Сколько секунд реального времени карточка может быть без статуса реагирования до звонка. */
+            after_s: number;
+            /** @description Варианты пояснения без микрофона: до трёх коротких; правильный не отмечается — пояснение не оценивается. */
+            reply_options: components["schemas"]["ReplyOption"][];
+        };
+        /** @description Звонок отдела контроля по карточке (TC-07): входящий вызов без бригады (Call.direction = inbound, phone_ext 112). Звонит 25 с, без ответа — end_reason missed; повторно не звонит. Пояснение диспетчера — событие control_reply. */
+        ControlCall: {
+            /** Format: uuid */
+            call_id: string;
+            /** Format: date-time */
+            started_at: string;
+            answered_at: string | null;
+            ended_at: string | null;
+            end_reason: ("missed" | "session_finished") | null;
+            /** @description Сколько секунд карточка была без статуса реагирования к началу звонка. */
+            without_status_s: number;
+            reply_options: components["schemas"]["ReplyOption"][];
+            reply: {
+                /** @enum {string} */
+                mode: "voice" | "parts";
+                text: string;
+                option_key: string | null;
+                /** Format: date-time */
+                at: string;
+            } | null;
+        };
+        /** @description Фоновая отработанная карточка реестра ДДС (TC-07, «Живая смена»): карточка прошлой смены своей службы, уже закрытая. Только вид реестра: не Card, в занятие, выдачу, оценку, разбор и прогресс не входит; действий по ней нет. Время — до начала занятия. */
+        BackgroundCard: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            session_id: string;
+            /** Format: date-time */
+            appeared_at: string;
+            /** Format: date-time */
+            status_at: string;
+            /**
+             * @description Последний статус службы по карточке.
+             * @enum {string}
+             */
+            state: "completed" | "refused" | "rejected";
+            source: components["schemas"]["CardSource"];
+        };
+        /** @description Исход сценария — блок «Что было дальше» в разборе (GP-27): что стало с людьми и чем обернулась задержка. Пишется по фактам реплик и карточки самого сценария. Читает только разбор закрытой карточки: пока карточка идёт, сервер исход не отдаёт. Без блока (старые сценарии) разбор берёт исход тренировки data/practice по номеру карточки. */
+        ScenarioOutcome: {
+            /** @description Полный ход: что стало с людьми, когда службы отработали вовремя. */
+            people: string;
+            /** @description Чем обернулась задержка: «Принята» (или «Не принята») позже норматива реакции. */
+            late: string;
+            /** @description Почему это важно. Только с источником; нет источника — поля нет. */
+            why?: string;
+            /** @description Что значит ход статусов не по эталону именно в этом сценарии (например, «Отказ от выполнения работ» вместо «Работы завершены»). Нет поля — общая строка разбора: статусы шли не по докладам бригады. */
+            status?: string;
+        };
+        /** AISelection */
+        AISelection: {
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /**
+             * Cards Per Participant
+             * @default 1
+             */
+            cards_per_participant: number;
+            /** @enum {string} */
+            generation_policy?: "after_lessons" | "now";
+            /** Categories */
+            categories?: ("traffic" | "fire" | "gas" | "medicine" | "utilities" | "lift" | "public_order" | "animals" | "other")[];
+        };
+        /** AIParticipantRecommendation */
+        AIParticipantRecommendation: {
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /** Service Id */
+            service_id: string;
+            /** Level */
+            level: number;
+            /** Weight */
+            weight: number;
+            /** Based On Attempts */
+            based_on_attempts: number;
+            /** Explanation */
+            explanation: string;
+        };
+        /** AIPreparation */
+        AIPreparation: {
+            /**
+             * Job Id
+             * Format: uuid
+             */
+            job_id: string;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "waiting" | "queued" | "generating" | "ready" | "failed" | "stopping" | "cancelled";
+            /** Cards Per Participant */
+            cards_per_participant: number;
+            /** Completed */
+            completed: number;
+            /** Total */
+            total: number;
+            /** Warnings */
+            warnings: string[];
+            /** Recommendations */
+            recommendations: components["schemas"]["AIParticipantRecommendation"][];
+        };
+        /** AIResourceState */
+        AIResourceState: {
+            /** Local Ai */
+            local_ai: boolean;
+            /** Lesson Running */
+            lesson_running: boolean;
+            /** Generation Running */
+            generation_running: boolean;
+        };
+        /** StartInput */
+        StartInput: {
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "now" | "wait" | "cancel";
+            /** Request Id */
+            request_id?: string | null;
+        };
+        /** AIActiveModel */
+        AIActiveModel: {
+            /** Model */
+            model: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "cpu" | "gpu";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "loaded" | "loading" | "unloaded" | "failed" | "unknown";
+            /** Fallback */
+            fallback: boolean;
+        };
+        /** AIBenchmark */
+        AIBenchmark: {
+            /** Model */
+            model: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "cpu" | "gpu";
+            /** Machine */
+            machine: string;
+            /** Generate Seconds */
+            generate_seconds: number | null;
+            /** Judge Seconds */
+            judge_seconds: number | null;
+            /** Tokens Per Second */
+            tokens_per_second: number | null;
+            /** Memory Gb */
+            memory_gb: number | null;
+        };
+        /** AIGpu */
+        AIGpu: {
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "none" | "no_driver" | "no_image" | "ready" | "unknown";
+            /** Backend */
+            backend: ("cuda" | "vulkan") | null;
+            /** Device */
+            device: string | null;
+            /** Name */
+            name: string | null;
+            /** Vram Mb */
+            vram_mb: number | null;
+        };
+        /** AIHardware */
+        AIHardware: {
+            /** Cpu Cores */
+            cpu_cores: number;
+            /** Memory Total Bytes */
+            memory_total_bytes: number | null;
+            gpu: components["schemas"]["AIGpu"];
+            /** Llm Gpu */
+            llm_gpu: boolean;
+            /** Forced */
+            forced: boolean;
+        };
+        /** AIModel */
+        AIModel: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** File */
+            file: string;
+            /** Size Bytes */
+            size_bytes: number;
+            /** Ram Gb */
+            ram_gb: number;
+            /** Vram Gb */
+            vram_gb: number;
+            /** Summary */
+            summary: string;
+            /** Pros */
+            pros: string[];
+            /** Cons */
+            cons: string[];
+            /** Choose When */
+            choose_when: string;
+            /** Installed */
+            installed: boolean;
+            /** Source */
+            source: string;
+            /** Modes */
+            modes: components["schemas"]["AIModelMode"][];
+        };
+        /** AIModelChoice */
+        AIModelChoice: {
+            /** Model */
+            model: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "cpu" | "gpu";
+            /**
+             * Force
+             * @default false
+             */
+            force: boolean;
+        };
+        /** AIModelMode */
+        AIModelMode: {
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "cpu" | "gpu";
+            /** Available */
+            available: boolean;
+            /** Reason */
+            reason: string | null;
+            /** Can Force */
+            can_force: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "loaded" | "loading" | "unloaded" | "failed" | "unknown";
+        };
+        /** AIModels */
+        AIModels: {
+            /** Ai Enabled */
+            ai_enabled: boolean;
+            /** Router */
+            router: boolean;
+            active: components["schemas"]["AIActiveModel"];
+            hardware: components["schemas"]["AIHardware"];
+            /** Gpu Suggestion */
+            gpu_suggestion: boolean;
+            /** Notice Dismissed */
+            notice_dismissed: boolean;
+            /** Models */
+            models: components["schemas"]["AIModel"][];
+            /** Benchmarks */
+            benchmarks: components["schemas"]["AIBenchmark"][];
+            local_generation: components["schemas"]["AILocalTiming"];
+        };
+        /** AIGpuNotice */
+        AIGpuNotice: {
+            /** Dismissed */
+            dismissed: boolean;
+        };
+        /** @description Вопрос проверки памяти: варианты ответа; при `multiple` — выбрать все верные. */
+        MemoryCheckQuestion: {
+            /**
+             * @description free_brigades — сколько бригад своей службы свободно; on_scene — какие бригады на месте (доклад о прибытии или о работах услышан, о завершении — нет); unreported — по каким карточкам услышанный доклад бригады ещё не отмечен статусом.
+             * @enum {string}
+             */
+            key: "free_brigades" | "on_scene" | "unreported";
+            text: string;
+            options: string[];
+            multiple: boolean;
+        };
+        /** @description Итог проверки: ответы обучаемого, верные ответы на момент показа и пояснения — в порядке вопросов. */
+        MemoryCheckResult: {
+            answers: string[][];
+            correct: string[][];
+            why: string[];
+            score: number;
+            total: number;
+            /** Format: date-time */
+            answered_at: string;
+        };
+        /**
+         * @description Проверка памяти посреди финальной смены (HQ-033, прототип A «Стоп-кадр», решение 18.10 — без паузы): три вопроса об обстановке, верные ответы сервер считает по состоянию смены на момент показа. Запись — в журнале первой карточки смены (`card_id`): `memory_check` при показе, `memory_check_answer` при ответе.
+         * @example {
+         *       "card_id": "00000000-0000-4000-8000-000000000200",
+         *       "shown_at": "2026-10-18T09:03:10Z",
+         *       "questions": [
+         *         {
+         *           "key": "free_brigades",
+         *           "text": "Сколько бригад вашей службы свободно прямо сейчас?",
+         *           "options": [
+         *             "0",
+         *             "1",
+         *             "2",
+         *             "3"
+         *           ],
+         *           "multiple": false
+         *         },
+         *         {
+         *           "key": "on_scene",
+         *           "text": "Какие бригады уже на месте?",
+         *           "options": [
+         *             "Бригада 1",
+         *             "Бригада 2",
+         *             "Ни одна"
+         *           ],
+         *           "multiple": true
+         *         },
+         *         {
+         *           "key": "unreported",
+         *           "text": "По какой карточке доклад бригады ещё не отмечен статусом?",
+         *           "options": [
+         *             "36812345 — пожар: мусор",
+         *             "По всем отмечено"
+         *           ],
+         *           "multiple": true
+         *         }
+         *       ],
+         *       "result": null
+         *     }
+         */
+        MemoryCheck: {
+            /**
+             * Format: uuid
+             * @description Карточка смены, в журнал которой пишется проверка (первая по времени появления).
+             */
+            card_id: string;
+            /** Format: date-time */
+            shown_at: string;
+            questions: components["schemas"]["MemoryCheckQuestion"][];
+            /** @description null — ещё не ответил. */
+            result: null | components["schemas"]["MemoryCheckResult"];
+        };
+        /** @description Ответы на проверку памяти — в порядке вопросов; у каждого вопроса — выбранные варианты. */
+        MemoryCheckAnswers: {
+            answers: string[][];
+        };
+        /**
+         * @description Показ экрана обучаемого преподавателю (HQ-017). requested — запрошен, ждёт согласия; sharing — кадры идут, преподаватель смотрит; paused — показ включён, но преподаватель сейчас не смотрит (кадры не шлются); stopped — показа нет.
+         * @example {
+         *       "session_id": "00000000-0000-4000-8000-000000000100",
+         *       "user_id": "00000000-0000-4000-8000-000000000201",
+         *       "state": "sharing",
+         *       "requested_at": "2026-10-18T09:00:00Z"
+         *     }
+         */
+        ScreenShare: {
+            /** Format: uuid */
+            session_id: string;
+            /** Format: uuid */
+            user_id: string;
+            /** @enum {string} */
+            state: "requested" | "sharing" | "paused" | "stopped";
+            /** Format: date-time */
+            requested_at: string | null;
+        };
+        /** @description Живой заявитель сценария (HQ-019, docs/dds_caller.md): звонок диспетчера на номер роли «Заявитель» телефона ДДС идёт не как звонок в службу (доклад, «Информация принята»), а разговором с заявителем — диспетчер спрашивает, заявитель отвечает фразами своей книги банка (scripts/voices/bank/callers). plot — сюжет: ключ происшествия в книгах заявителя (incidents), по нему окно телефона берёт реплики; character — характер по умолчанию (calm — спокойная, confused — растерянная), преподаватель может сменить его у абонента занятия (PhoneContact.character). Нет блока — звонок заявителю идёт как прежде. */
+        ScenarioCaller: {
+            /** @description Ключ сюжета в книгах заявителя (incidents), например animal_shaft. */
+            plot: string;
+            /**
+             * @description Характер заявителя по умолчанию: calm — отвечает сразу и полностью, confused — переспрашивает, часть сведений даёт только на уточнение. Сведения у обоих одни.
+             * @default calm
+             * @enum {string}
+             */
+            character: "calm" | "confused";
+        };
+        /**
+         * @description Замечание разбора (TC-10, contracts/evalcore.md «Замечания разбора»): что не так, цитата обучаемого, последствие в мире вместо минуса, страница памятки ДДС и готовое «Повторите: …». Тексты — по-русски, для обучаемого.
+         * @example {
+         *       "text": "Не поставлен статус «Прибытие».",
+         *       "quote": null,
+         *       "consequence": "По карточке не видно, что бригада на месте: заявители и система-112 решат, что помощь ещё не пришла.",
+         *       "memo_page": 31,
+         *       "repeat": "Повторите: после доклада бригады о прибытии поставьте «Прибытие».",
+         *       "kind": "error"
+         *     }
+         */
+        CriterionRemark: {
+            /** @description Что не так — одной фразой. */
+            text: string;
+            /** @description Фрагмент сказанного или написанного обучаемым (комментарий к статусу, ответ бригаде голосом, распознанный доклад): ±45 символов вокруг найденного, поиск без регистра, «ё» и латинских двойников; null — цитаты нет. */
+            quote: string | null;
+            /** @description Последствие в мире вместо минуса: «Служба не оповещена — фактически не выехала». */
+            consequence: string;
+            /** @description Страница памятки ДДС «Работа на АРМ-112», где это правило. */
+            memo_page: number;
+            /** @description Что сделать в следующий раз — готовое «Повторите: …». */
+            repeat: string;
+            /**
+             * @description error — ошибка, снижает балл; notice — замечание без снижения балла (статусы подряд быстрее порога — «карточку не читали»); data — вопрос к данным: ошибка в данных сценария, обучаемому не вменяется и балл не снижает.
+             * @enum {string}
+             */
+            kind: "error" | "notice" | "data";
+        };
+        /**
+         * Advice
+         * @description Рекомендация к дальнейшему обучению (GP-14): что подтянуть — слабые критерии оценки
+         *     последних карточек (focus, не больше двух) — и следующий шаг пути обучения.
+         */
+        Advice: {
+            /**
+             * Based On
+             * @description Сколько последних оценённых карточек.
+             */
+            based_on: number;
+            /** Focus */
+            focus: components["schemas"]["AdviceFocus"][];
+            /** Next Step */
+            next_step: number;
+            /** Next */
+            next: string;
+            /** Summary */
+            summary: string;
+            /** @description Прошлая рекомендация и её выполнение новой попыткой (TC-11); null — оценённая карточка одна или в прошлой рекомендации не было слабых мест. */
+            previous?: components["schemas"]["PreviousAdvice"] | null;
+        };
+        /**
+         * AdviceFocus
+         * @description Слабое место: критерий оценки (ключ evalcore), его название и совет одной фразой.
+         */
+        AdviceFocus: {
+            /** Criterion */
+            criterion: string;
+            /** Label */
+            label: string;
+            /** Text */
+            text: string;
+        };
+        /**
+         * AdviceCheck
+         * @description Слабое место прошлой рекомендации и отметка новой попытки (TC-11): done — критерий
+         *     проверялся и выполнен полностью, not_done — балл ниже полного, unchecked — сценарий новой
+         *     попытки этот критерий не проверял.
+         */
+        AdviceCheck: {
+            /** Criterion */
+            criterion: string;
+            /** Label */
+            label: string;
+            /** Text */
+            text: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "done" | "not_done" | "unchecked";
+        };
+        /**
+         * PreviousAdvice
+         * @description Прошлая рекомендация — по оценённым карточкам до новой попытки — и как её выполнила
+         *     новая попытка (TC-11).
+         */
+        PreviousAdvice: {
+            /**
+             * Card Id
+             * Format: uuid
+             * @description Новая попытка: последняя оценённая закрытая карточка.
+             */
+            card_id: string;
+            /** Focus */
+            focus: components["schemas"]["AdviceCheck"][];
+        };
+        /**
+         * ScenarioRepeat
+         * @description Повтор незачтённого сценария в «Моём пути» (TC-11): было → стало.
+         */
+        ScenarioRepeat: {
+            /**
+             * Scenario Id
+             * Format: uuid
+             */
+            scenario_id: string;
+            /**
+             * Number
+             * @description Номер карточки сценария.
+             */
+            number: string;
+            /** Incident Class */
+            incident_class: string;
+            /**
+             * Step
+             * @description Ступень по уровню сценария.
+             */
+            step: number;
+            /**
+             * Was
+             * @description Балл первой незачтённой попытки.
+             */
+            was: number;
+            /**
+             * Now
+             * @description Балл последней попытки после неё; null — повтора ещё не было.
+             */
+            now: number | null;
+            /**
+             * Passed
+             * @description Последняя попытка после незачтённой зачтена: исправлено.
+             */
+            passed: boolean;
+            /**
+             * Last Card Id
+             * Format: uuid
+             * @description Последняя попытка этого сценария.
+             */
+            last_card_id: string;
+        };
+        /** SessionNormsInput */
+        SessionNormsInput: {
+            /** Handling Normative S */
+            handling_normative_s: number;
+        };
+        /** GenerationVariety */
+        GenerationVariety: {
+            /** Count */
+            count: number;
+            /** Variants Total */
+            variants_total: number;
+            /** Variants Left */
+            variants_left: number;
+        };
+        ScenarioCorrectionInput: {
+            note: string;
+        };
+        GenerationTrainee: {
+            /** Format: uuid */
+            id: string;
+            login: string;
+            dds_service_id: string | null;
+            recommended_level: number;
+            explanation: string;
+            full_name: string;
+        };
+        /** AILocalTiming */
+        AILocalTiming: {
+            /** Period Hours */
+            period_hours: number;
+            /** Attempts */
+            attempts: number;
+            /** Mean Seconds */
+            mean_seconds: number | null;
+        };
+        /** DraftResult */
+        DraftResult: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+        };
+        /** DraftItem */
+        DraftItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "session" | "scenario";
+            /** Title */
+            title: string;
+            /**
+             * Deleted At
+             * Format: date-time
+             */
+            deleted_at: string;
+            /**
+             * Deleted By
+             * Format: uuid
+             */
+            deleted_by: string;
+        };
+        SessionMaterials: {
+            /** Format: uuid */
+            session_id: string;
+            title: string;
+            date: string | null;
+            is_current: boolean;
+            materials: components["schemas"]["Material"][];
+        };
+        /** JobErrorView */
+        JobErrorView: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Kind */
+            kind: string;
+            /** Attempts */
+            attempts: number;
+            /**
+             * Last Attempt At
+             * Format: date-time
+             */
+            last_attempt_at: string;
+            /** Message */
+            message: string;
+            /** Version */
+            version: string;
+            /** Read At */
+            read_at: string | null;
+            /** Read By */
+            read_by: string | null;
+        };
+        /** JobErrorsPage */
+        JobErrorsPage: {
+            /** Items */
+            items: components["schemas"]["JobErrorView"][];
+            /** Total */
+            total: number;
+            /** Unread */
+            unread: number;
+        };
+        /** ReadJobError */
+        ReadJobError: {
+            /** Version */
+            version: string;
         };
     };
     responses: never;
@@ -7542,6 +9785,143 @@ export interface operations {
             };
         };
     };
+    listPlayableScenarios: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "scenario_ids": [
+                     *         "00000000-0000-4000-8000-000000000101"
+                     *       ]
+                     *     } */
+                    "application/json": components["schemas"]["PlayableScenarios"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     getScenario: {
         parameters: {
             query?: never;
@@ -7925,6 +10305,142 @@ export interface operations {
                      *       "teacher_comment": "Синтетическая фикстура для разработки."
                      *     } */
                     "application/json": components["schemas"]["Scenario"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    deleteDraftScenario: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftResult"];
                 };
             };
             /** @description Ошибка запроса */
@@ -9135,7 +11651,7 @@ export interface operations {
             };
         };
     };
-    startSession: {
+    deleteDraftSession: {
         parameters: {
             query?: never;
             header: {
@@ -9147,6 +11663,146 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftResult"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    startSession: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["StartInput"];
+            };
+        };
         responses: {
             /** @description Успешный ответ */
             200: {
@@ -10917,6 +13573,438 @@ export interface operations {
             };
         };
     };
+    recognizeReport: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: binary
+                     * @description Одна фраза доклада: WAV/WebM/Ogg, не более 10 МиБ
+                     */
+                    audio?: string;
+                    /** @description Фраза, которую обучаемый проверил и поправил после неуверенного распознавания (TC-04), вместо audio: сервер не распознаёт речь, а сводит этот текст к виду доклада так же, как распознанный (уверенность null, громкость null). Работает и при выключенном распознавании. Нужно ровно одно из полей audio и text. */
+                    text?: string;
+                    /** @description Прежние фразы доклада в этом звонке, распознанные раньше: доклад складывается за звонок, части и вид считаются по сумме прежних фраз и новой (ответ на переспрос службы одной частью не теряет сказанного раньше). Нет — первая фраза. */
+                    earlier?: string;
+                } & (unknown | unknown);
+            };
+        };
+        responses: {
+            /** @description Результат распознавания */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "text": "Сто второй, ДТП на Дубнинской улице, дом 1, есть пострадавшие, бригада направлена.",
+                     *       "confidence": 0.82,
+                     *       "choice": "full"
+                     *     } */
+                    "application/json": components["schemas"]["VoiceReport"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    recognizeReply: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /**
+                     * Format: uuid
+                     * @description Реплика бригады с вариантами ответа (DeliveredMessage.delivery_id), на которую отвечают. Нет поля — фраза бригаде без вопроса (DT-19): только распознавание, option_key всегда null.
+                     */
+                    delivery_id?: string;
+                    /**
+                     * Format: binary
+                     * @description Одна фраза ответа: WAV/WebM/Ogg, не более 10 МиБ
+                     */
+                    audio: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Результат распознавания */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "text": "Нет, Бескудниковский бульвар, двадцать четыре.",
+                     *       "confidence": 0.81,
+                     *       "option_key": "fix",
+                     *       "loudness": "ok"
+                     *     } */
+                    "application/json": components["schemas"]["VoiceReply"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    checkBriefing: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BriefingCheckInput"];
+            };
+        };
+        responses: {
+            /** @description Что поймёт бригада */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "address": "ok",
+                     *       "heard_address": "Бескудниковский бульвар, 24",
+                     *       "incident": true,
+                     *       "complete": true,
+                     *       "readback": "Принял: Бескудниковский бульвар, 24. Выезжаем.",
+                     *       "ask_again": null
+                     *     } */
+                    "application/json": components["schemas"]["BriefingCheck"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
     listEvaluations: {
         parameters: {
             query?: never;
@@ -11960,6 +15048,100 @@ export interface operations {
             };
             /** @description Операция ожидает C-02/C-03. */
             501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listBackgroundCards: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Фоновые карточки, новые первыми */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "id": "00000000-0000-4000-8000-000000007001",
+                     *         "session_id": "00000000-0000-4000-8000-000000000300",
+                     *         "appeared_at": "2026-10-17T08:41:12Z",
+                     *         "status_at": "2026-10-17T08:49:40Z",
+                     *         "state": "completed",
+                     *         "source": {
+                     *           "number": "36812345",
+                     *           "incident_type_code": "1010101",
+                     *           "caller_name": "",
+                     *           "phone_aon": "",
+                     *           "phone_provided": "",
+                     *           "phone_scene": "",
+                     *           "address": {
+                     *             "city": "Москва",
+                     *             "okrug": "САО",
+                     *             "district": "Головинский",
+                     *             "street": "Онежская улица",
+                     *             "house": "35",
+                     *             "building": "",
+                     *             "apartment": ""
+                     *           },
+                     *           "description": "Во дворе горит мусорный контейнер, рядом машин нет.",
+                     *           "tags": [],
+                     *           "victims": false,
+                     *           "ambulance_refused": false,
+                     *           "blocked_people": false,
+                     *           "emergency": false,
+                     *           "incident_class": "пожар: мусор",
+                     *           "service_ids": [
+                     *             "101"
+                     *           ]
+                     *         }
+                     *       }
+                     *     ] */
+                    "application/json": components["schemas"]["BackgroundCard"][];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -13718,8 +16900,16 @@ export interface operations {
     startPractice: {
         parameters: {
             query?: {
-                /** @description Ступень обучения 1–4 (evalcore/progress.py). Без неё — обучающее упражнение, как раньше. Закрытая ступень — 409 step_locked. */
+                /** @description Ступень обучения 1–5 (evalcore/progress.py). Без неё — обучающее упражнение, как раньше. Ступень 4 — параллельная смена: два разных проработанных сценария уровней 1–2 своей службы, вторая карточка через 45 с после первой (settings_snapshot.parallel_cards 2 — одновременно не больше двух карточек; уровень участника 4 — фон и нагрузка, как у ступени 4 до смены из уровней 1–2). Ступень 5 — финальная смена (HQ-033): три проработанных сценария каталога своей службы разных происшествий, с ветками, карточки через 20 с одна за другой (parallel_cards 3, уровень участника 4 — фон), settings_snapshot.final_shift — вызов бригады подписан только бригадой. Закрытая ступень — 409 step_locked. */
                 step?: number;
+                /** @description Сценарий из каталога (listPracticeCatalog): тренировка именно этого сценария за диспетчера его службы, без подсказчика, уровень участника — уровень сценария. Вместе со step или scenario_id — 422 validation_error. Нет такого сценария — 404 scenario_not_found; сценарий не из каталога — 409 scenario_not_in_catalog. */
+                scenario?: string;
+                /** @description Карточка из разбора (кнопка «Пройти тренировку ещё раз»): тот же сценарий ещё раз. Со step — на той же ступени (идёт в её прогресс; при двух карточках вторая — из пула ступени); без step — как сценарий каталога. Не своя карточка — 404 card_not_found. Вместе со scenario или scenario_id — 422 validation_error. */
+                again?: string;
+                /** @description Показ (HQ-034): тренировку ведёт курсор — watch («Смотрю») или expert («Как сделал бы опытный»). В снимке настроек занятия settings_snapshot.demo = true и settings_snapshot.demo_mode — вид показа; карточки такой тренировки не идут ни в ступени обучения, ни в «Мои результаты». Нет параметра — обычная тренировка. Перехватить («Беру управление», takeOverPractice) можно только показ watch. */
+                demo?: "watch" | "expert";
+                /** @description Повтор незачтённого сценария (TC-11): id из TraineeProgress.repeats. Ступень — по уровню сценария; переданная step должна с ней совпадать (иначе 422). Сценария нет среди повторов — 409 repeat_unavailable. */
+                scenario_id?: string;
             };
             header: {
                 "X-CSRF-Token": string;
@@ -13815,7 +17005,140 @@ export interface operations {
                 };
             };
             /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listPracticeCatalog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "id": "00000000-0000-4000-8000-000000000700",
+                     *         "version": 3,
+                     *         "title": "Драка на улице с пострадавшим",
+                     *         "service_id": "102",
+                     *         "service_name": "Служба 102",
+                     *         "level": 2,
+                     *         "description": "У входа в торговый центр дерутся четверо мужчин. У одного разбита голова, лежит на асфальте.",
+                     *         "trains": [
+                     *           "readback_error",
+                     *           "clarify"
+                     *         ]
+                     *       }
+                     *     ] */
+                    "application/json": components["schemas"]["PracticeScenario"][];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -15094,6 +18417,3453 @@ export interface operations {
             };
             /** @description Ошибка запроса */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listWarmupResults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "id": "00000000-0000-4000-8000-000000000600",
+                     *         "trainee_id": "00000000-0000-4000-8000-000000000001",
+                     *         "trainee_name": "Обучаемый 01",
+                     *         "kind": "address",
+                     *         "correct": 8,
+                     *         "total": 10,
+                     *         "duration_ms": 74000,
+                     *         "mistakes": [
+                     *           "ул. Дубнинская, д. 32 / ул. Дубининская, д. 32"
+                     *         ],
+                     *         "created_at": "2026-10-11T10:00:00Z"
+                     *       }
+                     *     ] */
+                    "application/json": components["schemas"]["WarmupResult"][];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createWarmupResult: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "kind": "address",
+                 *       "correct": 8,
+                 *       "total": 10,
+                 *       "duration_ms": 74000,
+                 *       "mistakes": [
+                 *         "ул. Дубнинская, д. 32 / ул. Дубининская, д. 32"
+                 *       ]
+                 *     } */
+                "application/json": components["schemas"]["WarmupResultInput"];
+            };
+        };
+        responses: {
+            /** @description Сообщение сохранено */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "id": "00000000-0000-4000-8000-000000000600",
+                     *       "trainee_id": "00000000-0000-4000-8000-000000000001",
+                     *       "trainee_name": "Обучаемый 01",
+                     *       "kind": "address",
+                     *       "correct": 8,
+                     *       "total": 10,
+                     *       "duration_ms": 74000,
+                     *       "mistakes": [
+                     *         "ул. Дубнинская, д. 32 / ул. Дубининская, д. 32"
+                     *       ],
+                     *       "created_at": "2026-10-11T10:00:00Z"
+                     *     } */
+                    "application/json": components["schemas"]["WarmupResult"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listSessionInjects: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Контракт результата; backend ещё не реализован. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "options": [
+                     *         {
+                     *           "kind": "alarm",
+                     *           "title": "Тревога бригады",
+                     *           "cards": 2
+                     *         }
+                     *       ],
+                     *       "fired": [
+                     *         {
+                     *           "id": "00000000-0000-4000-8000-000000000800",
+                     *           "kind": "alarm",
+                     *           "title": "Тревога бригады",
+                     *           "card_id": "00000000-0000-4000-8000-000000000700",
+                     *           "card_number": "10271704",
+                     *           "participant_id": "00000000-0000-4000-8000-000000000201",
+                     *           "workstation": 5,
+                     *           "trainee_name": "Обучаемый 01",
+                     *           "fired_at": "2026-10-13T12:03:00Z"
+                     *         }
+                     *       ]
+                     *     } */
+                    "application/json": components["schemas"]["InjectOverview"];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Конфликт версии, состояния или ключа повтора. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Неверные данные. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Операция ожидает C-03. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    createSessionInject: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "kind": "alarm",
+                 *       "targets": [
+                 *         "00000000-0000-4000-8000-000000000201"
+                 *       ]
+                 *     } */
+                "application/json": components["schemas"]["InjectInput"];
+            };
+        };
+        responses: {
+            /** @description Контракт результата; backend ещё не реализован. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "kind": "alarm",
+                     *       "results": [
+                     *         {
+                     *           "participant_id": "00000000-0000-4000-8000-000000000201",
+                     *           "workstation": 5,
+                     *           "trainee_name": "Обучаемый 01",
+                     *           "status": "fired",
+                     *           "card_id": "00000000-0000-4000-8000-000000000700",
+                     *           "card_number": "10271704",
+                     *           "reason": null
+                     *         },
+                     *         {
+                     *           "participant_id": "00000000-0000-4000-8000-000000000202",
+                     *           "workstation": 6,
+                     *           "trainee_name": "Обучаемый 02",
+                     *           "status": "not_applicable",
+                     *           "card_id": null,
+                     *           "card_number": null,
+                     *           "reason": "Рано: карточка ещё не дошла до нужного статуса."
+                     *         }
+                     *       ]
+                     *     } */
+                    "application/json": components["schemas"]["InjectReceipt"];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Конфликт версии, состояния или ключа повтора. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Неверные данные. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchValidationError"];
+                };
+            };
+            /** @description Операция ожидает C-03. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    demoAccounts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "enabled": true,
+                     *       "password": "demo-local",
+                     *       "accounts": [
+                     *         {
+                     *           "login": "admin",
+                     *           "role": "admin",
+                     *           "full_name": "Администратор"
+                     *         }
+                     *       ]
+                     *     } */
+                    "application/json": components["schemas"]["DemoAccounts"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getAIResourceState: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "local_ai": false,
+                     *       "lesson_running": false,
+                     *       "generation_running": false
+                     *     } */
+                    "application/json": components["schemas"]["AIResourceState"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listGenerationJobs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [] */
+                    "application/json": components["schemas"]["JobProgress"][];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getAIModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "ai_enabled": true,
+                     *       "router": true,
+                     *       "active": {
+                     *         "model": "qwen3-4b",
+                     *         "mode": "cpu",
+                     *         "status": "loaded",
+                     *         "fallback": false
+                     *       },
+                     *       "hardware": {
+                     *         "cpu_cores": 8,
+                     *         "memory_total_bytes": 34359738368,
+                     *         "gpu": {
+                     *           "state": "ready",
+                     *           "backend": "vulkan",
+                     *           "device": "Vulkan1",
+                     *           "name": "NVIDIA GeForce RTX 3050 Laptop GPU (NVK GA107)",
+                     *           "vram_mb": 4096
+                     *         },
+                     *         "llm_gpu": true,
+                     *         "forced": false
+                     *       },
+                     *       "gpu_suggestion": true,
+                     *       "notice_dismissed": false,
+                     *       "models": [
+                     *         {
+                     *           "id": "qwen3-4b",
+                     *           "title": "Qwen3-4B Instruct 2507",
+                     *           "file": "qwen3-4b-instruct-2507-q4_k_m.gguf",
+                     *           "size_bytes": 2497281120,
+                     *           "ram_gb": 6,
+                     *           "vram_gb": 4,
+                     *           "summary": "Основная модель: небольшая и быстрая.",
+                     *           "installed": true,
+                     *           "pros": [
+                     *             "Работает на любом компьютере класса: 6 ГБ памяти."
+                     *           ],
+                     *           "cons": [
+                     *             "Иногда не узнаёт факт в пересказанном комментарии."
+                     *           ],
+                     *           "choose_when": "По умолчанию — для компьютеров класса до 32 ГБ памяти.",
+                     *           "source": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+                     *           "modes": [
+                     *             {
+                     *               "mode": "cpu",
+                     *               "available": true,
+                     *               "reason": null,
+                     *               "can_force": false,
+                     *               "status": "loaded"
+                     *             },
+                     *             {
+                     *               "mode": "gpu",
+                     *               "available": true,
+                     *               "reason": null,
+                     *               "can_force": false,
+                     *               "status": "unloaded"
+                     *             }
+                     *           ]
+                     *         }
+                     *       ],
+                     *       "benchmarks": [
+                     *         {
+                     *           "model": "qwen3-4b",
+                     *           "mode": "cpu",
+                     *           "machine": "i7-10700, 8 ядер, 32 ГБ",
+                     *           "generate_seconds": 65.1,
+                     *           "judge_seconds": 24,
+                     *           "tokens_per_second": 7.3,
+                     *           "memory_gb": 6
+                     *         }
+                     *       ],
+                     *       "local_generation": {
+                     *         "period_hours": 24,
+                     *         "attempts": 0,
+                     *         "mean_seconds": null
+                     *       }
+                     *     } */
+                    "application/json": components["schemas"]["AIModels"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setActiveAIModel: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "model": "qwen3-4b",
+                 *       "mode": "gpu",
+                 *       "force": false
+                 *     } */
+                "application/json": components["schemas"]["AIModelChoice"];
+            };
+        };
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "ai_enabled": true,
+                     *       "router": true,
+                     *       "active": {
+                     *         "model": "qwen3-4b",
+                     *         "mode": "gpu",
+                     *         "status": "loading",
+                     *         "fallback": false
+                     *       },
+                     *       "hardware": {
+                     *         "cpu_cores": 8,
+                     *         "memory_total_bytes": 34359738368,
+                     *         "gpu": {
+                     *           "state": "ready",
+                     *           "backend": "vulkan",
+                     *           "device": "Vulkan1",
+                     *           "name": "NVIDIA GeForce RTX 3050 Laptop GPU (NVK GA107)",
+                     *           "vram_mb": 4096
+                     *         },
+                     *         "llm_gpu": true,
+                     *         "forced": false
+                     *       },
+                     *       "gpu_suggestion": false,
+                     *       "notice_dismissed": false,
+                     *       "models": [
+                     *         {
+                     *           "id": "qwen3-4b",
+                     *           "title": "Qwen3-4B Instruct 2507",
+                     *           "file": "qwen3-4b-instruct-2507-q4_k_m.gguf",
+                     *           "size_bytes": 2497281120,
+                     *           "ram_gb": 6,
+                     *           "vram_gb": 4,
+                     *           "summary": "Основная модель: небольшая и быстрая.",
+                     *           "installed": true,
+                     *           "pros": [
+                     *             "Работает на любом компьютере класса: 6 ГБ памяти."
+                     *           ],
+                     *           "cons": [
+                     *             "Иногда не узнаёт факт в пересказанном комментарии."
+                     *           ],
+                     *           "choose_when": "По умолчанию — для компьютеров класса до 32 ГБ памяти.",
+                     *           "source": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+                     *           "modes": [
+                     *             {
+                     *               "mode": "cpu",
+                     *               "available": true,
+                     *               "reason": null,
+                     *               "can_force": false,
+                     *               "status": "loaded"
+                     *             },
+                     *             {
+                     *               "mode": "gpu",
+                     *               "available": true,
+                     *               "reason": null,
+                     *               "can_force": false,
+                     *               "status": "unloaded"
+                     *             }
+                     *           ]
+                     *         }
+                     *       ],
+                     *       "benchmarks": [
+                     *         {
+                     *           "model": "qwen3-4b",
+                     *           "mode": "cpu",
+                     *           "machine": "i7-10700, 8 ядер, 32 ГБ",
+                     *           "generate_seconds": 65.1,
+                     *           "judge_seconds": 24,
+                     *           "tokens_per_second": 7.3,
+                     *           "memory_gb": 6
+                     *         }
+                     *       ],
+                     *       "local_generation": {
+                     *         "period_hours": 24,
+                     *         "attempts": 0,
+                     *         "mean_seconds": null
+                     *       }
+                     *     } */
+                    "application/json": components["schemas"]["AIModels"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    setAIGpuNotice: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "dismissed": true
+                 *     } */
+                "application/json": components["schemas"]["AIGpuNotice"];
+            };
+        };
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "ai_enabled": true,
+                     *       "router": true,
+                     *       "active": {
+                     *         "model": "qwen3-4b",
+                     *         "mode": "cpu",
+                     *         "status": "loaded",
+                     *         "fallback": false
+                     *       },
+                     *       "hardware": {
+                     *         "cpu_cores": 8,
+                     *         "memory_total_bytes": 34359738368,
+                     *         "gpu": {
+                     *           "state": "ready",
+                     *           "backend": "vulkan",
+                     *           "device": "Vulkan1",
+                     *           "name": "NVIDIA GeForce RTX 3050 Laptop GPU (NVK GA107)",
+                     *           "vram_mb": 4096
+                     *         },
+                     *         "llm_gpu": true,
+                     *         "forced": false
+                     *       },
+                     *       "gpu_suggestion": false,
+                     *       "notice_dismissed": true,
+                     *       "models": [
+                     *         {
+                     *           "id": "qwen3-4b",
+                     *           "title": "Qwen3-4B Instruct 2507",
+                     *           "file": "qwen3-4b-instruct-2507-q4_k_m.gguf",
+                     *           "size_bytes": 2497281120,
+                     *           "ram_gb": 6,
+                     *           "vram_gb": 4,
+                     *           "summary": "Основная модель: небольшая и быстрая.",
+                     *           "installed": true,
+                     *           "pros": [
+                     *             "Работает на любом компьютере класса: 6 ГБ памяти."
+                     *           ],
+                     *           "cons": [
+                     *             "Иногда не узнаёт факт в пересказанном комментарии."
+                     *           ],
+                     *           "choose_when": "По умолчанию — для компьютеров класса до 32 ГБ памяти.",
+                     *           "source": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/main/Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+                     *           "modes": [
+                     *             {
+                     *               "mode": "cpu",
+                     *               "available": true,
+                     *               "reason": null,
+                     *               "can_force": false,
+                     *               "status": "loaded"
+                     *             },
+                     *             {
+                     *               "mode": "gpu",
+                     *               "available": true,
+                     *               "reason": null,
+                     *               "can_force": false,
+                     *               "status": "unloaded"
+                     *             }
+                     *           ]
+                     *         }
+                     *       ],
+                     *       "benchmarks": [
+                     *         {
+                     *           "model": "qwen3-4b",
+                     *           "mode": "cpu",
+                     *           "machine": "i7-10700, 8 ядер, 32 ГБ",
+                     *           "generate_seconds": 65.1,
+                     *           "judge_seconds": 24,
+                     *           "tokens_per_second": 7.3,
+                     *           "memory_gb": 6
+                     *         }
+                     *       ],
+                     *       "local_generation": {
+                     *         "period_hours": 24,
+                     *         "attempts": 0,
+                     *         "mean_seconds": null
+                     *       }
+                     *     } */
+                    "application/json": components["schemas"]["AIModels"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    startMemoryCheck: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Проверка памяти смены */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "card_id": "00000000-0000-4000-8000-000000000200",
+                     *       "shown_at": "2026-10-18T09:03:10Z",
+                     *       "questions": [
+                     *         {
+                     *           "key": "free_brigades",
+                     *           "text": "Сколько бригад вашей службы свободно прямо сейчас?",
+                     *           "options": [
+                     *             "0",
+                     *             "1",
+                     *             "2",
+                     *             "3"
+                     *           ],
+                     *           "multiple": false
+                     *         },
+                     *         {
+                     *           "key": "on_scene",
+                     *           "text": "Какие бригады уже на месте?",
+                     *           "options": [
+                     *             "Бригада 1",
+                     *             "Бригада 2",
+                     *             "Ни одна"
+                     *           ],
+                     *           "multiple": true
+                     *         },
+                     *         {
+                     *           "key": "unreported",
+                     *           "text": "По какой карточке доклад бригады ещё не отмечен статусом?",
+                     *           "options": [
+                     *             "36812345 — пожар: мусор",
+                     *             "По всем отмечено"
+                     *           ],
+                     *           "multiple": true
+                     *         }
+                     *       ],
+                     *       "result": null
+                     *     } */
+                    "application/json": components["schemas"]["MemoryCheck"];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Конфликт версии, состояния или ключа повтора. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    answerMemoryCheck: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "answers": [
+                 *         [
+                 *           "1"
+                 *         ],
+                 *         [
+                 *           "Ни одна"
+                 *         ],
+                 *         [
+                 *           "По всем отмечено"
+                 *         ]
+                 *       ]
+                 *     } */
+                "application/json": components["schemas"]["MemoryCheckAnswers"];
+            };
+        };
+        responses: {
+            /** @description Итог проверки памяти */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "card_id": "00000000-0000-4000-8000-000000000200",
+                     *       "shown_at": "2026-10-18T09:03:10Z",
+                     *       "questions": [
+                     *         {
+                     *           "key": "free_brigades",
+                     *           "text": "Сколько бригад вашей службы свободно прямо сейчас?",
+                     *           "options": [
+                     *             "0",
+                     *             "1",
+                     *             "2",
+                     *             "3"
+                     *           ],
+                     *           "multiple": false
+                     *         },
+                     *         {
+                     *           "key": "on_scene",
+                     *           "text": "Какие бригады уже на месте?",
+                     *           "options": [
+                     *             "Бригада 1",
+                     *             "Бригада 2",
+                     *             "Ни одна"
+                     *           ],
+                     *           "multiple": true
+                     *         },
+                     *         {
+                     *           "key": "unreported",
+                     *           "text": "По какой карточке доклад бригады ещё не отмечен статусом?",
+                     *           "options": [
+                     *             "36812345 — пожар: мусор",
+                     *             "По всем отмечено"
+                     *           ],
+                     *           "multiple": true
+                     *         }
+                     *       ],
+                     *       "result": {
+                     *         "answers": [
+                     *           [
+                     *             "1"
+                     *           ],
+                     *           [
+                     *             "Ни одна"
+                     *           ],
+                     *           [
+                     *             "По всем отмечено"
+                     *           ]
+                     *         ],
+                     *         "correct": [
+                     *           [
+                     *             "1"
+                     *           ],
+                     *           [
+                     *             "Бригада 1"
+                     *           ],
+                     *           [
+                     *             "36812345 — пожар: мусор"
+                     *           ]
+                     *         ],
+                     *         "why": [
+                     *           "Свободна: Бригада 2.",
+                     *           "На месте: Бригада 1.",
+                     *           "Доклад не отмечен статусом: 36812345 — «Прибытие»."
+                     *         ],
+                     *         "score": 1,
+                     *         "total": 3,
+                     *         "answered_at": "2026-10-18T09:03:31Z"
+                     *       }
+                     *     } */
+                    "application/json": components["schemas"]["MemoryCheck"];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Конфликт версии, состояния или ключа повтора. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Неверные данные. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    takeOverPractice: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "id": "00000000-0000-4000-8000-000000000400",
+                     *       "title": "Тренировка: ступень 1 — Интерфейс и статусы",
+                     *       "teacher_id": "00000000-0000-4000-8000-000000000001",
+                     *       "status": "running",
+                     *       "participants": [
+                     *         {
+                     *           "user_id": "00000000-0000-4000-8000-000000000001",
+                     *           "workstation_number": 1,
+                     *           "dds_service_id": "102",
+                     *           "level": 1
+                     *         }
+                     *       ],
+                     *       "settings_snapshot": {
+                     *         "reaction_normative_s": 30,
+                     *         "handling_normative_s": 180,
+                     *         "critical_cap": 0.5,
+                     *         "weights": {
+                     *           "reaction_time": 1,
+                     *           "handling_time": 1,
+                     *           "status_flow": 1,
+                     *           "routing": 1,
+                     *           "required_fields": 1,
+                     *           "address": 1,
+                     *           "call": 1,
+                     *           "spelling": 0.5,
+                     *           "comment_keywords": 1
+                     *         },
+                     *         "parallel_cards": 1,
+                     *         "hints_level": 1,
+                     *         "spelling_hints": false,
+                     *         "demo": false
+                     *       },
+                     *       "kind": "practice"
+                     *     } */
+                    "application/json": components["schemas"]["Session"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listSessionScreens: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Активные показы занятия. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [
+                     *       {
+                     *         "session_id": "00000000-0000-4000-8000-000000000100",
+                     *         "user_id": "00000000-0000-4000-8000-000000000201",
+                     *         "state": "sharing",
+                     *         "requested_at": "2026-10-18T09:00:00Z"
+                     *       }
+                     *     ] */
+                    "application/json": components["schemas"]["ScreenShare"][];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    requestScreenShare: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Запрос показа. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "session_id": "00000000-0000-4000-8000-000000000100",
+                     *       "user_id": "00000000-0000-4000-8000-000000000201",
+                     *       "state": "requested",
+                     *       "requested_at": "2026-10-18T09:00:00Z"
+                     *     } */
+                    "application/json": components["schemas"]["ScreenShare"];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Конфликт версии, состояния или ключа повтора. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Неверные данные. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchValidationError"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    stopScreenShare: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Показ остановлен. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "session_id": "00000000-0000-4000-8000-000000000100",
+                     *       "user_id": "00000000-0000-4000-8000-000000000201",
+                     *       "state": "stopped",
+                     *       "requested_at": null
+                     *     } */
+                    "application/json": components["schemas"]["ScreenShare"];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    updateSessionNorms: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "handling_normative_s": 180
+                 *     } */
+                "application/json": components["schemas"]["SessionNormsInput"];
+            };
+        };
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "id": "00000000-0000-4000-8000-000000000400",
+                     *       "title": "Учебное занятие",
+                     *       "teacher_id": "00000000-0000-4000-8000-000000000002",
+                     *       "status": "draft",
+                     *       "participants": [
+                     *         {
+                     *           "user_id": "00000000-0000-4000-8000-000000000001",
+                     *           "workstation_number": 1,
+                     *           "dds_service_id": "102",
+                     *           "level": 1
+                     *         }
+                     *       ],
+                     *       "settings_snapshot": {
+                     *         "reaction_normative_s": 30,
+                     *         "handling_normative_s": 180,
+                     *         "critical_cap": 0.5,
+                     *         "weights": {
+                     *           "reaction_time": 1,
+                     *           "handling_time": 1,
+                     *           "status_flow": 1,
+                     *           "routing": 1,
+                     *           "required_fields": 1,
+                     *           "address": 1,
+                     *           "call": 1,
+                     *           "spelling": 0.5,
+                     *           "comment_keywords": 1
+                     *         },
+                     *         "parallel_cards": 1,
+                     *         "hints_level": 0,
+                     *         "spelling_hints": false
+                     *       }
+                     *     } */
+                    "application/json": components["schemas"]["Session"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Норматив отработки можно менять только до начала занятия. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getGenerationVariety: {
+        parameters: {
+            query: {
+                service_id: string;
+                level: number;
+                categories?: ("traffic" | "fire" | "gas" | "medicine" | "utilities" | "lift" | "public_order" | "animals" | "other")[] | null;
+                trainee_login?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Количество каркасов */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "count": 3,
+                     *       "variants_total": 8,
+                     *       "variants_left": 5
+                     *     } */
+                    "application/json": components["schemas"]["GenerationVariety"];
+                };
+            };
+            /** @description Неподдерживаемая служба или уровень */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    getGenerationCategories: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Код темы и подпись */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "traffic": "ДТП",
+                     *       "fire": "Пожар и задымление",
+                     *       "gas": "Газ",
+                     *       "medicine": "Медицина",
+                     *       "utilities": "Вода и отопление",
+                     *       "lift": "Лифт",
+                     *       "public_order": "Общественный порядок",
+                     *       "animals": "Животные",
+                     *       "other": "Прочее"
+                     *     } */
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+        };
+    };
+    regenerateScenario: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /** @example {
+                 *       "note": "Вопрос бригады позже"
+                 *     } */
+                "application/json": components["schemas"]["ScenarioCorrectionInput"];
+            };
+        };
+        responses: {
+            /** @description Задание создано */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Job"];
+                };
+            };
+            /** @description Запрос отклонён */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Запрос отклонён */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Запрос отклонён */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Запрос отклонён */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    searchGenerationTrainees: {
+        parameters: {
+            query: {
+                /** @description ФИО, логин или их часть. Название параметра сохранено для совместимости. */
+                login: string;
+                /** @description Служба занятия или пакета для рекомендации. Без параметра — служба учётной записи. */
+                service_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description До двадцати активных обучаемых с рекомендованным уровнем */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [] */
+                    "application/json": components["schemas"]["GenerationTrainee"][];
+                };
+            };
+            /** @description Некорректный запрос */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    restoreDraftSession: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftResult"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    restoreDraftScenario: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftResult"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listDeletedDrafts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [] */
+                    "application/json": components["schemas"]["DraftItem"][];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    stopGeneration: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobProgress"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listSessionMaterials: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Материалы с названием, датой и признаком текущего занятия. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example [] */
+                    "application/json": components["schemas"]["SessionMaterials"][];
+                };
+            };
+            /** @description Требуется вход. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Нет прав или неверный CSRF. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Объект отсутствует или недоступен. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Конфликт версии, состояния или ключа повтора. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Неверные данные. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Операция ожидает C-07. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Хранилище временно недоступно. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    listJobErrors: {
+        parameters: {
+            query?: {
+                offset?: number;
+                limit?: number;
+                state?: "all" | "unread" | "read";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobErrorsPage"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+        };
+    };
+    readJobError: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-CSRF-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadJobError"];
+            };
+        };
+        responses: {
+            /** @description Успешный ответ */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobErrorView"];
+                };
+            };
+            /** @description Ошибка запроса */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /** @example {
+                     *       "code": "request_error",
+                     *       "message": "Запрос не выполнен.",
+                     *       "details": {}
+                     *     } */
+                    "application/json": components["schemas"]["Error"];
+                };
+            };
+            /** @description Ошибка запроса */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

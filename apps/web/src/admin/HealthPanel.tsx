@@ -2,12 +2,20 @@
 // место, копии, оповещения — C-07), словами и с автообновлением.
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../shared/api";
-import { describeHealth, describeStatus } from "./adminModel";
+import { describeHealth, describeStatus, systemAlertText } from "./adminModel";
+import { gpuReminder } from "./aiModelsModel";
 import { useSystemStatus } from "./useSystemStatus";
+import { useAIModels, useGpuNotice } from "./AIModelsPanel";
 import kit from "../teacher/console/Console.module.css";
 import styles from "./Admin.module.css";
 
-export function HealthPanel() {
+export function HealthPanel({
+  onModels,
+  onJobErrors,
+}: {
+  onModels?: () => void;
+  onJobErrors?: () => void;
+}) {
   const health = useQuery({
     queryKey: ["admin-health"],
     queryFn: async () => {
@@ -18,6 +26,15 @@ export function HealthPanel() {
     refetchInterval: 15_000,
   });
   const status = useSystemStatus();
+  const alerts =
+    status.data?.alerts.filter(
+      (alert) =>
+        !alert.message.startsWith("Непрочитанных ошибок очереди:") &&
+        !alert.message.startsWith("Заданий с ошибкой в очереди:"),
+    ) ?? [];
+  // Рабочая видеокарта, а ИИ на процессоре — предлагаем ускорить (HQ-016).
+  const models = useAIModels();
+  const notice = useGpuNotice();
 
   return (
     <div className={kit.tabBody}>
@@ -41,12 +58,28 @@ export function HealthPanel() {
           ))}
         </div>
       )}
-      {status.data && status.data.alerts.length > 0 && (
+      {models.data?.gpu_suggestion && (
+        <div className={kit.warning} role="status">
+          {gpuReminder(models.data)}{" "}
+          <button type="button" className={kit.plain} onClick={onModels}>
+            Сменить модель
+          </button>{" "}
+          <button
+            type="button"
+            className={kit.plain}
+            disabled={notice.isPending}
+            onClick={() => notice.mutate(true)}
+          >
+            Скрыть напоминание
+          </button>
+        </div>
+      )}
+      {alerts.length > 0 && (
         <ul className={kit.problems} role="status" aria-label="Оповещения">
-          {status.data.alerts.map((alert) => (
-            <li key={alert.message}>
+          {alerts.map((alert) => (
+            <li key={systemAlertText(alert.message)}>
               {alert.level === "error" ? "Сбой: " : "Внимание: "}
-              {alert.message}
+              {systemAlertText(alert.message)}
             </li>
           ))}
         </ul>
@@ -68,6 +101,9 @@ export function HealthPanel() {
         </p>
       )}
       <div className={kit.actions}>
+        <button type="button" className={kit.plain} onClick={onJobErrors}>
+          Открыть ошибки очереди
+        </button>
         <button
           type="button"
           className={kit.plain}

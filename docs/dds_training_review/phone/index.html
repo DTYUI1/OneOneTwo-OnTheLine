@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Телефон ДДС — макет</title>
+<!-- Макет окна звонка ДДС (рекомендации организаторов 16.10, п. 8; задача GP-09).
+     Рамка — окно разговора модуля «Оператор 112» (apps/web/src/operator/Talk.tsx,
+     talkWindow.ts, OperatorPage.module.css .talk*): размер не зависит от содержимого
+     (760×340, не меньше 600×320), тянется за любой край и угол, двигается за тёмный
+     заголовок, «−» сворачивает, «В центр» возвращает. Цвета — токены --op-* оттуда же.
+     Набора номера нет: звонок — выбор контакта из списка преподавателя (не больше 10 на ДДС).
+     Полоса макета сверху проходит сквозные сценарии со всеми состояниями окна.
+     GP-24 (замечание пользователя 16.10): полосы без содержимого не держат места — шаги
+     только при ответе по частям, ряд ответа по высоте кнопок, полоса размера только с
+     пояснением; растёт лента, окно того же размера. Пояснения, которые легко запомнить
+     («Выберите, кому позвонить.», подсказка хода вида «Вводная: …», подписи шкалы, размер
+     окна), видны, пока обучаемый не сделал действие верно 3 раза, потом — при наведении и в
+     «?». Флажок «освоил окно» на полосе макета показывает окно опытного обучаемого. -->
+<style>
+:root {
+  --op-panel: #efefef;
+  --op-border: #aeb1b3;
+  --op-line: #d2d2d2;
+  --op-blue: #157dbd;
+  --op-orange: #ec653b;
+  --op-dark: #2f353a;
+  --op-asked: #e4e7e9;
+  --op-muted: #6c6c6c;
+  --op-good: #1d6b42;
+  --op-good-bg: #e3f4ea;
+  --op-bad: #9b1c14;
+  --op-bad-bg: #fbe4e1;
+  --op-warn: #7a5600;
+  --op-warn-bg: #fcf1d6;
+  --color-text: #101820;
+  --phone: #2f8a4e;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body { font: 14px/1.4 Arial, sans-serif; color: var(--color-text); background: #c9ced1; display: flex; flex-direction: column; }
+button { font: inherit; cursor: pointer; }
+button:disabled { cursor: default; opacity: 0.5; }
+
+/* полоса макета — не часть тренажёра */
+.bar { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 12px; color: #dfe6ea; background: #1d2228; }
+.bar b { margin-right: 4px; }
+.bar button { padding: 4px 10px; color: #dfe6ea; background: transparent; border: 1px solid #47525b; border-radius: 3px; }
+.bar button:hover, .bar button.on { background: #47525b; }
+.bar label { display: inline-flex; align-items: center; gap: 4px; color: #aab4ba; }
+
+.stage-wrap { flex: 1; min-height: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; }
+.stage { position: relative; width: min(100%, calc((100vh - 40px) * 2)); aspect-ratio: 2 / 1; overflow: hidden; }
+.stage img { position: absolute; left: 0; top: 0; width: 100%; transform: translateY(-7.4%); user-select: none; pointer-events: none; }
+
+/* значок телефона на панели (рекомендации, п. 8: зелёный кружок с трубкой) */
+.dial { position: absolute; left: 89.6%; top: 93.6%; height: 5.4%; aspect-ratio: 1; min-width: 34px; display: grid; place-items: center; padding: 0; color: #fff; background: var(--phone); border: 2px solid #e9f5ec; border-radius: 50%; }
+.dial > svg { width: 55%; height: 55%; }
+.dial.ring { animation: pulse 1s steps(2) infinite; }
+.dial.alarm { background: var(--op-orange); border-color: #fde8e6; }
+.dial .badge { position: absolute; top: -6px; right: -6px; min-width: 20px; padding: 0 5px; font-size: 12px; font-weight: bold; line-height: 20px; color: #fff; background: var(--op-orange); border-radius: 10px; }
+.dial .timer { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 3px; padding: 0 5px; font-size: 12px; color: #fff; background: var(--op-dark); font-variant-numeric: tabular-nums; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 7px #2f8a4e66; } }
+
+/* ---------- окно: рамка .talk модуля 112 */
+.talk { position: fixed; z-index: 6; display: flex; flex-direction: column; min-height: 0; background: #fff; border: 1px solid var(--op-border); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
+.talk[hidden] { display: none; }
+.talkHead { display: flex; flex: none; flex-wrap: wrap; gap: 4px 10px; align-items: center; padding: 2px 6px 2px 10px; color: #fff; background: #303335; cursor: move; touch-action: none; user-select: none; }
+.talkHead h2 { margin: 0; font-size: 13px; font-weight: normal; white-space: nowrap; }
+.talkHead .t { font-variant-numeric: tabular-nums; }
+.headBtn { padding: 0 5px; color: #fff; background: transparent; border: 1px solid #ffffff66; }
+.tone { display: inline-flex; gap: 2px; align-items: flex-end; font-size: 12px; }
+.tone i { display: block; width: 4px; background: rgba(255, 255, 255, 0.25); }
+.tone i:nth-child(1) { height: 5px; } .tone i:nth-child(2) { height: 8px; } .tone i:nth-child(3) { height: 11px; } .tone i:nth-child(4) { height: 14px; }
+.tone[data-speaking="true"] i { background: #4cc38a; animation: voice 0.5s ease-in-out infinite alternate; }
+.tone[data-speaking="true"] i:nth-child(2) { animation-delay: 0.12s; } .tone[data-speaking="true"] i:nth-child(3) { animation-delay: 0.24s; } .tone[data-speaking="true"] i:nth-child(4) { animation-delay: 0.36s; }
+.tone span { margin-left: 6px; }
+@keyframes voice { from { transform: scaleY(0.4); } to { transform: scaleY(1); } }
+.talkTools { display: flex; flex-wrap: wrap; gap: 4px; margin-left: auto; }
+.talkTools button { padding: 1px 8px; font-size: 12px; color: #fff; background: transparent; border: 1px solid rgba(255, 255, 255, 0.45); }
+.talkTools button:hover:enabled { background: rgba(255, 255, 255, 0.12); }
+.talkTools .hangup { border-color: var(--op-orange); background: var(--op-orange); }
+.talk[data-collapsed="true"] { height: auto !important; box-shadow: none; }
+.talk[data-collapsed="true"] > :not(.talkHead), .talk[data-collapsed="true"] .tone { display: none; }
+
+/* входящий: строка над лентой, окно не растёт */
+.ringRow { display: flex; flex: none; align-items: center; gap: 10px; padding: 5px 10px; color: var(--color-text); background: var(--op-warn-bg); border-bottom: 1px solid var(--op-line); animation: attention 1s ease-in-out infinite alternate; }
+.ringRow.alarm { color: #fff; background: var(--op-orange); animation: none; }
+.ringRow span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ringRow small { color: inherit; opacity: 0.75; }
+.ringRow button { padding: 2px 12px; font-weight: bold; color: #fff; background: var(--phone); border: 0; }
+.ringRow.alarm button { color: var(--op-orange); background: #fff; }
+/* TC-02: линия на удержании — жёлтая строка без мигания; пропущенный вызов — спокойная строка */
+.lineRow { display: flex; flex: none; align-items: center; gap: 10px; padding: 5px 10px; color: var(--color-text); background: var(--op-panel); border-bottom: 1px solid var(--op-line); }
+.lineRow.held { background: var(--op-warn-bg); box-shadow: inset 4px 0 0 var(--op-warn); }
+.lineRow.lost b, .lineRow.dropped b { color: var(--op-bad); }
+.lineRow span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.lineRow button { padding: 2px 12px; font-weight: bold; color: #fff; background: var(--phone); border: 0; }
+@keyframes attention { from { box-shadow: inset 0 0 0 0 rgba(236, 101, 59, 0); } to { box-shadow: inset 0 0 0 2px rgba(236, 101, 59, 0.6); } }
+
+/* лента: .talkLog модуля 112 */
+.talkLog { flex: 1 1 110px; min-height: 60px; padding: 8px 10px 6px; overflow-y: auto; line-height: 1.4; mask-image: linear-gradient(to bottom, transparent 0, #000 8px); }
+.talkLog ol { margin: 0; padding: 0; list-style: none; }
+.talkLog li + li { margin-top: 4px; }
+.talkLog li > span.who { color: var(--op-muted); }
+.talkLog li.me { color: var(--op-muted); }
+.talkLog li.sys { color: var(--op-muted); font-style: italic; }
+.replay { margin-left: 4px; padding: 0 4px; color: var(--op-blue); vertical-align: middle; background: none; border: 0; }
+.parts { display: inline-flex; flex-wrap: wrap; gap: 3px; margin-left: 6px; vertical-align: middle; }
+.part { padding: 0 6px; font-size: 12px; line-height: 1.5; border: 1px solid var(--op-line); border-radius: 10px; }
+.part.ok { color: var(--op-good); background: var(--op-good-bg); border-color: #b9dcc7; }
+.part.miss { color: var(--op-bad); background: var(--op-bad-bg); border-color: #f0b8b1; }
+.talkStart { margin: 8px 0 0; padding: 6px 10px; color: #444; background: var(--op-panel); border-left: 3px solid var(--op-border); }
+.talkStart.warn { color: var(--op-warn); background: var(--op-warn-bg); border-left-color: #e2b24a; }
+
+/* контакты — в той же области, что и лента */
+.contacts { margin: 0; padding: 0; list-style: none; }
+.contacts .grp { padding: 6px 0 2px; font-size: 12px; color: var(--op-muted); }
+.contact { width: 100%; display: flex; align-items: center; gap: 10px; padding: 5px 8px; text-align: left; color: var(--color-text); background: #fff; border: 1px solid var(--op-line); margin-top: -1px; }
+.contact:hover { border-color: var(--op-blue); position: relative; }
+.contact b { font-weight: bold; }
+.contact small { color: var(--op-muted); }
+.contact .st { margin-left: auto; font-size: 12px; color: var(--op-muted); }
+.contact .st.free { color: var(--op-good); }
+.contact .go { flex: none; display: grid; place-items: center; width: 22px; height: 22px; color: #fff; background: var(--phone); border-radius: 50%; }
+.contact .go svg { width: 13px; height: 13px; }
+
+/* шаги: .steps модуля 112 */
+.steps { display: flex; flex: none; gap: 4px 8px; align-items: center; min-height: 26px; padding: 5px 8px 0 10px; border-top: 1px solid var(--op-line); font-size: 12px; }
+.stepList { display: flex; flex: 1; flex-wrap: wrap; gap: 3px; min-width: 0; }
+.step { padding: 1px 6px; font-size: 12px; line-height: 1.4; color: var(--color-text); background: #fff; border: 1px solid var(--op-line); border-radius: 10px; }
+.step[data-done="true"] { color: var(--op-good); background: var(--op-good-bg); border-color: #b9dcc7; }
+.step[data-current="true"] { color: #fff; background: var(--op-dark); border-color: var(--op-dark); }
+.switch { display: inline-flex; flex: none; gap: 4px; align-items: center; color: var(--op-muted); white-space: nowrap; cursor: pointer; }
+
+/* ряд ответа: .talkHints модуля 112 — по высоте кнопок (GP-24), пустой — не виден */
+.talkHints { display: flex; flex: none; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 43px; max-height: 74px; padding: 6px 24px 6px 10px; overflow-y: auto; border-top: 1px solid var(--op-line); }
+.talkHints:empty { display: none; }
+.question { min-height: 28px; padding: 3px 10px; line-height: 1.3; text-align: left; color: var(--color-text); background: #fff; border: 1px solid var(--op-border); }
+.question:hover:enabled { border-color: var(--op-blue); }
+.talkBtn { min-width: 150px; min-height: 30px; padding: 3px 14px; font-weight: bold; color: #fff; background: var(--op-blue); border: 1px solid var(--op-blue); }
+.talkBtn.rec { background: var(--op-orange); border-color: var(--op-orange); }
+.partsBtn { min-width: 110px; min-height: 30px; padding: 3px 14px; font-weight: bold; color: var(--op-blue); background: #fff; border: 1px solid var(--op-blue); }
+.partsBtn[aria-pressed="true"] { color: #fff; background: var(--op-dark); border-color: var(--op-dark); }
+.sep { align-self: stretch; width: 1px; margin: 2px 4px; background: var(--op-line); }
+.meter { display: flex; flex-direction: column; gap: 1px; width: 190px; }
+.meterBar { display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; height: 10px; }
+.meterBar i { background: var(--op-asked); }
+.meterBar i.zone { box-shadow: inset 0 -2px 0 #9fd0ae; }
+.meterBar i.on { background: var(--op-blue); }
+.meterBar i.on.hi { background: var(--op-orange); }
+.meterScale { display: flex; justify-content: space-between; font-size: 11px; color: var(--op-muted); }
+.status { font-size: 13px; color: var(--op-muted); font-variant-numeric: tabular-nums; }
+.spin { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -2px; border: 2px solid var(--op-line); border-top-color: var(--op-blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* полоса размера: .resizeBar модуля 112 — только пока пояснение не выучено (GP-24);
+   кнопка размера — в углу окна поверх содержимого */
+.resizeBar { display: flex; flex: none; align-items: center; justify-content: flex-end; gap: 8px; min-height: 20px; padding: 1px 24px 1px 3px; border-top: 1px solid var(--op-line); background: var(--op-panel); }
+.resizeBar[hidden] { display: none; }
+.resizeHint { overflow: hidden; color: var(--op-muted); font-size: 11px; line-height: 14px; white-space: nowrap; text-overflow: ellipsis; }
+.grip { position: absolute; right: 0; bottom: 0; z-index: 2; display: grid; place-items: center; width: 20px; height: 20px; color: var(--op-muted); cursor: nwse-resize; }
+.edge { position: absolute; z-index: 3; touch-action: none; }
+.edge[data-e="n"], .edge[data-e="s"] { right: 10px; left: 10px; height: 8px; cursor: ns-resize; }
+.edge[data-e="w"], .edge[data-e="e"] { top: 10px; bottom: 10px; width: 8px; cursor: ew-resize; }
+.edge[data-e="nw"], .edge[data-e="ne"], .edge[data-e="sw"], .edge[data-e="se"] { width: 14px; height: 14px; }
+.edge[data-e="n"], .edge[data-e="nw"], .edge[data-e="ne"] { top: -5px; }
+.edge[data-e="s"], .edge[data-e="sw"], .edge[data-e="se"] { bottom: -5px; }
+.edge[data-e="w"], .edge[data-e="nw"], .edge[data-e="sw"] { left: -5px; }
+.edge[data-e="e"], .edge[data-e="ne"], .edge[data-e="se"] { right: -5px; }
+.edge[data-e="nw"], .edge[data-e="se"] { cursor: nwse-resize; }
+.edge[data-e="ne"], .edge[data-e="sw"] { cursor: nesw-resize; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>Макет: телефон ДДС</b>
+  <button data-flow="contacts">Контакты</button>
+  <button data-flow="brief">Вводная бригаде</button>
+  <button data-flow="report">Входящий доклад бригады</button>
+  <button data-flow="s112">Доклад в 112</button>
+  <button data-flow="alarm">Тревога во время разговора</button>
+  <button data-flow="missed">Пропущенный доклад</button>
+  <button data-flow="hold">Удержание линии</button>
+  <button data-flow="caller">Звонок заявителю</button>
+  <label><input type="checkbox" id="nomic"> без микрофона</label>
+  <label title="Пояснения прячутся, когда действие сделано верно 3 раза"><input type="checkbox" id="learned"> освоил окно</label>
+</div>
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+    <img src="../../screenshots/arm_dds/06.png" alt="АРМ ДДС: карточка происшествия">
+    <button class="dial" id="dial" aria-label="Телефон"></button>
+  </div>
+</div>
+<section class="talk" id="talk" hidden aria-label="Телефон ДДС">
+  <div class="talkHead" id="head"></div>
+  <div id="ring"></div>
+  <div class="talkLog" id="log"></div>
+  <div id="steps"></div>
+  <div class="talkHints" id="hints"></div>
+  <div class="resizeBar" id="resizeBar">
+    <span class="resizeHint">Размер окна — потяните за любой край или угол</span>
+  </div>
+  <span class="grip" data-grip="se" title="Размер окна — потяните за любой край или угол"><svg width="12" height="12" viewBox="0 0 14 14"><path d="M3 12 12 3M7 12l5-5M11 12l1-1" stroke="currentColor"/></svg></span>
+  <span class="edge" data-e="n"></span><span class="edge" data-e="s"></span><span class="edge" data-e="w"></span><span class="edge" data-e="e"></span>
+  <span class="edge" data-e="nw"></span><span class="edge" data-e="ne"></span><span class="edge" data-e="sw"></span><span class="edge" data-e="se"></span>
+</section>
+<script>
+const ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>';
+const REPLAY = '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 .5 9 5 1 9.5z" fill="currentColor"/></svg>';
+const MOVE = '<svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1v14M1 8h14M5 4l3-3 3 3M5 12l3 3 3-3M4 5 1 8l3 3M12 5l3 3-3 3" fill="none" stroke="currentColor"/></svg>';
+const CARD = "36814845";
+
+// Список задаёт преподаватель: не больше 10 номеров на одну ДДС (рекомендации 16.10, п. 8).
+const CONTACTS = [
+  { group: "Силы службы" },
+  { id: "b201", name: "Расчёт АЦ-201", sub: "ПСЧ 46 · 201", st: "свободен", free: true, kind: "brigade" },
+  { id: "b202", name: "Расчёт АЦ-202", sub: "ПСЧ 46 · 202", st: "на выезде", kind: "brigade" },
+  { group: "Руководство и аварийная бригада" },
+  { id: "head", name: "Руководитель организации", sub: "2-01", kind: "person" },
+  { id: "resp", name: "Начальник отдела реагирования", sub: "2-02", kind: "person" },
+  { id: "chief", name: "Начальник аварийной бригады", sub: "2-03", kind: "person" },
+  { id: "spec", name: "Специалист аварийной бригады", sub: "2-04", kind: "person" },
+  { group: "Службы" },
+  { id: "s112", name: "Система-112", sub: "112", kind: "service" },
+  { id: "s103", name: "Скорая помощь", sub: "103", kind: "service" },
+  { group: "По карточке — добавил преподаватель" },
+  { id: "caller", name: "Заявитель", sub: "+7 916 *** 24 17 · номер из карточки", kind: "caller" },
+];
+const who = Object.fromEntries(CONTACTS.filter(c => c.id).map(c => [c.id, c]));
+
+// ---------- состояние
+const S = {
+  open: false, collapsed: false, view: "contacts", peer: null, feed: [], sec: 0, incoming: null,
+  phase: "idle",          // idle | dialing | them | you | rec | recognizing
+  turn: null, level: 0, recSec: 0, muted: false, summary: null, run: 0, callMode: null,
+  // TC-02: пропущенные вызовы и линия на удержании (в приложении — phone/missed.ts, hold.ts)
+  missed: [], held: null, dropped: null, onCallback: null,
+};
+// Вызов звонит 25 с, удержание — 3 мин; в макете сжато, чтобы не ждать.
+const MISSED_S = 6, HOLD_S = 30;
+let holdTimer = null;
+let clock = null, recTimer = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const noMic = () => $("nomic").checked;
+// Обучаемый освоил окно (GP-24): пояснения, которые легко запомнить, спрятаны.
+const learned = () => $("learned").checked;
+const inCall = () => S.view === "call";
+
+function startClock() { clearInterval(clock); S.sec = 0; clock = setInterval(() => { S.sec++; paintClock(); }, 1000); }
+function stopClock() { clearInterval(clock); }
+function guard(run) { if (run !== S.run) throw new Error("stop"); }
+
+// ---------- шаги сценария
+async function dial(id, run) {
+  S.open = true; S.view = "call"; S.peer = who[id]; S.feed = []; S.summary = null; S.turn = null; S.callMode = null;
+  S.phase = "dialing"; S.feed.push({ cls: "sys", text: "Гудки…" }); render();
+  await wait(1600); guard(run);
+  startClock();
+}
+
+async function them(text, run, ms) {
+  S.phase = "them";
+  S.feed.push({ cls: "them", who: S.peer.name, text, voice: true });
+  render();
+  await wait(ms || Math.min(4200, 900 + text.length * 35)); guard(run);
+  S.phase = "idle"; render();
+}
+
+// Ход обучаемого: voice — что «распознается» на каждой попытке; steps — варианты по частям.
+function you(turn) {
+  return new Promise(resolve => {
+    S.turn = { ...turn, step: 0, attempt: 0, picked: [], mode: noMic() ? "parts" : "voice", resolve };
+    S.phase = "you"; render();
+  });
+}
+
+async function theyHangUp(run) {
+  await wait(1200); guard(run);
+  S.feed.push({ cls: "sys", text: "Собеседник положил трубку." });
+  finish();
+}
+
+function finish() {
+  stopClock(); clearInterval(recTimer);
+  S.phase = "idle"; S.turn = null; S.view = "ended";
+  const last = {};
+  S.feed.filter(l => l.chips).flatMap(l => l.chips).forEach(c => { last[c.name] = c.ok || last[c.name]; });
+  S.summary = Object.entries(last).map(([name, ok]) => ({ name, ok }));
+  render();
+}
+
+// ---------- голос
+function startRec() {
+  S.phase = "rec"; S.recSec = 0; S.turn.notice = null;
+  const quiet = (S.turn.voice[S.turn.attempt] || {}).quiet;
+  clearInterval(recTimer);
+  let t = 0;
+  recTimer = setInterval(() => {
+    t++; if (t % 5 === 0) S.recSec++;
+    const base = quiet ? 2 : 8;
+    S.level = Math.max(0, Math.min(16, base + Math.round((Math.random() - 0.4) * (quiet ? 3 : 7))));
+    paintMeter();
+  }, 200);
+  render();
+}
+
+async function stopRec() {
+  clearInterval(recTimer);
+  const run = S.run, turn = S.turn;
+  S.phase = "recognizing"; render();
+  await wait(1000); guard(run);
+  const v = turn.voice[Math.min(turn.attempt, turn.voice.length - 1)];
+  turn.attempt++;
+  if (v.quiet) { turn.notice = "Вас едва слышно — говорите громче или ближе к микрофону."; S.phase = "you"; render(); return; }
+  if (v.unclear) {
+    turn.notice = turn.attempt >= 2 ? "Голос снова не понят. Выберите вариант ниже или повторите голосом." : "Не расслышал, повторите.";
+    if (turn.attempt >= 2) turn.mode = "parts";
+    S.phase = "you"; render(); return;
+  }
+  const chips = Object.entries(v.heard || {}).map(([name, ok]) => ({ name, ok }));
+  S.feed.push({ cls: "me", who: "Вы", text: v.text, chips });
+  S.turn = null; S.phase = "idle"; render();
+  turn.resolve({ via: "voice", heard: v.heard || {} });
+}
+
+function pick(i) {
+  const turn = S.turn, st = turn.steps[turn.step];
+  turn.picked.push({ name: st.part, text: st.opts[i], ok: st.right === undefined || st.right === i });
+  turn.step++;
+  if (turn.step < turn.steps.length) { render(); return; }
+  const heard = Object.fromEntries(turn.picked.map(p => [p.name, p.ok]));
+  const chips = turn.picked.map(p => ({ name: p.name, ok: p.ok }));
+  S.feed.push({ cls: "me", who: "Вы", text: turn.picked.map(p => p.text).join(". "), chips });
+  S.turn = null; S.phase = "idle"; render();
+  turn.resolve({ via: "parts", heard, picked: turn.picked });
+}
+
+// ---------- сценарии
+const ADDRESS = { part: "Адрес", opts: ["Бескудниковский бульвар, 24", "Бескудниковский переулок, 24", "Бескудниковский бульвар, 42"], right: 0 };
+const WHAT = { part: "Что случилось", opts: ["Задымление в квартире", "Пожар в подъезде", "Запах гари на улице"], right: 0 };
+const PEOPLE = { part: "Люди и опасности", opts: ["В квартире пожилой мужчина", "Людей нет", "Есть пострадавшие"], right: 0 };
+const REPORT = [
+  { part: "Кто вы", opts: ["Диспетчер службы 101", "Расчёт АЦ-201", "Оператор 112"], right: 0 },
+  { part: "Адрес и повод", opts: ["Бескудниковский бульвар, 24 — задымление", "Бескудниковский бульвар, 42 — задымление", "Бескудниковский бульвар, 24 — пожар"], right: 0 },
+  { part: "Карточка", opts: [CARD, "36814854", "36184845"], right: 0 },
+  { part: "Что изменилось", opts: ["Нужна скорая жильцу", "Выслан расчёт 201", "Без изменений"], right: 0 },
+];
+
+const FLOWS = {
+  async contacts() { S.open = true; S.view = "contacts"; S.peer = null; render(); },
+
+  async brief(run) {
+    await dial("b201", run);
+    await them("АЦ-201, слушаю.", run);
+    const r = await you({ hint: "Вводная: адрес, что случилось, люди и опасности.", learn: true, steps: [ADDRESS, WHAT, PEOPLE],
+      voice: [{ quiet: true }, { text: "Бескудниковский бульвар 24, задымление в квартире", heard: { "Адрес": true, "Что случилось": true, "Люди и опасности": false } }] });
+    guard(run);
+    if (r.heard["Люди и опасности"] === false) {
+      await them("Понял. Люди в квартире есть?", run);
+      await you({ hint: "Расчёт спрашивает о людях.", steps: [PEOPLE], voice: [{ text: "Да, пожилой мужчина, дверь не открывает", heard: { "Люди и опасности": true } }] });
+      guard(run);
+    }
+    await them("Повторяю: Бескудниковский бульвар, 42, задымление, в квартире пожилой мужчина.", run);
+    const c = await you({ hint: "Расчёт повторил вводную — подтвердите или поправьте.",
+      steps: [{ part: "Повтор адреса", opts: ["Верно", "Нет, дом 24", "Повторите адрес"], right: 1 }],
+      voice: [{ text: "Нет, дом двадцать четыре", heard: { "Повтор адреса": true } }] });
+    guard(run);
+    await them(c.heard["Повтор адреса"] ? "Принял, дом 24. Выезжаем." : "Принял. Выезжаем.", run);
+    await theyHangUp(run);
+  },
+
+  async report(run) {
+    S.open = false; S.view = "contacts"; render();
+    await wait(600); guard(run);
+    S.incoming = { c: who.b201, text: "входящий вызов" }; render();
+    await new Promise(r => (S.onAnswer = r)); guard(run);
+    await them("Диспетчер, АЦ-201. Прибыли на место, дым из окна пятого этажа, приступаем к разведке.", run);
+    const r = await you({ hint: "Доклад расчёта — подтвердите приём или уточните.", learn: true,
+      steps: [{ part: "Подтверждение", opts: ["Принял", "Повторите доклад", "Пострадавшие есть?"], right: 0 }],
+      voice: [{ unclear: true }, { unclear: true }] });
+    guard(run);
+    const said = r.picked ? r.picked[0].text : "";
+    if (said === "Повторите доклад") await them("Повторяю: прибыли, дым из окна пятого этажа, приступаем к разведке.", run);
+    if (said === "Пострадавшие есть?") await them("Пока неизвестно, доложу после разведки.", run);
+    await them("Принял. Конец связи.", run);
+    await theyHangUp(run);
+  },
+
+  async s112(run) {
+    await dial("s112", run);
+    await them("Система-112, слушаю.", run);
+    const r = await you({ hint: "Памятка ДДС, с. 32: кто вы, адрес и повод, карточка, что изменилось.", learn: true, steps: REPORT,
+      voice: [{ text: "Диспетчер сто первой, Бескудниковский бульвар 24 задымление, нужна скорая жильцу", heard: { "Кто вы": true, "Адрес и повод": true, "Карточка": false, "Что изменилось": true } }] });
+    guard(run);
+    if (r.heard["Карточка"] === false) {
+      await them("По какой карточке работаете? Назовите номер.", run);
+      await you({ hint: "Служба переспрашивает номер карточки.", steps: [REPORT[2]], voice: [{ text: `Карточка ${CARD}`, heard: { "Карточка": true } }] });
+      guard(run);
+    }
+    await them("Информация принята.", run);
+    await theyHangUp(run);
+  },
+
+  async alarm(run) {
+    await dial("b201", run);
+    await them("АЦ-201, слушаю.", run);
+    const p = you({ hint: "Вводная: адрес, что случилось, люди и опасности.", learn: true, steps: [ADDRESS, WHAT, PEOPLE], voice: [{ text: "…" }] });
+    await wait(1400); guard(run);
+    S.incoming = { c: who.b202, alarm: true, text: "Тревога · пострадал боец" }; render();
+    await new Promise(r => (S.onAnswer = r)); guard(run);
+    await them("Диспетчер, АЦ-202! Боец упал с лестницы, без сознания, нужна скорая.", run);
+    await you({ hint: "Тревога: что делаете?", steps: [{ part: "Решение", opts: ["Принял, вызываю скорую", "Повторите", "Ждите указаний"], right: 0 }],
+      voice: [{ text: "Принял, вызываю скорую", heard: { "Решение": true } }] });
+    guard(run);
+    await them("Понял, ждём.", run);
+    await theyHangUp(run);
+  },
+
+  // TC-02: бригада звонит 25 с — «пропущенный вызов»; «Перезвонить» отдаёт тот же доклад.
+  async missed(run) {
+    S.open = true; S.view = "contacts"; render();
+    await wait(600); guard(run);
+    S.incoming = { c: who.b201, text: "входящий вызов · по карточке " + CARD }; render();
+    await wait(MISSED_S * 1000); guard(run);
+    S.incoming = null;
+    S.missed = [{ c: who.b201, at: new Date().toTimeString().slice(0, 5), lost: false }]; render();
+    await new Promise(r => (S.onCallback = r)); guard(run);
+    S.missed = [];
+    await dial("b201", run);
+    await them("АЦ-201, слушаю. Докладываю: прибыли на место, дым из окна пятого этажа, приступаем к разведке.", run);
+    await theyHangUp(run);
+  },
+
+  // TC-02: второй входящий во время разговора — «Удержать и ответить» или «Ответить, положив текущий».
+  async hold(run) {
+    S.open = true; S.collapsed = false; S.view = "call"; S.peer = who.b201; S.summary = null; S.turn = null;
+    S.feed = [{ cls: "sys", text: "Входящий вызов: Расчёт АЦ-201" }];
+    startClock(); render();
+    await them("Диспетчер, АЦ-201. Прибыли на место, дым из окна пятого этажа, приступаем к разведке.", run);
+    S.incoming = { c: who.b202, text: "входящий вызов · по карточке 36814846" }; render();
+    await new Promise(r => (S.onAnswer = r)); guard(run);
+    await them("Диспетчер, АЦ-202. На месте, работы закончили, возвращаемся.", run);
+  },
+
+  async caller(run) {
+    await dial("caller", run);
+    await them("Алло?", run);
+    await you({ hint: "Заявитель — что уточнить?", steps: [{ part: "Вопрос", opts: ["Дым из квартиры ещё идёт?", "Кто остался в квартире?", "Подъезд открыт?"] }],
+      voice: [{ text: "Дым из квартиры ещё идёт? Подъезд открыт?", heard: { "Вопрос": true } }] });
+    guard(run);
+    await them("Идёт, дедушка не открывает. Подъезд открыт, домофон не работает.", run);
+    await you({ hint: "Что сказать заявителю?", steps: [{ part: "Ответ", opts: ["Расчёт выехал, ожидайте у подъезда", "Ожидайте", "Перезвоню"] }],
+      voice: [{ text: "Расчёт выехал, ожидайте у подъезда", heard: { "Ответ": true } }] });
+    guard(run);
+    await them("Хорошо, жду.", run);
+    await theyHangUp(run);
+  },
+};
+
+function startFlow(name) {
+  S.run++; stopClock(); clearInterval(recTimer);
+  S.incoming = null; S.onAnswer = null; S.turn = null; S.phase = "idle";
+  S.missed = []; S.held = null; S.dropped = null; S.onCallback = null; clearInterval(holdTimer);
+  document.querySelectorAll("[data-flow]").forEach(b => b.classList.toggle("on", b.dataset.flow === name));
+  FLOWS[name](S.run).catch(e => { if (e.message !== "stop") throw e; });
+}
+
+const CONTACT_FLOW = { b201: "brief", s112: "s112", caller: "caller" };
+async function callContact(id) {
+  if (CONTACT_FLOW[id]) return startFlow(CONTACT_FLOW[id]);
+  S.run++; const run = S.run;
+  try {
+    await dial(id, run);
+    const c = who[id];
+    await them({ brigade: `${c.name.replace("Расчёт ", "")}, слушаю.`, person: "Слушаю.", service: "Слушаю вас." }[c.kind], run);
+    await you({ hint: "Доклад: кто вы, адрес и повод, что делаете.", learn: true, steps: [REPORT[0], REPORT[1], { part: "Что делаете", opts: ["Выслан расчёт АЦ-201", "Ждём доклада", "Работы завершены"], right: 0 }],
+      voice: [{ text: "Диспетчер сто первой. Бескудниковский бульвар 24, задымление в квартире, выслан расчёт двести один", heard: { "Кто вы": true, "Адрес и повод": true, "Что делаете": true } }] });
+    guard(run);
+    await them("Понял, держите в курсе.", run);
+    await theyHangUp(run);
+  } catch (e) { if (e.message !== "stop") throw e; }
+}
+
+function hangUp() { S.run++; S.feed.push({ cls: "sys", text: "Вы положили трубку." }); finish(); }
+
+// «Удержать и ответить»: текущий разговор ждёт на удержании, через 3 мин собеседник кладёт трубку.
+function holdLine() {
+  S.held = { c: S.peer, feed: S.feed, sec: 0 };
+  clearInterval(holdTimer);
+  holdTimer = setInterval(() => {
+    if (!S.held) return clearInterval(holdTimer);
+    S.held.sec++;
+    if (S.held.sec >= HOLD_S) { S.dropped = S.held; S.held = null; clearInterval(holdTimer); setTimeout(() => { S.dropped = null; render(); }, 4000); }
+    render();
+  }, 1000);
+}
+function resume() {
+  const h = S.held; if (!h) return;
+  S.run++; S.held = null; clearInterval(holdTimer); clearInterval(recTimer);
+  S.view = "call"; S.peer = h.c; S.turn = null; S.phase = "idle"; S.summary = null;
+  S.feed = [{ cls: "sys", text: `Снят с удержания: ${h.c.name}` }, { cls: "them", who: h.c.name, text: "Расчёт на связи.", voice: true }];
+  startClock(); render();
+}
+
+function answer(keep) {
+  if (keep && inCall()) holdLine();
+  const inc = S.incoming; S.incoming = null;
+  clearInterval(recTimer);
+  S.open = true; S.collapsed = false; S.view = "call"; S.peer = inc.c; S.feed = []; S.turn = null; S.phase = "idle"; S.summary = null; S.callMode = null;
+  startClock(); render();
+  const r = S.onAnswer; S.onAnswer = null; if (r) r();
+}
+
+// ---------- отрисовка: те же пять полос, что у окна разговора 112
+function headView() {
+  const title = S.view === "contacts" ? "Телефон · Служба 101"
+    : S.view === "ended" ? `${esc(S.peer.name)} · разговор окончен · <span class="t">${mmss(S.sec)}</span>`
+    : S.phase === "dialing" ? `${esc(S.peer.name)} · вызов…`
+    : `Разговор: ${esc(S.peer.name)} · <span class="t" id="callT">${mmss(S.sec)}</span>`;
+  const tone = inCall() && S.phase !== "dialing"
+    ? `<span class="tone" data-speaking="${S.phase === "them"}" title="Голос собеседника"><i></i><i></i><i></i><i></i><span>${S.phase === "them" ? "говорит" : "слушает"}</span></span>` : "";
+  const hang = inCall() ? `<button class="hangup" data-act="hang">Положить трубку</button>` : "";
+  return `<button class="headBtn" aria-label="Переместить">${MOVE}</button>
+    <button class="headBtn" data-act="collapse" aria-label="Свернуть">${S.collapsed ? "+" : "−"}</button>
+    <h2>${title}</h2>${tone}
+    <span class="talkTools">${hang}
+      ${inCall() ? `<button data-act="mute">${S.muted ? "звук выкл." : "звук вкл."}</button>` : ""}
+      <button>?</button><button data-act="center">В центр</button><button data-act="close">Закрыть</button>
+    </span>`;
+}
+
+function ringView() {
+  if (!S.incoming) return "";
+  // Во время разговора: удержать его и ответить или ответить, положив его (TC-02).
+  const buttons = inCall()
+    ? `${S.held ? "" : '<button data-act="holdAnswer">Удержать и ответить</button>'}<button data-act="answer">Ответить, положив текущий</button>`
+    : '<button data-act="answer">Ответить</button>';
+  return `<div class="ringRow${S.incoming.alarm ? " alarm" : ""}"><span><b>${esc(S.incoming.c.name)}</b> · ${esc(S.incoming.text)}</span>${buttons}</div>`;
+}
+function linesView() {
+  const held = S.held ? `<div class="lineRow held"><span><b>${esc(S.held.c.name)}</b> · на удержании ${mmss(S.held.sec)}</span><button data-act="resume">Снять с удержания</button></div>` : "";
+  const dropped = S.dropped ? `<div class="lineRow dropped"><span><b>${esc(S.dropped.c.name)}</b> · не дождался на удержании и положил трубку</span></div>` : "";
+  const missed = S.missed.map(m => `<div class="lineRow${m.lost ? " lost" : ""}"><span><b>${esc(m.c.name)}</b> · ${m.lost ? "доклад потерян" : "пропущенный вызов"} в ${m.at}</span>${inCall() ? "" : '<button data-act="callback">Перезвонить</button>'}</div>`).join("");
+  return held + dropped + ringView() + missed;
+}
+
+function logView() {
+  if (S.view === "contacts") {
+    return `<ol class="contacts">${CONTACTS.map(c => c.group
+      ? `<li class="grp">${esc(c.group)}</li>`
+      : `<li><button class="contact" data-call="${c.id}"><span class="go">${ICON}</span><b>${esc(c.name)}</b><small>${esc(c.sub)}</small>${c.st ? `<span class="st${c.free ? " free" : ""}">${esc(c.st)}</span>` : ""}</button></li>`).join("")}</ol>`;
+  }
+  const lines = S.feed.map(l => `<li class="${l.cls}">${l.who ? `<span class="who">${esc(l.who)}:</span> ` : ""}${esc(l.text)}${l.voice ? `<button class="replay" data-act="replay" title="Прослушать ещё раз">${REPLAY}</button>` : ""}${l.chips ? `<span class="parts">${l.chips.map(c => `<span class="part ${c.ok ? "ok" : "miss"}">${c.ok ? "✓" : "✗"} ${esc(c.name)}</span>`).join("")}</span>` : ""}</li>`).join("");
+  let after = "";
+  if (S.turn && S.turn.notice) after = `<p class="talkStart warn">${esc(S.turn.notice)}</p>`;
+  // Подсказка хода о порядке («Вводная: …», «Памятка ДДС…») — пока окно не освоено (GP-24);
+  // подсказки по ходу разговора («Служба переспрашивает…») видны всегда.
+  else if (S.turn && S.phase === "you" && !(S.turn.learn && learned())) after = `<p class="talkStart">${esc(S.turn.hint)}</p>`;
+  if (noMic() && S.turn) after = `<p class="talkStart warn">Микрофон не найден. Подключите гарнитуру — пока отвечайте по частям.</p>` + after;
+  if (S.view === "ended" && S.summary.length) {
+    const ok = S.summary.filter(s => s.ok).length;
+    after = `<p class="talkStart">Что прозвучало: ${ok} из ${S.summary.length}<span class="parts">${S.summary.map(c => `<span class="part ${c.ok ? "ok" : "miss"}">${c.ok ? "✓" : "✗"} ${esc(c.name)}</span>`).join("")}</span></p>`;
+  }
+  return `<ol>${lines}</ol>${after}`;
+}
+
+function stepsView() {
+  const t = S.turn;
+  if (!inCall()) return "";
+  const list = t && t.steps.length > 1 && t.mode === "parts"
+    ? t.steps.map((s, i) => `<span class="step" data-done="${i < t.step}" data-current="${i === t.step}">${i < t.step ? "✓ " : ""}${i + 1}. ${esc(s.part)}</span>`).join("")
+    : "";
+  // Полоса шагов — только когда отвечают по частям (GP-24): пустая не держит места.
+  return list ? `<div class="steps"><div class="stepList">${list}</div></div>` : "";
+}
+
+function meterView() {
+  // Подписи шкалы — пока громкость не освоена (GP-24), потом — при наведении.
+  return `<span class="meter" title="Громкость: слева тихо, зелёным отмечена норма, справа громко"><span class="meterBar" id="meter">${Array.from({ length: 16 }, (_, i) => `<i class="${i >= 5 && i <= 11 ? "zone" : ""}"></i>`).join("")}</span>
+    ${learned() ? "" : `<span class="meterScale"><span>тихо</span><span>норма</span><span>громко</span></span>`}</span>`;
+}
+
+function hintsView() {
+  if (S.view === "contacts") return learned() ? "" : `<span class="status">Выберите, кому позвонить.</span>`;
+  if (S.view === "ended") return `<button class="question" data-act="redial">Перезвонить</button><button class="question" data-act="back">К контактам</button>`;
+  if (S.phase === "dialing") return `<span class="status"><span class="spin"></span>Соединение…</span>`;
+  const t = S.turn;
+  const parts = false;
+  const partsBtn = (off) => `<button class="partsBtn" data-act="parts" aria-pressed="${parts}" ${off ? "disabled" : ""}>По частям</button>`;
+  if (!t) return `<button class="talkBtn" disabled>${S.phase === "them" ? "Слушайте…" : "Говорить"}</button>${partsBtn(true)}`;
+  if (S.phase === "recognizing") return `<button class="talkBtn" disabled>Говорить</button>${partsBtn(true)}<span class="status"><span class="spin"></span>Распознаём…</span>`;
+  if (S.phase === "rec") return `<button class="talkBtn rec" data-act="stop">Закончить ответ</button>${meterView()}<span class="status">идёт запись · <span id="recT">${mmss(S.recSec)}</span></span>`;
+  const talk = `<button class="talkBtn" data-act="rec" ${noMic() ? "disabled" : ""}>Говорить</button>`;
+  if (t.mode === "parts") return t.steps[t.step].opts.map((o, i) => `<button class="question" data-pick="${i}">${esc(o)}</button>`).join("");
+  return talk + partsBtn(false);
+}
+
+function render() {
+  const w = $("talk");
+  w.hidden = !S.open;
+  w.dataset.collapsed = S.collapsed;
+  $("head").innerHTML = headView();
+  $("ring").innerHTML = linesView();
+  $("log").innerHTML = logView();
+  $("steps").innerHTML = stepsView();
+  $("hints").innerHTML = hintsView();
+  $("resizeBar").hidden = learned();
+  $("log").scrollTop = S.view === "contacts" ? 0 : $("log").scrollHeight;
+  paintDial(); paintMeter();
+}
+function paintClock() {
+  const t = $("callT"); if (t) t.textContent = mmss(S.sec);
+  const d = $("dialT"); if (d) d.textContent = mmss(S.sec);
+}
+function paintMeter() {
+  const m = $("meter"); if (!m) return;
+  [...m.children].forEach((el, i) => { el.classList.toggle("on", i < S.level); el.classList.toggle("hi", i >= 12); });
+  const r = $("recT"); if (r) r.textContent = mmss(S.recSec);
+}
+function paintDial() {
+  const d = $("dial");
+  d.classList.toggle("ring", !!S.incoming);
+  d.classList.toggle("alarm", !!(S.incoming && S.incoming.alarm));
+  d.innerHTML = ICON + (S.incoming ? '<span class="badge">1</span>' : "") + (inCall() && (!S.open || S.collapsed) ? `<span class="timer" id="dialT">${mmss(S.sec)}</span>` : "");
+}
+
+// ---------- события
+const talk = $("talk");
+talk.addEventListener("click", e => {
+  const c = e.target.closest("[data-call]"); if (c) return callContact(c.dataset.call);
+  const p = e.target.closest("[data-pick]"); if (p) return pick(+p.dataset.pick);
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  const act = a.dataset.act;
+  if (act === "hang") hangUp();
+  if (act === "answer") answer(false);
+  if (act === "holdAnswer") answer(true);
+  if (act === "resume") resume();
+  if (act === "callback") { const r = S.onCallback; S.onCallback = null; if (r) r(); }
+  if (act === "rec") { S.callMode = "voice"; S.turn.mode = "voice"; startRec(); }
+  if (act === "stop") stopRec();
+  if (act === "parts") { S.callMode = "parts"; if (S.turn) { S.turn.mode = "parts"; S.turn.notice = null; } render(); }
+  if (act === "mute") { S.muted = !S.muted; render(); }
+  if (act === "collapse") { S.collapsed = !S.collapsed; render(); }
+  if (act === "center") center();
+  if (act === "close") { S.open = false; render(); }
+  if (act === "replay") {
+    const keep = S.phase; S.phase = "them"; render();
+    setTimeout(() => { if (S.phase === "them") { S.phase = keep; render(); } }, 2200);
+  }
+  if (act === "back") { S.view = "contacts"; S.peer = null; render(); }
+  if (act === "redial") callContact(S.peer.id);
+});
+$("dial").addEventListener("click", () => { S.open = S.incoming ? true : !S.open; S.collapsed = false; render(); });
+$("nomic").addEventListener("change", () => { if (S.turn) { S.turn.mode = noMic() ? "parts" : "voice"; } render(); });
+$("learned").addEventListener("change", render);
+document.querySelector(".bar").addEventListener("click", e => { const f = e.target.closest("[data-flow]"); if (f) startFlow(f.dataset.flow); });
+
+// ---------- геометрия окна — как talkWindow.ts: 760×340, не меньше 600×320, в экране
+const EDGE = 8, MIN = { w: 600, h: 320 };
+const box = { left: 0, top: 0, width: 760, height: 340 };
+function place() { Object.assign(talk.style, { left: box.left + "px", top: box.top + "px", width: box.width + "px", height: box.height + "px" }); }
+function center() {
+  box.left = Math.max(EDGE, (innerWidth - box.width) / 2);
+  box.top = Math.max(EDGE, (innerHeight - box.height) / 2);
+  place();
+}
+center();
+(() => {
+  let drag = null;
+  $("head").addEventListener("pointerdown", e => {
+    if (e.target.closest("button:not([aria-label='Переместить'])")) return;
+    drag = { kind: "move", x: e.clientX, y: e.clientY, ...box };
+    $("head").setPointerCapture(e.pointerId);
+  });
+  talk.querySelectorAll(".edge, [data-grip]").forEach(el => el.addEventListener("pointerdown", e => {
+    const name = el.dataset.e || el.dataset.grip;
+    drag = { kind: "size", name, x: e.clientX, y: e.clientY, ...box };
+    el.setPointerCapture(e.pointerId); e.preventDefault();
+  }));
+  window.addEventListener("pointermove", e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (drag.kind === "move") {
+      box.left = Math.max(EDGE, Math.min(drag.left + dx, innerWidth - box.width - EDGE));
+      box.top = Math.max(EDGE, Math.min(drag.top + dy, innerHeight - box.height - EDGE));
+    } else {
+      const n = drag.name;
+      if (n.includes("e")) box.width = Math.max(MIN.w, Math.min(drag.width + dx, innerWidth - drag.left - EDGE));
+      if (n.includes("s")) box.height = Math.max(MIN.h, Math.min(drag.height + dy, innerHeight - drag.top - EDGE));
+      if (n.includes("w")) { const w = Math.max(MIN.w, drag.width - dx); box.left = drag.left + drag.width - w; box.width = w; }
+      if (n.includes("n")) { const h = Math.max(MIN.h, drag.height - dy); box.top = drag.top + drag.height - h; box.height = h; }
+    }
+    place();
+  });
+  window.addEventListener("pointerup", () => { drag = null; });
+})();
+
+render();
+</script>
+</body>
+</html>

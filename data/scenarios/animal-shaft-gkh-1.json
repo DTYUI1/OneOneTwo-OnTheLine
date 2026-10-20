@@ -1,0 +1,307 @@
+{
+  "format": 2,
+  "code": "animal-shaft-gkh-1",
+  "version": 7,
+  "title": "Котёнок в вентиляционной шахте",
+  "service_id": "GKH",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "21040100",
+  "complications": [],
+  "teacher_comment": "Бытовой сценарий ЖКХ со звонком заявителю (рекомендации организаторов 16.10, п. 8). Перед выдачей добавьте заявителя в телефон ДДС ЖКХ (роль «Заявитель», например номер 458): обучаемый набирает номер из карточки. Бригада не может попасть в квартиру — диспетчер звонит хозяйке. Без заявителя в списке звонок не пройдёт, поэтому в тренировку без преподавателя сценарий не выдаётся.",
+  "outcome": {
+    "people": "Бригада ЖКХ приехала на Кировоградскую улицу, 22: мяуканье слышалось в шахте у восьмого этажа. Квартира 58 была закрыта — диспетчер позвонил хозяйке, и она открыла. Бригада вскрыла вентиляционный короб на кухне и завершила работы.",
+    "late": "Карточку приняли позже норматива. Мяуканье из шахты слышно уже второй день: чем позже выедет бригада, тем дольше котёнок остаётся внутри."
+  },
+  "caller": {
+    "plot": "animal_shaft",
+    "character": "calm"
+  },
+  "card": {
+    "caller_name": "Орлова Татьяна Викторовна",
+    "phone_aon": "+79000000758",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "58"
+    },
+    "description": "Второй день из вентиляции на кухне квартиры 58 слышно мяуканье: котёнок упал в вентиляционную шахту дома. Квартира на восьмом этаже, заявитель — хозяйка квартиры.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Спасти животное",
+    "service_ids": [
+      "GKH"
+    ],
+    "number": "70008501",
+    "incident_type_code": "21040100"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "GKH"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮАО",
+      "district": "Чертаново Южное",
+      "street": "Кировоградская улица",
+      "house": "22",
+      "building": "",
+      "apartment": "58"
+    },
+    "expected_call": {
+      "required": true,
+      "service_id": "GKH",
+      "phone_ext": "458",
+      "before_s": 600,
+      "contact_role": "caller"
+    },
+    "expected_comment": "Второй день из вентиляции на кухне квартиры 58 слышно мяуканье: котёнок упал в вентиляционную шахту дома. Квартира на восьмом этаже, заявитель — хозяйка квартиры. Бригада не могла попасть в квартиру — позвонили хозяйке, открыла. Работы завершены, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял. Инструмент в машине, едем.",
+        "audio": "bank-v1/GKH/GKH.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте. Мяуканье слышно в вентиляционной шахте, где-то между этажами.",
+        "audio": "bank-v1/GKH/GKH.arrived.animal.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Вскрываем вентиляционный короб на кухне, котёнка уже видно, достаём.",
+        "audio": "bank-v1/GKH/GKH.working.animal.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Работы завершены, бригада свободна.",
+        "audio": "bank-v1/GKH/GKH.completed.any.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "door",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Диспетчер, хозяева дома будут? Квартира закрыта, никто не отвечает.",
+        "audio": "bank-v1/GKH/GKH.clarify.any.6.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "owner",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "owner",
+          "label": "Позвоню хозяйке, она откроет"
+        },
+        {
+          "key": "roof",
+          "label": "Вскрывайте шахту с чердака"
+        },
+        {
+          "key": "wait",
+          "label": "Ждите, хозяйка выйдет сама"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, так и сделаем.",
+            "audio": "bank-v1/GKH/GKH.clarify_ok.any.3.ogg"
+          },
+          "effects": [],
+          "awaits_call": {
+            "contact_role": "caller",
+            "within_s": 40,
+            "otherwise": [
+              {
+                "replace": "works",
+                "with": {
+                  "text": "Хозяйка не открыла. Вскрываем шахту с чердака, это надолго.",
+                  "audio": "bank-v1/GKH/GKH.working.animal.2.ogg"
+                }
+              },
+              {
+                "delay": "works",
+                "by_s": 40
+              }
+            ]
+          }
+        },
+        "wrong": {
+          "line": {
+            "text": "Плохо. Попробуем через управляющую, но это надолго.",
+            "audio": "bank-v1/GKH/GKH.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Хозяйка не открыла. Вскрываем шахту с чердака, это надолго.",
+                "audio": "bank-v1/GKH/GKH.working.animal.2.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Поздно, диспетчер, уже на месте разобрались. Но принял.",
+            "audio": "bank-v1/GKH/GKH.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 40
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада не может попасть в квартиру — нужен звонок заявителю",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер ЖКХ",
+        "correct": true
+      },
+      {
+        "text": "Служба 101",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Кировоградская улица, 22, кв. 58",
+        "correct": true
+      },
+      {
+        "text": "Кировоградская улица, 2, кв. 58",
+        "correct": false
+      },
+      {
+        "text": "Кировоградская улица, 22, кв. 85",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Котёнок в вентиляционной шахте",
+        "correct": true
+      },
+      {
+        "text": "Засор вентиляции",
+        "correct": false
+      },
+      {
+        "text": "Запах газа на кухне",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Пострадавших нет",
+        "correct": true
+      },
+      {
+        "text": "Хозяйке плохо",
+        "correct": false
+      },
+      {
+        "text": "Нужна эвакуация",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю аварийную бригаду",
+        "correct": true
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      },
+      {
+        "text": "Нужны пожарные",
+        "correct": false
+      }
+    ]
+  }
+}

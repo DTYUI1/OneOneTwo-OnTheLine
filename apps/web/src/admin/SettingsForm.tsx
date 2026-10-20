@@ -1,8 +1,10 @@
+import { FieldCaption, FieldHelp } from "../shared/FieldHelp";
 // Нормативы и веса критериев — PUT /settings. Действует на новые занятия:
 // занятие при создании сохраняет снимок настроек (settings_snapshot).
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, csrfToken } from "../shared/api";
+import { HandlingNormativeField } from "../shared/HandlingNormativeField";
 import { criterionLabel } from "../teacher/console/model";
 import {
   MAX_PARALLEL,
@@ -82,13 +84,13 @@ export function SettingsForm() {
       <p className={styles.warning}>
         Это значения по умолчанию для класса: их получат занятия, созданные
         после сохранения, а преподаватель может изменить их для своего занятия.
-        Уже созданные и идущие занятия работают по своему снимку настроек.
+        Для уже созданных занятий настройки останутся прежними.
       </p>
 
       <SettingsFields
         value={draft}
         onChange={(patch) => set(patch)}
-        weightHint="Вес — насколько критерий влияет на итог; 0 исключает критерий. Потолок — выше какого балла карточка не поднимется, если допущена критическая ошибка."
+        weightHint="Вес — насколько критерий влияет на итог; 0 исключает критерий. Максимальный балл ограничивает оценку карточки при критической ошибке. Штраф за доклад вариантом уменьшает балл за содержание доклада по сравнению с голосом: 0 % — без снижения, 100 % — содержание не засчитывается."
       />
 
       {problems.length > 0 && (
@@ -146,8 +148,12 @@ export function SettingsFields({
         <h3 className={styles.panelTitle}>Нормативы</h3>
         <div className={styles.actions}>
           <label className={styles.field}>
-            Реакция, с
+            <FieldCaption
+              label="Реакция, с"
+              help="Допустимое время от получения карточки до принятия или отказа, в секундах."
+            />
             <input
+              aria-label="Реакция, с"
               type="number"
               min={1}
               value={value.reaction_normative_s}
@@ -157,21 +163,17 @@ export function SettingsFields({
               }
             />
           </label>
+          <HandlingNormativeField
+            value={value.handling_normative_s}
+            onChange={(seconds) => onChange({ handling_normative_s: seconds })}
+          />
           <label className={styles.field}>
-            Отработка, с
-            <input
-              type="number"
-              min={1}
-              value={value.handling_normative_s}
-              className={styles.number}
-              onChange={(event) =>
-                onChange({ handling_normative_s: Number(event.target.value) })
-              }
+            <FieldCaption
+              label="Параллельных карточек"
+              help="Сколько карточек может быть в работе одновременно. Если уровень обучаемого меньше, действует ограничение по уровню."
             />
-          </label>
-          <label className={styles.field}>
-            Параллельных карточек
             <input
+              aria-label="Параллельных карточек"
               type="number"
               min={1}
               max={MAX_PARALLEL}
@@ -205,15 +207,28 @@ export function SettingsFields({
               }
             />
           </label>
+          <label className={styles.field}>
+            Доклад только голосом
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={value.voice_only ?? false}
+              onChange={(event) =>
+                onChange({ voice_only: event.target.checked })
+              }
+            />
+          </label>
         </div>
         <p className={styles.hint}>
           Реакция — от направления карточки до статуса «Принята» или «Не
           принята». Учебная отработка — активное время от открытия до
-          завершения, без подтверждённого ожидания. По умолчанию нормативы равны
-          30 секундам и 3 минутам. Число одновременных карточек ограничено также
-          уровнем обучаемого: действует меньшее значение. Подсказки орфографии
-          подчёркивают ошибки в комментарии и предлагают исправления. Включайте
-          их в учебных занятиях: в контрольном грамотность входит в оценку.
+          завершения, без подтверждённого ожидания. По умолчанию реакция — 30
+          секунд, отработка — 3:00. Число одновременных карточек ограничено
+          также уровнем обучаемого: действует меньшее значение. Подсказки
+          орфографии подчёркивают ошибки в комментарии и предлагают исправления.
+          Включайте их в учебных занятиях: в контрольном грамотность входит в
+          оценку. Доклад только голосом убирает варианты ответа из окна
+          разговора со службой — для контрольного занятия.
         </p>
       </div>
 
@@ -223,7 +238,13 @@ export function SettingsFields({
           <thead>
             <tr>
               <th>Критерий</th>
-              <th>Вес</th>
+              <th>
+                Вес{" "}
+                <FieldHelp label="Вес критерия">
+                  Насколько этот критерий влияет на итоговую оценку по сравнению
+                  с другими. 0 — не учитывать критерий.
+                </FieldHelp>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -254,8 +275,12 @@ export function SettingsFields({
         </table>
         <div className={styles.actions}>
           <label className={styles.field}>
-            Потолок при критической ошибке, 0…1
+            <FieldCaption
+              label="Максимальный балл при критической ошибке, 0…1"
+              help="Оценка не превысит это значение, если допущена критическая ошибка. Например, 0,5 означает не более 50 %."
+            />
             <input
+              aria-label="Максимальный балл при критической ошибке, 0…1"
               type="number"
               min={0}
               max={1}
@@ -264,6 +289,29 @@ export function SettingsFields({
               className={styles.number}
               onChange={(event) =>
                 onChange({ critical_cap: Number(event.target.value) })
+              }
+            />
+          </label>
+          <label className={styles.field}>
+            <FieldCaption
+              label="Штраф за доклад вариантом, %"
+              help="Насколько снизить балл за содержание доклада, если обучаемый выбрал готовый ответ вместо голосового доклада. 0 % — без снижения."
+            />
+            <input
+              aria-label="Штраф за доклад вариантом, %"
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              value={Math.round(
+                (1 - (value.report_choice_factor ?? 0.5)) * 100,
+              )}
+              className={styles.number}
+              onChange={(event) =>
+                onChange({
+                  report_choice_factor:
+                    (100 - Number(event.target.value)) / 100,
+                })
               }
             />
           </label>

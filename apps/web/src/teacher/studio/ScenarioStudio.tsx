@@ -17,32 +17,47 @@ import { ScenarioEditor } from "./ScenarioEditor";
 import { PacksPanel } from "./PacksPanel";
 import {
   STUDIO_KEY,
+  studioSectionKey,
   draftKey,
   readJSON,
   removeKey,
   writeJSON,
 } from "../persist";
 import kit from "../console/Console.module.css";
-import { onTabListKey } from "../tabKeys";
+import { SortHeading } from "./SortHeading";
+import {
+  NEWEST_FIRST,
+  sortedRows,
+  creationTime,
+  creationDate,
+  type SortState,
+} from "./sorting";
+import type { StudioSection } from "./sections";
 import styles from "./Studio.module.css";
-
-type Filter = "active" | Scenario["status"] | "packs";
-const FILTERS: [Filter, string][] = [
-  ["active", "рабочие"],
-  ["draft", "черновики"],
-  ["approved", "утверждённые"],
-  ["retired", "архив"],
-  ["packs", "пакеты"],
-];
 
 /** Восьмизначный номер карточки, как в реестре ДДС; учебные начинаются с 9. */
 function newNumber(): string {
   return "9" + String(Math.floor(Math.random() * 10_000_000)).padStart(7, "0");
 }
 
-export function ScenarioStudio() {
+export function ScenarioStudio({
+  filter = "active",
+}: {
+  filter?: StudioSection;
+}) {
   const queries = useQueryClient();
-  const [filter, setFilter] = useState<Filter>("active");
+  const [sort, setSort] = useState<SortState>(NEWEST_FIRST);
+  const storageKey = studioSectionKey(filter);
+  const [savedEditor] = useState(() => {
+    type SavedEditor = { id: string; isNew: boolean; section?: StudioSection };
+    const stored = readJSON<SavedEditor>(storageKey);
+    if (stored) return stored;
+    const legacy = readJSON<SavedEditor>(STUDIO_KEY);
+    return legacy?.id && (legacy.section ?? "active") === filter
+      ? legacy
+      : null;
+  });
+  const [restoring, setRestoring] = useState(Boolean(savedEditor));
   const [editing, setEditing] = useState<{
     form: ScenarioForm;
     isNew: boolean;
@@ -57,13 +72,6 @@ export function ScenarioStudio() {
       const { data, error } = await api.GET("/scenarios");
       if (!data) throw new Error(error?.message ?? "Сценарии недоступны.");
       return data;
-    },
-  });
-  const packs = useQuery({
-    queryKey: ["packs"],
-    queryFn: async () => {
-      const { data } = await api.GET("/packs");
-      return data ?? [];
     },
   });
   const services = useQuery({
@@ -109,19 +117,45 @@ export function ScenarioStudio() {
   useEffect(() => {
     if (restored.current) return;
     restored.current = true;
-    const stored = readJSON<{ id: string; isNew: boolean }>(STUDIO_KEY);
-    if (!stored) return;
-    if (stored.isNew) {
-      const draft = readJSON<{ form: ScenarioForm }>(draftKey(stored.id));
-      if (draft) setEditing({ form: draft.form, isNew: true });
-      else removeKey(STUDIO_KEY);
-    } else void open(stored.id);
+    const restore = async () => {
+      try {
+        if (!savedEditor) return;
+        if (savedEditor.isNew) {
+          const draft = readJSON<{ form: ScenarioForm }>(
+            draftKey(savedEditor.id),
+          );
+          if (draft) setEditing({ form: draft.form, isNew: true });
+          else removeKey(storageKey);
+        } else await open(savedEditor.id);
+      } catch {
+        setError(
+          "Не удалось открыть сценарий. Попробуйте выбрать его из списка.",
+        );
+      } finally {
+        setRestoring(false);
+      }
+    };
+    void restore();
     // Восстановление выполняется один раз при открытии студии.
   }, []);
   useEffect(() => {
     if (editing)
-      writeJSON(STUDIO_KEY, { id: editing.form.id, isNew: editing.isNew });
-  }, [editing]);
+      writeJSON(storageKey, {
+        id: editing.form.id,
+        isNew: editing.isNew,
+        section: filter,
+      });
+  }, [editing, filter, storageKey]);
+  useEffect(() => {
+    writeJSON(STUDIO_KEY, { section: filter });
+  }, [filter]);
+
+  if (restoring)
+    return (
+      <p className={kit.placeholder} role="status">
+        Открываем сценарий…
+      </p>
+    );
 
   if (editing)
     return (
@@ -134,7 +168,7 @@ export function ScenarioStudio() {
           newId={() => crypto.randomUUID()}
           newNumber={newNumber}
           onClose={(message) => {
-            removeKey(STUDIO_KEY);
+            removeKey(storageKey);
             setEditing(null);
             setNotice(message ?? "");
             window.scrollTo({ top: 0 });
@@ -144,11 +178,35 @@ export function ScenarioStudio() {
     );
 
   const all = scenarios.data ?? [];
-  const shown = all.filter((scenario) =>
+  const filtered = all.filter((scenario) =>
     filter === "active"
       ? scenario.status !== "retired"
       : scenario.status === filter,
   );
+
+  const shown = sortedRows(filtered, sort, (scenario, key) => {
+    switch (key) {
+      case "number":
+        return scenario.card.number;
+      case "service":
+        return (
+          scenarioServiceIds(scenario).map(serviceName).join(", ") ||
+          serviceName(scenario.target_service_id)
+        );
+      case "title":
+        return scenario.card.incident_class;
+      case "level":
+        return scenario.level;
+      case "weight":
+        return scenario.weight;
+      case "status":
+        return STATUS_LABELS[scenario.status];
+      case "origin":
+        return ORIGIN_LABELS[scenario.origin];
+      default:
+        return creationTime(scenario.created_at);
+    }
+  });
 
   return (
     <section
@@ -176,32 +234,6 @@ export function ScenarioStudio() {
           </button>
         </div>
       </header>
-      <div
-        className={kit.tabs}
-        role="tablist"
-        aria-label="Статус сценариев"
-        onKeyDown={onTabListKey}
-      >
-        {FILTERS.map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            role="tab"
-            aria-selected={filter === key}
-            className={kit.tab}
-            onClick={() => setFilter(key)}
-          >
-            {label}
-            <span className={kit.tabCount}>
-              {key === "packs"
-                ? (packs.data?.length ?? 0)
-                : key === "active"
-                  ? all.filter((item) => item.status !== "retired").length
-                  : all.filter((item) => item.status === key).length}
-            </span>
-          </button>
-        ))}
-      </div>
 
       {filter === "packs" ? (
         <PacksPanel
@@ -244,13 +276,54 @@ export function ScenarioStudio() {
                 <table className={kit.table}>
                   <thead>
                     <tr>
-                      <th>Номер</th>
-                      <th>Служба</th>
-                      <th>Происшествие</th>
-                      <th>Ур.</th>
-                      <th>Вес</th>
-                      <th>Статус</th>
-                      <th>Источник</th>
+                      <SortHeading
+                        label="Номер"
+                        field="number"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Служба"
+                        field="service"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Происшествие"
+                        field="title"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Ур."
+                        field="level"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Вес"
+                        field="weight"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Статус"
+                        field="status"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Источник"
+                        field="origin"
+                        sort={sort}
+                        onSort={setSort}
+                      />
+                      <SortHeading
+                        label="Дата"
+                        field="created_at"
+                        sort={sort}
+                        onSort={setSort}
+                      />
                       <th aria-label="Действия" />
                     </tr>
                   </thead>
@@ -288,6 +361,7 @@ export function ScenarioStudio() {
                           <span className={kit.muted}>v{scenario.version}</span>
                         </td>
                         <td>{ORIGIN_LABELS[scenario.origin]}</td>
+                        <td>{creationDate(scenario.created_at)}</td>
                         <td className={kit.rowActions}>
                           <button
                             type="button"

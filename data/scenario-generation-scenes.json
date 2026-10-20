@@ -1,0 +1,24 @@
+{
+  "version": "dds-scenes-v2",
+  "description": "Сюжеты генерации: код классификатора, происшествие банка фраз (scripts/voices/bank) и сообщение заявителя. Реплики бригад — из банка.",
+  "scenes": [
+    {"key": "water-valve", "service": "GKH", "code": "14040800", "incident": "no_water", "victims": false, "situation": "В квартире нет холодной воды.", "refusal": true},
+    {"key": "drain-blockage", "service": "GKH", "code": "14041500", "incident": "sewer", "victims": false, "situation": "Засор канализации, в подвале дома стоит вода.", "refusal": true},
+    {"key": "entry-light", "service": "GKH", "code": "14030100", "incident": "electric", "victims": false, "situation": "В подъезде не горит свет, в щитке искрит.", "refusal": true},
+    {"key": "smoke-food", "service": "101", "code": "1050102", "incident": "smoke", "victims": false, "situation": "Заявитель сообщает о задымлении в квартире, открытого огня не видно.", "refusal": true},
+    {"key": "trash-fire", "service": "101", "code": "1010101", "incident": "fire_street", "victims": false, "situation": "Во дворе горит мусор в контейнере.", "refusal": true},
+    {"key": "grass-fire", "service": "101", "code": "1010201", "incident": "fire_street", "victims": false, "situation": "У жилого дома горит сухая трава.", "refusal": true},
+    {"key": "traffic-collision", "service": "102", "code": "2010000", "incident": "traffic", "victims": false, "situation": "У дома столкнулись автомобили, движение затруднено.", "refusal": true},
+    {"key": "apartment-conflict", "service": "102", "code": "15060100", "incident": "domestic", "victims": false, "situation": "В соседней квартире скандал, слышны крики и шум драки.", "refusal": true},
+    {"key": "street-conflict", "service": "102", "code": "15060201", "incident": "fight", "victims": false, "situation": "У подъезда происходит драка, заявитель просит направить наряд.", "refusal": true},
+    {"key": "heart", "service": "103", "code": "22370000", "incident": "heart", "victims": true, "situation": "Человеку плохо с сердцем, жалуется на боль в груди.", "refusal": false},
+    {"key": "fall-injury", "service": "103", "code": "22530000", "incident": "fall", "victims": true, "situation": "Человек упал и повредил ногу, самостоятельно встать не может.", "refusal": false},
+    {"key": "child-fever", "service": "103", "code": "22520000", "incident": "child", "victims": true, "situation": "Ребёнку плохо, родители просят помощи.", "refusal": false},
+    {"key": "gas-apartment", "service": "104", "code": "13020201", "incident": "gas_flat", "victims": false, "situation": "В квартире ощущается запах бытового газа.", "refusal": true},
+    {"key": "gas-premises", "service": "104", "code": "13020204", "incident": "gas_flat", "victims": false, "situation": "В нежилом помещении ощущается запах бытового газа.", "refusal": true},
+    {"key": "gas-equipment", "service": "104", "code": "13020400", "incident": "gas_equipment", "victims": false, "situation": "Житель сообщает о неисправности газовой плиты.", "refusal": true},
+    {"key": "lift-stuck", "service": "MOSLIFT", "code": "14100100", "incident": "lift_stuck", "victims": false, "situation": "В лифте застряли люди, медицинская помощь не требуется.", "refusal": true, "blocked_people": true},
+    {"key": "lift-child", "service": "MOSLIFT", "code": "14100102", "incident": "lift_child", "victims": false, "situation": "В лифте застрял ребёнок без взрослых.", "refusal": true, "blocked_people": true},
+    {"key": "lift-broken", "service": "MOSLIFT", "code": "14100400", "incident": "lift_fault", "victims": false, "situation": "Лифт в подъезде неисправен, жильцы жалуются.", "refusal": true}
+  ]
+}

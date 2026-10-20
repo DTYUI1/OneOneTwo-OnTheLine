@@ -8,6 +8,9 @@ import {
   scenario,
   talk,
 } from "./operator-call";
+import { OPERATOR_MODULE, OPERATOR_OFF_REASON } from "./operator-module";
+
+test.skip(!OPERATOR_MODULE, OPERATOR_OFF_REASON);
 
 // OP-05: разговор с заявителем на экране оператора 112 (сценарий пожара). С этапа 2
 // девушка звонит в истерике: сначала «Успокоить» — просьба с причиной, повторить подряд.

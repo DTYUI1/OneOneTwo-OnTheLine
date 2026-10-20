@@ -202,3 +202,78 @@
     position: static;
   }
 }
+
+.generationAdvanced {
+  margin-block: var(--space-3);
+}
+.generationAdvanced summary {
+  margin-bottom: var(--space-3);
+  cursor: pointer;
+}
+.traineeInput {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+}
+.traineeInput input {
+  flex: 1;
+  min-width: 0;
+}
+.traineeInput button {
+  white-space: nowrap;
+}
+
+.source {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  background: var(--color-panel);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.sortHeading {
+  border: 0;
+  padding: 4px 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: left;
+}
+.sortHeading:hover {
+  text-decoration: underline;
+}
+
+.seedInput {
+  width: 160px;
+  max-width: 100%;
+}
+
+/* Длинный ход сценария прокручивается вместе с формой, не перекрывая предпросмотр. */
+.course {
+  position: static;
+  margin-bottom: var(--space-3);
+}
+
+.traineeResults {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.personalization {
+  margin-block: 8px;
+}
+.personalization summary {
+  cursor: pointer;
+}
+.personalization li + li {
+  margin-top: 6px;
+}

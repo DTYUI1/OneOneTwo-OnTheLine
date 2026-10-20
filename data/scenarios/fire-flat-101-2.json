@@ -1,0 +1,283 @@
+{
+  "format": 2,
+  "code": "fire-flat-101-2",
+  "version": 1,
+  "title": "Горит квартира, жильцы вышли на улицу",
+  "service_id": "101",
+  "level": 2,
+  "weight": 3,
+  "incident_type_code": "1050101",
+  "complications": [],
+  "teacher_comment": "Уровень 2. Исправить «Безкудниковский бульвар, 24» на Бескудниковский бульвар, 24. Сообщить шестой этаж по карточке. Жильцы вышли до приезда, спасение людей и вызов скорой не требуются. Статусы после докладов о тушении.",
+  "outcome": {
+    "people": "В квартире 72 на шестом этаже горит комната, огонь распространяется по мебели. Жильцы вышли на улицу, входная дверь осталась открытой. Хозяин сообщает, что все вышли, внутри никого нет. Пострадавших нет. Расчёт проложил рукавную линию и подал два ствола, не допустив распространения огня за пределы квартиры. Пожар ликвидирован, квартира выгорела полностью, пострадавших нет. Расчёт возвращается.",
+    "late": "Карточку приняли позже норматива. В квартире 72 на шестом этаже горит комната, огонь распространяется по мебели. Жильцы вышли на улицу, входная дверь осталась открытой. Хозяин сообщает, что все вышли, внутри никого нет. Пострадавших нет."
+  },
+  "card": {
+    "caller_name": "Кондратьев Савелий Никитич",
+    "phone_aon": "+79000000879",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "72"
+    },
+    "description": "В квартире 72 на шестом этаже горит комната, огонь распространяется по мебели. Жильцы вышли на улицу, входная дверь осталась открытой. Хозяин сообщает, что все вышли, внутри никого нет. Пострадавших нет.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "пожар: квартира",
+    "service_ids": [
+      "101"
+    ],
+    "number": "70008519",
+    "incident_type_code": "1050101"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "72"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "В квартире 72 на шестом этаже горит комната, огонь распространяется по мебели. Жильцы вышли на улицу, входная дверь осталась открытой. Хозяин сообщает, что все вышли, внутри никого нет. Пострадавших нет. Расчёт проложил рукавную линию и подал два ствола, не допустив распространения огня за пределы квартиры. Пожар ликвидирован, квартира выгорела полностью, пострадавших нет. Расчёт возвращается."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Есть, выезжаем. Если что уточнить, перезвоню.",
+        "audio": "bank-v1/101/101.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Огонь в квартире, дверь нараспашку. Жильцы на улице, соседи говорят, внутри никого.",
+        "audio": "bank-v1/101/101.arrived.fire_flat.6.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Проложили рукавную линию, подали два ствола, за пределы квартиры огонь не выпускаем.",
+        "audio": "bank-v1/101/101.working.fire_flat.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожар ликвидирован. Квартира выгорела полностью, пострадавших нет. Расчёт возвращается.",
+        "audio": "bank-v1/101/101.completed.fire_flat.1.ogg"
+      },
+      "after_s": 10,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 1
+      },
+      "line": {
+        "text": "Повторяю: Безкудниковский бульвар, 24.",
+        "audio": "bank-v6/101/101.readback.d92501c8.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка: {address}"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, не тот адрес записал. Исправил, едем.",
+            "audio": "bank-v1/101/101.readback_fixed.any.3.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/101/101.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/101/101.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "report": "departure",
+        "after_s": 2
+      },
+      "line": {
+        "text": "Диспетчер, на каком этаже квартира?",
+        "audio": "bank-v1/101/101.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "answer",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "answer",
+          "label": "Шестой этаж, квартира 72"
+        },
+        {
+          "key": "unknown",
+          "label": "Сведений нет, уточните на месте"
+        },
+        {
+          "key": "find",
+          "label": "Выясните сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, теперь ясно.",
+            "audio": "bank-v1/101/101.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Плохо. Ладно, разберёмся на месте.",
+            "audio": "bank-v1/101/101.clarify_unknown.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Понял, но мы уже разобрались, спасибо.",
+            "audio": "bank-v1/101/101.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Уточнение бригады: Диспетчер, на каком этаже квартира?",
+        "critical": false
+      }
+    }
+  ],
+  "traps": [
+    "readback"
+  ]
+}

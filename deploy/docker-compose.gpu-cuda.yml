@@ -1,0 +1,15 @@
+# Видеокарта NVIDIA с проприетарным драйвером (CUDA) для локального ИИ (HQ-016).
+# Подключает scripts/stand/up.sh, когда scripts/ai/detect_gpu.sh нашёл рабочую карту
+# (или при --gpu force). Режим «видеокарта» включает администратор в «Модели ИИ».
+services:
+  llm:
+    image: ${LLM_GPU_IMAGE:-arm112-llm-cuda:0.1.0}
+    environment:
+      LLAMA_ARG_DEVICE: ${LLM_GPU_DEVICE:-CUDA0}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

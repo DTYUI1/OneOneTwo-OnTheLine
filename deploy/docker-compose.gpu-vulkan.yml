@@ -1,0 +1,9 @@
+# Видеокарта через Vulkan (HQ-016): NVIDIA с открытым драйвером (NVK), AMD (RADV), Intel Arc.
+# Нужен только /dev/dri хоста (Linux), без nvidia-container-toolkit. Подключает
+# scripts/stand/up.sh; LLM_GPU_DEVICE — карта из --list-devices (встроенная Intel — Vulkan0).
+services:
+  llm:
+    image: ${LLM_VULKAN_IMAGE:-arm112-llm-vulkan:0.1.0}
+    environment:
+      LLAMA_ARG_DEVICE: ${LLM_GPU_DEVICE:-Vulkan0}
+    devices: [/dev/dri:/dev/dri]

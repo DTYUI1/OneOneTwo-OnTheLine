@@ -23,6 +23,7 @@ TRAINING_OPERATIONS = {
     "createAssignment",
     "postEvent",
     "uploadAudio",
+    "recognizeReport",
     "createOverride",
     "listScenarios",
     "getScenario",

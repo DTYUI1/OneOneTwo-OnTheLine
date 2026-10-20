@@ -4,9 +4,10 @@ import os
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
-from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
+from uuid import UUID, uuid4
 
 from app.api.database import create_database_app
+from app.api.sessions.practice import audio_scenario_id
 from app.core.config import ROOT
 from app.core.models import Evaluation, Scenario
 from fastapi.testclient import TestClient
@@ -14,8 +15,19 @@ from sqlalchemy import select
 
 from .test_lifecycle import event, login, run_db
 
+# Базы, где учебные сценарии уже загружены. БД теста — одна на процесс xdist (`database_url`),
+# а seed повторяем и существующего не меняет (`test_c04_demo_cli_is_repeatable_…`): повторный
+# запуск в той же БД — только лишние секунды. Полный набор звал его ~50 раз на процесс, и под
+# нагрузкой подпроцесс упирался в таймаут (ночь 17→18.10, HQ-039).
+SEEDED: set[str] = set()
+# Таймаут — защита от зависания, а не норматив скорости: на чистой БД seed идёт 3–10 с,
+# под полным набором с покрытием на 4 ядрах — в разы дольше.
+SEED_TIMEOUT_S = 180
+
 
 def seed_training(database_url: str) -> None:
+    if database_url in SEEDED:
+        return
     env = {
         **os.environ,
         "DATABASE_URL": database_url,
@@ -28,16 +40,17 @@ def seed_training(database_url: str) -> None:
         env=env,
         capture_output=True,
         encoding="utf-8",
-        timeout=30,
+        timeout=SEED_TIMEOUT_S,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+    SEEDED.add(database_url)
 
 
 def test_audio_demo_v2_has_four_reports_and_full_expected_flow(database_url):
     seed_training(database_url)
 
     async def check(db):
-        scenario = await db.get(Scenario, uuid5(NAMESPACE_URL, "arm112:c04:audio-demo-v2:102"))
+        scenario = await db.get(Scenario, audio_scenario_id("audio-demo-v2", "102"))
         assert scenario is not None
         assert scenario.reference["expected_flow"] == [
             "received",
@@ -54,7 +67,7 @@ def test_audio_demo_v2_has_four_reports_and_full_expected_flow(database_url):
 
 def test_audio_demo_v2_rejects_statuses_without_reports(database_config, database_url):
     seed_training(database_url)
-    scenario_id = uuid5(NAMESPACE_URL, "arm112:c04:audio-demo-v2:102")
+    scenario_id = audio_scenario_id("audio-demo-v2", "102")
     with TestClient(create_database_app(database_config)) as client:
         headers = login(client)
         users = {item["login"]: item for item in client.get("/api/users").json()}

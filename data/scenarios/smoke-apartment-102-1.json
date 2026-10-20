@@ -1,0 +1,335 @@
+{
+  "format": 2,
+  "code": "smoke-apartment-102-1",
+  "version": 5,
+  "replaces": [
+    "4b740281-5ed4-53f9-9902-957a7fa4a805"
+  ],
+  "title": "Задымление в квартире",
+  "service_id": "102",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "1050102",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: задымление в квартире 115, Бескудниковский бульвар, 24; карточка пришла только в 102. По пути наряд спрашивает этаж (девятый, в карточке). На месте дверь заперта и пахнет гарью — наряд просит пожарных; когда дверь вскрыта, хозяин без сознания — наряд просит скорую. Обе службы вызывает диспетчер (101, 103 или 112), без звонка они не приедут. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Наряд поднялся на девятый этаж: из квартиры 115 пахло гарью, дверь никто не открывал. По просьбе наряда вызвали пожарных — они вскрыли дверь и потушили пожар. Хозяин был без сознания и плохо дышал; скорая, которую вызвали по просьбе наряда, его забрала. Квартиру опечатали.",
+    "late": "Карточку приняли позже норматива, и наряд выехал позже. Всё это время из-под двери квартиры 115 шёл дым, а хозяин лежал в квартире без сознания."
+  },
+  "card": {
+    "caller_name": "Громова Светлана Игоревна",
+    "phone_aon": "+79000000711",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "115"
+    },
+    "description": "Из-под двери квартиры 115 на девятом этаже идёт дым, открытого огня не видно. В квартире живёт пожилой мужчина, на звонки в дверь не открывает. Дом газифицирован.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "задымление: квартира",
+    "service_ids": [
+      "102"
+    ],
+    "number": "70005111",
+    "incident_type_code": "1050102"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "102"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "САО",
+      "district": "Бескудниковский",
+      "street": "Бескудниковский бульвар",
+      "house": "24",
+      "building": "",
+      "apartment": "115"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "102",
+      "phone_ext": "102",
+      "before_s": 180
+    },
+    "expected_comment": "Из-под двери квартиры 115 на девятом этаже идёт дым, открытого огня не видно. В квартире живёт пожилой мужчина, на звонки в дверь не открывает. Дом газифицирован. Пожар потушили, хозяина забрала скорая. Квартиру опечатали, свободны."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, наряд направлен.",
+        "audio": "bank-v2/102/102.responding.fight.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. На этаже пахнет гарью, дверь никто не открывает.",
+        "audio": "bank-v1/102/102.arrived.smoke.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожарные вскрывают дверь, мы рядом, понятых нашли.",
+        "audio": "bank-v1/102/102.working.smoke.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожар потушили, хозяина забрала скорая. Квартиру опечатали, свободны.",
+        "audio": "bank-v1/102/102.completed.smoke.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "floor",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, на каком этаже квартира?",
+        "audio": "bank-v1/102/102.clarify.any.1.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "floor_9",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "floor_9",
+          "label": "Девятый этаж"
+        },
+        {
+          "key": "unknown",
+          "label": "Этаж не знаю — ищите по подъездам"
+        },
+        {
+          "key": "later",
+          "label": "Уточню у заявителя и перезвоню"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял, спасибо, дальше сами.",
+            "audio": "bank-v1/102/102.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Ясно. Пойдём по квартирам, поспрашиваем.",
+            "audio": "bank-v1/102/102.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 25
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Понял, но соседи подсказали раньше. Работаем.",
+            "audio": "bank-v1/102/102.clarify_late.any.3.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "arrival",
+              "by_s": 25
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд спросил этаж — он был в описании карточки",
+        "critical": false
+      }
+    },
+    {
+      "key": "firefighters",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Вызывайте пожарных, в квартире что-то горит, дверь заперта.",
+        "audio": "bank-v1/102/102.request_service.any.5.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "101",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял.",
+            "audio": "bank-v1/102/102.ack.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Так, принял.",
+            "audio": "bank-v1/102/102.ack.any.5.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, из окна валит дым, нужны пожарные!",
+            "audio": "bank-v1/102/102.request_service.any.4.ogg"
+          },
+          "effects": [
+            {
+              "replace": "works",
+              "with": {
+                "text": "Пожарных нет. Ломаем дверь сами, на площадке уже не продохнуть.",
+                "audio": "bank-v3/102/102.working.smoke.8.ogg"
+              }
+            },
+            {
+              "delay": "works",
+              "by_s": 20
+            },
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Дверь вскрыли сами, огонь сбили огнетушителем. Хозяина забрала скорая, квартиру опечатали.",
+                "audio": "bank-v3/102/102.completed.smoke.8.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд попросил пожарных: дверь заперта, в квартире горит",
+        "critical": false
+      }
+    },
+    {
+      "key": "ambulance",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Срочно скорую, человек без сознания, дышит плохо.",
+        "audio": "bank-v1/102/102.request_service.any.2.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "103",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Понял вас.",
+            "audio": "bank-v1/102/102.ack.any.4.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ясно.",
+            "audio": "bank-v1/102/102.ack.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, скорой всё нет! Хозяин наглотался дыма, хрипит.",
+            "audio": "bank-v3/102/102.request_service.smoke.1.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Скорой так и не дождались, хозяина повезли в больницу на патрульной машине. Квартиру закрыли.",
+                "audio": "bank-v3/102/102.completed.smoke.9.ogg"
+              }
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Наряд попросил скорую хозяину квартиры",
+        "critical": false
+      }
+    }
+  ]
+}

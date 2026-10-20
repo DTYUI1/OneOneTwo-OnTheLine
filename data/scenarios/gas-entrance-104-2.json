@@ -1,0 +1,282 @@
+{
+  "format": 2,
+  "code": "gas-entrance-104-2",
+  "version": 10,
+  "title": "Запах газа в подъезде",
+  "service_id": "104",
+  "level": 2,
+  "weight": 1,
+  "incident_type_code": "13020500",
+  "complications": [],
+  "teacher_comment": "Сценарий на финал (104): запах газа в подъезде, Балаклавский проспект, 12. На месте бригада находит утечку у счётчика; загазованность высокая — бригада просит пожарную охрану. Обстановка изменилась: диспетчер звонит в 112 (или в 101) и докладывает по памятке ДДС, с. 32: кто вы, адрес и повод, номер карточки, что изменилось.",
+  "outcome": {
+    "people": "Бригада Мосгаза нашла утечку у счётчика: газ травил на резьбе. Кран на опуске перекрыли, утечку устранили, замер чистый, газ жильцам вернули. Загазованность в подъезде была высокой, поэтому бригада просила вызвать пожарных.",
+    "late": "Карточку приняли позже норматива. Запах газа на четвёртом этаже подъезда стоял уже около часа, а загазованность оказалась высокой: чем дольше бригада не выезжала, тем дольше газ копился в подъезде."
+  },
+  "card": {
+    "caller_name": "Зайцев Павел Андреевич",
+    "phone_aon": "+79000000741",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Зюзино",
+      "street": "Балаклавский проспект",
+      "house": "12",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "В подъезде 2 на площадке четвёртого этажа сильный запах газа, чувствуется около часа. Жильцы открыли окна на лестнице, источник не нашли.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Запах бытового газа в многоквартирном доме",
+    "service_ids": [
+      "104"
+    ],
+    "number": "70008401",
+    "incident_type_code": "13020500"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "104"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЮЗАО",
+      "district": "Зюзино",
+      "street": "Балаклавский проспект",
+      "house": "12",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "104",
+      "phone_ext": "104",
+      "before_s": 180
+    },
+    "expected_comment": "В подъезде 2 на площадке четвёртого этажа сильный запах газа, чувствуется около часа. Жильцы открыли окна на лестнице, источник не нашли. Утечка у счётчика, загазованность высокая, нужна пожарная охрана — сообщено в 112. Утечку на счётчике устранили, замер чистый, газ жильцам вернули. Закончили."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Принял заявку, выезжаем, прибор с собой.",
+        "audio": "bank-v1/104/104.responding.any.3.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. В подъезде пахнет уже снизу, поднимаемся с прибором.",
+        "audio": "bank-v1/104/104.arrived.gas_flat.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Травит на резьбе у счётчика. Перекрыли кран на опуске, подтягиваем.",
+        "audio": "bank-v1/104/104.working.gas_flat.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пожарные вывели жильцов из подъезда. Утечку мы устранили, замер чистый, газ вернули.",
+        "audio": "bank-v9/104/104.completed.gas_flat.9.ogg"
+      },
+      "after_s": 20,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "evacuation",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Диспетчер, вызывайте пожарных! Загазованность высокая, может рвануть.",
+        "audio": "bank-v1/104/104.request_service.any.4.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "112",
+            "101"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ясно, принял.",
+            "audio": "bank-v1/104/104.ack.any.4.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Газ перекрыт, ремонтируем. Людям уже ничего не грозит.",
+            "audio": "bank-v1/104/104.status_working.any.7.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": {
+            "text": "Пожарных так и нет. Жильцов выводим сами, работы затягиваются.",
+            "audio": "bank-v1/104/104.request_service.gas_flat.1.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Утечку устранили. Пожарных не дождались, жильцов выводили сами, поэтому и затянулось.",
+                "audio": "bank-v1/104/104.completed.gas_flat.7.ogg"
+              }
+            },
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Обстановка изменилась: нужна пожарная охрана — сообщить в 112",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": [],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер Мосгаза, служба 104",
+        "correct": true
+      },
+      {
+        "text": "Служба 101",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "Балаклавский проспект, 12",
+        "correct": true
+      },
+      {
+        "text": "Балаклавский проспект, 21",
+        "correct": false
+      },
+      {
+        "text": "Болотниковская, 12",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Утечка газа в подъезде",
+        "correct": true
+      },
+      {
+        "text": "Пожар в подъезде",
+        "correct": false
+      },
+      {
+        "text": "Течь воды в подвале",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Нужна эвакуация 4–5 этажей",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Есть пострадавшие",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Нужна пожарная охрана",
+        "correct": true
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      }
+    ]
+  }
+}

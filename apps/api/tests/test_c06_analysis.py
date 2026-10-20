@@ -138,8 +138,8 @@ def test_override_and_session_analytics(lesson, database_config, database_url): 
     assert recommendation["direction"] == "keep"
     assert recommendation["based_on_attempts"] == 1
     assert recommendation["level"] == first["current_level"]
-    assert "Холодный старт" in recommendation["evidence"][0]
-    assert "Холодный старт" in first["explanation"]
+    assert "меньше трёх" in recommendation["evidence"][0]
+    assert "меньше трёх" in first["explanation"]
     assert len(report["attempts"]) == 3
     # I-SESSION: participant_id попытки — user UUID, как в trainees[].user_id.
     trainee_user_ids = {t["user_id"] for t in report["trainees"]}

@@ -162,6 +162,18 @@ _TYPO_MIN = 5
 # Граница фраз: отрицание действует только внутри своей фразы.
 _CLAUSE_BREAK = re.compile(r"[,.;:!?()\n—–]")
 _BREAK = "|"
+# Код домофона может звучать составным числом: «пятьдесят восемь» = «58».
+_TENS = dict(
+    zip(
+        "двадцать тридцать сорок пятьдесят шестьдесят семьдесят восемьдесят девяносто".split(),
+        range(20, 100, 10),
+        strict=True,
+    )
+)
+_UNITS = dict(
+    zip("один два три четыре пять шесть семь восемь девять".split(), range(1, 10), strict=True)
+)
+_COMPOUND_NUMBER = re.compile(r"\b(" + "|".join(_TENS) + r")\s+(" + "|".join(_UNITS) + r")\b")
 
 
 def _fact_word(word: str) -> str:
@@ -175,7 +187,10 @@ def _fact_tokens(text: str) -> list[str]:
     """Основы слов по порядку (отрицанию важно соседство), числа словами — цифрами. Между
     фразами — граница: «связи нет, погас свет» — «нет» не относится к «погас»."""
     tokens: list[str] = []
-    for clause in _CLAUSE_BREAK.split(text.lower().replace("ё", "е")):
+    normalized = _COMPOUND_NUMBER.sub(
+        lambda match: str(_TENS[match[1]] + _UNITS[match[2]]), text.lower().replace("ё", "е")
+    )
+    for clause in _CLAUSE_BREAK.split(normalized):
         words = re.findall(r"[a-zа-я0-9]+", clause)
         stems = [_fact_word(word) for word in words if word not in _FACT_STOPWORDS]
         if stems and tokens:

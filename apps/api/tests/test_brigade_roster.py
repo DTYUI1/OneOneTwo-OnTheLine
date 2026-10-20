@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select
 
 from . import test_c03_sessions as c03
+from .briefing_helpers import briefing_payload
 from .test_lifecycle import event, login, run_db
 
 lesson = c03.lesson
@@ -163,6 +164,7 @@ def test_busy_brigade_and_report_from_dispatched_brigade(lesson, database_config
             },
         )
         send(trainee, headers, b, "call_answer", {"call_id": call_id})
+        send(trainee, headers, b, "brigade_briefing", briefing_payload(cards[1], call_id))
         messages = training(trainee, b)["messages"]
         assert len(messages) == 1
         assert messages[0]["delivery"]["brigade_id"] == second["id"]

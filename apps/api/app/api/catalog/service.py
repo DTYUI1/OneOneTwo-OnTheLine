@@ -21,6 +21,7 @@ async def list_packs(db: AsyncSession) -> list[schemas.Pack]:
         schemas.Pack.model_validate(
             {
                 "id": pack.id,
+                "created_at": pack.created_at,
                 "title": pack.title,
                 "status": pack.status,
                 "scenario_ids": scenario_ids,

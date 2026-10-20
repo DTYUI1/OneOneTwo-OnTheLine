@@ -44,3 +44,14 @@ export function lateAnswers(
     (wait) => wait.waitS > BRIGADE_ANSWER_S,
   );
 }
+
+/**
+ * Потерянные доклады (TC-02): бригада звонила с докладом, вызов пропущен второй раз подряд,
+ * и сама она больше не звонила. Строка разбора, на балл не влияет.
+ */
+export function lostReports(callbacks: readonly Callback[]): BrigadeWait[] {
+  return brigadeWaits(
+    callbacks.filter((call) => call.end_reason === "lost"),
+    0,
+  );
+}

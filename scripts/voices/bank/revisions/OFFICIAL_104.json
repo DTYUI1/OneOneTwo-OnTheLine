@@ -1,0 +1,29 @@
+{
+  "service": "OFFICIAL_104",
+  "speaker": "official",
+  "gender": "female",
+  "character": "диспетчер Белова, служба 104",
+  "incidents": {},
+  "about": "Новые редакции разговорных фраз дежурного (HQ-037, «скорая — больше формальности»): служба, должность, «Информация принята», «Уточните…», «Повторите, пожалуйста…». `replaces` — старая фраза книги phrases/, её запись остаётся; окно телефона (scripts/voices/bank/web.py) берёт новую вместо старой, когда у новой есть запись в наборах data/voices/bank-v*.",
+  "phrases": [
+    {"id": "OFFICIAL_104.accepted.any.6", "slot": "accepted", "incidents": ["*"], "text": "Информация принята, аварийная бригада выезжает.", "replaces": "OFFICIAL_104.accepted.any.1"},
+    {"id": "OFFICIAL_104.accepted.any.7", "slot": "accepted", "incidents": ["*"], "text": "Принято, заявка в работе.", "replaces": "OFFICIAL_104.accepted.any.3"},
+    {"id": "OFFICIAL_104.accepted.any.8", "slot": "accepted", "incidents": ["*"], "text": "Информация принята.", "replaces": "OFFICIAL_104.accepted.any.5"},
+    {"id": "OFFICIAL_104.registered.any.6", "slot": "registered", "incidents": ["*"], "text": "Принято. Номер заявки восемьдесят один, аварийная бригада выезжает.", "number": "81", "replaces": "OFFICIAL_104.registered.any.2"},
+    {"id": "OFFICIAL_104.registered.any.7", "slot": "registered", "incidents": ["*"], "text": "Принято. Номер регистрации тридцать пять.", "number": "35", "replaces": "OFFICIAL_104.registered.any.4"},
+    {"id": "OFFICIAL_104.ask_who.any.4", "slot": "ask_who", "incidents": ["*"], "text": "Представьтесь, пожалуйста: фамилия, служба.", "replaces": "OFFICIAL_104.ask_who.any.3"},
+    {"id": "OFFICIAL_104.ask_address.any.5", "slot": "ask_address", "incidents": ["*"], "text": "Уточните дом, подъезд и квартиру.", "replaces": "OFFICIAL_104.ask_address.any.2"},
+    {"id": "OFFICIAL_104.ask_address.any.6", "slot": "ask_address", "incidents": ["*"], "text": "Повторите адрес, пожалуйста, медленно.", "replaces": "OFFICIAL_104.ask_address.any.3"},
+    {"id": "OFFICIAL_104.ask_what.any.4", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, что с газом: запах, хлопок?", "replaces": "OFFICIAL_104.ask_what.any.2"},
+    {"id": "OFFICIAL_104.ask_victims.any.4", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните самочувствие людей.", "replaces": "OFFICIAL_104.ask_victims.any.3"},
+    {"id": "OFFICIAL_104.not_understood.any.4", "slot": "not_understood", "incidents": ["*"], "text": "Плохо слышно, повторите, пожалуйста.", "replaces": "OFFICIAL_104.not_understood.any.3"},
+    {"id": "OFFICIAL_104.end_call.any.4", "slot": "end_call", "incidents": ["*"], "text": "Принято. Всего доброго.", "replaces": "OFFICIAL_104.end_call.any.1"},
+    {"id": "OFFICIAL_104.end_call.any.5", "slot": "end_call", "incidents": ["*"], "text": "Информация принята, работаем.", "replaces": "OFFICIAL_104.end_call.any.2"},
+    {"id": "OFFICIAL_104.ask_address.any.7", "slot": "ask_address", "incidents": ["*"], "text": "Уточните, жилой ли это дом, и назовите адрес полностью.", "replaces": "OFFICIAL_104.ask_address.any.4"},
+    {"id": "OFFICIAL_104.ask_what.any.5", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, где запах газа: в квартире, в подъезде?", "replaces": "OFFICIAL_104.ask_what.any.1"},
+    {"id": "OFFICIAL_104.ask_what.any.6", "slot": "ask_what", "incidents": ["*"], "text": "Уточните, перекрыта ли подача газа.", "replaces": "OFFICIAL_104.ask_what.any.3"},
+    {"id": "OFFICIAL_104.ask_card.any.3", "slot": "ask_card", "incidents": ["*"], "text": "Назовите, пожалуйста, номер карточки.", "replaces": "OFFICIAL_104.ask_card.any.1"},
+    {"id": "OFFICIAL_104.ask_card.any.4", "slot": "ask_card", "incidents": ["*"], "text": "Уточните номер карточки.", "replaces": "OFFICIAL_104.ask_card.any.2"},
+    {"id": "OFFICIAL_104.ask_victims.any.5", "slot": "ask_victims", "incidents": ["*"], "text": "Уточните, проводится ли эвакуация людей.", "replaces": "OFFICIAL_104.ask_victims.any.2"}
+  ]
+}

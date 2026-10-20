@@ -136,8 +136,8 @@
       "kind": "synthetic_template",
       "status": "present",
       "version": null,
-      "bytes": 2035,
-      "sha256": "fab4e31e0f8f7ff4f9996ba5c1b37b978952ceed44c277dc3c1d42fb1d203653",
+      "bytes": 2320,
+      "sha256": "8532dc02094004fcc3917b384968ac9b2f3a38d4f521f469d4c2b831395e3c40",
       "rights": "team synthetic"
     },
     {
@@ -145,8 +145,8 @@
       "kind": "synthetic_phonebook",
       "status": "present",
       "version": null,
-      "bytes": 1087,
-      "sha256": "638f879cf2da0aec8d8a92b75636455e021243b2c5f2612ec32ebfae3e38e59e",
+      "bytes": 1476,
+      "sha256": "5be4b4fa667377ab0c1d4c0625804659ab2c042d379a4724eac4d28ed984e801",
       "rights": "team synthetic"
     },
     {
@@ -154,8 +154,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 6847,
-      "sha256": "cebfd050942e9ae109aec099d9f20637c0e78fde3d30f506500b349dab6efb23",
+      "bytes": 7081,
+      "sha256": "2175b808ae84300da4a3222950baec4faee3e83db71f214857fd74b84489e7b1",
       "rights": "team synthetic"
     },
     {
@@ -163,8 +163,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 6755,
-      "sha256": "7f6de6fc3b02f162706e3fe7e20189312f6d695c613d19fa8ed28dd57a9c5d38",
+      "bytes": 6925,
+      "sha256": "1931cf4f8aa5aa6cf210e140e60920269b296172963abc3c3e2e9726e40cfacc",
       "rights": "team synthetic"
     },
     {
@@ -172,8 +172,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 7009,
-      "sha256": "24c6257d31fad96e1cccea02616de21f85c8cb556f20029f4f35e4223ce93052",
+      "bytes": 7275,
+      "sha256": "fe347b03b4a06112f2576cf247c991edee6090941f195d61b37ec0797bfa9f63",
       "rights": "team synthetic"
     },
     {
@@ -181,8 +181,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 7045,
-      "sha256": "a180a5b352d06e316ca3049d7956b2d653d4b6e5e45aef5908252992c5bc3a45",
+      "bytes": 7292,
+      "sha256": "cd604d095423bc631caa3cd9280d9d141253f558dcf9f795286552eda9c9c45a",
       "rights": "team synthetic"
     },
     {
@@ -190,8 +190,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 7201,
-      "sha256": "9f919debacad00c123370ab5e8e184d7ce1ec1a5f47d0c97cd6ab8691b1959c2",
+      "bytes": 7380,
+      "sha256": "833f18504ed39860465a5399fac4dc9d6302cc39c8a71b766684dad8158fab9d",
       "rights": "team synthetic"
     },
     {
@@ -199,8 +199,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 6895,
-      "sha256": "d76784404004e059fa17dce99c82574276d054a52f67b50c98d031c0d0937683",
+      "bytes": 7157,
+      "sha256": "069836be1c7249c6830d7a1574af75376d722a10d37d5fc681103ec7ccded9a8",
       "rights": "team synthetic"
     },
     {
@@ -208,8 +208,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 6755,
-      "sha256": "b5775c7f32e56ec46be55400acdc6c985db1a852fe71c23b3d9a90185b825370",
+      "bytes": 7044,
+      "sha256": "9a9d89029ee344f43b88ac6e247d65dd790624333c2287582d5c7fd7c01a08b1",
       "rights": "team synthetic"
     },
     {
@@ -217,8 +217,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 6870,
-      "sha256": "b62e8ab1c6be3dc319ee0bfc046c59308079d6052b73f7edae618d6d7bd84676",
+      "bytes": 7103,
+      "sha256": "9d02e1ea467badf2dd92a98afac6d304a878d43ef62ccb705c634d5f4ea73294",
       "rights": "team synthetic"
     },
     {
@@ -226,8 +226,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 7021,
-      "sha256": "7a83bf0dd2bb41a4559f4ca969211f0d65d910a83be47327769b883e5fea1c11",
+      "bytes": 7262,
+      "sha256": "5399e902f41c0b1b3136a678d84378fd1eff0a886848b6c0d8ce80c278e1f19e",
       "rights": "team synthetic"
     },
     {
@@ -235,8 +235,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 6890,
-      "sha256": "b97a4fe2b039905396d71042069aa16e8b32e85c0455a72abe704d4e18fa42c9",
+      "bytes": 7157,
+      "sha256": "a2d38a1070e5a30e019fe66b43d15e6262729f62ea8a9f80ad4c4764d8690667",
       "rights": "team synthetic"
     },
     {
@@ -244,8 +244,8 @@
       "kind": "synthetic_golden",
       "status": "present",
       "version": null,
-      "bytes": 4747,
-      "sha256": "2b07052147e434aa8c0a2b79952a1c88fade4222763493f5b99c1de807cbc874",
+      "bytes": 5059,
+      "sha256": "ad9b6a7a653270dfbf2c6592ffa3675a6c6effe299aa492d1fb6d69e20a73d65",
       "rights": "team synthetic"
     }
   ],

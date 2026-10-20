@@ -445,17 +445,17 @@
     {
       "service_id": "101",
       "path": "practice/smoke-apartment/101/arrival-1.ogg",
-      "text": "Расчёт на месте, дым из квартиры на девятом этаже, вскрываем дверь.",
-      "duration_ms": 4156,
-      "sha256": "c0478aacc053754cf7a05975681a4994a0bf174c01dd270d816cde75ab5f3fc1",
+      "text": "Расчёт на месте, Бескудниковский бульвар, двадцать четыре. Дым из окна на верхних этажах, подъездов шесть.",
+      "duration_ms": 6629,
+      "sha256": "d452eb782acd09265b3a6da09be27a1fd7efd2b3c59537d550679879884154e2",
       "media_type": "audio/ogg"
     },
     {
       "service_id": "101",
       "path": "practice/smoke-apartment/101/works-1.ogg",
-      "text": "Дверь вскрыта, горит кухня, подана вода, мужчину вынесли и передали скорой.",
-      "duration_ms": 4644,
-      "sha256": "8a4eb862f34539ffc3fd4503885cfbaf975bf7d738951c2dd2ce2b342b53e7c4",
+      "text": "Дверь вскрыта, горит кухня, подана вода.",
+      "duration_ms": 2612,
+      "sha256": "866160e05b54acba6a3d27e7c17d915e12dee9c493dac208ca09564051864850",
       "media_type": "audio/ogg"
     },
     {
@@ -480,6 +480,102 @@
       "text": "Хозяин открыл дверь сам, подгорела еда на плите, огня нет, наши работы не потребовались, возвращаемся.",
       "duration_ms": 6304,
       "sha256": "edff5329e76119a9951e06a242485a2f902ced1195481fd0f932ee0f0e36b316",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-readback.ogg",
+      "text": "Диспетчер, как поняли? Бескудниковский переулок, двадцать четыре, выезжаем!",
+      "duration_ms": 4981,
+      "sha256": "21344b561530a46c914df503cec279a5884f69c34717d86ca109dbc2c7e11591",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-readback-met.ogg",
+      "text": "Понял, Бескудниковский бульвар, едем.",
+      "duration_ms": 2438,
+      "sha256": "b13e8f5d991eb44f0412c9df641bc3aef08945823736878a490a2e816cbbdff8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-readback-wrong-replace.ogg",
+      "text": "Диспетчер, мы на Бескудниковском переулке. Дыма нет, никто не вызывал. Проверьте адрес!",
+      "duration_ms": 5944,
+      "sha256": "9d1f14bab7be740780cd7e029d2cd8506b04987f9149e590dee412c9424807e3",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-floor.ogg",
+      "text": "Диспетчер, на каком этаже квартира сто пятнадцать?",
+      "duration_ms": 3367,
+      "sha256": "df40cadb1cde8b25e2099eba5c47f3c7f780e4c4ce0c9b7a4acc94fcc401c761",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-floor-met.ogg",
+      "text": "Понял, девятый. Поднимаемся.",
+      "duration_ms": 2380,
+      "sha256": "b2069a28865d02a8ed543d15f91cd7e29619d24c5d8d4561e2110df305fdc204",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-floor-wrong.ogg",
+      "text": "Понял. Будем искать по подъездам, это займёт время.",
+      "duration_ms": 3495,
+      "sha256": "b5b5a60d0321b65236b819e10a08c5adb90c920b7a9f7a05c06546d645f62f10",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-floor-late.ogg",
+      "text": "Понял, девятый. Мы уже начали по подъездам, поднимаемся.",
+      "duration_ms": 4284,
+      "sha256": "105d2c7e43786ab90050ed6501472177438a0ebebaded5c1433ea8d0f59a6ecb",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-ambulance.ogg",
+      "text": "Диспетчер, мужчину вынесли на площадку. Он без сознания. Срочно нужна скорая!",
+      "duration_ms": 5468,
+      "sha256": "7a35995172a50e349960151f98ea2b156f2021e491d9192d295d4424336ee925",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-ambulance-again.ogg",
+      "text": "Диспетчер, скорая будет? Мужчина так и лежит без сознания.",
+      "duration_ms": 3959,
+      "sha256": "c5e43ae2eb64cba0bfd845e71b6dcda48e5cafdcda968a9f94cc1672982783c9",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-ambulance-again-missed-replace.ogg",
+      "text": "Пожар ликвидирован, квартира проветрена. Скорую вызвали через своих, приехала только что, мужчину забрали. Расчёт возвращается.",
+      "duration_ms": 8127,
+      "sha256": "41788351a6f9961d6b49677695f53e77083764d0d351795ba3417959a4e00785",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-silence-met.ogg",
+      "text": "Работы идут. Кухню потушили, проливаем, проветриваем подъезд. Скоро закончим.",
+      "duration_ms": 5422,
+      "sha256": "597662066882c2fbc1fbcfcfb11e818b83d90ba6d981704967838089bedf8df4",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-silence-late.ogg",
+      "text": "Работы почти закончены, проветриваем подъезд.",
+      "duration_ms": 3123,
+      "sha256": "658c76d690122d2ba83d6180ed358084f321bb73a98552123351ebc5d8437fc1",
       "media_type": "audio/ogg"
     },
     {
@@ -768,6 +864,30 @@
       "text": "Участники осмотрены, травм нет, от помощи отказались, бригада свободна.",
       "duration_ms": 3634,
       "sha256": "f5e759c02f78d2d183c08a7f91c988b86ef098c7e79b4ea58de6d0ae8e832ac8",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-alarm.ogg",
+      "text": "Тревога! Тревога! Боец упал в пролёт лестницы, травма ноги, сам идти не может. Срочно скорую!",
+      "duration_ms": 6664,
+      "sha256": "3b3bb16ea45ca17c2fd1bf9219edeaef8903cbc2507d110a7edb7fd1c47a981e",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-alarm-met.ogg",
+      "text": "Понял, ждём скорую. Работы продолжаем.",
+      "duration_ms": 2914,
+      "sha256": "059eea043da4f241fe12eb93837145681bf8291b004e83b5267024e16fe323e1",
+      "media_type": "audio/ogg"
+    },
+    {
+      "service_id": "101",
+      "path": "practice/smoke-apartment/101/event-alarm-late.ogg",
+      "text": "Понял, скорую ждём. Работы продолжаем.",
+      "duration_ms": 2914,
+      "sha256": "6be374f8854139163f71463ae8d2a0454a9e361a76f336a751bc9e7de1eb8d1e",
       "media_type": "audio/ogg"
     }
   ]

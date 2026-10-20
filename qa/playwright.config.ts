@@ -8,6 +8,9 @@ export default defineConfig({
   // Database-тесты делят учётки и список занятий преподавателя.
   workers: process.env.E2E_DATABASE === "1" ? 1 : undefined,
   use: { baseURL, ignoreHTTPSErrors: true, trace: "retain-on-failure" },
+  // Долгие спеки (показ курсором — минуты) помечены @night: обычный прогон и перед PR их не
+  // гоняет, ночной — E2E_NIGHT=1 (CONTRIBUTING «Когда что гонять»).
+  grepInvert: process.env.E2E_NIGHT === "1" ? undefined : /@night/,
   projects: [
     { name: "chromium", use: { browserName: "chromium" } },
     { name: "firefox", use: { browserName: "firefox" } },

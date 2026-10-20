@@ -1,0 +1,374 @@
+{
+  "$comment": "Фоновые отработанные карточки реестра ДДС (TC-07, contracts/C01_INTERFACES.md, «Живая смена»): прошлые карточки смены, которые уже закрыла служба. Только вид реестра: в занятие и оценку не входят. На службу — до 10 записей; уровень участника задаёт, сколько показать (0/3/6/10). Классы — из classifier.json, адреса — улицы Москвы; тексты составлены командой (синтетические данные).",
+  "version": 1,
+  "services": {
+    "101": [
+      {
+        "incident_type_code": "1010101",
+        "incident_class": "пожар: мусор",
+        "address": {"city": "Москва", "okrug": "САО", "district": "Головинский", "street": "Онежская улица", "house": "35", "building": "", "apartment": ""},
+        "description": "Во дворе горит мусорный контейнер, рядом машин нет.",
+        "victims": false,
+        "service_ids": ["101"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1050201",
+        "incident_class": "пожар: балкон",
+        "address": {"city": "Москва", "okrug": "СВАО", "district": "Бабушкинский", "street": "улица Менжинского", "house": "29", "building": "", "apartment": "64"},
+        "description": "На балконе шестого этажа горят вещи, жильцы вышли на лестницу.",
+        "victims": false,
+        "service_ids": ["101", "103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1051302",
+        "incident_class": "задымление: подвал",
+        "address": {"city": "Москва", "okrug": "ЮВАО", "district": "Выхино-Жулебино", "street": "Ферганская улица", "house": "8", "building": "2", "apartment": ""},
+        "description": "Из подвала дома идёт дым, пахнет горелой проводкой.",
+        "victims": false,
+        "service_ids": ["101", "104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1020201",
+        "incident_class": "пожар: машина",
+        "address": {"city": "Москва", "okrug": "ЗАО", "district": "Кунцево", "street": "улица Ивана Франко", "house": "40", "building": "", "apartment": ""},
+        "description": "У подъезда горит припаркованный автомобиль, огонь под капотом.",
+        "victims": false,
+        "service_ids": ["101", "102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1010201",
+        "incident_class": "пожар: трава",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Гольяново", "street": "Уральская улица", "house": "6", "building": "", "apartment": ""},
+        "description": "Горит сухая трава на пустыре за домом, площадь небольшая.",
+        "victims": false,
+        "service_ids": ["101"],
+        "state": "refused"
+      },
+      {
+        "incident_type_code": "1050601",
+        "incident_class": "пожар: мусоропровод",
+        "address": {"city": "Москва", "okrug": "СЗАО", "district": "Митино", "street": "Пятницкое шоссе", "house": "21", "building": "", "apartment": ""},
+        "description": "Горит мусор в мусоропроводе, в подъезде запах дыма.",
+        "victims": false,
+        "service_ids": ["101"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1051202",
+        "incident_class": "задымление: лестничная клетка",
+        "address": {"city": "Москва", "okrug": "ЮАО", "district": "Нагатино-Садовники", "street": "Нагатинская улица", "house": "16", "building": "", "apartment": ""},
+        "description": "На лестнице между третьим и четвёртым этажами дым, источник не виден.",
+        "victims": false,
+        "service_ids": ["101", "103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1010102",
+        "incident_class": "задымление: мусор",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Измайлово", "street": "Первомайская улица", "house": "42", "building": "", "apartment": ""},
+        "description": "Дымится урна у входа в магазин.",
+        "victims": false,
+        "service_ids": ["101"],
+        "state": "refused"
+      },
+      {
+        "incident_type_code": "1990043",
+        "incident_class": "Пожар: Гараж",
+        "address": {"city": "Москва", "okrug": "СВАО", "district": "Отрадное", "street": "улица Декабристов", "house": "20", "building": "3", "apartment": ""},
+        "description": "Дым из гаража в гаражном кооперативе, ворота заперты.",
+        "victims": false,
+        "service_ids": ["101", "102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "1050402",
+        "incident_class": "задымление: газовая плита",
+        "address": {"city": "Москва", "okrug": "ЮВАО", "district": "Люблино", "street": "Совхозная улица", "house": "10", "building": "", "apartment": "88"},
+        "description": "На кухне подгорела еда, квартира задымлена, хозяйка проветривает.",
+        "victims": false,
+        "service_ids": ["101", "104"],
+        "state": "refused"
+      }
+    ],
+    "102": [
+      {
+        "incident_type_code": "15100100",
+        "incident_class": "Нарушение тишины",
+        "address": {"city": "Москва", "okrug": "СЗАО", "district": "Хорошёво-Мнёвники", "street": "улица Народного Ополчения", "house": "34", "building": "", "apartment": "112"},
+        "description": "Громкая музыка в квартире после двадцати трёх часов, соседи не открывают.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "15050300",
+        "incident_class": "Кража",
+        "address": {"city": "Москва", "okrug": "ЦАО", "district": "Басманный", "street": "Бауманская улица", "house": "11", "building": "", "apartment": ""},
+        "description": "В кафе со спинки стула украли сумку, заявитель на месте.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "15150100",
+        "incident_class": "Пьяный в общественном месте",
+        "address": {"city": "Москва", "okrug": "ЮЗАО", "district": "Ясенево", "street": "Новоясеневский проспект", "house": "1", "building": "", "apartment": ""},
+        "description": "У входа в метро лежит мужчина в состоянии опьянения, на вопросы отвечает.",
+        "victims": false,
+        "service_ids": ["102", "103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "2010100",
+        "incident_class": "ДТП без пострадавших - легковой",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Перово", "street": "Зелёный проспект", "house": "60", "building": "", "apartment": ""},
+        "description": "Столкнулись две легковые машины, пострадавших нет, мешают проезду.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "15220000",
+        "incident_class": "Мелкое хулиганство",
+        "address": {"city": "Москва", "okrug": "ЦАО", "district": "Пресненский", "street": "улица Красная Пресня", "house": "24", "building": "", "apartment": ""},
+        "description": "Подростки бьют стёкла на остановке.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "refused"
+      },
+      {
+        "incident_type_code": "15030600",
+        "incident_class": "Телефонное мошенничество",
+        "address": {"city": "Москва", "okrug": "САО", "district": "Дмитровский", "street": "Дмитровское шоссе", "house": "157", "building": "", "apartment": "15"},
+        "description": "Пожилой женщине позвонили от имени банка и выманили код из СМС.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "15210102",
+        "incident_class": "Угон автомашины (свыше 30 минут)",
+        "address": {"city": "Москва", "okrug": "ЗАО", "district": "Можайский", "street": "Можайское шоссе", "house": "38", "building": "", "apartment": ""},
+        "description": "Утром не нашли машину на стоянке у дома, ключи у владельца.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "15060100",
+        "incident_class": "Драка в квартире",
+        "address": {"city": "Москва", "okrug": "СВАО", "district": "Бабушкинский", "street": "улица Менжинского", "house": "11", "building": "", "apartment": "23"},
+        "description": "Соседи слышат крики и шум драки за стеной.",
+        "victims": false,
+        "service_ids": ["102", "103"],
+        "state": "refused"
+      },
+      {
+        "incident_type_code": "15120100",
+        "incident_class": "Нарушение ПДД - пешеход",
+        "address": {"city": "Москва", "okrug": "ЮВАО", "district": "Люблино", "street": "Совхозная улица", "house": "39", "building": "", "apartment": ""},
+        "description": "Пешеходы переходят дорогу вне перехода у школы.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "rejected"
+      },
+      {
+        "incident_type_code": "15050200",
+        "incident_class": "Кража гос.номеров",
+        "address": {"city": "Москва", "okrug": "СЗАО", "district": "Митино", "street": "Пятницкое шоссе", "house": "7", "building": "", "apartment": ""},
+        "description": "С машины во дворе сняли оба номера, на стекле записка.",
+        "victims": false,
+        "service_ids": ["102"],
+        "state": "completed"
+      }
+    ],
+    "103": [
+      {
+        "incident_type_code": "22520000",
+        "incident_class": "Температура",
+        "address": {"city": "Москва", "okrug": "ЮЗАО", "district": "Ясенево", "street": "Новоясеневский проспект", "house": "32", "building": "1", "apartment": "140"},
+        "description": "У ребёнка пяти лет температура тридцать девять, жаропонижающее не помогает.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22080000",
+        "incident_class": "Боль в животе",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Гольяново", "street": "Уральская улица", "house": "19", "building": "", "apartment": "31"},
+        "description": "Мужчина сорока лет жалуется на сильную боль в животе с утра.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22390000",
+        "incident_class": "Повышенное АД",
+        "address": {"city": "Москва", "okrug": "САО", "district": "Головинский", "street": "Онежская улица", "house": "12", "building": "", "apartment": "7"},
+        "description": "Женщине семидесяти лет плохо, давление сто восемьдесят.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22530000",
+        "incident_class": "Травма",
+        "address": {"city": "Москва", "okrug": "ЦАО", "district": "Басманный", "street": "Бауманская улица", "house": "58", "building": "", "apartment": ""},
+        "description": "Мужчина поскользнулся у подъезда, не может наступить на ногу.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22150000",
+        "incident_class": "Головная боль",
+        "address": {"city": "Москва", "okrug": "СЗАО", "district": "Хорошёво-Мнёвники", "street": "улица Народного Ополчения", "house": "9", "building": "", "apartment": "44"},
+        "description": "Сильная головная боль у женщины пятидесяти лет, тошнит.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22010000",
+        "incident_class": "Аллергия",
+        "address": {"city": "Москва", "okrug": "ЮВАО", "district": "Выхино-Жулебино", "street": "Ферганская улица", "house": "20", "building": "", "apartment": "211"},
+        "description": "После укуса осы отекла рука, дышит свободно.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22160000",
+        "incident_class": "Головокружение",
+        "address": {"city": "Москва", "okrug": "ЗАО", "district": "Кунцево", "street": "улица Ивана Франко", "house": "12", "building": "", "apartment": ""},
+        "description": "В аптеке женщине стало плохо, кружится голова, сидит на стуле.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22340000",
+        "incident_class": "Отравление",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Перово", "street": "Зелёный проспект", "house": "22", "building": "", "apartment": "60"},
+        "description": "Рвота у двоих взрослых после ужина, слабость.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22480000",
+        "incident_class": "Слабость",
+        "address": {"city": "Москва", "okrug": "СВАО", "district": "Отрадное", "street": "улица Декабристов", "house": "8", "building": "", "apartment": "19"},
+        "description": "Пожилой мужчина третий день почти не встаёт, родственники просят осмотреть.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "22090000",
+        "incident_class": "Боль в ноге",
+        "address": {"city": "Москва", "okrug": "ЮАО", "district": "Нагатино-Садовники", "street": "Нагатинская улица", "house": "3", "building": "", "apartment": "52"},
+        "description": "Сильная боль и отёк голени, ходить не может.",
+        "victims": true,
+        "service_ids": ["103"],
+        "state": "completed"
+      }
+    ],
+    "104": [
+      {
+        "incident_type_code": "13020100",
+        "incident_class": "Запах бытового газа в кухне",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Измайлово", "street": "Первомайская улица", "house": "73", "building": "", "apartment": "18"},
+        "description": "На кухне слабый запах газа, плита выключена.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13030202",
+        "incident_class": "Нет газа в квартире (многоквартирном доме)",
+        "address": {"city": "Москва", "okrug": "САО", "district": "Дмитровский", "street": "Дмитровское шоссе", "house": "103", "building": "", "apartment": "77"},
+        "description": "С утра в квартире нет газа, у соседей газ есть.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13010400",
+        "incident_class": "Запах бытового газа на улице",
+        "address": {"city": "Москва", "okrug": "ЗАО", "district": "Можайский", "street": "Можайское шоссе", "house": "15", "building": "", "apartment": ""},
+        "description": "У газораспределительного шкафа во дворе пахнет газом.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13030400",
+        "incident_class": "Неисправность газовового оборудования",
+        "address": {"city": "Москва", "okrug": "ЮВАО", "district": "Люблино", "street": "Совхозная улица", "house": "4", "building": "", "apartment": "35"},
+        "description": "Газовая колонка не зажигается, щёлкает, запаха газа нет.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "refused"
+      },
+      {
+        "incident_type_code": "13050200",
+        "incident_class": "Гул (шум, вибрация) от газопровода",
+        "address": {"city": "Москва", "okrug": "ЮЗАО", "district": "Ясенево", "street": "Новоясеневский проспект", "house": "14", "building": "", "apartment": ""},
+        "description": "Гудит газовая труба на фасаде дома, шум слышен в квартирах.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13020400",
+        "incident_class": "Запах от газовового оборудования",
+        "address": {"city": "Москва", "okrug": "СЗАО", "district": "Хорошёво-Мнёвники", "street": "улица Народного Ополчения", "house": "45", "building": "", "apartment": "9"},
+        "description": "Пахнет газом у счётчика, жильцы перекрыли кран.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13040200",
+        "incident_class": "Повышенное давление бытового газа в квартире",
+        "address": {"city": "Москва", "okrug": "ВАО", "district": "Гольяново", "street": "Уральская улица", "house": "23", "building": "", "apartment": "66"},
+        "description": "Пламя на плите высокое и гудит, жильцы выключили плиту.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13010500",
+        "incident_class": "Запах бытовогогаза от колодца",
+        "address": {"city": "Москва", "okrug": "ЦАО", "district": "Пресненский", "street": "улица Красная Пресня", "house": "36", "building": "", "apartment": ""},
+        "description": "Из колодца на тротуаре пахнет газом.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "refused"
+      },
+      {
+        "incident_type_code": "13050100",
+        "incident_class": "Нарушение на настенном газопроводе (искрение кабеля, обледенение, провисание)",
+        "address": {"city": "Москва", "okrug": "СВАО", "district": "Отрадное", "street": "улица Декабристов", "house": "33", "building": "", "apartment": ""},
+        "description": "Провисла газовая труба на стене дома у второго подъезда.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "completed"
+      },
+      {
+        "incident_type_code": "13030201",
+        "incident_class": "Нет газа в частном доме",
+        "address": {"city": "Москва", "okrug": "ЮАО", "district": "Нагатино-Садовники", "street": "Нагатинская улица", "house": "27", "building": "", "apartment": ""},
+        "description": "В доме нет газа второй час, оплата не просрочена.",
+        "victims": false,
+        "service_ids": ["104"],
+        "state": "rejected"
+      }
+    ]
+  }
+}

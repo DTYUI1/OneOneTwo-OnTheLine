@@ -1,0 +1,392 @@
+{
+  "format": 2,
+  "code": "gas-apartment-101-1",
+  "version": 4,
+  "replaces": [
+    "6628b47f-436e-5e35-bf40-3690c898368f"
+  ],
+  "title": "Запах газа в квартире",
+  "service_id": "101",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "13020201",
+  "complications": [],
+  "teacher_comment": "Тренировка без преподавателя: запах газа в квартире, улица Плеханова, 11. Расчёт спрашивает, есть ли в квартире люди (это есть в карточке), просит вызвать газовую службу — в карточке её нет, звонок в 104 или 112 за диспетчером; затем расчёт долго молчит на работах. Не вызвали газовую — расчёт перезванивает и уходит, оставив пост. Каждый доклад — после статуса диспетчера.",
+  "outcome": {
+    "people": "Расчёт приехал на улицу Плеханова, 11: в подъезде пахло газом, сильнее наверху. Жильцов вывели на улицу, лифт заблокировали. Перекрыть газ на стояке пожарные сами не могут — по просьбе расчёта вызвали газовую службу, она устранила утечку, подъезд проветрили, жильцов вернули.",
+    "late": "Карточку приняли позже норматива. Газ в квартире 34 копился, хотя заявитель перекрыл кран на плите и открыл окна: запах не уходил, а в квартире оставались двое взрослых."
+  },
+  "card": {
+    "caller_name": "Соловьёва Марина Александровна",
+    "phone_aon": "+79000000714",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ВАО",
+      "district": "Перово",
+      "street": "улица Плеханова",
+      "house": "11",
+      "building": "",
+      "apartment": "34"
+    },
+    "description": "Сильный запах газа в квартире 34 на третьем этаже. Заявитель перекрыл кран на плите, запах не уходит, окна открыты. В квартире двое взрослых.",
+    "tags": [],
+    "victims": false,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Запах бытового газа в квартире",
+    "service_ids": [
+      "101"
+    ],
+    "number": "70005401",
+    "incident_type_code": "13020201"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "101"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ВАО",
+      "district": "Перово",
+      "street": "улица Плеханова",
+      "house": "11",
+      "building": "",
+      "apartment": "34"
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "101",
+      "phone_ext": "101",
+      "before_s": 180
+    },
+    "expected_comment": "Сильный запах газа в квартире 34 на третьем этаже. Заявитель перекрыл кран на плите, запах не уходит, окна открыты. В квартире двое взрослых. Утечку устранила газовая служба, подъезд проветрили, жильцов вернули. Возвращаемся."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Вызов принят, отделение выехало.",
+        "audio": "bank-v2/101/101.responding.gas_smell.1.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Прибыли. В подъезде запах газа, сильнее всего наверху.",
+        "audio": "bank-v1/101/101.arrived.gas_smell.1.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Выводим жильцов на улицу, лифт заблокировали.",
+        "audio": "bank-v1/101/101.working.gas_smell.2.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Утечку устранила газовая служба, подъезд проветрили, жильцов вернули. Возвращаемся.",
+        "audio": "bank-v1/101/101.completed.gas_smell.1.ogg"
+      },
+      "after_s": 40,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "people",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Внутри люди остались? Заявитель что-нибудь говорил?",
+        "audio": "bank-v1/101/101.clarify.any.7.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "two",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "two",
+          "label": "В квартире двое взрослых"
+        },
+        {
+          "key": "none",
+          "label": "Людей нет, все вышли"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, проверьте сами"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Принял, теперь ясно.",
+            "audio": "bank-v1/101/101.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Понял. Будем стучать по квартирам.",
+            "audio": "bank-v1/101/101.clarify_unknown.any.2.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Поздно, диспетчер, мы уже внутри.",
+            "audio": "bank-v1/101/101.clarify_late.any.2.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт спросил, есть ли в квартире люди, — это было в карточке",
+        "critical": false
+      }
+    },
+    {
+      "key": "gas",
+      "kind": "request_service",
+      "trigger": {
+        "on": "message",
+        "after_s": 3,
+        "report": "works"
+      },
+      "line": {
+        "text": "Вызывайте Мосгаз, надо перекрыть газ на стояке, сами не можем.",
+        "audio": "bank-v1/101/101.request_service.any.7.ogg"
+      },
+      "expect": [
+        {
+          "action": "call_service",
+          "phone_exts": [
+            "104",
+            "112"
+          ],
+          "within_s": 30
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Так, принял, записал.",
+            "audio": "bank-v1/101/101.ack.any.5.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Работаем на месте, обстановка под контролем.",
+            "audio": "bank-v1/101/101.status_working.any.3.ogg"
+          },
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 20
+            }
+          ]
+        },
+        "missed": {
+          "line": {
+            "text": "Диспетчер, Мосгаз вызвали? Запах держится, а перекрыть стояк нам нечем.",
+            "audio": "bank-v3/101/101.request_service.gas_smell.1.ogg"
+          },
+          "effects": [
+            {
+              "replace": "completion",
+              "with": {
+                "text": "Газовую службу так и не дождались. Подъезд обесточен, жильцы на улице, у квартиры оставили пост.",
+                "audio": "bank-v3/101/101.completed.gas_smell.7.ogg"
+              }
+            },
+            {
+              "delay": "completion",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт попросил газовую службу — в карточке её нет",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Работы идут, пока без изменений.",
+            "audio": "bank-v1/101/101.status_working.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Заканчиваем, осталось всё проверить и свернуться.",
+            "audio": "bank-v1/101/101.status_working.any.8.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Расчёт долго работал без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "input_parts": {
+    "who": [
+      {
+        "text": "Диспетчер службы 101",
+        "correct": true
+      },
+      {
+        "text": "Служба 102",
+        "correct": false
+      },
+      {
+        "text": "Звоню по вызову",
+        "correct": false
+      }
+    ],
+    "address": [
+      {
+        "text": "улица Плеханова, 11",
+        "correct": true
+      },
+      {
+        "text": "улица Плещеева, 11",
+        "correct": false
+      },
+      {
+        "text": "улица Плеханова, 17",
+        "correct": false
+      }
+    ],
+    "what": [
+      {
+        "text": "Запах газа в квартире 34",
+        "correct": true
+      },
+      {
+        "text": "Задымление в подъезде",
+        "correct": false
+      },
+      {
+        "text": "Пожар на кухне",
+        "correct": false
+      }
+    ],
+    "people": [
+      {
+        "text": "Двое взрослых в квартире",
+        "correct": true
+      },
+      {
+        "text": "Людей нет",
+        "correct": false
+      },
+      {
+        "text": "Есть пострадавшие",
+        "correct": false
+      }
+    ],
+    "decision": [
+      {
+        "text": "Высылаю расчёт",
+        "correct": true
+      },
+      {
+        "text": "Нужна скорая",
+        "correct": false
+      },
+      {
+        "text": "Работ не требуется",
+        "correct": false
+      }
+    ]
+  }
+}

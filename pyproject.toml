@@ -8,7 +8,15 @@ dependencies = []
 members = ["apps/api", "packages/evalcore", "scripts"]
 
 [dependency-groups]
-dev = ["pytest==8.4.2", "pytest-cov==6.3.0", "ruff==0.13.0", "mypy==1.18.1", "types-PyYAML==6.0.12.20250915", "types-jsonschema==4.25.1.20250822"]
+dev = [
+    "pytest==8.4.2",
+    "pytest-cov==6.3.0",
+    "ruff==0.13.0",
+    "mypy==1.18.1",
+    "types-PyYAML==6.0.12.20250915",
+    "types-jsonschema==4.25.1.20250822",
+    "pytest-xdist==3.8.0",
+]
 
 [tool.ruff]
 target-version = "py312"

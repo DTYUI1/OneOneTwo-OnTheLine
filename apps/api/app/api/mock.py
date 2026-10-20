@@ -20,6 +20,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
 from app.api.c01 import pending, reject_extensions, validate_pending
+from app.api.foundation import demo_accounts
 from app.core.config import ROOT, settings
 
 
@@ -154,6 +155,8 @@ class MockBackend:
             response.delete_cookie("session")
             response.delete_cookie("csrf")
             return response
+        if op == "demoAccounts":
+            return JSONResponse(demo_accounts.demo_accounts(settings).model_dump())
         if op == "health":
             health = self.example("Health")
             health["mode"] = settings.api_mode
@@ -235,6 +238,10 @@ class MockBackend:
                 if u.get("deleted_at")
             ]
             return JSONResponse({"last_backup_at": None, "items": items})
+        if op == "listJobErrors":
+            return JSONResponse({"items": [], "total": 0, "unread": 0})
+        if op == "readJobError":
+            raise HTTPException(404, "Задание не найдено.")
         if op == "listBackups":
             return JSONResponse(self.backups[::-1])
         if op == "requestBackup":

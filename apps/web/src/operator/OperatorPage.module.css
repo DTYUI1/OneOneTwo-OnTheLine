@@ -23,7 +23,6 @@
   --op-info-bg: #e8edf2;
   --op-guide: #253c52;
   --op-guide-title: #9fd0ff;
-  --op-guide-line: #4aa3ff;
   display: grid;
   grid-template-columns: minmax(0, 860fr) minmax(0, 1032fr);
   height: 100vh;
@@ -140,12 +139,19 @@
   flex-direction: column;
   justify-content: center;
   white-space: nowrap;
+  min-width: 0;
+  min-height: 0;
 }
 .incident h1 {
   margin: 0;
 }
 .incident p {
   margin: 0;
+}
+.traineeName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 .timer,
 .timerOverdue {
@@ -861,16 +867,6 @@
   border-radius: 3px;
   pointer-events: auto;
 }
-.guideOutline {
-  position: fixed;
-  z-index: 7;
-  /* Внутри границ цели (замечание капитана 29.09): снаружи рамка наезжала на соседей —
-     вкладки шагов над вариантами вопросов. */
-  outline: 3px solid var(--op-guide-line);
-  outline-offset: -3px;
-  pointer-events: none;
-}
-
 /* Низ: оранжевая полоса «Службы:». */
 .bar {
   display: flex;
@@ -1111,8 +1107,11 @@
 }
 .saveError {
   margin: 4.444px 8.889px 0 auto;
+  /* Белая плашка: тёмно-красный прямо на оранжевой полосе почти не читается. */
+  padding: 2px 8px;
   font-size: 15.556px;
   color: #b00020;
+  background: #ffffff;
 }
 
 /* Окно результата попытки и разбор звонка (этап 3): две колонки, у каждой своя прокрутка —
@@ -1533,6 +1532,10 @@
 }
 .phoneField input {
   padding-right: 56px;
+}
+/* Неполный номер после «сохранить»: красная черта, как у сообщения об ошибке. */
+.phoneField input[aria-invalid="true"] {
+  border-bottom-color: #b00020;
 }
 .aon {
   position: absolute;
@@ -2079,6 +2082,12 @@
   }
 }
 @media (max-height: 800px) {
+  .incident h1 {
+    line-height: 18px;
+  }
+  .incident p {
+    line-height: 13px;
+  }
   .page {
     grid-template-rows: 60px minmax(0, 1fr) 56px;
     gap: 8px;
@@ -2366,4 +2375,65 @@
     font-size: 10px;
     line-height: 12px;
   }
+}
+.phoneIcon,
+.phoneMarks,
+.barTools > button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+.phoneIcon {
+  background: var(--op-gap);
+}
+.phoneMarks {
+  display: inline-flex;
+  align-items: center;
+}
+.barTools > button {
+  display: flex;
+}
+.caller .inactiveSelect {
+  min-width: 0;
+  min-height: 28px;
+  padding: 3px 0;
+  border: 0;
+  border-bottom: 1px solid var(--op-line);
+  color: var(--op-label);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4'%3E%3Cpath d='M0 0h8L4 4z' fill='%23777'/%3E%3C/svg%3E")
+    right 1px center no-repeat;
+  cursor: pointer;
+}
+.addressLine .mapButton {
+  display: flex;
+  align-self: center;
+  padding: 0;
+  cursor: pointer;
+}
+.phoneIcon:focus-visible,
+.phoneMarks:focus-visible,
+.barTools > button:focus-visible,
+.inactiveSelect:focus-visible,
+.mapButton:focus-visible {
+  outline: 2px solid var(--color-active);
+  outline-offset: 2px;
+}
+.page [data-shortcut] {
+  position: relative;
+}
+.page[data-shortcuts="true"]
+  [data-shortcut-label]:not([data-shortcut-label=""])::after {
+  content: attr(data-shortcut-label);
+  position: absolute;
+  z-index: 12;
+  right: 2px;
+  top: 2px;
+  padding: 1px 4px;
+  color: var(--color-on-dark);
+  background: var(--color-header);
+  font: 12px/1.4 sans-serif;
+  pointer-events: none;
 }

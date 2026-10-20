@@ -6,20 +6,25 @@ from typing import Any, cast
 from uuid import UUID, uuid4
 
 from evalcore.models import EvalContext  # type: ignore[import-untyped]
-from evalcore.scoring import evaluate  # type: ignore[import-untyped]
+from evalcore.scoring import SCORING_VERSION, evaluate  # type: ignore[import-untyped]
 from fastapi import HTTPException, Request, Response
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.evaluations import repo, schemas
 from app.api.notifications import notify
+from app.api.training.briefing import evaluation_briefings
+from app.api.training.brigades import card_brigade_numbers
+from app.api.training.caller import caller_phrases, tells_fact
 from app.api.training.content import plan_for_assignment
+from app.api.training.scenario_events import card_events_plan, evaluation_events
 from app.api.training.status_evidence import justified_state
 from app.core.evaluation_details import (
     DEFAULT_EXPLANATION,
     call_context,
     pack_explanations,
     unpack_explanation,
+    unpack_remarks,
 )
 from app.core.models import (
     Assignment,
@@ -39,6 +44,8 @@ from app.core.models import (
 from app.core.models import (
     Evaluation as EvaluationRow,
 )
+from app.core.report_completion import REPORT_COMPLETION_VERSION, apply_report_completion
+from app.core.scored_criteria import criterion_weight
 from app.core.spelling import for_scenario
 from app.worker.queue import enqueue_job
 
@@ -54,21 +61,35 @@ def criteria_for(row: Any) -> list[schemas.CriterionResult]:
             scores.update({str(key): float(value) for key, value in layer.items()})
     criteria = []
     for key, score in sorted(scores.items()):
-        explanation, evidence = unpack_explanation(explanations.get(key, DEFAULT_EXPLANATION))
+        stored = explanations.get(key, DEFAULT_EXPLANATION)
+        explanation, evidence = unpack_explanation(stored)
+        weight = criterion_weight(explanations, key, weights)
+        # Для исключённого критерия сохраняем audit-детали, но не выдумываем ошибку
+        # из технического нуля старой записи без remarks.
+        remarks = (
+            []
+            if weight == 0 and (not isinstance(stored, dict) or "remarks" not in stored)
+            else unpack_remarks(stored, key, score)
+        )
         criteria.append(
             schemas.CriterionResult(
                 key=key,
                 score=score,
-                weight=float(weights.get(key, 1)),
-                critical=key in evaluation.critical_flags,
+                weight=weight,
+                critical=weight != 0 and key in evaluation.critical_flags,
                 evidence=evidence,
                 explanation=explanation,
+                remarks=[schemas.CriterionRemark(**item) for item in remarks],
             )
         )
     return criteria
 
 
-def serialize(row: Any, override: TeacherOverride | None = None) -> schemas.Evaluation:
+def serialize(
+    row: Any,
+    override: TeacherOverride | None = None,
+    check: tuple[str, int] | None = None,
+) -> schemas.Evaluation:
     evaluation: EvaluationRow = row["Evaluation"]
     total = (
         override.new_total
@@ -85,6 +106,11 @@ def serialize(row: Any, override: TeacherOverride | None = None) -> schemas.Eval
         criteria=criteria_for(row),
         model_info={str(key): str(value) for key, value in evaluation.model_info.items()},
         teacher_comment=override.teacher_comment if override is not None else "",
+        ai_check=(
+            schemas.AICheck(state=cast(Any, check[0]), ahead=check[1])
+            if check is not None and evaluation.status != "complete"
+            else None
+        ),
     )
 
 
@@ -93,7 +119,11 @@ async def list_evaluations(request: Request) -> list[schemas.Evaluation]:
     overrides = await repo.latest_overrides(
         request.state.db, [row["Evaluation"].id for row in rows]
     )
-    return [serialize(row, overrides.get(row["Evaluation"].id)) for row in rows]
+    checks = await repo.ai_checks(request.state.db, [row["Evaluation"].id for row in rows])
+    return [
+        serialize(row, overrides.get(row["Evaluation"].id), checks.get(row["Evaluation"].id))
+        for row in rows
+    ]
 
 
 async def get_evaluation(request: Request, evaluation_id: UUID) -> schemas.Evaluation:
@@ -106,7 +136,8 @@ async def get_evaluation(request: Request, evaluation_id: UUID) -> schemas.Evalu
     if row is None:
         raise HTTPException(404, "Оценка не найдена.")
     override = (await repo.latest_overrides(request.state.db, [evaluation_id])).get(evaluation_id)
-    return serialize(row, override)
+    checks = await repo.ai_checks(request.state.db, [evaluation_id])
+    return serialize(row, override, checks.get(evaluation_id))
 
 
 async def create_override(request: Request, body: schemas.OverrideInput) -> schemas.Evaluation:
@@ -122,7 +153,8 @@ async def create_override(request: Request, body: schemas.OverrideInput) -> sche
     previous = (await repo.latest_overrides(request.state.db, [body.evaluation_id])).get(
         body.evaluation_id
     )
-    request.state.audit_before = serialize(row, previous).model_dump(mode="json")
+    check = (await repo.ai_checks(request.state.db, [body.evaluation_id])).get(body.evaluation_id)
+    request.state.audit_before = serialize(row, previous, check).model_dump(mode="json")
     override = TeacherOverride(
         id=uuid4(),
         evaluation_id=body.evaluation_id,
@@ -137,7 +169,7 @@ async def create_override(request: Request, body: schemas.OverrideInput) -> sche
     await request.state.db.flush()
     request.state.entity = "teacher_override"
     request.state.entity_id = str(override.id)
-    result = serialize(row, override)
+    result = serialize(row, override, check)
     request.state.audit_after = result.model_dump(mode="json")
     await notify(request.state.db, "evaluation." + row["Evaluation"].status, body.evaluation_id)
     return result
@@ -168,14 +200,80 @@ async def planned_messages(
     result = []
     for planned in plan.plan["messages"]:
         presented_at = presented.get(UUID(planned["message"]["id"]))
-        result.append(
-            {
-                "message_id": planned["message"]["id"],
-                "justifies_state": justified_state(planned, scenario.id),
-                "presented_at": presented_at.isoformat() if presented_at else None,
-            }
-        )
+        item = {
+            "message_id": planned["message"]["id"],
+            "justifies_state": justified_state(planned, scenario.id),
+            "presented_at": presented_at.isoformat() if presented_at else None,
+        }
+        # Доклад с места меняет задачу (TC-05): эталон карточки считает evalcore.
+        if "task_change" in planned:
+            item["task_change"] = planned["task_change"]
+        result.append(item)
     return tuple(result)
+
+
+async def conversation_lines(db: AsyncSession, card: Card) -> tuple[dict[str, Any], ...]:
+    """`EvalContext.lines` (HQ-020): реплики собеседников и первое предъявление каждой.
+
+    Всё, что план сценария может сказать (доклады, реплики событий и веток, подмены), — чтобы
+    отличить сведение из разговора от знания самого диспетчера; и все выдачи карточки с
+    подтверждённым `message_presented` — что и когда прозвучало (в том числе повтор адреса).
+    `planned` — доклад плана: должен прозвучать, если карточку довести; реплики событий и веток
+    звучат, только если сработали.
+    """
+    messages, events = await card_events_plan(db, card)
+    heard: dict[str, datetime | None] = {}
+    planned: set[str] = set()
+
+    def add(line: Any, at: datetime | None = None, *, report: bool = False) -> None:
+        text = line.get("text") if isinstance(line, dict) else None
+        if not isinstance(text, str) or not text.strip():
+            return
+        if report:
+            planned.add(text)
+        known = heard.get(text)
+        if at is not None and (known is None or at < known):
+            heard[text] = at
+        else:
+            heard.setdefault(text, None)
+
+    for planned_message in messages:
+        add(planned_message.get("message"), report=True)
+    for event in events:
+        add(event.get("line"))
+        for branch in (event.get("branches") or {}).values():
+            add(branch.get("line"))
+            for effect in branch.get("effects") or []:
+                add(effect.get("with"))
+    presented = (
+        await db.execute(
+            select(MessageDelivery.message, func.min(MessagePresentation.recorded_at))
+            .join(MessagePresentation, MessagePresentation.delivery_id == MessageDelivery.id)
+            .where(
+                MessageDelivery.card_id == card.id,
+                MessagePresentation.kind == "message_presented",
+            )
+            .group_by(MessageDelivery.id)
+        )
+    ).tuples()
+    for message, at in presented:
+        add(message, at)
+    # Живой заявитель (HQ-019): прозвучавшая реплика со сведением сюжета — с моментом, когда
+    # прозвучала; неполный ответ растерянной (`on: first`) сведения не даёт.
+    phrases = caller_phrases()
+    said = await db.execute(
+        select(CardEvent.payload, CardEvent.server_ts).where(
+            CardEvent.card_id == card.id, CardEvent.type == "caller_said"
+        )
+    )
+    for payload, at in said.tuples():
+        phrase = phrases.get(str(payload.get("phrase_id")))
+        if phrase is not None and tells_fact(phrase):
+            add(phrase, at)
+    return tuple(
+        {"text": text, "presented_at": at.isoformat() if at else None, "planned": text in planned}
+        for text, at in heard.items()
+    )
 
 
 async def evaluation_context(
@@ -252,8 +350,75 @@ async def evaluation_context(
             for item in routing
         ),
         planned_messages=await planned_messages(db, card, assignment, scenario),
+        scenario_events=await evaluation_events(db, card),
+        briefings=await evaluation_briefings(db, card.id),
+        lines=await conversation_lines(db, card),
+        brigade_numbers=await card_brigade_numbers(db, card.id),
     )
     return context, card, participant, lesson
+
+
+async def refresh_terminal_rules(db: AsyncSession, card_id: UUID) -> None:
+    """Поздний доклад обновляет rules той же оценки, не стирая решение преподавателя/ИИ.
+
+    Вызывается под Session → Assignment → Card → Call. Последней берём Evaluation;
+    worker берёт Card → Evaluation, override — только Evaluation.
+    После ожидания читаем обновлённый ИИ-слой и журнал, иначе worker мог бы вернуть
+    устаревшие правила. Prediction остаётся первоначальным фактом для ML-аудита.
+    """
+    from app.api.analysis.service import card_timing
+    from app.worker.judging import combine_scores
+
+    existing = await db.scalar(
+        select(EvaluationRow)
+        .where(EvaluationRow.card_id == card_id)
+        .order_by(EvaluationRow.version.desc())
+        .limit(1)
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+    if existing is None:
+        return
+    context, card, _, lesson = await evaluation_context(db, card_id)
+    try:
+        evaluated = evaluate(context, timing=await card_timing(db, card, lesson))
+    except NotImplementedError:
+        return
+    evaluated, completion_factor = apply_report_completion(evaluated, context, card.state)
+    # Пояснения ИИ перекрывают одноимённые правила, как при обычном apply_judge.
+    layer_keys = set(existing.semantic_scores or {}) | set(existing.llm_scores or {})
+    retained = {
+        key: value
+        for key, value in existing.explanation.items()
+        if key not in existing.rules_scores or key in layer_keys
+    }
+    existing.rules_scores = {item.key: float(item.score) for item in evaluated.criteria}
+    existing.critical_flags = [str(item) for item in evaluated.critical_flags]
+    existing.explanation = {**pack_explanations(evaluated.criteria), **retained}
+    existing.total = float(evaluated.total)
+    if existing.llm_scores:
+        existing.total = combine_scores(
+            existing.total,
+            bool(existing.critical_flags),
+            float(lesson.settings_snapshot.get("critical_cap", 0.5)),
+            existing.llm_scores,
+            completion_factor=completion_factor,
+        )
+    existing.model_info = {
+        **existing.model_info,
+        "rules": SCORING_VERSION,
+        "report_completion": REPORT_COMPLETION_VERSION,
+        "report_completion_factor": str(completion_factor),
+    }
+    if not completion_factor:
+        existing.status = "complete"
+        existing.model_info = {
+            **existing.model_info,
+            "llm": "rule:no-reports",
+            "semantic": "not-applicable",
+        }
+    await db.flush()
+    await notify(db, "evaluation." + existing.status, existing.id)
 
 
 async def evaluate_terminal_card(db: AsyncSession, card_id: UUID) -> EvaluationRow:
@@ -270,6 +435,7 @@ async def evaluate_terminal_card(db: AsyncSession, card_id: UUID) -> EvaluationR
     from app.api.analysis.service import card_timing
 
     timing = await card_timing(db, card, lesson)
+    completion_factor = 1.0
     try:
         evaluated = evaluate(context, timing=timing)
     except NotImplementedError:
@@ -283,11 +449,18 @@ async def evaluate_terminal_card(db: AsyncSession, card_id: UUID) -> EvaluationR
         model_info = {"rules": "unavailable:T-006", "semantic": "pending", "llm": "pending"}
     else:
         rules_available = True
+        evaluated, completion_factor = apply_report_completion(evaluated, context, card.state)
         rules_scores = {item.key: float(item.score) for item in evaluated.criteria}
         total = float(evaluated.total)
         critical_flags = [str(item) for item in evaluated.critical_flags]
         explanation = pack_explanations(evaluated.criteria)
-        model_info = {"rules": "evalcore", "semantic": "pending", "llm": "pending"}
+        model_info = {
+            "rules": SCORING_VERSION,
+            "semantic": "pending" if completion_factor else "not-applicable",
+            "llm": "pending" if completion_factor else "rule:no-reports",
+            "report_completion": REPORT_COMPLETION_VERSION,
+            "report_completion_factor": str(completion_factor),
+        }
     version = (
         int(
             await db.scalar(
@@ -310,7 +483,7 @@ async def evaluate_terminal_card(db: AsyncSession, card_id: UUID) -> EvaluationR
         critical_flags=critical_flags,
         explanation=explanation,
         model_info=model_info,
-        status="partial",
+        status="partial" if completion_factor else "complete",
     )
     db.add(evaluation)
     await db.flush()
@@ -331,14 +504,15 @@ async def evaluate_terminal_card(db: AsyncSession, card_id: UUID) -> EvaluationR
         prediction.actual_time_s = actual_time
         prediction.actual_timeout = actual_time > normative
         await db.flush()
-    await notify(db, "evaluation.partial", evaluation.id)
-    await enqueue_job(
-        db,
-        kind="evaluate",
-        payload={"card_id": str(card_id), "evaluation_id": str(evaluation.id)},
-        entity_id=evaluation.id,
-        version=evaluation.version,
-    )
+    await notify(db, "evaluation." + evaluation.status, evaluation.id)
+    if completion_factor:
+        await enqueue_job(
+            db,
+            kind="evaluate",
+            payload={"card_id": str(card_id), "evaluation_id": str(evaluation.id)},
+            entity_id=evaluation.id,
+            version=evaluation.version,
+        )
     return evaluation
 
 
@@ -390,6 +564,8 @@ async def build_report(request: Request, session_id: UUID) -> schemas.Report:
         ]
         for view in views:
             for criterion in view.criteria:
+                if criterion.weight == 0:
+                    continue
                 criterion_scores.setdefault(criterion.key, []).append(criterion.score)
         trainee_rows.append(
             schemas.TraineeReport(
@@ -399,7 +575,9 @@ async def build_report(request: Request, session_id: UUID) -> schemas.Report:
                 total=fmean(item.total for item in views) if views else None,
                 reaction_time_s=fmean(reactions) if reactions else None,
                 handling_time_s=fmean(handling) if handling else None,
-                errors=sum(item.score < 1 for view in views for item in view.criteria),
+                errors=sum(
+                    item.score < 1 for view in views for item in view.criteria if item.weight != 0
+                ),
                 level=participant.level,
             )
         )

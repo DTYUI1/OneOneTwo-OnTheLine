@@ -1,0 +1,128 @@
+/* «Проверка памяти» — стоп-кадр прототипа A (proto.css, «стоп-кадр и окна»): жёлтая полоса
+   сверху, варианты кнопками. Решение 18.10 (без паузы): не модальное окно, а панель у левого
+   края — ниже окна телефона по слоям (у него 44–45) и в стороне от него (он у правого края),
+   АРМ под ней работает; свёрнутая — одна шапка. */
+.window {
+  position: fixed;
+  left: 16px;
+  bottom: 64px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100vh - 140px);
+  color: var(--color-text);
+  background: #fff;
+  border-top: 6px solid #e0a33e;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px #0004;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 16px;
+}
+
+.fold {
+  padding: 4px 10px;
+  color: var(--color-text);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+}
+
+.content {
+  overflow: auto;
+  padding: 0 16px 14px;
+}
+
+.window h2 {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+.note,
+.hint,
+.why {
+  color: #5c666d;
+}
+
+.note {
+  margin: 0;
+}
+
+.question {
+  margin: 12px 0;
+}
+
+.question p {
+  margin: 0 0 6px;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option {
+  padding: 8px 14px;
+  color: var(--color-text);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+}
+
+.option[aria-pressed="true"] {
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border-color: var(--color-active);
+}
+
+.option[data-verdict="ok"] {
+  color: #fff;
+  background: #2e7d32;
+  border-color: #2e7d32;
+}
+
+.option[data-verdict="bad"] {
+  color: #fff;
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.option:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.why {
+  margin: 6px 0 0;
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.primary {
+  padding: 6px 14px;
+  color: var(--color-on-dark);
+  background: var(--color-active);
+  border: 1px solid var(--color-active);
+}
+
+.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,349 @@
+{
+  "format": 2,
+  "code": "heart-street-103-1",
+  "version": 3,
+  "replaces": [
+    "e78c605b-d55a-50a5-83af-a9bee39b4532"
+  ],
+  "title": "Плохо с сердцем на улице",
+  "service_id": "103",
+  "level": 1,
+  "weight": 1,
+  "incident_type_code": "22370000",
+  "complications": [],
+  "teacher_comment": "Плохо с сердцем на остановке, проспект Мира, 26. Бригада повторяет адрес с ошибкой (тридцать шесть вместо двадцати шести), на месте не видит больного и спрашивает ориентир — он есть в карточке: остановка у дома, на скамейке. Не ответили — бригада ищет сама, помощь запаздывает. На работах бригада молчит — нужно позвонить ей самому.",
+  "outcome": {
+    "people": "Бригада скорой нашла мужчину на остановке у дома 26 на проспекте Мира: боль за грудиной, бледный. Подозревали инфаркт — помощь оказали на месте и госпитализировали мужчину в кардиологию.",
+    "late": "Карточку приняли позже норматива. Боль за грудиной у мужчины шестидесяти лет может оказаться инфарктом — здесь важна каждая минута.",
+    "why": "При остановке сердца каждая минута до помощи отнимает шансы выжить (модель Larsen, 1993)."
+  },
+  "card": {
+    "caller_name": "Белова Анна Михайловна",
+    "phone_aon": "+79000000716",
+    "phone_provided": "",
+    "phone_scene": "",
+    "address": {
+      "city": "Москва",
+      "okrug": "ЦАО",
+      "district": "Мещанский",
+      "street": "проспект Мира",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "description": "На остановке у дома мужчине около шестидесяти лет плохо: боль за грудиной, бледный, сидит на скамейке, в сознании.",
+    "tags": [],
+    "victims": true,
+    "ambulance_refused": false,
+    "blocked_people": false,
+    "emergency": false,
+    "incident_class": "Плохо с сердцем",
+    "service_ids": [
+      "103"
+    ],
+    "number": "70005601",
+    "incident_type_code": "22370000"
+  },
+  "reference": {
+    "expected_flow": [
+      "received",
+      "accepted",
+      "responding",
+      "arrived",
+      "working",
+      "completed"
+    ],
+    "required_fields": [
+      "service_number",
+      "comment"
+    ],
+    "expected_service_ids": [
+      "103"
+    ],
+    "expected_address": {
+      "city": "Москва",
+      "okrug": "ЦАО",
+      "district": "Мещанский",
+      "street": "проспект Мира",
+      "house": "26",
+      "building": "",
+      "apartment": ""
+    },
+    "expected_call": {
+      "required": false,
+      "service_id": "103",
+      "phone_ext": "103",
+      "before_s": 180
+    },
+    "expected_comment": "На остановке у дома мужчине около шестидесяти лет плохо: боль за грудиной, бледный, сидит на скамейке, в сознании. Подозрение на инфаркт, пациент госпитализирован в кардиологию, бригада свободна."
+  },
+  "brigades": [
+    {
+      "key": "b1",
+      "ordinal": 0
+    }
+  ],
+  "plan": [
+    {
+      "key": "departure",
+      "brigade": "b1",
+      "line": {
+        "text": "Выехали. Станет хуже до нашего приезда — сразу звоните.",
+        "audio": "bank-v1/103/103.responding.any.10.ogg"
+      },
+      "after_s": 3,
+      "requires_state": "accepted",
+      "justifies_state": "responding"
+    },
+    {
+      "key": "arrival",
+      "brigade": "b1",
+      "line": {
+        "text": "Бригада на месте, ищем мужчину на остановке.",
+        "audio": "bank-v2/103/103.arrived.heart.8.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "responding",
+      "justifies_state": "arrived"
+    },
+    {
+      "key": "works",
+      "brigade": "b1",
+      "line": {
+        "text": "Подозрение на инфаркт, оказываем помощь, готовим к госпитализации.",
+        "audio": "bank-v2/103/103.working.heart.7.ogg"
+      },
+      "after_s": 6,
+      "requires_state": "arrived",
+      "justifies_state": "working"
+    },
+    {
+      "key": "completion",
+      "brigade": "b1",
+      "line": {
+        "text": "Пациент госпитализирован в кардиологию, бригада свободна.",
+        "audio": "bank-v2/103/103.completed.heart.7.ogg"
+      },
+      "after_s": 35,
+      "requires_state": "working",
+      "justifies_state": "completed"
+    }
+  ],
+  "events": [
+    {
+      "key": "readback",
+      "kind": "readback_error",
+      "trigger": {
+        "on": "message",
+        "after_s": 1,
+        "report": "departure"
+      },
+      "line": {
+        "text": "Диспетчер, как поняли? Проспект Мира, тридцать шесть, выезжаем!",
+        "audio": "bank-v4/103/103.readback_trap.253d0339.ogg"
+      },
+      "expect": [
+        {
+          "action": "correct_readback",
+          "option_key": "fix",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "fix",
+          "label": "Поправка по адресу: проспект Мира, 26"
+        },
+        {
+          "key": "ok",
+          "label": "Понял"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Так, записала правильный адрес. Едем.",
+            "audio": "bank-v1/103/103.readback_fixed.any.2.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу нас никто не ждал. Сверились с карточкой, переехали, на месте, время потеряли.",
+                "audio": "bank-v4/103/103.wrong_place.moved2.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "replace": "arrival",
+              "with": {
+                "text": "Диспетчер, по тому адресу никто не вызывал. Сверились с карточкой, переехали, теперь на месте. Потеряли время.",
+                "audio": "bank-v4/103/103.wrong_place.moved.ogg"
+              }
+            },
+            {
+              "delay": "arrival",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада повторила адрес с ошибкой",
+        "critical": true
+      }
+    },
+    {
+      "key": "landmark",
+      "kind": "clarify",
+      "trigger": {
+        "on": "message",
+        "after_s": 2,
+        "report": "arrival"
+      },
+      "line": {
+        "text": "Мы на месте, но человека не видим. Где именно он? Есть ориентир?",
+        "audio": "bank-v1/103/103.clarify.any.6.ogg"
+      },
+      "expect": [
+        {
+          "action": "reply",
+          "option_key": "stop",
+          "within_s": 30
+        }
+      ],
+      "reply_options": [
+        {
+          "key": "stop",
+          "label": "На остановке у дома, на скамейке"
+        },
+        {
+          "key": "metro",
+          "label": "У входа в метро"
+        },
+        {
+          "key": "unknown",
+          "label": "Не знаю, ищите на месте"
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Ага, вижу. Спасибо.",
+            "audio": "bank-v1/103/103.clarify_ok.any.4.ogg"
+          },
+          "effects": []
+        },
+        "wrong": {
+          "line": {
+            "text": "Поняла, будем искать сами, это займёт время.",
+            "audio": "bank-v1/103/103.clarify_unknown.any.1.ogg"
+          },
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        },
+        "late": {
+          "line": {
+            "text": "Уже нашли сами.",
+            "audio": "bank-v1/103/103.clarify_late.any.1.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "works",
+              "by_s": 30
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада не нашла больного — где он, было в карточке",
+        "critical": false
+      }
+    },
+    {
+      "key": "silence",
+      "kind": "silence",
+      "trigger": {
+        "on": "no_contact",
+        "state": "working",
+        "silent_s": 20
+      },
+      "line": null,
+      "expect": [
+        {
+          "action": "call_brigade",
+          "within_s": 10
+        }
+      ],
+      "branches": {
+        "met": {
+          "line": {
+            "text": "Пока на месте. Давление меряем, состояние стабильное.",
+            "audio": "bank-v1/103/103.status_working.any.2.ogg"
+          },
+          "effects": []
+        },
+        "late": {
+          "line": {
+            "text": "Ещё на месте. Ждём, когда подействует укол.",
+            "audio": "bank-v1/103/103.status_working.any.6.ogg"
+          },
+          "effects": []
+        },
+        "missed": {
+          "line": null,
+          "effects": [
+            {
+              "delay": "completion",
+              "by_s": 45
+            }
+          ]
+        }
+      },
+      "review": {
+        "label": "Бригада долго работала без доклада",
+        "critical": false
+      }
+    }
+  ],
+  "control_call": {
+    "after_s": 60,
+    "reply_options": [
+      {
+        "key": "late",
+        "label": "Не успел обработать, статус ставлю сейчас"
+      },
+      {
+        "key": "check",
+        "label": "Уточняю, наша ли карточка"
+      },
+      {
+        "key": "fault",
+        "label": "Сбой АРМ, статус ставлю сейчас"
+      }
+    ]
+  },
+  "traps": [
+    "readback"
+  ]
+}

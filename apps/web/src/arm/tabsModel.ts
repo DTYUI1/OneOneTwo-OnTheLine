@@ -2,8 +2,10 @@
 // Реальный АРМ держит каждое происшествие в своей вкладке браузера (arm_dds/04, 07);
 // здесь вкладки внутри приложения, и строка состояния видна поверх любой карточки.
 import type { Card } from "../shared/api";
-import { isClosed } from "./cardModel";
+import { formatHandlingNormative } from "../shared/handlingNormative";
+import { formatDuration, isClosed } from "./cardModel";
 import type { LiveTiming } from "./timingAdapter";
+import { urgencyStage, type Urgency } from "./trainer/urgency";
 
 /** Происшествия в работе: идущее занятие, карточка не закрыта и не прервана; по появлению. */
 export function workingCards(
@@ -83,5 +85,32 @@ export function tabClock(
     label: "обработка",
     seconds,
     overdue: seconds > normatives.handling,
+  };
+}
+
+export interface WorkBadge {
+  /** «01:42» — активная обработка, как в оценке. */
+  readonly text: string;
+  /** Стадии — как у «Принята» ждёт (urgency.ts): до 70 % спокойно, затем жёлтый и красный. */
+  readonly stage: Urgency;
+  /** Подсказка при наведении: «Отработка 01:42 из 3:00. …». */
+  readonly title: string;
+}
+
+/**
+ * Таймер отработки на вкладке происшествия (капитан, 19.10): сколько идёт работа с
+ * карточкой. Только обработка — реакцию на «Принята» считает подсказка тренажёра; до
+ * открытия и после окончательной «Не принята» таймера нет.
+ */
+export function workBadge(
+  clock: TabClock | null,
+  handlingNormativeS: number,
+): WorkBadge | null {
+  if (!clock || clock.label !== "обработка") return null;
+  const text = formatDuration(clock.seconds);
+  return {
+    text,
+    stage: urgencyStage(clock.seconds, handlingNormativeS),
+    title: `Отработка ${text} из ${formatHandlingNormative(handlingNormativeS)}. Ожидание доклада бригады не считается.`,
   };
 }

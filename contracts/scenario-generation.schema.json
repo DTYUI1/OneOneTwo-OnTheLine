@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arm112.local/contracts/scenario-generation.schema.json",
+  "title": "ScenarioGenerationResponse",
+  "description": "Карточка и выбор фраз банка для учебного задания; технические ссылки и реплики из банка добавляет сервер.",
+  "anyOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "facts",
+        "caller_name",
+        "description",
+        "tags",
+        "choices",
+        "expected_comment"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "ready"
+          ]
+        },
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "service",
+            "address",
+            "victims",
+            "outcome"
+          ],
+          "properties": {
+            "service": {
+              "type": "string",
+              "enum": [
+                "101",
+                "102",
+                "103",
+                "104",
+                "GKH",
+                "MOSLIFT"
+              ]
+            },
+            "address": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 300
+            },
+            "victims": {
+              "type": "boolean"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "completed",
+                "refused"
+              ]
+            }
+          }
+        },
+        "caller_name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 40,
+          "maxLength": 900
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80
+          }
+        },
+        "choices": {
+          "type": "object",
+          "description": "Выбранная фраза банка по каждому докладу: ключ — статус доклада, значение — текст одной из предложенных фраз. Точный список фраз сервер задаёт под вход.",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 400
+          }
+        },
+        "expected_comment": {
+          "type": "string",
+          "minLength": 40,
+          "maxLength": 900
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "refused"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500
+        }
+      }
+    }
+  ]
+}
